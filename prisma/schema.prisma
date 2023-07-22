@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgres"
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING") // used for migrations
+}
+
+model Mob {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    name String @unique
+    desc String?
+    level Int
+    health Int
+    goldMin Int
+    goldMax Int
+    spriteUrl String
+    boss Boolean @default(false)
+    drops Loot[]
+}
+
+
+model Loot {
+  mob       Mob     @relation(fields: [mobId], references: [id])
+  mobId     String
+  item       Item     @relation(fields: [itemId], references: [id])
+  itemId     String
+  
+  dropRate   Decimal?
+
+  @@id([mobId, itemId])
+}
+
+
+model Item {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    name      String @unique()
+    desc      String?
+    spriteUrl String
+    slot      String?
+    levelReq  Int?
+    consumable Boolean @default(false)
+    sellPrice Int?
+    stackSize Int @default(1)
+    droppedBy Loot[]
+}
