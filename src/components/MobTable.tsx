@@ -7,9 +7,12 @@ import {
   getSortedRowModel,
   useReactTable,
   createColumnHelper,
+  getExpandedRowModel,
+  type ExpandedState,
+  type Row,
 } from "@tanstack/react-table"
 import { TbCrown as Crown, TbArrowDown as ArrowDown, TbArrowUp as ArrowUp } from "react-icons/tb";
-import { useState } from "react"
+import { Fragment, useState } from "react"
 
 import { Button } from "~/components/ui/button"
 import {
@@ -38,22 +41,45 @@ import { Checkbox } from "./ui/checkbox"
 type Datum = RouterOutputs['mob']['getAll'][number]
 const columnHelper = createColumnHelper<Datum>()
 
-export const columns = [
-  columnHelper.display({
-    id: 'sprite',
-    size: 32,
-    cell: ({ row }) => <div className="flex justify-center">
-      <MobSprite url={row.original.spriteUrl} name={row.original.name} size="sm" />
+function DropsList({ drops, className }: { drops: Datum['drops'], className?: string }) {
+
+  return (      <div className={cn("flex items-center gap-x-4", className)}>
+  {drops.map(d => <div key={d.itemId}><TooltipProvider>
+    <Tooltip delayDuration={0}>
+      <TooltipTrigger className="block pt-1">
+        <ItemSprite
+          className="border-2 shadow-sm border-slate-200 bg-slate-50 rounded-sm"
+          url={d.item.spriteUrl}
+          name={d.item.name}
+          size="md"
+        />
+      </TooltipTrigger>
+      <TooltipContent side="bottom">
+      <p>{d.item.name}</p>
+    </TooltipContent>
+    </Tooltip>
+  </TooltipProvider>
+  <div className="text-sm pt-1 px-1 flex items-center space-x-1">
+    <div>
+    {d.item.sellPrice}  
     </div>
-  }),
+    <UnitSprite type="coin" />
+  </div>
+  </div>
+)}
+</div>)
+
+}
+
+export const columns = [
   columnHelper.accessor('level', {
-    cell: info => <div className="flex justify-center">{info.getValue()}</div>,
-    size: 6,
+    id: 'level',
+    cell: ({ getValue }) => <div className="flex justify-center">{getValue()}</div>,
     header: ({ column }) => {
       const sort = column.getIsSorted()
       return (
-        <div className="flex justify-center">
-                  <Button
+        <div className="flex">
+        <Button
           variant="ghost"
           onClick={() => column.toggleSorting()}
         >
@@ -64,6 +90,12 @@ export const columns = [
         </div>
       )
   }}),
+  columnHelper.display({
+    id: 'sprite',
+    cell: ({ row }) => <div className="flex justify-center">
+      <MobSprite url={row.original.spriteUrl} name={row.original.name} size="sm" />
+    </div>
+  }),
   columnHelper.accessor('name', {
     cell: info => info.getValue(),
     header: ({ column }) => {
@@ -81,13 +113,11 @@ export const columns = [
     }
   }),
   columnHelper.accessor('boss', {
-    size: 6,
     header: () => null,
     cell: ({ row }) => row.original.boss ? <div className="flex justify-center"><Crown className="h-5 w-5 text-yellow-600" /></div> : '',
   }),
   columnHelper.accessor(row => (row.goldMin+row.goldMax)/2, {
     id: 'gold',
-    size: 12,
     cell: ({ row }) => <div className="flex items-center gap-x-2 justify-center">{row.original.goldMax === row.original.goldMin ? row.original.goldMin : `${row.original.goldMin}-${row.original.goldMax}`}<UnitSprite type="coin" size="sm" /></div>,
     header: ({ column }) => {
       const sort = column.getIsSorted()
@@ -104,7 +134,6 @@ export const columns = [
     }
   }),
   columnHelper.accessor('health', {
-    size: 12,
     cell: info => <div className="flex justify-center">{info.getValue()}</div>,
     header: ({ column }) => {
       const sort = column.getIsSorted()
@@ -120,38 +149,22 @@ export const columns = [
       )
     },
   }),
-
   columnHelper.accessor(row => row.drops.map(d => d.item.name).join(', '), {
     id: 'loot',
     header: 'Loot',
-    size: 360,
-    cell: ({ row }) => <div className="flex items-center gap-x-4">
-      {row.original.drops.map(d => <div key={d.itemId}><TooltipProvider>
-        <Tooltip delayDuration={0}>
-          <TooltipTrigger className="block pt-1">
-            <ItemSprite
-              className="border-2 shadow-sm border-slate-200 bg-slate-50 rounded-sm"
-              url={d.item.spriteUrl}
-              name={d.item.name}
-              size="md"
-            />
-          </TooltipTrigger>
-          <TooltipContent side="bottom">
-          <p>{d.item.name}</p>
-        </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-      <div className="text-sm pt-1 px-1 flex items-center space-x-1">
-        <div>
-        {d.item.sellPrice}  
-        </div>
-        <UnitSprite type="coin" />
-      </div>
-      </div>
-)}
-    </div>,
+    cell: ({ row }) => <DropsList className="hidden lg:flex" drops={row.original.drops} />
   }),
 ]
+
+const rowCanExpand = (row: Row<Datum>) => {
+  return row.original.drops.length > 0
+}
+
+const renderExpandedRow = ({row}: { row: Row<Datum> }) => {
+  return (
+    <DropsList drops={row.original.drops} />
+  )
+}
 
 export function MobTable() {
 
@@ -164,6 +177,8 @@ export function MobTable() {
     []
   )
 
+  const [expanded, setExpanded] = useState<ExpandedState>({})
+
   const { data } = api.mob.getAll.useQuery();
 
   const table = useReactTable({
@@ -172,11 +187,15 @@ export function MobTable() {
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
+    onExpandedChange: setExpanded,
     getCoreRowModel: getCoreRowModel(),
     // getPaginationRowModel: getPaginationRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getRowCanExpand: rowCanExpand,
     state: {
+      expanded,
       sorting,
       columnFilters,
       globalFilter,
@@ -213,10 +232,11 @@ export function MobTable() {
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
+                  if(header.id === 'sprite') {
+                    return null
+                  }
                   return (
-                    <TableHead key={header.id} style={{
-                      width: header.getSize(),
-                    }}>
+                    <TableHead className={cn(header.id === 'loot' && "hidden lg:table-cell")} colSpan={header.id === 'level' ? 2 : undefined} key={header.id}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -231,26 +251,29 @@ export function MobTable() {
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
+              table.getRowModel().rows.map((row) => {
+                return (<Fragment key={row.id}>
+                  <TableRow className={cn(row.getCanExpand() && "border-b-0" ,"lg:border-b")}>
                   {row.getVisibleCells().map((cell) => {
-                    return (<TableCell key={cell.id}
-                            className={cn(cell.column.id === 'sprite' && 'py-0', 'text-lg')}
-                            style={{
-                              width: cell.column.getSize(),
-                            }}
-                            >
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext()
-                            )}
-                          </TableCell>)
+                    return (<TableCell key={cell.id} className={cn(cell.column.id === 'sprite' && 'py-0', 'text-lg')}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>)
                   })}
                 </TableRow>
-              ))
+                {row.getCanExpand() && (
+                  <TableRow className="table-row lg:hidden hover:bg-inherit">
+                    <TableCell className="pt-0" colSpan={row.getVisibleCells().length}>
+                      {renderExpandedRow({ row })}
+                    </TableCell>
+                  </TableRow>
+                )}
+                </Fragment>
+                )
+
+              })
             ) : (
               <TableRow>
                 <TableCell
