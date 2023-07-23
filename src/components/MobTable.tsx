@@ -36,6 +36,8 @@ import {
 import { UnitSprite } from "./UnitSprite"
 import { DebouncedInput } from "./DebouncedInput"
 import { Checkbox } from "./ui/checkbox"
+import { GiHealthNormal as Health } from 'react-icons/gi'
+import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 
 
 type Datum = RouterOutputs['mob']['getAll'][number]
@@ -43,7 +45,7 @@ const columnHelper = createColumnHelper<Datum>()
 
 function DropsList({ drops, className }: { drops: Datum['drops'], className?: string }) {
 
-  return (      <div className={cn("flex items-center gap-x-4", className)}>
+  return (<div className={cn("flex flex-wrap items-center gap-x-4", className)}>
   {drops.map(d => <div key={d.itemId}><TooltipProvider>
     <Tooltip delayDuration={0}>
       <TooltipTrigger className="block pt-1">
@@ -71,6 +73,18 @@ function DropsList({ drops, className }: { drops: Datum['drops'], className?: st
 
 }
 
+function DropGold({ goldMin, goldMax, className }: { goldMin: number, goldMax: number, className?: string }) {
+
+  return (<div className={cn(className, "flex flex-row-reverse items-center gap-x-2")}>
+    {goldMax === goldMin ? goldMin : `${goldMin}-${goldMax}`}<UnitSprite type="coin" size="sm" /></div>)
+}
+
+function MobHealth({ health, className }: { health: number, className?: string }) {
+  return <div className={cn(className, "flex flex-row-reverse justify-center items-center gap-x-2")}>
+    <div>{health}</div><Health className="text-red-500 w-4 h-4" />
+    </div>
+}
+
 export const columns = [
   columnHelper.accessor('level', {
     id: 'level',
@@ -85,7 +99,6 @@ export const columns = [
         >
           Level
           {sort ? (sort === 'asc' ? <ArrowUp className="ml-2 h-4 w-4" /> : <ArrowDown className="ml-2 h-4 w-4" />) : null}
-          
         </Button>
         </div>
       )
@@ -110,7 +123,8 @@ export const columns = [
           
         </Button>
       )
-    }
+    },
+    // size: 10
   }),
   columnHelper.accessor('boss', {
     header: () => null,
@@ -118,7 +132,7 @@ export const columns = [
   }),
   columnHelper.accessor(row => (row.goldMin+row.goldMax)/2, {
     id: 'gold',
-    cell: ({ row }) => <div className="flex items-center gap-x-2 justify-center">{row.original.goldMax === row.original.goldMin ? row.original.goldMin : `${row.original.goldMin}-${row.original.goldMax}`}<UnitSprite type="coin" size="sm" /></div>,
+    cell: ({ row }) => <DropGold className="justify-center" goldMin={row.original.goldMin} goldMax={row.original.goldMax} />,
     header: ({ column }) => {
       const sort = column.getIsSorted()
       return (
@@ -134,7 +148,7 @@ export const columns = [
     }
   }),
   columnHelper.accessor('health', {
-    cell: info => <div className="flex justify-center">{info.getValue()}</div>,
+    cell: info => <MobHealth health={info.getValue()} />,
     header: ({ column }) => {
       const sort = column.getIsSorted()
       return (
@@ -152,17 +166,19 @@ export const columns = [
   columnHelper.accessor(row => row.drops.map(d => d.item.name).join(', '), {
     id: 'loot',
     header: 'Loot',
-    cell: ({ row }) => <DropsList className="hidden lg:flex" drops={row.original.drops} />
+    cell: ({ row }) => <DropsList drops={row.original.drops} /> //className="hidden lg:flex"
   }),
 ]
 
-const rowCanExpand = (row: Row<Datum>) => {
-  return row.original.drops.length > 0
-}
-
 const renderExpandedRow = ({row}: { row: Row<Datum> }) => {
   return (
-    <DropsList drops={row.original.drops} />
+    <div className="text-lg flex items-center gap-x-12 flex-wrap justify-between">
+      <div className="p-3 flex gap-x-8">
+        <DropGold goldMin={row.original.goldMin} goldMax={row.original.goldMax} />
+        <MobHealth health={row.original.health} />
+      </div>
+      <DropsList drops={row.original.drops} />
+    </div>
   )
 }
 
@@ -193,7 +209,7 @@ export function MobTable() {
     getExpandedRowModel: getExpandedRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    getRowCanExpand: rowCanExpand,
+    getRowCanExpand: () => true,
     state: {
       expanded,
       sorting,
@@ -203,6 +219,7 @@ export function MobTable() {
   })
 
 
+  const hideOnSmall = ['loot', 'health', 'gold']
 
   return (
     <div className="w-full">
@@ -236,7 +253,7 @@ export function MobTable() {
                     return null
                   }
                   return (
-                    <TableHead className={cn(header.id === 'loot' && "hidden lg:table-cell")} colSpan={header.id === 'level' ? 2 : undefined} key={header.id}>
+                    <TableHead className={cn(hideOnSmall.includes(header.id) && "hidden lg:table-cell")} colSpan={header.id === 'level' ? 2 : undefined} key={header.id}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -253,17 +270,26 @@ export function MobTable() {
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => {
                 return (<Fragment key={row.id}>
-                  <TableRow className={cn(row.getCanExpand() && "border-b-0" ,"lg:border-b")}>
+                  <TableRow aria-expanded={row.getIsExpanded()} className="relative aria-expanded:border-b-0 lg:aria-expanded:border-b" onClick={row.getToggleExpandedHandler()}>
                   {row.getVisibleCells().map((cell) => {
-                    return (<TableCell key={cell.id} className={cn(cell.column.id === 'sprite' && 'py-0', 'text-lg')}>
+                    return (<TableCell key={cell.id}
+                      className={cn('py-2 px-4', cell.column.id === 'sprite' && 'p-0', 'text-lg', hideOnSmall.includes(cell.column.id) && "p-0 lg:px-2 lg:py-3")}
+                    >
+                        <div
+                          className={cn('text-lg', hideOnSmall.includes(cell.column.id) && "hidden lg:block")}
+                        >
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()
                         )}
+                        </div>
                       </TableCell>)
                   })}
+                  {
+                    row.getIsExpanded() ? <BsChevronUp className="block lg:hidden absolute h-4 w-4 top-3 right-3" /> : <BsChevronDown className="block lg:hidden absolute h-4 w-4 top-3 right-3" />
+                  }
                 </TableRow>
-                {row.getCanExpand() && (
+                {row.getIsExpanded() && (
                   <TableRow className="table-row lg:hidden hover:bg-inherit">
                     <TableCell className="pt-0" colSpan={row.getVisibleCells().length}>
                       {renderExpandedRow({ row })}
