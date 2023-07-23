@@ -136,7 +136,8 @@ export const columns = [
     header: ({ column }) => {
       const sort = column.getIsSorted()
       return (
-        <Button
+        <div className="flex justify-center">
+                  <Button
           variant="ghost"
           onClick={() => column.toggleSorting()}
         >
@@ -144,6 +145,7 @@ export const columns = [
           {sort ? (sort === 'asc' ? <ArrowUp className="ml-2 h-4 w-4" /> : <ArrowDown className="ml-2 h-4 w-4" />) : null}
           
         </Button>
+        </div>
       )
     }
   }),
@@ -152,6 +154,7 @@ export const columns = [
     header: ({ column }) => {
       const sort = column.getIsSorted()
       return (
+        <div className="flex justify-center">
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting()}
@@ -160,6 +163,7 @@ export const columns = [
           {sort ? (sort === 'asc' ? <ArrowUp className="ml-2 h-4 w-4" /> : <ArrowDown className="ml-2 h-4 w-4" />) : null}
           
         </Button>
+        </div>
       )
     },
   }),
@@ -184,9 +188,7 @@ const renderExpandedRow = ({row}: { row: Row<Datum> }) => {
 
 export function MobTable() {
 
-  const [sorting, setSorting] = useState<SortingState>([
-    {id: 'level', desc: false}
-  ])
+  const [sorting, setSorting] = useState<SortingState>([])
 
   const [globalFilter, setGlobalFilter] = useState('')
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
