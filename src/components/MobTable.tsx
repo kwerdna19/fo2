@@ -1,3 +1,5 @@
+'use client'
+
 import {
   type ColumnFiltersState,
   type SortingState,
@@ -23,7 +25,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table"
-import { type RouterOutputs, api } from "~/utils/api"
+import { type RouterOutputs } from "~/utils/api"
 import { MobSprite } from "./MobSprite"
 import { cn } from "~/utils/styles"
 import { ItemSprite } from "./ItemSprite"
@@ -38,6 +40,7 @@ import { DebouncedInput } from "./DebouncedInput"
 import { Checkbox } from "./ui/checkbox"
 import { GiHealthNormal as Health } from 'react-icons/gi'
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
+import Link from "next/link";
 
 
 type Datum = RouterOutputs['mob']['getAll'][number]
@@ -110,7 +113,7 @@ export const columns = [
     </div>
   }),
   columnHelper.accessor('name', {
-    cell: info => info.getValue(),
+    cell: info => <Link href={`/mobs/${info.getValue().replace(/ /g, '-').toLowerCase()}`}>{info.getValue()}</Link>,
     header: ({ column }) => {
       const sort = column.getIsSorted()
       return (
@@ -186,7 +189,7 @@ const renderExpandedRow = ({row}: { row: Row<Datum> }) => {
   )
 }
 
-export function MobTable() {
+export function MobTable({ data }: { data: RouterOutputs['mob']['getAll']}) {
 
   const [sorting, setSorting] = useState<SortingState>([])
 
@@ -196,8 +199,6 @@ export function MobTable() {
   )
 
   const [expanded, setExpanded] = useState<ExpandedState>({})
-
-  const { data } = api.mob.getAll.useQuery();
 
   const table = useReactTable({
     data: data ?? [],
