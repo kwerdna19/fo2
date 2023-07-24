@@ -5,6 +5,6 @@ import { api } from "~/utils/api"
 export const revalidate = 86400 // secs
 
 export default async function Mobs() {
-  const mobs = await api.mob.getAll.query()
+  const mobs = await api.mob.getAll()
   return <MobTable data={mobs} />
 }

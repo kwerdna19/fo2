@@ -6,7 +6,7 @@ export const revalidate = 86400 // secs
 export default async function Mob({ params }: { params: { slug: string } }) {
 
   const { slug } = params
-  const mob = await api.mob.getByName.query(slug)
+  const mob = await api.mob.getByName(slug)
 
   return <div>
     <h2 className="text-3xl">{mob.name}</h2>
