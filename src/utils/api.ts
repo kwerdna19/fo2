@@ -19,6 +19,13 @@ export const api = createTRPCProxyClient<AppRouter>({
     }),
     httpBatchLink({
       url: `${getBaseUrl()}/api/trpc`,
+      fetch: async (input, init?) => {
+        // const fetch = getFetch();
+        return fetch(input, {
+          ...init,
+          credentials: "include",
+        });
+      },
     }),
   ],
 });

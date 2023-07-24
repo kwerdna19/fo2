@@ -4,7 +4,7 @@ import { createTRPCContext } from "~/server/api/trpc";
 
 
 const handler = (request: Request) => {
-  console.log(`incoming request ${request.url}`);
+  console.log("HANDLER", request.url)
   return fetchRequestHandler({
     endpoint: "/api/trpc",
     req: request,
