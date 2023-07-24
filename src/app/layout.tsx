@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <header className="p-6">
+        <header className="p-6 mx-auto max-w-screen-2xl">
           <Header />
         </header>
         <main className="flex flex-col items-center p-5 pt-0 mx-auto max-w-screen-2xl">

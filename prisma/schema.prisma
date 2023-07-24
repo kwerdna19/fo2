@@ -18,6 +18,7 @@ model Mob {
     updatedAt DateTime @updatedAt
     name String @unique
     desc String?
+    note String?
     level Int
     health Int
     goldMin Int
@@ -25,8 +26,33 @@ model Mob {
     spriteUrl String
     boss Boolean @default(false)
     drops Loot[]
+    locations Location[]
 }
 
+// type Enum TBD
+model Npc {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    name String
+    note String?
+    type String
+    spriteUrl String
+    items NpcSale[]
+    locations Location[]
+}
+
+model NpcSale {
+
+  npc       Npc     @relation(fields: [npcId], references: [id])
+  npcId     String
+  item       Item     @relation(fields: [itemId], references: [id])
+  itemId     String
+  
+  price   Int
+
+  @@unique([npcId, itemId])
+}
 
 model Loot {
   mob       Mob     @relation(fields: [mobId], references: [id])
@@ -39,18 +65,105 @@ model Loot {
   @@id([mobId, itemId])
 }
 
+enum Slot {
+  HEAD
+  FACE
+  BACK
+  SHOULDERS
+  CHEST
+  LEGS
+  LEFT_RING
+  RIGHT_RING
+  MAIN_HAND
+  LEFT_TRINKET
+  RIGHT_TRINKET
+  OFFHAND
+  GUILD
+}
 
+enum EquippableType {
+  HEAD
+  FACE
+  BACK
+  SHOULDERS
+  CHEST
+  LEGS
+  RING // LEFT/RIGHT
+  MAIN_HAND
+  TRINKET // LEFT/RIGHT
+  OFFHAND
+  GUILD
+}
 model Item {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     name      String @unique()
     desc      String?
+    note      String?
     spriteUrl String
-    slot      String?
+    equip     EquippableType?
     levelReq  Int?
+    twoHand   Boolean?
     consumable Boolean @default(false)
     sellPrice Int?
     stackSize Int @default(1)
     droppedBy Loot[]
+    soldBy    NpcSale[]
+    // for items that provide a skill
+    skillId  String?
+    skillInfo Skill? @relation(fields: [skillId], references: [id])
+    
+    // stats - for equipable
+    range Int? // for now 0 and 1
+    str Int?
+    sta Int?
+    agi Int?
+    int Int?
+    armor Int?
+    atkSpeed Decimal?
+    dmgMin Int?
+    dmgMax Int?
+}
+
+model Location {
+  id        String   @id @default(cuid())
+  area       Area     @relation(fields: [areaId], references: [id])
+  areaId     String
+  x     Int
+  y     Int
+  npc   Npc?   @relation(fields: [npcId], references: [id])
+  npcId     String?
+  mob   Mob?   @relation(fields: [mobId], references: [id])
+  mobId     String?
+
+  @@unique([areaId, npcId])
+  @@unique([areaId, mobId])
+}
+
+model Area {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  spriteUrl String
+  updatedAt DateTime @updatedAt
+  spriteUrlBase String
+  name      String @unique()
+  note      String?
+  locations Location[]
+}
+
+// type enum
+model Skill {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    name      String
+    rank      Int
+    desc      String?
+    note      String?
+    spriteUrl String
+    type      String?
+    levelReq  Int @default(0)
+    items     Item[]
+    @@unique([name, rank])
 }

@@ -39,7 +39,6 @@ import { UnitSprite } from "./UnitSprite"
 import { DebouncedInput } from "./DebouncedInput"
 import { Checkbox } from "./ui/checkbox"
 import { GiHealthNormal as Health } from 'react-icons/gi'
-import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import Link from "next/link";
 
 
@@ -289,9 +288,6 @@ export function MobTable({ data }: { data: RouterOutputs['mob']['getAll']}) {
                         </div>
                       </TableCell>)
                   })}
-                  {
-                    row.getIsExpanded() ? <BsChevronUp className="block lg:hidden absolute h-4 w-4 top-3 right-3" /> : <BsChevronDown className="block lg:hidden absolute h-4 w-4 top-3 right-3" />
-                  }
                 </TableRow>
                 {row.getIsExpanded() && (
                   <TableRow className="table-row lg:hidden hover:bg-inherit">
