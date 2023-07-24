@@ -1,6 +1,7 @@
 import '~/styles/globals.css'
 import { type Metadata } from "next"
 import { Footer } from '~/components/layout/Footer'
+import { Header } from '~/components/layout/Header'
 
 export const metadata: Metadata = {
   title: {
@@ -19,10 +20,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <main className="flex flex-col items-center p-5 mx-auto max-w-screen-2xl">
+        <header className="p-6">
+          <Header />
+        </header>
+        <main className="flex flex-col items-center p-5 pt-0 mx-auto max-w-screen-2xl">
           {children}
         </main>
-        <footer className="flex flex-col items-center p-5 mx-auto max-w-screen-2xl mb-4">
+        <footer className="flex flex-col items-center p-5 mx-auto max-w-screen-2xl">
           <Footer />
         </footer>
       </body>

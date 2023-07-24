@@ -108,9 +108,9 @@ export const columns = [
   }}),
   columnHelper.display({
     id: 'sprite',
-    cell: ({ row }) => <div className="flex justify-center">
+    cell: ({ row }) => <Link href={`/mobs/${row.original.name.replace(/ /g, '-').toLowerCase()}`} className="flex justify-center">
       <MobSprite url={row.original.spriteUrl} name={row.original.name} size="sm" />
-    </div>
+    </Link>
   }),
   columnHelper.accessor('name', {
     cell: info => <Link href={`/mobs/${info.getValue().replace(/ /g, '-').toLowerCase()}`}>{info.getValue()}</Link>,
@@ -189,6 +189,7 @@ const renderExpandedRow = ({row}: { row: Row<Datum> }) => {
   )
 }
 
+
 export function MobTable({ data }: { data: RouterOutputs['mob']['getAll']}) {
 
   const [sorting, setSorting] = useState<SortingState>([])
@@ -226,7 +227,7 @@ export function MobTable({ data }: { data: RouterOutputs['mob']['getAll']}) {
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4 gap-8">
+      <div className="flex items-center mb-4 gap-8">
         <DebouncedInput
           placeholder="Filter by mob or item..."
           value={globalFilter ?? ''}
