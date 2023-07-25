@@ -13,9 +13,8 @@ import {
   type ExpandedState,
   type Row,
 } from "@tanstack/react-table"
-import { TbCrown as Crown, TbArrowDown as ArrowDown, TbArrowUp as ArrowUp } from "react-icons/tb";
+import { TbCrown as Crown } from "react-icons/tb";
 import { Fragment, useState } from "react"
-import { Button } from "~/components/ui/button"
 import {
   Table,
   TableBody,

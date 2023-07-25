@@ -10,12 +10,8 @@ import {
   useReactTable,
   createColumnHelper,
   getExpandedRowModel,
-  type ExpandedState,
-  type Row,
 } from "@tanstack/react-table"
-import { TbCrown as Crown, TbArrowDown as ArrowDown, TbArrowUp as ArrowUp } from "react-icons/tb";
-import { Fragment, useState } from "react"
-import { Button } from "~/components/ui/button"
+import { useState } from "react"
 import {
   Table,
   TableBody,
@@ -25,9 +21,7 @@ import {
   TableRow,
 } from "~/components/ui/table"
 import { type RouterOutputs } from "~/utils/api"
-import { cn } from "~/utils/styles"
 import { DebouncedInput } from "../../DebouncedInput"
-import { Checkbox } from "../../ui/checkbox"
 import Link from "next/link";
 import { ItemSprite } from "~/components/ItemSprite";
 import { getSortButton } from "~/components/SortButton";
