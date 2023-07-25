@@ -33,7 +33,7 @@ const spriteHeight = spriteSheetHeight/spriteRows
 
 export interface MobSpriteProps extends Variant { url: string, name: string, className?: string, animated?: boolean }
 
-export const MobSprite = ({ url, name, className, animated = true, size = 'xs' }: MobSpriteProps) => {
+export const MobSprite = ({ url, name, className, animated = false, size = 'xs' }: MobSpriteProps) => {
 
   const mult = variants.size[size]
 

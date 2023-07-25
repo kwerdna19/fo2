@@ -20,7 +20,6 @@ export function DroppedByList({ mobs, className }: { mobs: Datum['droppedBy']; c
             <MobSprite
               url={d.mob.spriteUrl}
               name={d.mob.name}
-              animated={false}
               size="sm"
             />
           </Link>
