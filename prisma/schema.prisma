@@ -27,6 +27,9 @@ model Mob {
     boss Boolean @default(false)
     drops Loot[]
     locations Location[]
+    atkSpeed Decimal?
+    dmgMin Int?
+    dmgMax Int?
 }
 
 // type Enum TBD
