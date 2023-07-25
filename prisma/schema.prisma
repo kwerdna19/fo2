@@ -16,7 +16,8 @@ model Mob {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    name String @unique
+    name String @unique()
+    slug String @unique()
     desc String?
     note String?
     level Int
@@ -38,6 +39,7 @@ model Npc {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     name String
+    slug String @unique()
     note String?
     type String
     spriteUrl String
@@ -102,6 +104,7 @@ model Item {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     name      String @unique()
+    slug      String @unique()
     desc      String?
     note      String?
     spriteUrl String
@@ -151,6 +154,7 @@ model Area {
   updatedAt DateTime @updatedAt
   spriteUrlBase String
   name      String @unique()
+  slug      String @unique()
   note      String?
   locations Location[]
 }
@@ -161,6 +165,7 @@ model Skill {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     name      String
+    slug      String @unique()
     rank      Int
     desc      String?
     note      String?

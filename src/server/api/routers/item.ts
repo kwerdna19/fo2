@@ -3,18 +3,18 @@ import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 export const router = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.mob.findMany({
+    return ctx.prisma.item.findMany({
       orderBy: {
-        level: 'asc'
+        name: 'asc'
       },
       include: {
-        drops: {
+        droppedBy: {
           include: {
-            item: true
+            mob: true
           },
           orderBy: {
-            item: {
-              sellPrice: 'asc'
+            mob: {
+              level: 'asc'
             }
           }
         }
@@ -22,18 +22,18 @@ export const router = createTRPCRouter({
     })
   }),
   getById: publicProcedure.input(z.string()).query(({ ctx, input }) => {
-    return ctx.prisma.mob.findUniqueOrThrow({
+    return ctx.prisma.item.findUniqueOrThrow({
       where: {
         id: input
       },
       include: {
-        drops: {
+        droppedBy: {
           include: {
-            item: true
+            mob: true
           },
           orderBy: {
-            item: {
-              sellPrice: 'asc'
+            mob: {
+              level: 'asc'
             }
           }
         }
@@ -41,18 +41,18 @@ export const router = createTRPCRouter({
     })
   }),
   getBySlug: publicProcedure.input(z.string()).query(({ ctx, input }) => {
-    return ctx.prisma.mob.findUnique({
+    return ctx.prisma.item.findUnique({
       where: {
         slug: input
       },
       include: {
-        drops: {
+        droppedBy: {
           include: {
-            item: true
+            mob: true
           },
           orderBy: {
-            item: {
-              sellPrice: 'asc'
+            mob: {
+              level: 'asc'
             }
           }
         }

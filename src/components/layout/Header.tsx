@@ -92,6 +92,13 @@ export function Header() {
             </Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuLink active={pathMatches('/items')} asChild className={navigationMenuTriggerStyle()}>
+            <Link href="/items">
+              Items
+            </Link>
+          </NavigationMenuLink>
+        </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
     </div>

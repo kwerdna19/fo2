@@ -33,6 +33,7 @@ import Link from "next/link";
 import { DropsList } from "./DropsList";
 import { DropGold } from "./DropGold";
 import { MobHealth } from "./MobHealth";
+import SortButton, { getSortButton } from "~/components/SortButton";
 
 
 export type Datum = RouterOutputs['mob']['getAll'][number]
@@ -42,42 +43,17 @@ export const columns = [
   columnHelper.accessor('level', {
     id: 'level',
     cell: ({ getValue }) => <div className="flex justify-center">{getValue()}</div>,
-    header: ({ column }) => {
-      const sort = column.getIsSorted()
-      return (
-        <div className="flex">
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting()}
-        >
-          Level
-          {sort ? (sort === 'asc' ? <ArrowUp className="ml-2 h-4 w-4" /> : <ArrowDown className="ml-2 h-4 w-4" />) : null}
-        </Button>
-        </div>
-      )
-  }}),
+    header: getSortButton('Level')
+  }),
   columnHelper.display({
     id: 'sprite',
-    cell: ({ row }) => <Link href={`/mobs/${row.original.name.replace(/ /g, '-').toLowerCase()}`} className="flex justify-center">
+    cell: ({ row }) => <Link href={`/mobs/${row.original.slug}`} className="flex justify-center">
       <MobSprite url={row.original.spriteUrl} name={row.original.name} size="sm" />
     </Link>
   }),
   columnHelper.accessor('name', {
-    cell: info => <Link href={`/mobs/${info.getValue().replace(/ /g, '-').toLowerCase()}`}>{info.getValue()}</Link>,
-    header: ({ column }) => {
-      const sort = column.getIsSorted()
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting()}
-        >
-          Name
-          {sort ? (sort === 'asc' ? <ArrowUp className="ml-2 h-4 w-4" /> : <ArrowDown className="ml-2 h-4 w-4" />) : null}
-          
-        </Button>
-      )
-    },
-    // size: 10
+    cell: info => <Link href={`/mobs/${info.row.original.slug}`}>{info.getValue()}</Link>,
+    header: getSortButton('Name')
   }),
   columnHelper.accessor('boss', {
     header: () => null,
@@ -87,17 +63,11 @@ export const columns = [
     id: 'gold',
     cell: ({ row }) => <DropGold className="justify-center" goldMin={row.original.goldMin} goldMax={row.original.goldMax} />,
     header: ({ column }) => {
-      const sort = column.getIsSorted()
       return (
         <div className="flex justify-center">
-                  <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting()}
-        >
-          Gold
-          {sort ? (sort === 'asc' ? <ArrowUp className="ml-2 h-4 w-4" /> : <ArrowDown className="ml-2 h-4 w-4" />) : null}
-          
-        </Button>
+          <SortButton column={column}>
+            Gold
+          </SortButton>
         </div>
       )
     }
@@ -105,17 +75,11 @@ export const columns = [
   columnHelper.accessor('health', {
     cell: info => <MobHealth health={info.getValue()} />,
     header: ({ column }) => {
-      const sort = column.getIsSorted()
       return (
         <div className="flex justify-center">
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting()}
-        >
-          Health
-          {sort ? (sort === 'asc' ? <ArrowUp className="ml-2 h-4 w-4" /> : <ArrowDown className="ml-2 h-4 w-4" />) : null}
-          
-        </Button>
+          <SortButton column={column}>
+            Health
+          </SortButton>
         </div>
       )
     },

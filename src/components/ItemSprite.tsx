@@ -31,5 +31,5 @@ export const ItemSprite = ({ url, name, className, size = 'xs' }: ItemSpriteProp
   const width = spriteWidth*mult
 
   /* eslint-disable-next-line @next/next/no-img-element */
-  return (<img style={{ height, width }} className={cn("pixelated", className)} src={url} alt={`${name} sprite`} />)
+  return (<img style={{ height, width }} className={cn("box-content pixelated", className)} src={url} alt={`${name} sprite`} />)
 }

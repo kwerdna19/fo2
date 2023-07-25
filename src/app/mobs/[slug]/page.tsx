@@ -5,9 +5,10 @@ import { api } from "~/utils/api"
 // 1 day
 export const revalidate = 86400 // secs
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const { slug } = params
-  const mob = await api.mob.getByName(slug)
+interface Params { slug: string }
+
+export async function generateMetadata({ params }: { params: Params }) {
+  const mob = await api.mob.getBySlug(params.slug)
   if(!mob) {
     return {}
   }
@@ -16,10 +17,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 }
 
-export default async function Mob({ params }: { params: { slug: string } }) {
+export default async function Mob({ params }: { params: Params }) {
 
-  const { slug } = params
-  const mob = await api.mob.getByName(slug)
+  const mob = await api.mob.getBySlug(params.slug)
 
   if(!mob) {
     notFound()
