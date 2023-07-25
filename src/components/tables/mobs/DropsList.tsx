@@ -9,6 +9,7 @@ import {
 } from "~/components/ui/tooltip";
 import { UnitSprite } from "../../UnitSprite";
 import { type Datum } from "./MobTable";
+import Link from "next/link";
 
 export function DropsList({ drops, className }: { drops: Datum['drops']; className?: string; }) {
 
@@ -16,11 +17,14 @@ export function DropsList({ drops, className }: { drops: Datum['drops']; classNa
     {drops.map(d => <div key={d.itemId}><TooltipProvider>
       <Tooltip delayDuration={0}>
         <TooltipTrigger className="block pt-1">
-          <ItemSprite
-            className="border-2 shadow-sm border-slate-200 bg-slate-50 rounded-sm"
-            url={d.item.spriteUrl}
-            name={d.item.name}
-            size="md" />
+          <Link href={`/items/${d.item.slug}`}>
+            <ItemSprite
+              className="border-2 shadow-sm border-slate-200 bg-slate-50 rounded-sm"
+              url={d.item.spriteUrl}
+              name={d.item.name}
+              size="md"
+            />
+          </Link>
         </TooltipTrigger>
         <TooltipContent side="bottom">
           <p>{d.item.name}</p>

@@ -4,21 +4,21 @@ import { readFileSync } from 'fs'
 const prisma = new PrismaClient()
 async function main() {
 
-  const mobs = (JSON.parse(readFileSync('./prisma/seed/mobs.json', { encoding: 'utf-8' }))) as Mob[]
+  const mobs = (JSON.parse(readFileSync('./prisma/seed/backup/mobs.json', { encoding: 'utf-8' }))) as Mob[]
   for(const data of mobs) {
     await prisma.mob.create({
       data
     })
   }
 
-  const items = (JSON.parse(readFileSync('./prisma/seed/items.json', { encoding: 'utf-8' }))) as Item[]
+  const items = (JSON.parse(readFileSync('./prisma/seed/backup/items.json', { encoding: 'utf-8' }))) as Item[]
   for(const data of items) {
     await prisma.item.create({
       data
     })
   }
 
-  const loots = (JSON.parse(readFileSync('./prisma/seed/loots.json', { encoding: 'utf-8' }))) as Loot[]
+  const loots = (JSON.parse(readFileSync('./prisma/seed/backup/loots.json', { encoding: 'utf-8' }))) as Loot[]
   for(const data of loots) {
     await prisma.loot.create({
       data

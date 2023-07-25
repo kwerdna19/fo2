@@ -25,10 +25,13 @@ import { DebouncedInput } from "../../DebouncedInput"
 import Link from "next/link";
 import { ItemSprite } from "~/components/ItemSprite";
 import { getSortButton } from "~/components/SortButton";
+import { GoldCount } from "~/components/GoldCount"
+import { DroppedByList } from "./DroppedByList"
+import { cn } from "~/utils/styles"
 
 
 type Data = RouterOutputs['item']['getAll']
-type Datum = Data[number]
+export type Datum = Data[number]
 const columnHelper = createColumnHelper<Datum>()
 
 export const columns = [
@@ -44,15 +47,16 @@ export const columns = [
     header: getSortButton('Name'),
   }),
   columnHelper.accessor('levelReq', {
-    id: 'levelReq',
-    // cant figure this out so nulls always on bottom
-    // sortingFn: (a, b) => {
-    //   if(a.original.levelReq === null || b.original.levelReq === null) {
-    //     return 1
-    //   }
-    //   return (a.original.levelReq ?? 0) - (b.original.levelReq ?? 0)
-    // },
     header: getSortButton('Level Req')
+  }),
+  columnHelper.accessor('sellPrice', {
+    header: getSortButton('Sell Price'),
+    cell: info => <GoldCount count={info.getValue()} />,
+  }),
+  columnHelper.accessor(row => row.droppedBy.map(d => d.mob.name).join(', '), {
+    id: 'dropped-by',
+    header: 'Dropped By',
+    cell: ({ row }) => <DroppedByList mobs={row.original.droppedBy}  />
   })
 ]
 
@@ -121,7 +125,7 @@ export function ItemTable({ data }: { data: Data }) {
                 return (<TableRow key={row.id} aria-expanded={row.getIsExpanded()} onClick={row.getToggleExpandedHandler()}>
                   {row.getVisibleCells().map((cell) => {
                     return (<TableCell key={cell.id}
-                      className="text-lg"
+                      className={cn("text-lg", cell.column.id === 'dropped-by' && 'p-0')}
                     >
                         {flexRender(
                           cell.column.columnDef.cell,

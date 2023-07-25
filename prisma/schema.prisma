@@ -28,7 +28,7 @@ model Mob {
     boss Boolean @default(false)
     drops Loot[]
     locations Location[]
-    atkSpeed Decimal?
+    atkSpeed Float?
     dmgMin Int?
     dmgMax Int?
 }
@@ -65,7 +65,7 @@ model Loot {
   item       Item     @relation(fields: [itemId], references: [id])
   itemId     String
   
-  dropRate   Decimal?
+  dropRate   Float?
 
   @@id([mobId, itemId])
 }
@@ -127,7 +127,7 @@ model Item {
     agi Int?
     int Int?
     armor Int?
-    atkSpeed Decimal?
+    atkSpeed Float?
     dmgMin Int?
     dmgMax Int?
 }
