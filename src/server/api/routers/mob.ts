@@ -41,7 +41,7 @@ export const router = createTRPCRouter({
     })
   }),
   getByName: publicProcedure.input(z.string()).query(({ ctx, input }) => {
-    return ctx.prisma.mob.findUniqueOrThrow({
+    return ctx.prisma.mob.findUnique({
       where: {
         name: input.replace(/(?:\b)([a-z])/g, V => V.toUpperCase()).replace(/-/g, ' ')
       },

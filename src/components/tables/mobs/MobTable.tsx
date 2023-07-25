@@ -15,7 +15,6 @@ import {
 } from "@tanstack/react-table"
 import { TbCrown as Crown, TbArrowDown as ArrowDown, TbArrowUp as ArrowUp } from "react-icons/tb";
 import { Fragment, useState } from "react"
-
 import { Button } from "~/components/ui/button"
 import {
   Table,
@@ -26,66 +25,18 @@ import {
   TableRow,
 } from "~/components/ui/table"
 import { type RouterOutputs } from "~/utils/api"
-import { MobSprite } from "./MobSprite"
+import { MobSprite } from "../../MobSprite"
 import { cn } from "~/utils/styles"
-import { ItemSprite } from "./ItemSprite"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "~/components/ui/tooltip"
-import { UnitSprite } from "./UnitSprite"
-import { DebouncedInput } from "./DebouncedInput"
-import { Checkbox } from "./ui/checkbox"
-import { GiHealthNormal as Health } from 'react-icons/gi'
+import { DebouncedInput } from "../../DebouncedInput"
+import { Checkbox } from "../../ui/checkbox"
 import Link from "next/link";
+import { DropsList } from "./DropsList";
+import { DropGold } from "./DropGold";
+import { MobHealth } from "./MobHealth";
 
 
-type Datum = RouterOutputs['mob']['getAll'][number]
+export type Datum = RouterOutputs['mob']['getAll'][number]
 const columnHelper = createColumnHelper<Datum>()
-
-function DropsList({ drops, className }: { drops: Datum['drops'], className?: string }) {
-
-  return (<div className={cn("flex flex-wrap items-center gap-x-4", className)}>
-  {drops.map(d => <div key={d.itemId}><TooltipProvider>
-    <Tooltip delayDuration={0}>
-      <TooltipTrigger className="block pt-1">
-        <ItemSprite
-          className="border-2 shadow-sm border-slate-200 bg-slate-50 rounded-sm"
-          url={d.item.spriteUrl}
-          name={d.item.name}
-          size="md"
-        />
-      </TooltipTrigger>
-      <TooltipContent side="bottom">
-      <p>{d.item.name}</p>
-    </TooltipContent>
-    </Tooltip>
-  </TooltipProvider>
-  <div className="text-sm pt-1 px-1 flex items-center space-x-1">
-    <div>
-    {d.item.sellPrice}  
-    </div>
-    <UnitSprite type="coin" />
-  </div>
-  </div>
-)}
-</div>)
-
-}
-
-function DropGold({ goldMin, goldMax, className }: { goldMin: number, goldMax: number, className?: string }) {
-
-  return (<div className={cn(className, "flex flex-row-reverse items-center gap-x-2")}>
-    {goldMax === goldMin ? goldMin : `${goldMin}-${goldMax}`}<UnitSprite type="coin" size="sm" /></div>)
-}
-
-function MobHealth({ health, className }: { health: number, className?: string }) {
-  return <div className={cn(className, "flex flex-row-reverse justify-center items-center gap-x-2")}>
-    <div>{health}</div><Health className="text-red-500 w-4 h-4" />
-    </div>
-}
 
 export const columns = [
   columnHelper.accessor('level', {

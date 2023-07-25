@@ -10,6 +10,8 @@ export const getBaseUrl = () => {
   return `http://localhost:${process.env.PORT ?? 3000}`; // dev SSR should use localhost
 };
 
+// For now, with NEXTJS App dir, I'll only be calling the routes directly from the server
+// @TODO / TBA - replace with client/server solution
 export const api = appRouter.createCaller({ prisma })
 
 // createTRPCProxyClient<AppRouter>({
