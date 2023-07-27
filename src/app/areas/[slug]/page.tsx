@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation"
-import AreaMap from "~/components/AreaMap"
+import AreaMap from "~/components/maps/SingleAreaMap"
 import { api } from "~/utils/api"
 
 // 1 day

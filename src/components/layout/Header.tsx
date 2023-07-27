@@ -5,55 +5,18 @@ import Link from "next/link"
 import { cn } from "~/utils/styles"
 import {
   NavigationMenu,
-  // NavigationMenuContent,
+  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  // NavigationMenuTrigger,
+  NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "~/components/ui/navigation-menu"
 import { UnitSprite } from "../UnitSprite"
 import { usePathname } from "next/navigation"
+import { RouterOutputs } from "~/utils/api"
 
-// const components: { title: string; href: string; description: string }[] = [
-//   {
-//     title: "Alert Dialog",
-//     href: "/docs/primitives/alert-dialog",
-//     description:
-//       "A modal dialog that interrupts the user with important content and expects a response.",
-//   },
-//   {
-//     title: "Hover Card",
-//     href: "/docs/primitives/hover-card",
-//     description:
-//       "For sighted users to preview content available behind a link.",
-//   },
-//   {
-//     title: "Progress",
-//     href: "/docs/primitives/progress",
-//     description:
-//       "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
-//   },
-//   {
-//     title: "Scroll-area",
-//     href: "/docs/primitives/scroll-area",
-//     description: "Visually or semantically separates content.",
-//   },
-//   {
-//     title: "Tabs",
-//     href: "/docs/primitives/tabs",
-//     description:
-//       "A set of layered sections of content—known as tab panels—that are displayed one at a time.",
-//   },
-//   {
-//     title: "Tooltip",
-//     href: "/docs/primitives/tooltip",
-//     description:
-//       "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
-//   },
-// ]
-
-export function Header() {
+export function Header({ areas }: { areas: RouterOutputs['area']['getAllQuick'] }) {
 
   const path = usePathname()
 
@@ -65,26 +28,10 @@ export function Header() {
         <UnitSprite type="gem" size="lg" />
         <h1>FO2 DB</h1>
       </Link>
-      <div className="my-2 border-r-2 self-stretch" />
-    <NavigationMenu>
+      <div className="pl-2 my-2 border-r-2 self-stretch" />
+      <div className="flex-1">
+      <NavigationMenu>
       <NavigationMenuList>
-        {/* <NavigationMenuItem>
-          <NavigationMenuTrigger>Components</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-              {components.map((component) => (
-                <ListItem
-                  key={component.title}
-                  title={component.title}
-                  href={component.href}
-                >
-                  {component.description}
-                </ListItem>
-              ))}
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem> */}
-
         <NavigationMenuItem>
           <NavigationMenuLink active={pathMatches('/mobs')} asChild className={navigationMenuTriggerStyle()}>
             <Link href="/mobs">
@@ -99,20 +46,40 @@ export function Header() {
             </Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuLink asChild>
+            <NavigationMenuTrigger>
+              <Link href="/areas">
+                Areas
+              </Link>
+            </NavigationMenuTrigger>
+          </NavigationMenuLink>
+          <NavigationMenuContent>
+            <ul className="gap-3 p-3 md:w-[300px] lg:w-[400px]">
+              <ListItem href="/areas" title="World Map">
+                Full interactive world map.
+              </ListItem>
+              <hr className="my-2"/>
+              {areas.map(area => <ListItem key={area.id} href={`/areas/${area.slug}`} title={area.name}>{area.note}</ListItem>)}
+            </ul>
+          </NavigationMenuContent>
+        </NavigationMenuItem>
+
       </NavigationMenuList>
     </NavigationMenu>
+      </div>
     </div>
   )
 }
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a">
+  Omit<React.ComponentPropsWithoutRef<"a">, 'href'> & { href: string }
 >(({ className, title, children, ...props }, ref) => {
   return (
     <li>
       <NavigationMenuLink asChild>
-        <a
+        <Link
           ref={ref}
           className={cn(
             "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
@@ -121,10 +88,10 @@ const ListItem = React.forwardRef<
           {...props}
         >
           <div className="text-sm font-medium leading-none">{title}</div>
-          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+          {children ? <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
             {children}
-          </p>
-        </a>
+          </p> : null}
+        </Link>
       </NavigationMenuLink>
     </li>
   )

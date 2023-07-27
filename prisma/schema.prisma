@@ -158,6 +158,9 @@ model Area {
   height    Int
   width     Int
   locations Location[]
+  region    Int
+  originXGlobal Int
+  originYGlobal Int
 }
 
 // type enum
