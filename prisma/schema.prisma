@@ -143,8 +143,12 @@ model Location {
   mob   Mob?   @relation(fields: [mobId], references: [id])
   mobId     String?
 
+  connectedArea   Area?   @relation(name: "portals", fields: [connectedAreaId], references: [id])
+  connectedAreaId String?
+
   @@unique([areaId, npcId])
   @@unique([areaId, mobId])
+
 }
 
 model Area {
@@ -161,6 +165,7 @@ model Area {
   region    Int
   originXGlobal Int
   originYGlobal Int
+  portals Location[] @relation(name: "portals")
 }
 
 // type enum
