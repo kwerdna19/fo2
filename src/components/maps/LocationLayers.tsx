@@ -2,7 +2,7 @@
 import { LayerGroup, LayersControl, Marker, Popup } from "react-leaflet";
 import * as L from "leaflet";
 import { spriteWidth, spriteHeight } from "../MobSprite";
-import { RouterOutputs } from "~/utils/api";
+import { type RouterOutputs } from "~/utils/api";
 
 type Locations = NonNullable<RouterOutputs['area']['getBySlug']>['locations']
 
