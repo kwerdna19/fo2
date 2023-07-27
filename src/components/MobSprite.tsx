@@ -24,11 +24,24 @@ const rowCycles = 3
 const colSequence = [0,1,2,1]
 const dur = 333
 
-const spriteSheetWidth = 96
-const spriteSheetHeight = 192
+export const spriteSheetWidth = 96
+export const spriteSheetHeight = 192
 
-const spriteWidth = spriteSheetWidth/spriteCols
-const spriteHeight = spriteSheetHeight/spriteRows
+export const spriteWidth = spriteSheetWidth/spriteCols
+export const spriteHeight = spriteSheetHeight/spriteRows
+
+const defaultSprite = [2,1] as const
+
+// export const getSpriteCoordinates = (r: number, c: number, mult = 1) => {
+//   const imgWidth = mult*spriteSheetWidth
+//   const imgHeight = mult*spriteSheetHeight
+  
+//   const y = (r/spriteRows)*imgHeight
+//   const x = (c/spriteCols)*imgWidth
+
+//   return { x, y }
+
+// }
 
 
 export interface MobSpriteProps extends Variant { url: string, name: string, className?: string, animated?: boolean }
@@ -42,8 +55,8 @@ export const MobSprite = ({ url, name, className, animated = false, size = 'xs' 
 
 
   // (2,1) is default non-animated sprite slot
-  const [row, setRow] = useState(2)
-  const [colIndex, setColIndex] = useState(1)
+  const [row, setRow] = useState<number>(defaultSprite[0])
+  const [colIndex, setColIndex] = useState<number>(defaultSprite[1])
   const col = colSequence[colIndex]!
 
   useEffect(() => {

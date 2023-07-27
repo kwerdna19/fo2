@@ -152,10 +152,11 @@ model Area {
   createdAt DateTime @default(now())
   spriteUrl String
   updatedAt DateTime @updatedAt
-  spriteUrlBase String
   name      String @unique()
   slug      String @unique()
   note      String?
+  height    Int
+  width     Int
   locations Location[]
 }
 
