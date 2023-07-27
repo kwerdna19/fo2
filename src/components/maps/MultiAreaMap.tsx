@@ -41,7 +41,7 @@ export default function MultiAreaMap({ areas, bg }: { areas: Areas, bg?: string 
       style={{
         maxHeight: 600,
         backgroundColor: bg,
-        zIndex: -1
+        zIndex: 0
       }}
     >
       {areas.map(area => <MapBackground key={area.id} url={area.spriteUrl} height={area.height} width={area.width} x={area.originXGlobal} y={area.originYGlobal} />)}

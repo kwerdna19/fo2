@@ -1,6 +1,9 @@
 import { notFound } from "next/navigation"
-import AreaMap from "~/components/maps/SingleAreaMap"
 import { api } from "~/utils/api"
+import dynamic from 'next/dynamic'
+
+// import SingleAreaMap from "~/components/maps/SingleAreaMap"
+const SingleAreaMap = dynamic(() => import("~/components/maps/SingleAreaMap"), { ssr: false })
 
 // 1 day
 export const revalidate = 86400 // secs
@@ -27,6 +30,6 @@ export default async function Area({ params }: { params: Params }) {
 
   return <div className="w-full flex flex-col items-center gap-y-8">
     <h2 className="text-3xl">{area.name}</h2>
-    <AreaMap area={area} />
+    <SingleAreaMap area={area} />
   </div>
 }

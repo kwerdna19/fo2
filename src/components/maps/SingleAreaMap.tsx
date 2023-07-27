@@ -23,7 +23,7 @@ export default function SingleAreaMap({ area }: { area: Area }) {
       className="border shadow-lg border-slate-500 flex-1 rounded-md w-full max-w-screen-lg min-h-[24rem] box-border"
       style={{
         maxHeight: height/4,
-        zIndex: -1
+        zIndex: 0
       }}
     >
       <MapBackground url={url} height={height} width={width} />
