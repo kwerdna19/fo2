@@ -26,12 +26,12 @@ export function LocationLayers({ id, locations }: { id: string; locations: Locat
               iconSize: [spriteWidth * 2, spriteHeight * 2],
             })}
           >
-            <Popup minWidth={56*(mob.drops.length || 1) + 8}>
+            <Popup minWidth={56*(mob.drops.length || 1) + 8} closeButton={false}>
               <div className="p-2 pt-1">
                 <Link href={`/mobs/${mob.slug}`} className="text-sm font-bold">
                   {mob.name}
                 </Link>
-                <DropsList className="mt-2" size="sm" drops={mob.drops} infoInToolTip />
+                <DropsList className="mt-1" size="sm" drops={mob.drops} infoInToolTip />
               </div>
             </Popup>
           </Marker>;

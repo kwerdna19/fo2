@@ -7,9 +7,9 @@
 }
 
 .leaflet-popup-content {
-  margin: 0
+  margin: 0 !important;
 }
 
 .leaflet-container a {
-  color: unset;
+  color: unset !important;
 }
