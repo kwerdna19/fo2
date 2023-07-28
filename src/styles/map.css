@@ -5,3 +5,11 @@
   background-position: 50% 66.666%;
   background-size: 300% 400%;
 }
+
+.leaflet-popup-content {
+  margin: 0
+}
+
+.leaflet-container a {
+  color: unset;
+}

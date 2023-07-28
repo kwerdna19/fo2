@@ -23,7 +23,20 @@ export const router = createTRPCRouter({
       include: {
         locations: {
           include: {
-            mob: true,
+            mob: {
+              include: {
+                drops: {
+                  include: {
+                    item: true
+                  },
+                  orderBy: {
+                    item: {
+                      sellPrice: 'asc'
+                    }
+                  }
+                }
+              }
+            },
             npc: true
           }
         }
@@ -38,11 +51,24 @@ export const router = createTRPCRouter({
       include: {
         locations: {
           include: {
-            mob: true,
+            mob: {
+              include: {
+                drops: {
+                  include: {
+                    item: true
+                  },
+                  orderBy: {
+                    item: {
+                      sellPrice: 'asc'
+                    }
+                  }
+                }
+              }
+            },
             npc: true
           }
         }
-      }
+      },
     })
   })
 });
