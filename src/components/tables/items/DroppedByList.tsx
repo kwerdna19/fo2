@@ -29,9 +29,9 @@ export function DroppedByList({ mobs, className }: { mobs: Datum['droppedBy']; c
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
-      {d.dropRate !== null ? <div className="text-sm pt-1 px-1 flex items-center space-x-1">
-        {d.dropRate}
-      </div> : null}
+      <div className="text-sm pb-1 -mt-3 px-1 flex justify-center space-x-1">
+        <>{d.dropRate ?? '?'}<span className="pl-0.5 mr-1">%</span></>
+      </div>
     </div>
     )}
   </div>);
