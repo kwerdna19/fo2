@@ -146,9 +146,6 @@ model Location {
   connectedArea   Area?   @relation(name: "portals", fields: [connectedAreaId], references: [id])
   connectedAreaId String?
 
-  @@unique([areaId, npcId])
-  @@unique([areaId, mobId])
-
 }
 
 model Area {
