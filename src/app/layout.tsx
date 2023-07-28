@@ -1,5 +1,6 @@
 import '~/styles/globals.css'
 import { type Metadata } from "next"
+import { Analytics } from '@vercel/analytics/react';
 import { Footer } from '~/components/layout/Footer'
 import { Header } from '~/components/layout/Header'
 import { api } from '~/utils/api'
@@ -36,6 +37,7 @@ export default async function RootLayout({
         <footer className="flex p-2 sm:p-3 md:p-4 lg:p-5 max-w-screen-2xl w-full">
           <Footer />
         </footer>
+        <Analytics />
       </body>
     </html>
   )
