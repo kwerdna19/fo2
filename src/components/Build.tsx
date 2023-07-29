@@ -5,6 +5,7 @@ import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from "./ui/t
 import Link from "next/link"
 import { ItemSprite } from "./ItemSprite"
 import { Slot, getPossibleBuildFromItems, playerSlots } from "~/utils/fo"
+import { ItemStats } from "./tables/items/ItemStats"
 
 function BuildItem({ item, tooltipSide }: { item: Item, tooltipSide: 'left' | 'right' }) {
 
@@ -20,8 +21,9 @@ function BuildItem({ item, tooltipSide }: { item: Item, tooltipSide: 'left' | 'r
           />
         </Link>
       </TooltipTrigger>
-      <TooltipContent side={tooltipSide} sideOffset={10}>
-        <div>{item.name}</div>
+      <TooltipContent side={tooltipSide} sideOffset={10} className="min-w-[8rem]">
+        <div className="mb-2 font-bold">{item.name}</div>
+        <ItemStats stats={item} />
       </TooltipContent>
     </Tooltip>
   </TooltipProvider>)
