@@ -28,44 +28,31 @@ import { getSortButton } from "~/components/SortButton";
 import { GoldCount } from "~/components/GoldCount"
 import { DroppedByList } from "./DroppedByList"
 import { cn } from "~/utils/styles"
+import { ItemStats } from "./ItemStats"
 import { type Item } from "@prisma/client"
+import { getAverageDamage, getSumOfBasicStats, isWeapon } from "~/utils/fo"
 
 
 type Data = RouterOutputs['item']['getAll']
 export type Datum = Data[number]
 const columnHelper = createColumnHelper<Datum>()
 
-function ItemStats(props: { stats: Pick<Item, 'str' | 'agi' | 'armor' | 'int' | 'sta'>, className?: string }) {
+function WeaponStats(props: { stats: Pick<Item, 'atkSpeed' | 'dmgMin' | 'dmgMax'>; className?: string; }) {
 
-
-  const { className, stats: inputItem } = props
-
-  const armor = inputItem.armor
-
-  const stats = (['str', 'agi', 'int', 'sta'] as const).filter(s => inputItem[s] !== null).map(s => {
-    return {
-      stat: s.toUpperCase(),
-      value: inputItem[s]!
-    }
-  })
-  //.sort((a, b) => b.value - a.value)
-
-
-  if(stats.length === 0 && !armor) {
-    return null
+  const { className, stats } = props;
+  const { atkSpeed, dmgMax, dmgMin } = stats
+  if (atkSpeed === null || dmgMax === null || dmgMin === null) {
+    return null;
   }
 
   return (<div className={cn(className, "text-sm")}>
-    {stats.length > 0 ? <div className="bg-slate-200 w-16 space-y-1.5 rounded-md p-1 mb-1">
-      {stats.map(({ stat, value }) => {
-            return (<div key={stat} className="flex justify-between">
-            <div className="bg-slate-300 w-6 text-center rounded-sm">{value > 0 ? `+${value}` : value}</div>
-            <div className="flex-1 text-center pl-1">{stat}</div>
-        </div>)
-      })}
-    </div> : null}
-    {armor ? <div className="p-1"><span>{armor > 0 ? `+${armor}` : armor}</span> <span>Armor</span></div> : null}
-  </div>)
+    <div>
+      ATK SP: {atkSpeed*1000}
+    </div>
+    <div>
+      BASE DMG: {dmgMin}-{dmgMax}
+    </div>
+  </div>);
 
 }
 
@@ -82,12 +69,25 @@ export const columns = [
     header: getSortButton('Name'),
   }),
   columnHelper.accessor('levelReq', {
-    header: getSortButton('Level Req')
+    header: getSortButton('Level')
   }),
-  columnHelper.display({
+  // sort will be by sum of basic stats, using armor as a secondary sort
+  columnHelper.accessor(row => getSumOfBasicStats(row) + (row.armor ?? 0)/1_000_000, {
     id: 'stats',
-    header: 'Stats',
+    header: getSortButton('Stats'),
     cell: ({ row }) => <ItemStats stats={row.original} />
+  }),
+  columnHelper.accessor(row => isWeapon(row) ? getAverageDamage(row) : null, {
+    id: 'damage',
+    header: getSortButton('Damage'),
+    cell: ({ row }) => isWeapon(row.original) ? `${row.original.dmgMin}-${row.original.dmgMax}` : null
+  }),
+  columnHelper.accessor('atkSpeed', {
+    header: getSortButton('Atk Speed'),
+    cell: info => {
+      const sp = info.getValue()
+      return sp && sp*1000
+    }
   }),
   columnHelper.accessor('sellPrice', {
     header: getSortButton('Sell Price'),
