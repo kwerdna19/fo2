@@ -70,22 +70,6 @@ model Loot {
   @@id([mobId, itemId])
 }
 
-enum Slot {
-  HEAD
-  FACE
-  BACK
-  SHOULDERS
-  CHEST
-  LEGS
-  LEFT_RING
-  RIGHT_RING
-  MAIN_HAND
-  LEFT_TRINKET
-  RIGHT_TRINKET
-  OFFHAND
-  GUILD
-}
-
 enum EquippableType {
   HEAD
   FACE
