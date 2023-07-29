@@ -1,20 +1,20 @@
-import { type EquippableType, type Item } from "@prisma/client";
+import { EquippableType, type Item } from "@prisma/client";
 
 // not exported from prisma client yet?
 export enum Slot {
-  HEAD = 1,
-  FACE = 2,
-  BACK = 3,
-  SHOULDERS = 4,
-  CHEST = 5,
-  LEGS = 6,
-  LEFT_RING = 7,
-  RIGHT_RING = 8,
-  MAIN_HAND = 9,
-  LEFT_TRINKET = 10,
-  RIGHT_TRINKET = 11,
-  GUILD = 12,
-  OFFHAND = 13
+  HEAD,
+  FACE,
+  BACK,
+  SHOULDERS,
+  CHEST,
+  LEGS,
+  LEFT_RING,
+  RIGHT_RING,
+  MAIN_HAND,
+  LEFT_TRINKET,
+  RIGHT_TRINKET,
+  GUILD,
+  OFFHAND
 }
 
 export const equipmentSlotConfig: Record<EquippableType, Slot | Slot[]> = {
@@ -30,6 +30,17 @@ export const equipmentSlotConfig: Record<EquippableType, Slot | Slot[]> = {
   OFFHAND: Slot.OFFHAND,
   GUILD: Slot.GUILD,
 }
+
+export const visibleEquipment = [
+  EquippableType.HEAD,
+  EquippableType.FACE,
+  EquippableType.BACK,
+  EquippableType.SHOULDERS,
+  EquippableType.CHEST,
+  EquippableType.LEGS,
+  EquippableType.MAIN_HAND,
+  EquippableType.OFFHAND
+] as const
 
 type WeaponKey = 'dmgMin' | 'dmgMax' | 'atkSpeed'
 type Weapon<T extends Item = Item> = {[K in keyof T]: K extends WeaponKey ? NonNullable<T[K]> : T[K] }
@@ -71,7 +82,6 @@ export const getBuildFromItems = (items: Item[]): Build => {
 }
 
 const equipTypeWorksForSlot = (e: EquippableType | null, s: Slot) => {
-  console.log('es', e,s)
   if(!e) {
     return false
   }
@@ -97,6 +107,22 @@ export const playerSlots = [
   Slot.OFFHAND,
   Slot.GUILD,
 ]
+
+export const slotBackgroundSpriteMap: Record<Slot, string> = {
+  [Slot.HEAD]: '/sprites/item-bg/item-bg-head-icon.png',
+  [Slot.FACE]: '/sprites/item-bg/item-bg-face-icon.png',
+  [Slot.BACK]: '/sprites/item-bg/item-bg-back-icon.png',
+  [Slot.SHOULDERS]: '/sprites/item-bg/item-bg-shoulder-icon.png',
+  [Slot.CHEST]: '/sprites/item-bg/item-bg-body-icon.png',
+  [Slot.LEGS]: '/sprites/item-bg/item-bg-leg-icon.png',
+  [Slot.LEFT_RING]: '/sprites/item-bg/item-bg-ring1-icon.png',
+  [Slot.RIGHT_RING]: '/sprites/item-bg/item-bg-ring1-icon.png',
+  [Slot.MAIN_HAND]: '/sprites/item-bg/item-bg-weapon-icon.png',
+  [Slot.LEFT_TRINKET]: '/sprites/item-bg/item-bg-trinket1-icon.png',
+  [Slot.RIGHT_TRINKET]: '/sprites/item-bg/item-bg-trinket1-icon.png',
+  [Slot.GUILD]: '/sprites/item-bg/item-bg-guild-icon.png',
+  [Slot.OFFHAND]: '/sprites/item-bg/item-bg-offhand-icon.png',
+} 
 
 export const getPossibleBuildFromItems = (items: Item[]): PossibleBuild => {
 

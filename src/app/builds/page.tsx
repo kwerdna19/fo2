@@ -13,12 +13,11 @@ export default async function Builds() {
 
   const items = await api.item.getMaxes({
     stat: 'str',
-    maxLevel: 16
   })
 
 
   return <div className="w-full flex flex-col items-center">
     <div>STR</div>
-    <Build items={items} />
+    <Build items={items} stat="str" opt="max" />
   </div>
 }
