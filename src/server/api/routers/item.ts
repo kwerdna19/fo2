@@ -61,7 +61,7 @@ export const router = createTRPCRouter({
     })
   }),
   // this can return multiple rows for the same stat is they have equal stat of interest (tied for max)
-  getMaxes: publicProcedure.input(z.object({
+  getSuperlatives: publicProcedure.input(z.object({
     stat: z.enum(['str', 'int', 'sta', 'agi', 'armor']),
     type: z.enum(['min', 'max']).default('max'),
     maxLevel: z.number().optional()
@@ -71,7 +71,7 @@ export const router = createTRPCRouter({
       WITH q AS
       (
         SELECT
-            equip, ${type.toUpperCase()}(${stat})
+            equip, ${type.toUpperCase()}("${stat}")
         FROM
           "Item"
         WHERE

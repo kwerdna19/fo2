@@ -66,8 +66,8 @@ export function Header({ areas }: { areas: RouterOutputs['area']['getAllQuick'] 
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink active={pathMatches('/builds')} asChild className={navigationMenuTriggerStyle()}>
-            <Link href="/builds">
-              Builds
+            <Link href="/max-builds">
+              Max Builds
             </Link>
           </NavigationMenuLink>
         </NavigationMenuItem>

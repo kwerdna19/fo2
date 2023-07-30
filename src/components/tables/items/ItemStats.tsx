@@ -1,8 +1,9 @@
 'use client';
 import { cn } from "~/utils/styles";
 import { type Item } from "@prisma/client";
+import { BasicStats } from "~/utils/fo";
 
-export function ItemStats(props: { stats: Pick<Item, 'armor' | 'str' | 'agi' | 'int' | 'sta'>; className?: string; }) {
+export function ItemStats(props: { stats: Pick<Item, BasicStats>; className?: string; }) {
 
 
   const { className, stats: inputItem } = props;

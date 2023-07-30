@@ -4,10 +4,10 @@ import { BsGithub } from 'react-icons/bs'
 
 
 const credits = [
-  <>Created by <code>Ak</code></>,
-  <>Data organized by <code>MeanManSlayer</code></>,
-  <>Fantasy Online 2 creator <code>Gamer</code></>,
-  <>Sprite artwork by <code>Lighterthief</code></>
+  <>Site creator: <code>Ak</code></>,
+  <>Data contributions: <code>MeanManSlayer</code>, <code>Deleria</code></>,
+  <>Sprite artwork: <code>Lighterthief</code></>,
+  <>Fantasy Online 2: <code>Gamer</code></>,
 ]
 
 
