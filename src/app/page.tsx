@@ -15,7 +15,7 @@ export default function App() {
     <NavCard
       href="/items"
       label="Items"
-      image={<ItemSprite size="md" url="/sprites/item/long_sword.png" name="long sword" />}
+      image={<ItemSprite size="md" url="/sprites/item/weapons-sword-long-icon.png" name="long sword" />}
     />
   </div>
 }
