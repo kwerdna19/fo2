@@ -13,7 +13,7 @@ const stats = ['agi', 'str', 'sta', 'int', 'armor'] as const
 
 export default async function Builds() {
 
-  const getSuperlatives = (type: RouterInputs['item']['getSuperlatives']['type']) => Promise.all(stats.map(s => api.item.getSuperlatives({
+  const getSuperlatives = (type: RouterInputs['item']['getSuperlatives']['type']) => Promise.all(stats.map(async s => (await api()).item.getSuperlatives({
     stat: s,
     type
   }))).then(([agi, str, sta, int, armor]) => ({ agi, str, sta, int, armor }))
