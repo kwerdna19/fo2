@@ -5,7 +5,7 @@ import { BsGithub } from 'react-icons/bs'
 
 const credits = [
   <>Site creator: <code>Ak</code></>,
-  <>Data contributions: <code>MeanManSlayer</code>, <code>Deleria</code></>,
+  <>Data contributions: <code>MeanManSlayer</code>, <code>Deliria</code></>,
   <>Sprite artwork: <code>Lighterthief</code></>,
   <>Fantasy Online 2: <code>Gamer</code></>,
 ]
