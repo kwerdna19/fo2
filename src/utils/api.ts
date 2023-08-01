@@ -2,7 +2,7 @@
 import { type inferRouterInputs, type inferRouterOutputs } from "@trpc/server";
 // import superjson from "superjson";
 import { appRouter, type AppRouter } from "~/server/api/root";
-import { prisma } from '../server/db'
+import { createTRPCContext } from "~/server/api/trpc";
 
 export const getBaseUrl = () => {
   if (typeof window !== "undefined") return ""; // browser should use relative url
@@ -12,7 +12,9 @@ export const getBaseUrl = () => {
 
 // For now, with NEXTJS App dir, I'll only be calling the routes directly from the server
 // @TODO / TBA - replace with client/server solution
-export const api = appRouter.createCaller({ prisma })
+export const api = async () => {
+  return appRouter.createCaller(await createTRPCContext())
+}
 
 // createTRPCProxyClient<AppRouter>({
 //   transformer: superjson,

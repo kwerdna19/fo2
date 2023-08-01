@@ -9,6 +9,6 @@ export const metadata = {
 }
 
 export default async function Mobs() {
-  const mobs = await api.mob.getAll()
+  const mobs = await (await api()).mob.getAll()
   return <MobTable data={mobs} />
 }

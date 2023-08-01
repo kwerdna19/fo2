@@ -9,6 +9,6 @@ export const metadata = {
 }
 
 export default async function Mobs() {
-  const items = await api.item.getAll()
+  const items = await (await api()).item.getAll()
   return <ItemTable data={items} />
 }

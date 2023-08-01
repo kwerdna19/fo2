@@ -12,7 +12,7 @@ export const metadata = {
 }
 
 export default async function Areas() {
-  const areas = await api.area.getAllPopulated()
+  const areas = await (await api()).area.getAllPopulated()
 
 
   return <div className="w-full flex flex-col items-center gap-y-6">

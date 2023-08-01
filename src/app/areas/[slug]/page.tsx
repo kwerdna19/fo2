@@ -11,7 +11,7 @@ export const revalidate = 86400 // secs
 interface Params { slug: string }
 
 export async function generateMetadata({ params }: { params: Params }) {
-  const area = await api.area.getBySlug(params.slug)
+  const area = await (await api()).area.getBySlug(params.slug)
   if(!area) {
     return {}
   }
@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: { params: Params }) {
 
 export default async function Area({ params }: { params: Params }) {
 
-  const area = await api.area.getBySlug(params.slug)
+  const area = await (await api()).area.getBySlug(params.slug)
 
   if(!area) {
     notFound()

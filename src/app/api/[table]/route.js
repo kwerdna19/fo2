@@ -33,7 +33,7 @@ const handler = async (request, { params }) => {
       })
     }
 
-    const data = await api[table][fn](input)
+    const data = await (await api())[table][fn](input)
     return NextResponse.json(data, {
       status: 200,
       headers: corsHeaders
