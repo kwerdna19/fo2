@@ -4,16 +4,14 @@ import { z } from "zod";
 import TextField from "./controlled/TextField";
 import { type ReactNode } from "react";
 import { Button } from "../ui/button";
-import { itemsSchema, locationsSchema, nameSchema, selectedAreaSchema } from "./controlled/schemas";
-import AreaSelect from "./controlled/AreaSelect";
+import { locationsSchema, nameSchema, saleItemsSchema } from "./controlled/schemas";
 import LocationsMultiField from "./controlled/LocationsMultiField";
-import ItemsMultiField from "./controlled/ItemsMultiField";
+import SaleItemsMultiField from "./controlled/SaleItemsMultiField";
 
 const mapping = [
   [nameSchema, TextField],
-  [selectedAreaSchema, AreaSelect],
   [locationsSchema, LocationsMultiField],
-  [itemsSchema, ItemsMultiField]
+  [saleItemsSchema, SaleItemsMultiField]
   // [z.boolean(), CheckBoxField],
   // [z.number(), NumberField],
 ] as const;

@@ -93,7 +93,7 @@ export default function LocationsMultiField({ className, areas }: { className?: 
                 {errMessage}
               </p> : null}  */}
             </div>
-            <div className="grid grid-cols-5 gap-x-2 items-center">
+            <div className="grid grid-cols-5 gap-x-2 items-center justify-between">
               <Input
                 className="col-span-2"
                 type="number"
@@ -152,13 +152,13 @@ export default function LocationsMultiField({ className, areas }: { className?: 
                 </DialogContent>
               </Dialog>
             </div>
-              {i > 0 ? <Button size="icon" variant="destructive" onClick={() => {
+              <Button size="icon" variant="destructive" onClick={() => {
                   field.onChange((field.value ?? []).filter((_, index) => {
                     return index !== i
                   }))
               }}>
                 <LuTrash2 />
-            </Button> : null}
+            </Button>
           </div>
         })}
         

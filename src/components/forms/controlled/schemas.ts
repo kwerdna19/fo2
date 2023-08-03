@@ -22,7 +22,12 @@ export const locationsSchema = z.object({
   areaId: z.string()
 }).array().describe('Locations')
 
-export const itemsSchema = z.object({
+export const itemSchema = z.object({
   id: z.string(),
   name: z.string(),
-}).array().describe('Items')
+}).describe('Item')
+
+export const saleItemsSchema = z.object({
+  item: itemSchema,
+  price: z.number(),
+}).array().describe('Sale Items')

@@ -3,7 +3,7 @@
 'use client'
 import { z } from "zod"
 import { Form } from "~/components/forms/Form"
-import { coordinatesSchema, itemsSchema, locationsSchema, nameSchema, selectedAreaSchema } from "./controlled/schemas"
+import { locationsSchema, nameSchema, saleItemsSchema } from "./controlled/schemas"
 import { useForm } from "react-hook-form"
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type Item, type Area } from "@prisma/client"
@@ -13,7 +13,7 @@ const schema = z.object({
   // area: selectedAreaSchema,
   // coordinates: coordinatesSchema
   locations: locationsSchema,
-  items: itemsSchema
+  items: saleItemsSchema
 })
 
 type Schema = z.infer<typeof schema>
