@@ -3,6 +3,7 @@ import {
   type DefaultSession,
 } from "next-auth";
 import { authOptions } from "./options";
+import { type User } from "@prisma/client";
 
 
 export const getServerSessionRsc = () => getServerSession(authOptions)
@@ -10,13 +11,11 @@ export const getServerSessionRsc = () => getServerSession(authOptions)
 
 declare module "next-auth" {
   interface Session extends DefaultSession {
-    user: DefaultSession["user"] & {
-      id: string;
-      // ...other properties
-      // role: UserRole;
-    };
+    user: User;
   }
 
+
+  interface AdapterUser extends User {}
   // interface User {
   //   // ...other properties
   //   // role: UserRole;
