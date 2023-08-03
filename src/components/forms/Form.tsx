@@ -4,10 +4,14 @@ import { z } from "zod";
 import TextField from "./controlled/TextField";
 import { type ReactNode } from "react";
 import { Button } from "../ui/button";
-import { nameSchema } from "./controlled/schemas";
+import { coordinatesSchema, nameSchema, selectedAreaSchema } from "./controlled/schemas";
+import AreaSelect from "./controlled/AreaSelect";
+import MapCoordinates from "./controlled/MapCoordinates";
 
 const mapping = [
   [nameSchema, TextField],
+  [selectedAreaSchema, AreaSelect],
+  [coordinatesSchema, MapCoordinates]
   // [z.boolean(), CheckBoxField],
   // [z.number(), NumberField],
 ] as const;

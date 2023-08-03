@@ -8,7 +8,7 @@ import { LocationLayers } from "./LocationLayers";
 
 type Area = NonNullable<RouterOutputs['area']['getBySlug']>
 
-export default function SingleAreaMap({ area }: { area: Area }) {
+export default function SingleAreaMap({ area }: { area: Pick<Area, 'id' | 'spriteUrl' | 'height' | 'width' | 'locations'> }) {
 
   const { spriteUrl: url, height, width, locations } = area
 
@@ -27,6 +27,6 @@ export default function SingleAreaMap({ area }: { area: Area }) {
       }}
     >
       <MapBackground url={url} height={height} width={width} />
-      <LocationLayers id={area.id} locations={locations}  />
+      {/* <LocationLayers id={area.id} locations={locations}  /> */}
   </MapContainer>)
 }

@@ -11,7 +11,9 @@ export const router = createTRPCRouter({
         id: true,
         name: true,
         slug: true,
-        note: true
+        spriteUrl: true,
+        width: true,
+        height: true
       }
     })
   }),
