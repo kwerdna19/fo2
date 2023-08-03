@@ -27,6 +27,6 @@ export default function SingleAreaMap({ area }: { area: Pick<Area, 'id' | 'sprit
       }}
     >
       <MapBackground url={url} height={height} width={width} />
-      {/* <LocationLayers id={area.id} locations={locations}  /> */}
+      <LocationLayers id={area.id} locations={locations}  />
   </MapContainer>)
 }
