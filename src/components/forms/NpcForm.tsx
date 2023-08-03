@@ -3,37 +3,44 @@
 'use client'
 import { z } from "zod"
 import { Form } from "~/components/forms/Form"
-import { coordinatesSchema, nameSchema, selectedAreaSchema } from "./controlled/schemas"
-import { useForm, useWatch } from "react-hook-form"
+import { coordinatesSchema, itemsSchema, locationsSchema, nameSchema, selectedAreaSchema } from "./controlled/schemas"
+import { useForm } from "react-hook-form"
 import { zodResolver } from '@hookform/resolvers/zod';
+import { type Item, type Area } from "@prisma/client"
 
 const schema = z.object({
   name: nameSchema,
-  area: selectedAreaSchema,
-  coordinates: coordinatesSchema
+  // area: selectedAreaSchema,
+  // coordinates: coordinatesSchema
+  locations: locationsSchema,
+  items: itemsSchema
 })
 
 type Schema = z.infer<typeof schema>
 
 interface Props {
-  areas: Schema['area'][]
+  areas: Pick<Area, 'id' | 'name' | 'spriteUrl' | 'height' | 'width'>[]
+  items: Pick<Item, 'id' | 'name' | 'spriteUrl'>[]
 }
-
-export default function NpcForm({ areas }: Props) {
+ 
+export default function NpcForm({ areas, items }: Props) {
 
   const form = useForm<Schema>({ resolver: zodResolver(schema) });
-  const area = useWatch({ control: form.control, name: 'area' });
 
     return (<Form
         form={form}
         schema={schema}
         props={{
-          area: {
-            options: areas
+          locations: {
+            areas,
           },
-          coordinates: {
-            area
+          items: {
+            items
           }
+        }}
+        defaultValues={{
+          locations: [{}],
+          items: [{}]
         }}
         onSubmit={v => {
           console.log("SUBIMT", v)

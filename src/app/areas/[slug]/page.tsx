@@ -24,6 +24,7 @@ export default async function Area({ params }: { params: Params }) {
 
   const area = await (await api()).area.getBySlug(params.slug)
 
+
   if(!area) {
     notFound()
   }

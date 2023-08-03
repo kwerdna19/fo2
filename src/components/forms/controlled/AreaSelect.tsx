@@ -15,7 +15,7 @@ import { type selectedAreaSchema } from "./schemas";
 
 type Area = z.infer<typeof selectedAreaSchema>
 
-export default function AreaSelect({ className, options }: { className?: string, options: Area[] }) {
+export default function AreaSelect({ className, options }: { className?: string, options: Pick<Area, 'id' | 'name'>[] }) {
 
   const { label, placeholder, isOptional } = useFieldInfo();
   const { field, error } = useTsController<Area>();

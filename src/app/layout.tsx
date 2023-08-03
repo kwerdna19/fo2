@@ -1,4 +1,6 @@
 import '~/styles/globals.css'
+import 'leaflet/dist/leaflet.css';
+import '~/styles/map.css'
 import { type Metadata } from "next"
 import { Analytics } from '@vercel/analytics/react';
 import { Footer } from '~/components/layout/Footer'

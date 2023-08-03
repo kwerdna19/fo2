@@ -22,6 +22,18 @@ export const router = createTRPCRouter({
       }
     })
   }),
+  getAllQuick: publicProcedure.query(({ ctx }) => {
+    return ctx.prisma.item.findMany({
+      orderBy: {
+        name: 'asc'
+      },
+      select: {
+        id: true,
+        name: true,
+        spriteUrl: true
+      }
+    })
+  }),
   getById: publicProcedure.input(z.string()).query(({ ctx, input }) => {
     return ctx.prisma.item.findUniqueOrThrow({
       where: {

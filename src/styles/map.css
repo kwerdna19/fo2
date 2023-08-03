@@ -13,3 +13,18 @@
 .leaflet-container a {
   color: unset !important;
 }
+
+.location-input-selection {
+  height: 100%;
+  width: 100%;
+}
+
+.location-input-selection::after {
+  content: "📍";
+  font-size: 24px;
+  line-height: 24px;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+}
