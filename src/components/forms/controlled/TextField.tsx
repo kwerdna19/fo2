@@ -3,14 +3,12 @@ import { useTsController, useFieldInfo } from "@ts-react/form";
 import { Input } from "~/components/ui/input";
 import { cn } from "~/utils/styles";
 import { Label } from "~/components/ui/label";
-import { useId } from "react";
 
 
-export default function TextField({className}: { className?: string }) {
+export default function TextField({className, id = 'text-feld'}: { className?: string, id?: string }) {
 
   const { label, placeholder, isOptional } = useFieldInfo();
   const { field, error } = useTsController<string>();
-  const id = useId()
 
   const errMessage = error?.errorMessage
 

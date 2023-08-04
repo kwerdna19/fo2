@@ -3,7 +3,7 @@ import { useTsController, useFieldInfo } from "@ts-react/form";
 import { Input } from "~/components/ui/input";
 import { cn } from "~/utils/styles";
 import { Label } from "~/components/ui/label";
-import { useId, useState } from "react";
+import { useState } from "react";
 import { type z } from "zod";
 import { type saleItemsSchema } from "./schemas";
 import { type Item } from "@prisma/client";
@@ -44,7 +44,7 @@ export default function SaleItemsMultiField({ className, items }: { className?: 
       <Label className={cn(error && "text-destructive", className)}>{label}{isOptional ? null : <span className="pl-0.5 text-red-600">*</span>}</Label>
 
       <div className="space-y-4">
-        {(field.value ?? []).map(({ item: value = {}, price }, i) => {
+        {(field.value ?? []).map(({ item: value, price }, i) => {
 
 
         const setItem = (item: Items[number]['item'] | undefined) => {
@@ -78,16 +78,16 @@ export default function SaleItemsMultiField({ className, items }: { className?: 
                       {items.map((item) => (
                         <CommandItem
                           key={item.id}
-                          value={item.id}
+                          value={item.name}
                           onSelect={(currentValue) => {
-                            setItem(currentValue === value.id ? undefined : items.find((item) => item.id === currentValue))
+                            setItem(currentValue === value?.name ? undefined : item)
                             setOpen(o => ({...o, [i]: false}))
                           }}
                         >
                           <LuCheck
                             className={cn(
                               "mr-2 h-4 w-4",
-                              value.id === item.id ? "opacity-100" : "opacity-0"
+                              value?.id === item.id ? "opacity-100" : "opacity-0"
                             )}
                           />
                           <div className="flex items-center gap-x-4">

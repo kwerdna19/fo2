@@ -14,7 +14,7 @@ import { GoldCount } from "~/components/GoldCount";
 export function DropsList({ drops, className, infoInToolTip = false, size = 'md' }: { drops: Datum['drops']; className?: string; infoInToolTip?: boolean, size?: 'md' | 'sm' }) {
 
 
-  const getItemInfo = (dropRate: number | null, sellPrice: number | null) => (<div className="text-sm pt-1 px-1 flex items-center justify-between space-x-1">
+  const getItemInfo = (dropRate: number | null  | undefined, sellPrice: number | null) => (<div className="text-sm pt-1 px-1 flex items-center justify-between space-x-1">
   <div>
     <GoldCount size="xs" count={sellPrice} />
   </div>

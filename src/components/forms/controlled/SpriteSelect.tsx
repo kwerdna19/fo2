@@ -2,7 +2,6 @@
 import { useTsController, useFieldInfo } from "@ts-react/form";
 import { cn } from "~/utils/styles";
 import { Label } from "~/components/ui/label";
-import { useId } from "react";
 import {
   Select,
   SelectContent,
@@ -17,7 +16,7 @@ export default function SpriteSelect({ className, options }: { className?: strin
 
   const { label, placeholder, isOptional } = useFieldInfo();
   const { field, error } = useTsController<string>();
-  const id = useId()
+  const id = 'sprite-select'
 
   const errMessage = error?.errorMessage
 

@@ -18,6 +18,14 @@ export const router = createTRPCRouter({
               level: 'asc'
             }
           }
+        },
+        soldBy: {
+          include: {
+            npc: true
+          },
+          orderBy: {
+            price: 'asc'
+          }
         }
       }
     })

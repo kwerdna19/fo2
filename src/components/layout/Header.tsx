@@ -47,6 +47,13 @@ export function Header({ areas }: { areas: RouterOutputs['area']['getAllQuick'] 
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
+          <NavigationMenuLink active={pathMatches('/npcs')} asChild className={navigationMenuTriggerStyle()}>
+            <Link href="/npcs">
+              Npcs
+            </Link>
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
           <NavigationMenuLink asChild>
             <NavigationMenuTrigger>
               <Link href="/areas">

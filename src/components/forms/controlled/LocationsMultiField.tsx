@@ -3,7 +3,7 @@ import { useTsController, useFieldInfo } from "@ts-react/form";
 import { Input } from "~/components/ui/input";
 import { cn } from "~/utils/styles";
 import { Label } from "~/components/ui/label";
-import { useId, useState } from "react";
+import { useState } from "react";
 import { type z } from "zod";
 import { type locationsSchema } from "./schemas";
 import { type Area } from "@prisma/client";
@@ -39,7 +39,11 @@ export default function LocationsMultiField({ className, areas }: { className?: 
   const [coordInput, setCoordInput] = useState<Locations[number]['coordinates']>()
   const [dialogOpen, setDialogOpen] = useState<Record<number, boolean>>({})
 
+  // const { } = useFormState()
+
   const errMessage = error?.errorMessage
+
+  console.log('locations field', field.value)
 
   const onAdd = () => {
     field.onChange([...(field.value ?? []), {}])

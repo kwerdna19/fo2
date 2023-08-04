@@ -31,30 +31,12 @@ import { cn } from "~/utils/styles"
 import { ItemStats } from "./ItemStats"
 import { type Item } from "@prisma/client"
 import { getAverageDamage, getSumOfBasicStats, isWeapon } from "~/utils/fo"
+import { SoldByList } from "./SoldByList"
 
 
 type Data = RouterOutputs['item']['getAll']
 export type Datum = Data[number]
 const columnHelper = createColumnHelper<Datum>()
-
-function WeaponStats(props: { stats: Pick<Item, 'atkSpeed' | 'dmgMin' | 'dmgMax'>; className?: string; }) {
-
-  const { className, stats } = props;
-  const { atkSpeed, dmgMax, dmgMin } = stats
-  if (atkSpeed === null || dmgMax === null || dmgMin === null) {
-    return null;
-  }
-
-  return (<div className={cn(className, "text-sm")}>
-    <div>
-      ATK SP: {atkSpeed*1000}
-    </div>
-    <div>
-      BASE DMG: {dmgMin}-{dmgMax}
-    </div>
-  </div>);
-
-}
 
 export const columns = [
   columnHelper.display({
@@ -97,6 +79,11 @@ export const columns = [
     id: 'dropped-by',
     header: 'Dropped By',
     cell: ({ row }) => <DroppedByList mobs={row.original.droppedBy}  />
+  }),
+  columnHelper.accessor(row => row.soldBy.map(d => d.npc.name).join(', '), {
+    id: 'sold-by',
+    header: 'Sold By',
+    cell: ({ row }) => <SoldByList npcs={row.original.soldBy}  />
   })
 ]
 

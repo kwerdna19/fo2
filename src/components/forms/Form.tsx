@@ -1,24 +1,31 @@
 'use client'
-import { createTsForm } from "@ts-react/form";
+import { createTsForm, createUniqueFieldSchema } from "@ts-react/form";
 import { z } from "zod";
 import TextField from "./controlled/TextField";
 import { type ReactNode } from "react";
 import { Button } from "../ui/button";
-import { locationsSchema, nameSchema, saleItemsSchema, spriteSelectSchema } from "./controlled/schemas";
+import { locationsSchema, npcTypeSchema, saleItemsSchema } from "./controlled/schemas";
 import LocationsMultiField from "./controlled/LocationsMultiField";
 import SaleItemsMultiField from "./controlled/SaleItemsMultiField";
 import SpriteSelect from "./controlled/SpriteSelect";
+import SimpleSelect from "./controlled/SimpleSelect";
+import { LuLoader2 } from "react-icons/lu";
+
+export const spriteSelectSchema = createUniqueFieldSchema(z.string().describe('Sprite'), 'sprite')
 
 const mapping = [
-  [nameSchema, TextField],
-  [locationsSchema, LocationsMultiField],
-  [saleItemsSchema, SaleItemsMultiField],
-  [spriteSelectSchema, SpriteSelect]
+  [z.string(), TextField],
   // [z.boolean(), CheckBoxField],
   // [z.number(), NumberField],
+
+  // more custom
+  [locationsSchema, LocationsMultiField],
+  [saleItemsSchema, SaleItemsMultiField],
+  [spriteSelectSchema, SpriteSelect],
+  [npcTypeSchema, SimpleSelect],
 ] as const;
 
-function FormComponent({ children, className, onSubmit }: { children: ReactNode, className?: string, onSubmit: () => void }) {
+function FormComponent({ children, className, onSubmit, loading }: { children: ReactNode, className?: string, onSubmit: () => void, loading: boolean }) {
 
 
   return <form onSubmit={onSubmit} className={className}>
@@ -26,7 +33,10 @@ function FormComponent({ children, className, onSubmit }: { children: ReactNode,
       {children}
     </div>
     <div className="flex justify-end mt-12">
-      <Button type="submit">Submit</Button>
+      <Button disabled={loading} type="submit">
+        {loading && <LuLoader2 className="mr-2 h-4 w-4 animate-spin" />}
+        Submit
+      </Button>
     </div>
   </form>
 

@@ -2,7 +2,6 @@
 import { useTsController, useFieldInfo } from "@ts-react/form";
 import { cn } from "~/utils/styles";
 import { Label } from "~/components/ui/label";
-import { useId } from "react";
 import {
   Select,
   SelectContent,
@@ -19,7 +18,7 @@ export default function AreaSelect({ className, options }: { className?: string,
 
   const { label, placeholder, isOptional } = useFieldInfo();
   const { field, error } = useTsController<Area>();
-  const id = useId()
+  const id = 'area-select'
 
   const errMessage = error?.errorMessage
 

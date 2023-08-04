@@ -7,6 +7,7 @@ import { Footer } from '~/components/layout/Footer'
 import { Header } from '~/components/layout/Header'
 import { api } from '~/utils/api'
 import { NextAuthProvider } from '~/components/providers/NextAuthProvider';
+import { Toaster } from "~/components/ui/toaster"
 
 export const metadata: Metadata = {
   title: {
@@ -41,6 +42,7 @@ export default async function RootLayout({
           <footer className="flex p-2 sm:p-3 md:p-4 lg:p-5 max-w-screen-2xl w-full">
             <Footer />
           </footer>
+          <Toaster />
           <Analytics />
         </body>
       </html>

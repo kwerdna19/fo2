@@ -1,3 +1,5 @@
+import { NpcTable } from "~/components/tables/npcs/NpcTable"
+import { api } from "~/utils/api"
 
 
 // 1 day
@@ -7,9 +9,7 @@ export const metadata = {
   title: 'Npcs'
 }
 
-export default function Npcs() {
-  // const items = await (await api()).item.getAll()
-  return <div>
-    npcs
-  </div>
+export default async function Npcs() {
+  const npcs = await (await api()).npc.getAll()
+  return <NpcTable data={npcs} />
 }

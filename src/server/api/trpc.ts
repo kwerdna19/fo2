@@ -4,6 +4,8 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 import { prisma } from "~/server/db";
 import { getServerAuthSession } from "~/server/auth/util";
+import { satisfiesRole } from "../auth/roles";
+import { Role } from "@prisma/client";
 
 interface CreateContextOptions {
   session: Session | null;
@@ -59,4 +61,19 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
   });
 });
 
+/** Reusable middleware that enforces users are logged in before running the procedure. */
+const enforceUserIsMod = t.middleware(({ ctx, next }) => {
+  if (!ctx.session?.user || !satisfiesRole(Role.MODERATOR)(ctx.session.user.role)) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+  return next({
+    ctx: {
+      // infers the `session` as non-nullable
+      session: { ...ctx.session, user: ctx.session.user },
+    },
+  });
+});
+
 export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
+
+export const moderatorProcedure = t.procedure.use(enforceUserIsMod);
