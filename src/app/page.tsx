@@ -17,5 +17,10 @@ export default function App() {
       label="Items"
       image={<ItemSprite size="md" url="/sprites/item/weapons-sword-long-icon.png" name="long sword" />}
     />
+    <NavCard
+      href="/npcs"
+      label="Npcs"
+      image={<MobSprite size="md" url="/sprites/npcs/npc-storage-001q87.png" name="zutroy" className="-mt-12 mb-5 -ml-2 -mr-2" />}
+    />
   </div>
 }
