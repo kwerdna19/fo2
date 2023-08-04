@@ -3,11 +3,12 @@
 // import { api } from "~/utils/api"
 
 import { Role } from "@prisma/client"
-import { redirect } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
 import NpcForm from "~/components/forms/NpcForm"
 import { satisfiesRole } from "~/server/auth/roles"
 import { getServerSessionRsc } from "~/server/auth/util"
 import { api } from "~/utils/api"
+import { getListOfImages } from "~/utils/server"
 
 // 1 day
 export const revalidate = 86400 // secs
@@ -36,8 +37,14 @@ export default async function AddNpc() {
 
   const items = await (await api()).item.getAllQuick()
 
+  const sprites = getListOfImages('npcs')
+
+  if(!sprites) {
+    notFound()
+  }
+
     return <div className="w-full max-w-screen-xl">
     <h2 className="text-3xl mb-4">Add</h2>
-    <NpcForm areas={areas} items={items} />
+    <NpcForm areas={areas} items={items} sprites={sprites} />
   </div>
 }

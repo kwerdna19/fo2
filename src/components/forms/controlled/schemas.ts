@@ -1,6 +1,5 @@
+import { createUniqueFieldSchema } from "@ts-react/form";
 import { z } from "zod";
-
-
 
 export const nameSchema = z.string().describe('Name')
 
@@ -31,3 +30,6 @@ export const saleItemsSchema = z.object({
   item: itemSchema,
   price: z.number(),
 }).array().describe('Sale Items')
+
+
+export const spriteSelectSchema = createUniqueFieldSchema(z.string().url().describe('Sprite'), 'sprite')

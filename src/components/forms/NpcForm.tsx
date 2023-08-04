@@ -3,7 +3,7 @@
 'use client'
 import { z } from "zod"
 import { Form } from "~/components/forms/Form"
-import { locationsSchema, nameSchema, saleItemsSchema } from "./controlled/schemas"
+import { locationsSchema, nameSchema, saleItemsSchema, spriteSelectSchema } from "./controlled/schemas"
 import { useForm } from "react-hook-form"
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type Item, type Area } from "@prisma/client"
@@ -13,17 +13,19 @@ const schema = z.object({
   // area: selectedAreaSchema,
   // coordinates: coordinatesSchema
   locations: locationsSchema,
-  items: saleItemsSchema
+  items: saleItemsSchema,
+  sprite: spriteSelectSchema
 })
 
 type Schema = z.infer<typeof schema>
 
 interface Props {
   areas: Pick<Area, 'id' | 'name' | 'spriteUrl' | 'height' | 'width'>[]
-  items: Pick<Item, 'id' | 'name' | 'spriteUrl'>[]
+  items: Pick<Item, 'id' | 'name' | 'spriteUrl'>[],
+  sprites: string[]
 }
  
-export default function NpcForm({ areas, items }: Props) {
+export default function NpcForm({ areas, items, sprites }: Props) {
 
   const form = useForm<Schema>({ resolver: zodResolver(schema) });
 
@@ -36,6 +38,9 @@ export default function NpcForm({ areas, items }: Props) {
           },
           items: {
             items
+          },
+          sprite: {
+            options: sprites
           }
         }}
         defaultValues={{
