@@ -77,7 +77,7 @@ export const router = createTRPCRouter({
       data: {
         name,
         spriteUrl,
-        slug: name.replace(/\s/g, ' ').replace(/[^a-zA-Z\d]/g, '').toLowerCase(),
+        slug: name.replace(/\s+/g, '-').replace(/[^a-zA-Z\d]/g, '').toLowerCase(),
         type: type,
         locations: {
           createMany: {
