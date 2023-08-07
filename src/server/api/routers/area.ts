@@ -68,7 +68,18 @@ export const router = createTRPCRouter({
                 }
               }
             },
-            npc: true
+            npc: {
+              include: {
+                items: {
+                  include: {
+                    item: true
+                  },
+                  orderBy: {
+                    price: 'asc'
+                  }
+                }
+              }
+            },
           }
         }
       },
