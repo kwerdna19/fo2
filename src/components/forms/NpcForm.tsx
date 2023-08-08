@@ -1,46 +1,64 @@
 'use client'
-import { Form, spriteSelectSchema } from "~/components/forms/Form"
+import { Form } from "~/components/forms/Form"
 import { type Item, type Area } from "@prisma/client"
 import { useToast } from "~/components/ui/use-toast"
 import { useTransition } from "react"
-import { type RouterInputs, type RouterOutputs } from "~/utils/api"
-import { locationsSchema, nameSchema, npcTypeSchema, saleItemsSchema } from "./controlled/schemas"
+import { npcSchema, npcTypeSchema } from "./controlled/schemas"
 import { z } from "zod"
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { type RouterOutputs } from "~/utils/api"
+import { useRouter } from "next/navigation"
 
 
-const createNpcSchema = z.object({
-  name: nameSchema,
-  type: npcTypeSchema,
-  sprite: spriteSelectSchema,
-  locations: locationsSchema,
-  items: saleItemsSchema,
-})
+export type NpcSchema = z.infer<typeof npcSchema>
 
+type InputData = NonNullable<RouterOutputs['npc']['getBySlug']>
 interface Props {
   areas: Pick<Area, 'id' | 'name' | 'spriteUrl' | 'height' | 'width'>[]
   items: Pick<Item, 'id' | 'name' | 'spriteUrl'>[],
   sprites: string[],
-  onSubmit: (data: RouterInputs['npc']['create']) => Promise<RouterOutputs['npc']['create']>
+  onSubmit: (data: NpcSchema, originalId?: string) => Promise<RouterOutputs['npc']['create']>
+  initialValues?: InputData
 }
- 
-export default function NpcForm({ areas, items, sprites, onSubmit }: Props) {
+
+const getFormDataFromData = (npc: InputData): NpcSchema => {
+  return {
+    items: npc.items.map(({ item, price }) => ({
+      id: item.id,
+      item,
+      price
+    })),
+    locations: npc.locations.map(({ id, areaId, x, y }) => ({
+      id,
+      areaId,
+      coordinates: { x, y }
+    })),
+    sprite: z.string().brand('sprite').parse(npc.spriteUrl),
+    name: npc.name,
+    type: npcTypeSchema.parse(npc.type)
+  }
+}
+
+export default function NpcForm({ areas, items, sprites, onSubmit, initialValues }: Props) {
 
     const [isPending, startTransition] = useTransition()
 
-    const form = useForm<z.infer<typeof createNpcSchema>>({
-      resolver: zodResolver(createNpcSchema),
-      reValidateMode: "onSubmit"
+    const form = useForm<NpcSchema>({
+      resolver: zodResolver(npcSchema),
+      values: initialValues && getFormDataFromData(initialValues),
     });
 
     const { toast } = useToast()
+    const router = useRouter()
 
     return (<Form
-        schema={createNpcSchema}
+        schema={npcSchema}
         form={form}
         formProps={{
-          loading: isPending
+          loading: isPending,
+          dirty: form.formState.isDirty,
+          button: initialValues ? 'Update' : 'Create'
         }}
         props={{
           locations: {
@@ -53,22 +71,22 @@ export default function NpcForm({ areas, items, sprites, onSubmit }: Props) {
             options: sprites
           }
         }}
-        defaultValues={{
-          locations: [],
-          items: [],
-          sprite: '',
-          name: '',
-          type: 'Quest'
-        }}
         onSubmit={v => {
           startTransition(async () => {
-            console.log('submitting', v)
-            const result = await onSubmit(v)
+            const response = await onSubmit(v, initialValues?.id)
+            if(response.slug !== initialValues?.slug) {
+              if(initialValues) {
+                router.replace(`/npcs/${response.slug}/edit`)
+              } else {
+                router.push(`/npcs/${response.slug}`)
+              }
+            } else {
+              router.refresh()
+            }
             toast({
               title: "Success",
-              description: `Created ${result.name}`
+              description: initialValues ? 'Updated' : 'Created'
             })
-            form.reset()
           })
         }}
     />)

@@ -1,7 +1,3 @@
-// import { notFound } from "next/navigation"
-// import { ItemSprite } from "~/components/ItemSprite"
-// import { api } from "~/utils/api"
-
 import { Role } from "@prisma/client"
 import { notFound, redirect } from "next/navigation"
 import NpcForm from "~/components/forms/NpcForm"
@@ -14,17 +10,11 @@ import { addNpc } from "./actions"
 // 1 day
 export const revalidate = 86400 // secs
 
-// export async function generateMetadata({ params }: { params: Params }) {
-//   const item = await (await api()).item.getBySlug(params.slug)
-//   if(!item) {
-//     return {}
-//   }
-//   return {
-//     title: item.name,
-//   }
-// }
+export const metadata = {
+  title: 'Add Npc'
+}
 
-export default async function AddNpc() {
+export default async function EditNpc() {
 
   const session = await getServerSessionRsc()
 

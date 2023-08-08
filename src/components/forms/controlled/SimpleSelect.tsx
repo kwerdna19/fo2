@@ -1,5 +1,5 @@
 'use client'
-import { useTsController, useFieldInfo } from "@ts-react/form";
+import { useTsController, useFieldInfo, useEnumValues } from "@ts-react/form";
 import { cn } from "~/utils/styles";
 import { Label } from "~/components/ui/label";
 import {
@@ -11,9 +11,10 @@ import {
 } from "~/components/ui/select"
 
 
-export default function SimpleSelect({ className, enumValues, options, id = 'simple-select' }: { className?: string, enumValues?: string[], options?: string[], id?: string }) {
+export default function SimpleSelect({ className, options, id = 'simple-select' }: { className?: string, options?: string[], id?: string }) {
   const { label, placeholder, isOptional } = useFieldInfo();
   const { field, error } = useTsController<string>();
+  const enumValues = useEnumValues();
 
   const errMessage = error?.errorMessage
 
@@ -35,7 +36,7 @@ export default function SimpleSelect({ className, enumValues, options, id = 'sim
       </SelectTrigger>
       <SelectContent>
         {
-          (enumValues ?? options ?? []).map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)
+          (options ?? enumValues ?? []).map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)
         }
       </SelectContent>
     </Select>

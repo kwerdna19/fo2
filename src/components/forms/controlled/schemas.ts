@@ -1,3 +1,4 @@
+import { createUniqueFieldSchema } from "~/utils/ts-react-form";
 import { z } from "zod";
 
 export const nameSchema = z.string().describe('Name')
@@ -16,6 +17,7 @@ export const coordinatesSchema = z.object({
 }).describe('Coordinates')
 
 export const locationsSchema = z.object({
+  id: z.string().optional(), // needed for dynamic removal / addition
   coordinates: coordinatesSchema,
   areaId: z.string()
 }).array().describe('Locations')
@@ -33,4 +35,13 @@ export const saleItemsSchema = z.object({
 export const npcTypeSchema = z.enum(["Storage", "Shop", "Quest", "Market"]).describe('Type')
 
 
+export const spriteSelectSchema = createUniqueFieldSchema(z.string().describe('Sprite'), 'sprite')
+
+export const npcSchema = z.object({
+  name: nameSchema,
+  type: npcTypeSchema,
+  sprite: spriteSelectSchema,
+  locations: locationsSchema,
+  items: saleItemsSchema,
+})
 

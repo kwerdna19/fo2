@@ -1,17 +1,17 @@
 'use client'
-import { createTsForm, createUniqueFieldSchema } from "@ts-react/form";
+import { createTsForm } from "@ts-react/form";
+
 import { z } from "zod";
 import TextField from "./controlled/TextField";
 import { type ReactNode } from "react";
 import { Button } from "../ui/button";
-import { locationsSchema, npcTypeSchema, saleItemsSchema } from "./controlled/schemas";
+import { locationsSchema, npcTypeSchema, saleItemsSchema, spriteSelectSchema } from "./controlled/schemas";
 import LocationsMultiField from "./controlled/LocationsMultiField";
 import SaleItemsMultiField from "./controlled/SaleItemsMultiField";
 import SpriteSelect from "./controlled/SpriteSelect";
 import SimpleSelect from "./controlled/SimpleSelect";
 import { LuLoader2 } from "react-icons/lu";
 
-export const spriteSelectSchema = createUniqueFieldSchema(z.string().describe('Sprite'), 'sprite')
 
 const mapping = [
   [z.string(), TextField],
@@ -25,17 +25,16 @@ const mapping = [
   [npcTypeSchema, SimpleSelect],
 ] as const;
 
-function FormComponent({ children, className, onSubmit, loading }: { children: ReactNode, className?: string, onSubmit: () => void, loading: boolean }) {
-
+function FormComponent({ children, className, onSubmit, loading, dirty, button = 'Submit' }: { children: ReactNode, className?: string, onSubmit: () => void, loading: boolean, dirty: boolean, button?: string }) {
 
   return <form onSubmit={onSubmit} className={className}>
     <div className="grid grid-cols-2 gap-5">
       {children}
     </div>
     <div className="flex justify-end mt-12">
-      <Button disabled={loading} type="submit">
+      <Button disabled={loading || !dirty} type="submit">
         {loading && <LuLoader2 className="mr-2 h-4 w-4 animate-spin" />}
-        Submit
+        {button}
       </Button>
     </div>
   </form>

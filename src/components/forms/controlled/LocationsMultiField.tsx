@@ -39,11 +39,7 @@ export default function LocationsMultiField({ className, areas }: { className?: 
   const [coordInput, setCoordInput] = useState<Locations[number]['coordinates']>()
   const [dialogOpen, setDialogOpen] = useState<Record<number, boolean>>({})
 
-  // const { } = useFormState()
-
-  const errMessage = error?.errorMessage
-
-  console.log('locations field', field.value)
+  // const errMessage = error?.errorMessage
 
   const onAdd = () => {
     field.onChange([...(field.value ?? []), {}])
@@ -126,7 +122,7 @@ export default function LocationsMultiField({ className, areas }: { className?: 
                     setCoordInput(undefined)
                   }
               }}>
-                <DialogTrigger>
+                <DialogTrigger asChild>
                   <Button variant="outline" size="icon" disabled={!areaId}>
                     <LuMap />
                   </Button>

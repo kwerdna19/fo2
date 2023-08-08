@@ -1,4 +1,6 @@
 import { notFound } from "next/navigation"
+import { LuPencil } from "react-icons/lu"
+import { AdminButton } from "~/components/AdminButton"
 import { MobSprite } from "~/components/MobSprite"
 import { api } from "~/utils/api"
 
@@ -26,7 +28,12 @@ export default async function Npc({ params }: { params: Params }) {
   }
 
   return <div>
-    <h2 className="text-3xl">{params.slug}</h2>
+    <div className="flex gap-x-4">
+      <h2 className="text-3xl">{npc.name}</h2>
+      <AdminButton size="icon" variant="outline" href={`/npcs/${params.slug}/edit`}>
+        <LuPencil className="w-4 h-4" />
+      </AdminButton>
+    </div>
     <div>
       <MobSprite size="xl" url={npc.spriteUrl} name={npc.name}/>
     </div>

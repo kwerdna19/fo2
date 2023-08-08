@@ -1,9 +1,9 @@
 'use server'
 
-import { type RouterInputs, api } from "~/utils/api"
+import { type NpcSchema } from "~/components/forms/NpcForm"
+import { api } from "~/utils/api"
 
-
-export async function addNpc(data: RouterInputs['npc']['create']) {
+export async function addNpc(data: NpcSchema) {
   const trpc = await api()
   return trpc.npc.create(data)
 }

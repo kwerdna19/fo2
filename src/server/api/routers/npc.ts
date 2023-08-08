@@ -1,6 +1,8 @@
 import { z } from "zod";
-import { locationsSchema, nameSchema, npcTypeSchema, saleItemsSchema } from "~/components/forms/controlled/schemas";
+import { npcSchema } from "~/components/forms/controlled/schemas";
 import { createTRPCRouter, moderatorProcedure, publicProcedure } from "~/server/api/trpc";
+
+const getSlugFromName = (name: string) => name.replace(/\s+/g, '-').replace(/[^a-zA-Z\d-]/g, '').toLowerCase()
 
 export const router = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
@@ -60,16 +62,8 @@ export const router = createTRPCRouter({
       }
     })
   }),
-  // needed instead of createNpc schema due to bug with react-ts-form
-  create: moderatorProcedure.input(z.object({
-    name: nameSchema,
-    type: npcTypeSchema,
-    sprite: z.string(),
-    locations: locationsSchema,
-    items: saleItemsSchema,
-  })).mutation(async ({ ctx, input }) => {
-
-    await new Promise(res => setTimeout(res, 2000))
+  create: moderatorProcedure.input(npcSchema)
+  .mutation(async ({ ctx, input }) => {
 
     const { name, sprite: spriteUrl, items, locations, type } = input
 
@@ -77,7 +71,7 @@ export const router = createTRPCRouter({
       data: {
         name,
         spriteUrl,
-        slug: name.replace(/\s+/g, '-').replace(/[^a-zA-Z\d]/g, '').toLowerCase(),
+        slug: getSlugFromName(name),
         type: type,
         locations: {
           createMany: {
@@ -96,7 +90,136 @@ export const router = createTRPCRouter({
             }))
           }
         }
+      },
+      include: {
+        items: true,
+        locations: true
       }
     })
+  }),
+  update: moderatorProcedure.input(z.object({
+    id: z.string(),
+    data: npcSchema
+  })
+  )
+  .mutation(async ({ ctx, input: { data, id } }) => {
+
+    const { sprite: spriteUrl, items, locations, ...fields } = data
+
+    let updated = await ctx.prisma.npc.update({
+      where: {
+        id
+      },
+      data: {
+        ...fields,
+        spriteUrl,
+        slug: getSlugFromName(fields.name),
+        updatedAt: new Date(),
+        items: {
+          upsert: items.map(({ item, price }) => ({
+            create: {
+              price: price,
+              itemId: item.id
+            },
+            update: {
+              price: price
+            },
+            where: {
+              npcId_itemId: {
+                itemId: item.id,
+                npcId: id
+              }
+            }
+          }))
+        },
+        locations: {
+          upsert: locations.map(l => ({
+            create: {
+              x: l.coordinates.x,
+              y: l.coordinates.y,
+              areaId: l.areaId,
+            },
+            update: {
+              x: l.coordinates.x,
+              y: l.coordinates.y,
+              areaId: l.areaId,
+            },
+            where: l.id ? {
+              id: l.id
+            } : {
+              areaId_x_y_npcId: {
+                areaId: l.areaId,
+                x: l.coordinates.x,
+                y: l.coordinates.y,
+                npcId: id
+              }
+            }
+          }))
+        }
+      },
+      include: {
+        items: true,
+        locations: true
+      }
+    })
+
+    const itemsToRemove = updated.items.filter(updatedItem => {
+      return !items.find(inputItem => {
+        return inputItem.item.id === updatedItem.itemId
+      })
+    })
+
+    // TODO - verify
+    const locationsToRemove = updated.locations.filter(updatedLocation => {
+      return !locations.find(inputLocation => {
+        return (
+          updatedLocation.areaId === inputLocation.areaId &&
+          updatedLocation.x === inputLocation.coordinates.x &&
+          updatedLocation.y === inputLocation.coordinates.y &&
+          updatedLocation.npcId === id
+        )
+      })
+    })
+
+    if(itemsToRemove.length || locationsToRemove.length) {
+
+      updated = await ctx.prisma.npc.update({
+        where: {
+          id
+        },
+        data: {
+          items: {
+            delete: itemsToRemove.map(item => ({
+              npcId_itemId: {
+                npcId: id,
+                itemId: item.itemId
+              }
+            })),
+            // update: itemsToUpdate.map(({ item, ...otherFields }) => ({
+            //   data: otherFields,
+            //    where: {
+            //     npcId_itemId: {
+            //       itemId: item.id,
+            //       npcId: id
+            //     }
+            //    }
+            // }))
+          },
+          locations: {
+            delete: locationsToRemove.map(l => ({
+              id: l.id
+            })),
+          }
+        },
+        include: {
+          items: true,
+          locations: true
+        }
+      })
+
+    }
+
+    return updated
+
   }),
 });

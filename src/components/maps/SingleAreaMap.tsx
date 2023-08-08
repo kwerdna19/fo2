@@ -14,9 +14,6 @@ export default function SingleAreaMap({ area, className, children }: { area: Pic
 
   const { spriteUrl: url, height, width, locations } = area
 
-  console.log('area', { area })
-
-
   return (<MapContainer
       center={[height/2,width/2]}
       maxBounds={[[0,0], [height,width]]}
