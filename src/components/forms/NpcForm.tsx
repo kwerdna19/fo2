@@ -47,6 +47,10 @@ export default function NpcForm({ areas, items, sprites, onSubmit, initialValues
     const form = useForm<NpcSchema>({
       resolver: zodResolver(npcSchema),
       values: initialValues && getFormDataFromData(initialValues),
+      defaultValues: {
+        items: [],
+        locations: [],
+      }
     });
 
     const { toast } = useToast()
