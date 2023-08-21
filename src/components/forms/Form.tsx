@@ -5,24 +5,29 @@ import { z } from "zod";
 import TextField from "./controlled/TextField";
 import { type ReactNode } from "react";
 import { Button } from "../ui/button";
-import { locationsSchema, npcTypeSchema, saleItemsSchema, spriteSelectSchema } from "./controlled/schemas";
+import { dropsSchema, locationsSchema, npcTypeSchema, saleItemsSchema, spriteSelectSchema } from "./controlled/schemas";
 import LocationsMultiField from "./controlled/LocationsMultiField";
 import SaleItemsMultiField from "./controlled/SaleItemsMultiField";
 import SpriteSelect from "./controlled/SpriteSelect";
 import SimpleSelect from "./controlled/SimpleSelect";
 import { LuLoader2 } from "react-icons/lu";
+import DropItemsMultiField from "./controlled/DropItemsMultiField";
+import NumberField from "./controlled/NumberField";
+import CheckboxField from "./controlled/CheckboxField";
 
 
 const mapping = [
   [z.string(), TextField],
-  // [z.boolean(), CheckBoxField],
-  // [z.number(), NumberField],
+  [z.boolean(), CheckboxField],
+  [z.number(), NumberField],
 
   // more custom
   [locationsSchema, LocationsMultiField],
   [saleItemsSchema, SaleItemsMultiField],
   [spriteSelectSchema, SpriteSelect],
   [npcTypeSchema, SimpleSelect],
+
+  [dropsSchema, DropItemsMultiField]
 ] as const;
 
 function FormComponent({ children, className, onSubmit, loading, dirty, button = 'Submit' }: { children: ReactNode, className?: string, onSubmit: () => void, loading: boolean, dirty: boolean, button?: string }) {

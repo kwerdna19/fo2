@@ -45,3 +45,24 @@ export const npcSchema = z.object({
   items: saleItemsSchema,
 })
 
+
+export const dropsSchema = z.object({
+  item: itemSchema,
+  dropRate: z.number().optional().nullable(),
+}).array().describe('Drops')
+
+export const mobSchema = z.object({
+  name: nameSchema,
+  sprite: spriteSelectSchema,
+  level: z.number().int().describe('Level'),
+  health: z.number().int().describe('Health'),
+  goldMin: z.number().describe('Min Gold'),
+  goldMax: z.number().describe('Max Gold'),
+  boss: z.boolean().describe('Boss'),
+  atkSpeed: z.number().optional().nullable().describe('Atk Speed'),
+  dmgMin: z.number().optional().nullable().describe('Dmg Min'),
+  dmgMax: z.number().optional().nullable().describe('Dmg Max'),
+  locations: locationsSchema,
+  drops: dropsSchema,
+})
+

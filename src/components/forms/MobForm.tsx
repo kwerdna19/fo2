@@ -3,7 +3,7 @@ import { Form } from "~/components/forms/Form"
 import { type Item, type Area } from "@prisma/client"
 import { useToast } from "~/components/ui/use-toast"
 import { useTransition } from "react"
-import { npcSchema, npcTypeSchema } from "./controlled/schemas"
+import { mobSchema } from "./controlled/schemas"
 import { z } from "zod"
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,47 +11,55 @@ import { type RouterOutputs } from "~/utils/api"
 import { useRouter } from "next/navigation"
 
 
-export type NpcSchema = z.infer<typeof npcSchema>
+export type MobSchema = z.infer<typeof mobSchema>
 
-type InputData = NonNullable<RouterOutputs['npc']['getBySlug']>
+type InputData = NonNullable<RouterOutputs['mob']['getBySlug']>
+
 interface Props {
   areas: Pick<Area, 'id' | 'name' | 'spriteUrl' | 'height' | 'width'>[]
   items: Pick<Item, 'id' | 'name' | 'spriteUrl'>[],
   sprites: string[],
-  onSubmit: (data: NpcSchema, originalId?: string) => Promise<RouterOutputs['npc']['create']>
+  onSubmit: (data: MobSchema, originalId?: string) => Promise<RouterOutputs['mob']['create']>
   initialValues?: InputData
 }
 
-const getFormDataFromData = (npc: InputData): NpcSchema => {
+const getFormDataFromData = (mob: InputData): MobSchema => {
   return {
-    items: npc.items.map(({ item, price }) => ({
+    drops: mob.drops.map(({ item, dropRate }) => ({
       id: item.id,
       item,
-      price
+      dropRate
     })),
-    locations: npc.locations.map(({ id, areaId, x, y }) => ({
+    locations: mob.locations.map(({ id, areaId, x, y }) => ({
       id,
       areaId,
       coordinates: { x, y }
     })),
-    sprite: z.string().brand('sprite').parse(npc.spriteUrl),
-    name: npc.name,
-    type: npcTypeSchema.parse(npc.type)
+    sprite: z.string().brand('sprite').parse(mob.spriteUrl),
+    name: mob.name,
+    goldMax: mob.goldMax,
+    goldMin: mob.goldMin,
+    level: mob.level,
+    health: mob.health,
+    boss: mob.boss,
+    atkSpeed: mob.atkSpeed,
+    dmgMax: mob.dmgMax,
+    dmgMin: mob.dmgMin
   }
 }
 
-export default function NpcForm({ areas, items, sprites, onSubmit, initialValues }: Props) {
+export default function MobForm({ areas, items, sprites, onSubmit, initialValues }: Props) {
 
     const [isPending, startTransition] = useTransition()
 
     const vals = initialValues && getFormDataFromData(initialValues)
 
-    const form = useForm<NpcSchema>({
-      resolver: zodResolver(npcSchema),
+    const form = useForm<MobSchema>({
+      resolver: zodResolver(mobSchema),
       // values: vals,
       defaultValues: vals ?? {
         locations: [],
-        items: []
+        drops: [],
       }
     });
 
@@ -59,7 +67,7 @@ export default function NpcForm({ areas, items, sprites, onSubmit, initialValues
     const router = useRouter()
 
     return (<Form
-        schema={npcSchema}
+        schema={mobSchema}
         form={form}
         formProps={{
           loading: isPending,
@@ -70,7 +78,7 @@ export default function NpcForm({ areas, items, sprites, onSubmit, initialValues
           locations: {
             areas,
           },
-          items: {
+          drops: {
             items,
           },
           sprite: {
@@ -82,9 +90,9 @@ export default function NpcForm({ areas, items, sprites, onSubmit, initialValues
             const response = await onSubmit(v, initialValues?.id)
             if(response.slug !== initialValues?.slug) {
               if(initialValues) {
-                router.replace(`/npcs/${response.slug}/edit`)
+                router.replace(`/mobs/${response.slug}/edit`)
               } else {
-                router.push(`/npcs/${response.slug}`)
+                router.push(`/mobs/${response.slug}`)
               }
             }
             toast({
