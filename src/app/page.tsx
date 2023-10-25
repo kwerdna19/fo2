@@ -20,7 +20,7 @@ export default function App() {
     <NavCard
       href="/npcs"
       label="Npcs"
-      image={<MobSprite size="md" url="/sprites/npcs/npc-storage-001q87.png" name="zutroy" className="-mt-12 mb-5 -ml-2 -mr-2" />}
+      image={<MobSprite size="md" url="/sprites/npc/npc-storage-001q87.png" name="zutroy" className="-mt-12 mb-5 -ml-2 -mr-2" />}
     />
   </div>
 }

@@ -20,7 +20,7 @@ export default async function AddMob() {
   const areas = await api.area.getAllQuick.query()
   const items = await api.item.getAllQuick.query()
 
-  const sprites = getListOfImages('mobs')
+  const sprites = getListOfImages('mob')
 
   if(!sprites) {
     notFound()

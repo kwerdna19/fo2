@@ -1,6 +1,6 @@
 import NextAuth, { type DefaultSession } from "next-auth"
 import { PrismaAdapter } from "@auth/prisma-adapter"
-import DiscordProvider from "next-auth/providers/discord";
+import Discord from "@auth/core/providers/discord"
 import { env } from "~/env.mjs"
 import { db } from "~/server/db";
 import { type User } from "@prisma/client";
@@ -8,19 +8,25 @@ import { type User } from "@prisma/client";
 export const {
   handlers: { GET, POST },
   auth,
+  // eslint-disable-next-line @typescript-eslint/unbound-method
+  signIn,
+  // eslint-disable-next-line @typescript-eslint/unbound-method
+  signOut,
 } = NextAuth({
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id
-      },
-    }),
+    session: ({ session, user }) => {
+      return {
+        ...session,
+        user: {
+          ...user,
+          ...session.user,
+        },
+      }
+    },
   },
   adapter: PrismaAdapter(db),
   providers: [
-    DiscordProvider({
+    Discord({
       clientId: env.DISCORD_CLIENT_ID,
       clientSecret: env.DISCORD_CLIENT_SECRET,
     })
