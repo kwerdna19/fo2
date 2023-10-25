@@ -5,7 +5,7 @@ import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles"
 import { getListOfImages } from "~/utils/server"
 import { editNpc } from "./actions"
 import { Button } from "~/components/ui/button"
-import { LuChevronLeft } from "react-icons/lu"
+import { ChevronLeft } from "lucide-react"
 import Link from "next/link"
 import { api } from "~/trpc/server"
 
@@ -46,7 +46,7 @@ export default async function EditNpc({ params }: { params: Params }) {
     return <div className="w-full max-w-screen-xl">
     <Button size="sm" variant="outline" className="mb-5" asChild>
       <Link href={`/npcs/${npc.slug}`}>
-        <LuChevronLeft className="mr-2 h-4 w-4" />
+        <ChevronLeft className="mr-2 h-4 w-4" />
         Back to page
       </Link>
     </Button>

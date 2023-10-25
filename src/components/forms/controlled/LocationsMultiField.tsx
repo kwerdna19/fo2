@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select"
-import { LuMap, LuTrash2 } from "react-icons/lu";
+import { Map, Trash2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -124,7 +124,7 @@ export default function LocationsMultiField({ className, areas }: { className?: 
               }}>
                 <DialogTrigger asChild>
                   <Button variant="outline" size="icon" disabled={!areaId}>
-                    <LuMap />
+                    <Map />
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-screen-xl w-full">
@@ -157,7 +157,7 @@ export default function LocationsMultiField({ className, areas }: { className?: 
                     return index !== i
                   }))
               }}>
-                <LuTrash2 />
+                <Trash2 />
             </Button>
           </div>
         })}

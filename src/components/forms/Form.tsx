@@ -10,7 +10,7 @@ import LocationsMultiField from "./controlled/LocationsMultiField";
 import SaleItemsMultiField from "./controlled/SaleItemsMultiField";
 import SpriteSelect from "./controlled/SpriteSelect";
 import SimpleSelect from "./controlled/SimpleSelect";
-import { LuLoader2 } from "react-icons/lu";
+import { Loader2 } from "lucide-react";
 import DropItemsMultiField from "./controlled/DropItemsMultiField";
 import NumberField from "./controlled/NumberField";
 import CheckboxField from "./controlled/CheckboxField";
@@ -38,7 +38,7 @@ function FormComponent({ children, className, onSubmit, loading, dirty, button =
     </div>
     <div className="flex justify-end mt-12">
       <Button disabled={loading || !dirty} type="submit">
-        {loading && <LuLoader2 className="mr-2 h-4 w-4 animate-spin" />}
+        {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         {button}
       </Button>
     </div>

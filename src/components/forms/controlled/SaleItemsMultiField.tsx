@@ -20,7 +20,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "~/components/ui/popover"
-import { LuCheck, LuChevronsUpDown, LuTrash2 } from "react-icons/lu";
+import { Check, ChevronsUpDown, Trash2 } from "lucide-react";
 import { ItemSprite } from "~/components/ItemSprite";
 
 
@@ -67,7 +67,7 @@ export default function SaleItemsMultiField({ className, items }: { className?: 
                     className="justify-between col-span-3"
                   >
                     {value?.name ?? "Select item..."}
-                    <LuChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent align="start" className="w-[--radix-popover-trigger-width] p-0">
@@ -84,7 +84,7 @@ export default function SaleItemsMultiField({ className, items }: { className?: 
                             setOpen(o => ({...o, [i]: false}))
                           }}
                         >
-                          <LuCheck
+                          <Check
                             className={cn(
                               "mr-2 h-4 w-4",
                               value?.id === item.id ? "opacity-100" : "opacity-0"
@@ -116,7 +116,7 @@ export default function SaleItemsMultiField({ className, items }: { className?: 
                   return index !== i
                 }))
             }}>
-              <LuTrash2 />
+              <Trash2 />
           </Button>
           </div>
         })}

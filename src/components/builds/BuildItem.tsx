@@ -7,7 +7,7 @@ import { Slot, slotBackgroundSpriteMap } from "~/utils/fo";
 import { ItemStats } from "../tables/items/ItemStats";
 import { Button } from "../ui/button";
 import { cn } from "~/utils/styles";
-import { LuChevronDown, LuChevronUp } from "react-icons/lu";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 export function BuildItem({ item, tooltipSide, slot, stat, switchOptions }: { item?: Item | null; slot: Slot; tooltipSide: 'left' | 'right'; stat?: string; switchOptions?: (inc: 1 | -1) => void; }) {
 
@@ -43,10 +43,10 @@ export function BuildItem({ item, tooltipSide, slot, stat, switchOptions }: { it
     </TooltipProvider>
     {switchOptions !== undefined ? <div className="flex flex-col justify-between py-1">
       <Button size="icon" onClick={() => switchOptions(1)} className="h-7 w-7">
-        <LuChevronUp className="h-5 w-5" />
+        <ChevronUp className="h-5 w-5" />
       </Button>
       <Button size="icon" onClick={() => switchOptions(-1)} className="h-7 w-7">
-        <LuChevronDown className="h-5 w-5" />
+        <ChevronDown className="h-5 w-5" />
       </Button>
     </div> : null}
   </div>);

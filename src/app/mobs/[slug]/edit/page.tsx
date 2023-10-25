@@ -3,7 +3,7 @@ import { notFound } from "next/navigation"
 import { getListOfImages } from "~/utils/server"
 import { editMob } from "./actions"
 import { Button } from "~/components/ui/button"
-import { LuChevronLeft } from "react-icons/lu"
+import { ChevronLeft } from "lucide-react"
 import Link from "next/link"
 import MobForm from "~/components/forms/MobForm"
 import { api } from "~/trpc/server"
@@ -46,7 +46,7 @@ export default async function EditMob({ params }: { params: Params }) {
     return <div className="w-full max-w-screen-xl">
     <Button size="sm" variant="outline" className="mb-5" asChild>
       <Link href={`/mobs/${mob.slug}`}>
-        <LuChevronLeft className="mr-2 h-4 w-4" />
+        <ChevronLeft className="mr-2 h-4 w-4" />
         Back to page
       </Link>
     </Button>
