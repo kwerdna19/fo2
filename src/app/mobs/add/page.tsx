@@ -1,11 +1,10 @@
 import { Role } from "@prisma/client"
-import { notFound, redirect } from "next/navigation"
-import { satisfiesRole } from "~/server/auth/roles"
-import { getServerSessionRsc } from "~/server/auth/util"
-import { api } from "~/utils/api"
+import { notFound } from "next/navigation"
+import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles"
 import { getListOfImages } from "~/utils/server"
 import MobForm from "~/components/forms/MobForm"
 import { addMob } from "./actions"
+import { api } from "~/trpc/server"
 
 // 1 day
 export const revalidate = 86400 // secs
@@ -16,16 +15,10 @@ export const metadata = {
 
 export default async function AddMob() {
 
-  const session = await getServerSessionRsc()
+  await userSatisfiesRoleOrRedirect(Role.MODERATOR, '/mobs')
 
-  const role = session?.user.role
-
-  if(!satisfiesRole(Role.MODERATOR)(role)) {
-    return redirect('/mobs')
-  }
-
-  const areas = await (await api()).area.getAllQuick()
-  const items = await (await api()).item.getAllQuick()
+  const areas = await api.area.getAllQuick.query()
+  const items = await api.item.getAllQuick.query()
 
   const sprites = getListOfImages('mobs')
 

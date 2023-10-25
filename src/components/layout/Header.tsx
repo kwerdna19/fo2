@@ -14,7 +14,7 @@ import {
 } from "~/components/ui/navigation-menu"
 import { UnitSprite } from "../UnitSprite"
 import { usePathname } from "next/navigation"
-import { type RouterOutputs } from "~/utils/api"
+import { type RouterOutputs } from "~/trpc/shared"
 
 export function Header({ areas }: { areas: RouterOutputs['area']['getAllQuick'] }) {
 

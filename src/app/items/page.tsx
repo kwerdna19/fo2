@@ -1,5 +1,5 @@
 import { ItemTable } from "~/components/tables/items/ItemTable"
-import { api } from "~/utils/api"
+import { api } from "~/trpc/server"
 
 // 1 day
 export const revalidate = 86400 // secs
@@ -9,6 +9,6 @@ export const metadata = {
 }
 
 export default async function Mobs() {
-  const items = await (await api()).item.getAll()
+  const items = await api.item.getAll.query()
   return <ItemTable data={items} />
 }

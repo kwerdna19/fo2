@@ -23,7 +23,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table"
-import { type RouterOutputs } from "~/utils/api"
+import { type RouterOutputs } from "~/trpc/shared"
 import { MobSprite } from "../../MobSprite"
 import { cn } from "~/utils/styles"
 import { DebouncedInput } from "../../DebouncedInput"

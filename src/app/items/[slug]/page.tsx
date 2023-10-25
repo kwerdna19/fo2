@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation"
 import { ItemSprite } from "~/components/ItemSprite"
-import { api } from "~/utils/api"
+import { api } from "~/trpc/server"
 
 // 1 day
 export const revalidate = 86400 // secs
@@ -8,7 +8,7 @@ export const revalidate = 86400 // secs
 interface Params { slug: string }
 
 export async function generateMetadata({ params }: { params: Params }) {
-  const item = await (await api()).item.getBySlug(params.slug)
+  const item = await api.item.getBySlug.query(params.slug)
   if(!item) {
     return {}
   }
@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: { params: Params }) {
 
 export default async function Item({ params }: { params: Params }) {
 
-  const item = await (await api()).item.getBySlug(params.slug)
+  const item = await api.item.getBySlug.query(params.slug)
 
   if(!item) {
     notFound()

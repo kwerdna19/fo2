@@ -2,7 +2,7 @@ import { notFound } from "next/navigation"
 import { LuPencil } from "react-icons/lu"
 import { AdminButton } from "~/components/AdminButton"
 import { MobSprite } from "~/components/MobSprite"
-import { api } from "~/utils/api"
+import { api } from "~/trpc/server"
 
 // 1 day
 export const revalidate = 86400 // secs
@@ -10,7 +10,7 @@ export const revalidate = 86400 // secs
 interface Params { slug: string }
 
 export async function generateMetadata({ params }: { params: Params }) {
-  const item = await (await api()).npc.getBySlug(params.slug)
+  const item = await api.npc.getBySlug.query(params.slug)
   if(!item) {
     return {}
   }
@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: { params: Params }) {
 
 export default async function Npc({ params }: { params: Params }) {
 
-  const npc = await (await api()).npc.getBySlug(params.slug)
+  const npc = await api.npc.getBySlug.query(params.slug)
 
   if(!npc) {
     notFound()

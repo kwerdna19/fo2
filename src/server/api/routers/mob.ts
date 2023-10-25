@@ -5,7 +5,7 @@ import { getSlugFromName } from "~/utils/misc";
 
 export const router = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.mob.findMany({
+    return ctx.db.mob.findMany({
       orderBy: {
         level: 'asc'
       },
@@ -24,7 +24,7 @@ export const router = createTRPCRouter({
     })
   }),
   getById: publicProcedure.input(z.string()).query(({ ctx, input }) => {
-    return ctx.prisma.mob.findUniqueOrThrow({
+    return ctx.db.mob.findUniqueOrThrow({
       where: {
         id: input
       },
@@ -43,7 +43,7 @@ export const router = createTRPCRouter({
     })
   }),
   getBySlug: publicProcedure.input(z.string()).query(({ ctx, input }) => {
-    return ctx.prisma.mob.findUnique({
+    return ctx.db.mob.findUnique({
       where: {
         slug: input
       },
@@ -67,7 +67,7 @@ export const router = createTRPCRouter({
 
     const { name, sprite: spriteUrl, drops, locations, ...rest } = input
 
-    return ctx.prisma.mob.create({
+    return ctx.db.mob.create({
       data: {
         name,
         spriteUrl,
@@ -106,7 +106,7 @@ export const router = createTRPCRouter({
 
     const { sprite: spriteUrl, drops, locations, ...fields } = data
 
-    let updated = await ctx.prisma.mob.update({
+    let updated = await ctx.db.mob.update({
       where: {
         id
       },
@@ -183,7 +183,7 @@ export const router = createTRPCRouter({
 
     if(itemsToRemove.length || locationsToRemove.length) {
 
-      updated = await ctx.prisma.mob.update({
+      updated = await ctx.db.mob.update({
         where: {
           id
         },

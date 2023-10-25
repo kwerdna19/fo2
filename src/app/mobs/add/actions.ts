@@ -1,9 +1,8 @@
 'use server'
 
 import { type MobSchema } from "~/components/forms/MobForm"
-import { api } from "~/utils/api"
+import { api } from "~/trpc/server"
 
 export async function addMob(data: MobSchema) {
-  const trpc = await api()
-  return trpc.mob.create(data)
+  return api.mob.create.mutate(data)
 }

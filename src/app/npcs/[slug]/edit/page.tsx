@@ -1,14 +1,13 @@
 import { Role } from "@prisma/client"
-import { notFound, redirect } from "next/navigation"
+import { notFound } from "next/navigation"
 import NpcForm from "~/components/forms/NpcForm"
-import { satisfiesRole } from "~/server/auth/roles"
-import { getServerSessionRsc } from "~/server/auth/util"
-import { api } from "~/utils/api"
+import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles"
 import { getListOfImages } from "~/utils/server"
 import { editNpc } from "./actions"
 import { Button } from "~/components/ui/button"
 import { LuChevronLeft } from "react-icons/lu"
 import Link from "next/link"
+import { api } from "~/trpc/server"
 
 // 1 day
 export const revalidate = 86400 // secs
@@ -16,7 +15,7 @@ export const revalidate = 86400 // secs
 interface Params { slug: string }
 
 export async function generateMetadata({ params }: { params: Params }) {
-  const npc = await (await api()).npc.getBySlug(params.slug)
+  const npc = await api.npc.getBySlug.query(params.slug)
   if(!npc) {
     return {}
   }
@@ -27,24 +26,16 @@ export async function generateMetadata({ params }: { params: Params }) {
 
 export default async function EditNpc({ params }: { params: Params }) {
 
-  const session = await getServerSessionRsc()
+  await userSatisfiesRoleOrRedirect(Role.MODERATOR, '/npcs/' + params.slug)
 
-  const role = session?.user.role
-
-  if(!satisfiesRole(Role.MODERATOR)(role)) {
-    return redirect('/npcs/' + params.slug)
-  }
-
-  const trpc = await api()
-
-  const npc = await trpc.npc.getBySlug(params.slug)
+  const npc = await api.npc.getBySlug.query(params.slug)
 
   if(!npc) {
     return notFound()
   }
 
-  const areas = await trpc.area.getAllQuick()
-  const items = await trpc.item.getAllQuick()
+  const areas = await api.area.getAllQuick.query()
+  const items = await api.item.getAllQuick.query()
 
   const sprites = getListOfImages('npcs')
 

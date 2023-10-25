@@ -4,7 +4,7 @@ import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 export const router = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.item.findMany({
+    return ctx.db.item.findMany({
       orderBy: {
         name: 'asc'
       },
@@ -31,7 +31,7 @@ export const router = createTRPCRouter({
     })
   }),
   getAllQuick: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.item.findMany({
+    return ctx.db.item.findMany({
       orderBy: {
         name: 'asc'
       },
@@ -43,7 +43,7 @@ export const router = createTRPCRouter({
     })
   }),
   getById: publicProcedure.input(z.string()).query(({ ctx, input }) => {
-    return ctx.prisma.item.findUniqueOrThrow({
+    return ctx.db.item.findUniqueOrThrow({
       where: {
         id: input
       },
@@ -62,7 +62,7 @@ export const router = createTRPCRouter({
     })
   }),
   getBySlug: publicProcedure.input(z.string()).query(({ ctx, input }) => {
-    return ctx.prisma.item.findUnique({
+    return ctx.db.item.findUnique({
       where: {
         slug: input
       },
@@ -87,7 +87,7 @@ export const router = createTRPCRouter({
     maxLevel: z.number().optional()
   })).query(async ({ ctx, input: { stat, type, maxLevel } }) => {
 
-    const result = await ctx.prisma.$queryRawUnsafe<Item[]>(`
+    const result = await ctx.db.$queryRawUnsafe<Item[]>(`
       WITH q AS
       (
         SELECT

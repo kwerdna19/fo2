@@ -1,6 +1,6 @@
 'use client'
 
-import { type RouterOutputs } from "~/utils/api";
+import { type RouterOutputs } from "~/trpc/shared";
 import { MapContainer } from "react-leaflet"
 import * as L from "leaflet";
 import { MapBackground } from "./MapBackground";

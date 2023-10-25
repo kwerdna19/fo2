@@ -1,15 +1,14 @@
 'use server'
 
 import { type MobSchema } from "~/components/forms/MobForm"
-import { api } from "~/utils/api"
+import { api } from "~/trpc/server"
 
 export async function editMob(data: MobSchema, id?: string) {
   if(!id) {
     throw new Error("No ID")
   }
-  const trpc = await api()
   
-  return await trpc.mob.update({
+  return await api.mob.update.mutate({
     id,
     data
   })

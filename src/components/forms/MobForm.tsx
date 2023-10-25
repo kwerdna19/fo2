@@ -7,8 +7,8 @@ import { mobSchema } from "./controlled/schemas"
 import { z } from "zod"
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { type RouterOutputs } from "~/utils/api"
 import { useRouter } from "next/navigation"
+import { type RouterOutputs } from "~/trpc/shared"
 
 
 export type MobSchema = z.infer<typeof mobSchema>

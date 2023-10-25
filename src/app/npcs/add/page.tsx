@@ -1,11 +1,10 @@
 import { Role } from "@prisma/client"
-import { notFound, redirect } from "next/navigation"
+import { notFound } from "next/navigation"
 import NpcForm from "~/components/forms/NpcForm"
-import { satisfiesRole } from "~/server/auth/roles"
-import { getServerSessionRsc } from "~/server/auth/util"
-import { api } from "~/utils/api"
+import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles"
 import { getListOfImages } from "~/utils/server"
 import { addNpc } from "./actions"
+import { api } from "~/trpc/server"
 
 // 1 day
 export const revalidate = 86400 // secs
@@ -16,17 +15,11 @@ export const metadata = {
 
 export default async function EditNpc() {
 
-  const session = await getServerSessionRsc()
+  await userSatisfiesRoleOrRedirect(Role.MODERATOR, '/npcs')
 
-  const role = session?.user.role
+  const areas = await api.area.getAllQuick.query()
 
-  if(!satisfiesRole(Role.MODERATOR)(role)) {
-    return redirect('/npcs')
-  }
-
-  const areas = await (await api()).area.getAllQuick()
-
-  const items = await (await api()).item.getAllQuick()
+  const items = await api.item.getAllQuick.query()
 
   const sprites = getListOfImages('npcs')
 

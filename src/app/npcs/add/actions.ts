@@ -1,9 +1,8 @@
 'use server'
 
 import { type NpcSchema } from "~/components/forms/NpcForm"
-import { api } from "~/utils/api"
+import { api } from "~/trpc/server"
 
 export async function addNpc(data: NpcSchema) {
-  const trpc = await api()
-  return trpc.npc.create(data)
+  return await api.npc.create.mutate(data)
 }

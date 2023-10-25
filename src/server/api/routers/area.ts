@@ -3,7 +3,7 @@ import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 export const router = createTRPCRouter({
   getAllQuick: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.area.findMany({
+    return ctx.db.area.findMany({
       orderBy: {
         createdAt: 'asc'        
       },
@@ -19,7 +19,7 @@ export const router = createTRPCRouter({
     })
   }),
   getAllPopulated: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.area.findMany({
+    return ctx.db.area.findMany({
       orderBy: {
         createdAt: 'asc'        
       },
@@ -47,7 +47,7 @@ export const router = createTRPCRouter({
     })
   }),
   getBySlug: publicProcedure.input(z.string()).query(({ ctx, input }) => {
-    return ctx.prisma.area.findUnique({
+    return ctx.db.area.findUnique({
       where: {
         slug: input
       },

@@ -20,7 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table"
-import { type RouterOutputs } from "~/utils/api"
+import { type RouterOutputs } from "~/trpc/shared"
 import { DebouncedInput } from "../../DebouncedInput"
 import Link from "next/link";
 import { ItemSprite } from "~/components/ItemSprite";

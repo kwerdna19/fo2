@@ -6,7 +6,7 @@ const getSlugFromName = (name: string) => name.replace(/\s+/g, '-').replace(/[^a
 
 export const router = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.npc.findMany({
+    return ctx.db.npc.findMany({
       orderBy: {
         name: 'asc'
       },
@@ -25,7 +25,7 @@ export const router = createTRPCRouter({
     })
   }),
   getById: publicProcedure.input(z.string()).query(({ ctx, input }) => {
-    return ctx.prisma.npc.findUniqueOrThrow({
+    return ctx.db.npc.findUniqueOrThrow({
       where: {
         id: input
       },
@@ -44,7 +44,7 @@ export const router = createTRPCRouter({
     })
   }),
   getBySlug: publicProcedure.input(z.string()).query(({ ctx, input }) => {
-    return ctx.prisma.npc.findUnique({
+    return ctx.db.npc.findUnique({
       where: {
         slug: input
       },
@@ -67,7 +67,7 @@ export const router = createTRPCRouter({
 
     const { name, sprite: spriteUrl, items, locations, type } = input
 
-    return ctx.prisma.npc.create({
+    return ctx.db.npc.create({
       data: {
         name,
         spriteUrl,
@@ -106,7 +106,7 @@ export const router = createTRPCRouter({
 
     const { sprite: spriteUrl, items, locations, ...fields } = data
 
-    let updated = await ctx.prisma.npc.update({
+    let updated = await ctx.db.npc.update({
       where: {
         id
       },
@@ -183,7 +183,7 @@ export const router = createTRPCRouter({
 
     if(itemsToRemove.length || locationsToRemove.length) {
 
-      updated = await ctx.prisma.npc.update({
+      updated = await ctx.db.npc.update({
         where: {
           id
         },

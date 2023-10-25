@@ -2,10 +2,10 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import { type Session } from "next-auth";
 import superjson from "superjson";
 import { ZodError } from "zod";
-import { prisma } from "~/server/db";
-import { getServerAuthSession } from "~/server/auth/util";
-import { satisfiesRole } from "../auth/roles";
+import { db } from "~/server/db";
+import { roleIsSatisfied } from "~/server/auth/roles";
 import { Role } from "@prisma/client";
+import { auth } from "~/server/auth";
 
 interface CreateContextOptions {
   session: Session | null;
@@ -14,7 +14,7 @@ interface CreateContextOptions {
 const createInnerTRPCContext = ({ session }: CreateContextOptions) => {
   return {
     session,
-    prisma
+    db
   };
 };
 
@@ -23,9 +23,9 @@ export const createTRPCContext = async (
 //   {
 //   req,
 //   res,
-// }: CreateNextContextOptions
+// }
 ) => {
-  const session = await getServerAuthSession();
+  const session = await auth();
   return createInnerTRPCContext({ session });
 };
 
@@ -63,7 +63,7 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
 
 /** Reusable middleware that enforces users are logged in before running the procedure. */
 const enforceUserIsMod = t.middleware(({ ctx, next }) => {
-  if (!ctx.session?.user || !satisfiesRole(Role.MODERATOR)(ctx.session.user.role)) {
+  if (!ctx.session?.user || !roleIsSatisfied(ctx.session.user.role, Role.MODERATOR)) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
   return next({

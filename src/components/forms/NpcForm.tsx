@@ -7,7 +7,7 @@ import { npcSchema, npcTypeSchema } from "./controlled/schemas"
 import { z } from "zod"
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { type RouterOutputs } from "~/utils/api"
+import { type RouterOutputs } from "~/trpc/shared"
 import { useRouter } from "next/navigation"
 
 

@@ -1,18 +1,15 @@
-import { getProviders } from "next-auth/react"
 import { redirect } from "next/navigation"
 import LoginCard from "~/components/layout/LoginCard"
-import { getServerSessionRsc } from "~/server/auth/util"
+import { auth } from "~/server/auth"
 
 export default async function Login() {
 
-  const session = await getServerSessionRsc()
+  const session = await auth()
   if(session && session.user) {
     redirect('/')
   }
 
-  const providers = await getProviders()
-
   return <div className="w-full flex justify-center items-center">
-    <LoginCard providers={providers ? Object.values(providers) : []} />
+    <LoginCard />
   </div>
 }

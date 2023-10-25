@@ -1,6 +1,7 @@
 
-import { type RouterInputs, api } from "~/utils/api"
 import MaxMinBuildsPage from "~/components/builds/MaxMinBuildsPage";
+import { api } from "~/trpc/server";
+import { type RouterInputs } from "~/trpc/shared";
 
 // 1 day
 export const revalidate = 86400 // secs
@@ -13,7 +14,7 @@ const stats = ['agi', 'str', 'sta', 'int', 'armor'] as const
 
 export default async function Builds() {
 
-  const getSuperlatives = (type: RouterInputs['item']['getSuperlatives']['type']) => Promise.all(stats.map(async s => (await api()).item.getSuperlatives({
+  const getSuperlatives = (type: RouterInputs['item']['getSuperlatives']['type']) => Promise.all(stats.map(async s => api.item.getSuperlatives.query({
     stat: s,
     type
   }))).then(([agi, str, sta, int, armor]) => ({ agi, str, sta, int, armor }))

@@ -2,7 +2,7 @@
 import { LayerGroup, LayersControl, Marker, Popup } from "react-leaflet";
 import * as L from "leaflet";
 import { spriteWidth, spriteHeight } from "../MobSprite";
-import { type RouterOutputs } from "~/utils/api";
+import { type RouterOutputs } from "~/trpc/shared";
 import { DropsList } from "../tables/mobs/DropsList";
 import Link from "next/link";
 import { MobHealth } from "../tables/mobs/MobHealth";
