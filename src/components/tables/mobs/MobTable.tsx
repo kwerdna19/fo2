@@ -9,9 +9,7 @@ import {
   getSortedRowModel,
   useReactTable,
   createColumnHelper,
-  getExpandedRowModel,
-  type ExpandedState,
-  type Row,
+  getExpandedRowModel
 } from "@tanstack/react-table"
 import { TbCrown as Crown } from "react-icons/tb";
 import { Fragment, useState } from "react"
@@ -86,21 +84,9 @@ export const columns = [
   columnHelper.accessor(row => row.drops.map(d => d.item.name).join(', '), {
     id: 'loot',
     header: 'Loot',
-    cell: ({ row }) => <DropsList drops={row.original.drops} /> //className="hidden lg:flex"
+    cell: ({ row }) => <DropsList drops={row.original.drops} className="flex-nowrap" /> //className="hidden lg:flex"
   }),
 ]
-
-const renderExpandedRow = ({row}: { row: Row<Datum> }) => {
-  return (
-    <div className="text-lg flex items-center gap-x-12 flex-wrap justify-between">
-      <div className="p-3 flex gap-x-8">
-        <DropGold goldMin={row.original.goldMin} goldMax={row.original.goldMax} />
-        <MobHealth health={row.original.health} />
-      </div>
-      <DropsList drops={row.original.drops} />
-    </div>
-  )
-}
 
 
 export function MobTable({ data }: { data: RouterOutputs['mob']['getAll']}) {
@@ -112,15 +98,12 @@ export function MobTable({ data }: { data: RouterOutputs['mob']['getAll']}) {
     []
   )
 
-  const [expanded, setExpanded] = useState<ExpandedState>({})
-
   const table = useReactTable({
     data: data ?? [],
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
-    onExpandedChange: setExpanded,
     getCoreRowModel: getCoreRowModel(),
     // getPaginationRowModel: getPaginationRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
@@ -128,15 +111,12 @@ export function MobTable({ data }: { data: RouterOutputs['mob']['getAll']}) {
     getFilteredRowModel: getFilteredRowModel(),
     getRowCanExpand: () => true,
     state: {
-      expanded,
       sorting,
       columnFilters,
       globalFilter,
     },
   })
 
-
-  const hideOnSmall = ['loot', 'health', 'gold']
 
   return (
     <div className="w-full">
@@ -170,7 +150,7 @@ export function MobTable({ data }: { data: RouterOutputs['mob']['getAll']}) {
                     return null
                   }
                   return (
-                    <TableHead className={cn(hideOnSmall.includes(header.id) && "hidden lg:table-cell")} colSpan={header.id === 'level' ? 2 : undefined} key={header.id}>
+                    <TableHead colSpan={header.id === 'level' ? 2 : undefined} key={header.id}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -190,10 +170,10 @@ export function MobTable({ data }: { data: RouterOutputs['mob']['getAll']}) {
                   <TableRow aria-expanded={row.getIsExpanded()} className="relative aria-expanded:border-b-0 lg:aria-expanded:border-b" onClick={row.getToggleExpandedHandler()}>
                   {row.getVisibleCells().map((cell) => {
                     return (<TableCell key={cell.id}
-                      className={cn('py-2 px-4', cell.column.id === 'sprite' && 'p-0', 'text-lg', hideOnSmall.includes(cell.column.id) && "p-0 lg:px-2 lg:py-3")}
+                      className={cn('py-2 px-4', cell.column.id === 'sprite' && 'p-0', 'text-lg')}
                     >
                         <div
-                          className={cn('text-lg', hideOnSmall.includes(cell.column.id) && "hidden lg:block")}
+                          className="text-lg"
                         >
                         {flexRender(
                           cell.column.columnDef.cell,
@@ -203,13 +183,6 @@ export function MobTable({ data }: { data: RouterOutputs['mob']['getAll']}) {
                       </TableCell>)
                   })}
                 </TableRow>
-                {row.getIsExpanded() && (
-                  <TableRow className="table-row lg:hidden hover:bg-inherit">
-                    <TableCell className="pt-0" colSpan={row.getVisibleCells().length}>
-                      {renderExpandedRow({ row })}
-                    </TableCell>
-                  </TableRow>
-                )}
                 </Fragment>
                 )
 
