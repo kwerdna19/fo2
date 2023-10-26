@@ -8,8 +8,7 @@ import {
   getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
-  createColumnHelper,
-  getExpandedRowModel
+  createColumnHelper
 } from "@tanstack/react-table"
 import { TbCrown as Crown } from "react-icons/tb";
 import { Fragment, useState } from "react"
@@ -106,10 +105,8 @@ export function MobTable({ data }: { data: RouterOutputs['mob']['getAll']}) {
     onGlobalFilterChange: setGlobalFilter,
     getCoreRowModel: getCoreRowModel(),
     // getPaginationRowModel: getPaginationRowModel(),
-    getExpandedRowModel: getExpandedRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    getRowCanExpand: () => true,
     state: {
       sorting,
       columnFilters,
@@ -167,7 +164,7 @@ export function MobTable({ data }: { data: RouterOutputs['mob']['getAll']}) {
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => {
                 return (<Fragment key={row.id}>
-                  <TableRow aria-expanded={row.getIsExpanded()} className="relative aria-expanded:border-b-0 lg:aria-expanded:border-b" onClick={row.getToggleExpandedHandler()}>
+                  <TableRow className="relative">
                   {row.getVisibleCells().map((cell) => {
                     return (<TableCell key={cell.id}
                       className={cn('py-2 px-4', cell.column.id === 'sprite' && 'p-0', 'text-lg')}
