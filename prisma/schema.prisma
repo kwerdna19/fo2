@@ -33,6 +33,18 @@ model Mob {
     atkSpeed Float?
     dmgMin Int?
     dmgMax Int?
+
+    spawnTimeSec Int?
+
+    range Int?
+    str Int?
+    sta Int?
+    agi Int?
+    int Int?
+    armor Int?
+    crit Float?
+    dodge Float?
+
 }
 
 // type Enum TBD
@@ -125,7 +137,7 @@ model Item {
     unobtainable Boolean @default(false)
     
     // stats - for equipable
-    range Int? // for now 0 and 1
+    range Int?
     str Int?
     sta Int?
     agi Int?
