@@ -1,6 +1,6 @@
 import { EquippableType, type Item } from "@prisma/client";
 
-// not exported from prisma client yet?
+// not exported form prisma, bc unused in schemas, so moved here
 export enum Slot {
   HEAD,
   FACE,
@@ -17,7 +17,16 @@ export enum Slot {
   OFFHAND
 }
 
-export const equipmentSlotConfig: Record<EquippableType, Slot | Slot[]> = {
+export type CosmeticEquippableType = typeof EquippableType.COSMETIC_HEAD |
+typeof EquippableType.COSMETIC_FACE |
+typeof EquippableType.COSMETIC_BACK |
+typeof EquippableType.COSMETIC_SHOULDERS |
+typeof EquippableType.COSMETIC_CHEST |
+typeof EquippableType.COSMETIC_LEGS
+
+export type NonCosmeticEquippableType = Exclude<EquippableType, CosmeticEquippableType>
+
+export const equipmentSlotConfig: Record<NonCosmeticEquippableType, Slot | Slot[]> = {
   HEAD: Slot.HEAD,
   FACE: Slot.FACE,
   BACK: Slot.BACK,
@@ -63,10 +72,10 @@ export const getSumOfBasicStats = (item: Item) => {
 }
 
 const equipTypeWorksForSlot = (e: EquippableType | null, s: Slot) => {
-  if(!e) {
+  if(!e || e.startsWith('COSMETIC_')) {
     return false
   }
-  const slotOrSlots = equipmentSlotConfig[e]
+  const slotOrSlots = equipmentSlotConfig[e as NonCosmeticEquippableType]
   if(Array.isArray(slotOrSlots)) {
     return slotOrSlots.includes(s)
   }
