@@ -49,6 +49,10 @@ model Npc {
     locations Location[]
 }
 
+enum Unit {
+  GEMS
+  COINS
+}
 model NpcSale {
 
   npc       Npc     @relation(fields: [npcId], references: [id])
@@ -56,6 +60,7 @@ model NpcSale {
   item       Item     @relation(fields: [itemId], references: [id])
   itemId     String
   
+  unit    Unit @default(COINS)
   price   Int
 
   @@unique([npcId, itemId])
@@ -84,6 +89,13 @@ enum EquippableType {
   TRINKET // LEFT/RIGHT
   OFFHAND
   GUILD
+
+  COSMETIC_HEAD
+  COSMETIC_FACE
+  COSMETIC_BACK
+  COSMETIC_SHOULDERS
+  COSMETIC_CHEST
+  COSMETIC_LEGS
 }
 model Item {
     id        String   @id @default(cuid())
@@ -105,6 +117,12 @@ model Item {
     // for items that provide a skill
     skillId  String?
     skillInfo Skill? @relation(fields: [skillId], references: [id])
+
+    // for items that TP to area
+    areaId  String?
+    area Area? @relation(name: "teleports", fields: [areaId], references: [id])
+
+    unobtainable Boolean @default(false)
     
     // stats - for equipable
     range Int? // for now 0 and 1
@@ -153,6 +171,8 @@ model Area {
   originXGlobal Int
   originYGlobal Int
   portals Location[] @relation(name: "portals")
+
+  item  Item[] @relation(name: "teleports")
 }
 
 // type enum
