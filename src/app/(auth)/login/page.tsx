@@ -2,6 +2,8 @@ import { redirect } from "next/navigation"
 import LoginCard from "~/components/layout/LoginCard"
 import { auth } from "~/server/auth"
 
+export const dynamic = "force-dynamic"
+
 export default async function Login() {
 
   const session = await auth()

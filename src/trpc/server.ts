@@ -3,10 +3,12 @@ import {
   loggerLink,
   unstable_httpBatchStreamLink,
 } from "@trpc/client";
+import { createServerSideHelpers } from '@trpc/react-query/server';
 import { headers } from "next/headers";
 
-import { type AppRouter } from "~/server/api/root";
+import { appRouter, type AppRouter } from "~/server/api/root";
 import { getUrl, transformer } from "./shared";
+import { db } from "~/server/db";
 
 export const api = createTRPCProxyClient<AppRouter>({
   transformer,
@@ -25,4 +27,13 @@ export const api = createTRPCProxyClient<AppRouter>({
       },
     }),
   ],
+});
+
+export const staticApi = createServerSideHelpers({
+  router: appRouter,
+  ctx: {
+    db,
+    session: null
+  },
+  transformer,
 });

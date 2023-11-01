@@ -7,7 +7,7 @@ import { Footer } from '~/components/layout/Footer'
 import { Header } from '~/components/layout/Header.server'
 import { Toaster } from "~/components/ui/toaster"
 import { TRPCReactProvider } from '~/trpc/react';
-import { headers } from 'next/headers';
+// import { headers } from 'next/headers';
 import { Inter } from "next/font/google"
 import { cn } from '~/utils/styles';
  
@@ -25,8 +25,6 @@ export const metadata: Metadata = {
   manifest: '/site.webmanifest',
 }
 
-export const dynamic = "force-dynamic"
-
 export default function RootLayout({
   children,
 }: {
@@ -36,7 +34,7 @@ export default function RootLayout({
   return (
       <html lang="en">
         <body className={cn("min-h-screen flex flex-col items-center bg-background font-sans antialiased", inter.variable)}>
-          <TRPCReactProvider headers={headers()}>
+          <TRPCReactProvider>
             <header className="p-4 sm:p-5 md:p-6 max-w-screen-2xl w-full">
               <Header />
             </header>
