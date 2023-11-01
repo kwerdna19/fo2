@@ -59,6 +59,7 @@ model Npc {
     spriteUrl String
     items NpcSale[]
     locations Location[]
+    inGameId Int?
 }
 
 enum Unit {
