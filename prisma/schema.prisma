@@ -136,6 +136,8 @@ model Item {
 
     unobtainable Boolean @default(false)
 
+    inGameId Int?
+
     // stats - requirements
     reqStr Int?
     reqSta Int?
@@ -190,6 +192,8 @@ model Area {
   originYGlobal Int
   portals Location[] @relation(name: "portals")
 
+  inGameId Int?
+
   item  Item[] @relation(name: "teleports")
 }
 
@@ -221,6 +225,8 @@ model Skill {
     int Int?
     armor Int?
     atkSpeed Float?
+
+    inGameId Int?
 
     items     Item[]
     @@unique([name, rank])
