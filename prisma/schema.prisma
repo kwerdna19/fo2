@@ -135,6 +135,12 @@ model Item {
     area Area? @relation(name: "teleports", fields: [areaId], references: [id])
 
     unobtainable Boolean @default(false)
+
+    // stats - requirements
+    reqStr Int?
+    reqSta Int?
+    reqAgi Int?
+    reqInt Int?
     
     // stats - for equipable
     range Int?
@@ -200,6 +206,22 @@ model Skill {
     spriteUrl String
     type      String?
     levelReq  Int @default(0)
+
+    reqStr Int?
+    reqSta Int?
+    reqAgi Int?
+    reqInt Int?
+
+    // stats - for stat bonuses
+    range Int?
+    atkPower Int?
+    str Int?
+    sta Int?
+    agi Int?
+    int Int?
+    armor Int?
+    atkSpeed Float?
+
     items     Item[]
     @@unique([name, rank])
 }
