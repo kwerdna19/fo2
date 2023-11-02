@@ -29,7 +29,6 @@ import { GoldCount } from "~/components/GoldCount"
 import { DroppedByList } from "./DroppedByList"
 import { cn } from "~/utils/styles"
 import { ItemStats } from "./ItemStats"
-import { type Item } from "@prisma/client"
 import { getAverageDamage, getSumOfBasicStats, isWeapon } from "~/utils/fo"
 import { SoldByList } from "./SoldByList"
 
