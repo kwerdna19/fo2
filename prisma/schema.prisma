@@ -60,6 +60,9 @@ model Npc {
     items NpcSale[]
     locations Location[]
     inGameId Int?
+    // for npcs that TP to area
+    areaId  String?
+    area Area? @relation(name: "teleport-npcs", fields: [areaId], references: [id])
 }
 
 enum Unit {
@@ -133,7 +136,7 @@ model Item {
 
     // for items that TP to area
     areaId  String?
-    area Area? @relation(name: "teleports", fields: [areaId], references: [id])
+    area Area? @relation(name: "teleport-items", fields: [areaId], references: [id])
 
     unobtainable Boolean @default(false)
 
@@ -195,7 +198,10 @@ model Area {
 
   inGameId Int?
 
-  item  Item[] @relation(name: "teleports")
+  items  Item[] @relation(name: "teleport-items")
+  skills Skill[] @relation(name: "teleport-skills")
+  npcs  Npc[] @relation(name: "teleport-npcs")
+
 }
 
 // type enum
@@ -228,6 +234,10 @@ model Skill {
     atkSpeed Float?
 
     inGameId Int?
+
+    // for skills that TP to area
+    areaId  String?
+    area Area? @relation(name: "teleport-skills", fields: [areaId], references: [id])
 
     items     Item[]
     @@unique([name, rank])

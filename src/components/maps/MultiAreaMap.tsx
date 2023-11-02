@@ -4,10 +4,15 @@ import { type RouterOutputs } from "~/trpc/shared";
 import { MapContainer } from "react-leaflet"
 import * as L from "leaflet";
 import { MapBackground } from "./MapBackground";
+import { useState } from "react";
 
 type Areas = RouterOutputs['area']['getAllPopulated']
 
-export default function MultiAreaMap({ areas, bg }: { areas: Areas, bg?: string }) {
+export default function MultiAreaMap({ areas: allAreas, bg }: { areas: Areas, bg?: string }) {
+
+  const [region] = useState(allAreas.at(0)?.region)
+
+  const areas = allAreas.filter(a => a.region === region)
 
   const maxX = areas.reduce((acc, area) => {
     if(area.originXGlobal + area.width > acc) {
