@@ -33,7 +33,7 @@ export default function SaleItemsMultiField({ className, items }: { className?: 
 
   const [open, setOpen] = useState<Record<number, boolean>>({})
 
-  const errMessage = error?.errorMessage
+  // const errMessage = error?.errorMessage
 
   const onAdd = () => {
     field.onChange([...(field.value ?? []), {}])

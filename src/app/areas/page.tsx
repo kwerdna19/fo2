@@ -4,9 +4,6 @@ import { staticApi } from '~/trpc/server'
 // import MultiAreaMap from "~/components/maps/MultiAreaMap"
 const MultiAreaMap = dynamic(() => import("~/components/maps/MultiAreaMap"), { ssr: false })
 
-// 1 day
-export const revalidate = 86400 // secs
-
 export const metadata = {
   title: 'Areas'
 }

@@ -2,8 +2,6 @@ import { notFound } from "next/navigation"
 import { ItemSprite } from "~/components/ItemSprite"
 import { api } from "~/trpc/server"
 
-// 1 day
-export const revalidate = 86400 // secs
 
 interface Params { slug: string }
 

@@ -4,9 +4,6 @@ import { AdminButton } from "~/components/AdminButton"
 import { MobSprite } from "~/components/MobSprite"
 import { api } from "~/trpc/server"
 
-// 1 day
-export const revalidate = 86400 // secs
-
 interface Params { slug: string }
 
 export async function generateMetadata({ params }: { params: Params }) {

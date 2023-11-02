@@ -1,8 +1,6 @@
 'use client'
 
-import { type Item } from "@prisma/client"
-import { type Build, type PossibleBuild, type Slot, getPossibleBuildFromItems, playerSlots } from "~/utils/fo"
-import { useState } from "react"
+import { type Build, type PossibleBuild, type Slot, playerSlots } from "~/utils/fo"
 import { CharacterPreview } from "./CharacterPreview"
 import { BuildItem } from "./BuildItem"
 

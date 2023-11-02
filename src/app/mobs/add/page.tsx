@@ -6,9 +6,6 @@ import MobForm from "~/components/forms/MobForm"
 import { addMob } from "./actions"
 import { api } from "~/trpc/server"
 
-// 1 day
-export const revalidate = 86400 // secs
-
 export const metadata = {
   title: 'Add Mob'
 }

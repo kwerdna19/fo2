@@ -1,12 +1,6 @@
 'use client'
 
 import { type Item } from "@prisma/client"
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "~/components/ui/tabs"
 import { type BasicStats } from "~/utils/fo"
 import { MaxMinStatTabs } from "./MaxMinStatTabs"
 

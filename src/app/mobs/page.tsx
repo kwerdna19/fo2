@@ -1,9 +1,6 @@
 import { MobTable } from "~/components/tables/mobs/MobTable"
 import { staticApi } from "~/trpc/server"
 
-// 1 day
-export const revalidate = 86400 // secs
-
 export const metadata = {
   title: 'Mobs'
 }

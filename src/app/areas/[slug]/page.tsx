@@ -1,17 +1,13 @@
 import { notFound } from "next/navigation"
+import { staticApi } from "~/trpc/server"
 import dynamic from 'next/dynamic'
-import { api } from "~/trpc/server"
 
-// import SingleAreaMap from "~/components/maps/SingleAreaMap"
 const SingleAreaMap = dynamic(() => import("~/components/maps/SingleAreaMap"), { ssr: false })
-
-// 1 day
-export const revalidate = 86400 // secs
 
 interface Params { slug: string }
 
 export async function generateMetadata({ params }: { params: Params }) {
-  const area = await api.area.getBySlug.query(params.slug)
+  const area = await staticApi.area.getBySlug.fetch(params.slug)
   if(!area) {
     return {}
   }
@@ -20,10 +16,16 @@ export async function generateMetadata({ params }: { params: Params }) {
   }
 }
 
+export async function generateStaticParams() {
+  const areas = await staticApi.area.getAllQuick.fetch()
+  return areas.map((area) => ({
+    slug: area.slug,
+  }))
+}
+
 export default async function Area({ params }: { params: Params }) {
 
-  const area = await api.area.getBySlug.query(params.slug)
-
+  const area = await staticApi.area.getBySlug.fetch(params.slug)
 
   if(!area) {
     notFound()

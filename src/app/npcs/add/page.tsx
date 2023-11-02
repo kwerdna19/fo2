@@ -6,9 +6,6 @@ import { getListOfImages } from "~/utils/server"
 import { addNpc } from "./actions"
 import { api } from "~/trpc/server"
 
-// 1 day
-export const revalidate = 86400 // secs
-
 export const metadata = {
   title: 'Add Npc'
 }

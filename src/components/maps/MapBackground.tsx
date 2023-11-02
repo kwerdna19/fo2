@@ -1,5 +1,5 @@
 'use client';
-import { ImageOverlay, useMapEvent, useMapEvents } from "react-leaflet";
+import { ImageOverlay, useMapEvent } from "react-leaflet";
 import { useState } from "react";
 
 export function MapBackground({ url, height, width, x = 0, y = 0 }: { url: string; height: number; width: number; x?: number; y?: number }) {

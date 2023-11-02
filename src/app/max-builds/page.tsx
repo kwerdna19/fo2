@@ -3,9 +3,6 @@ import MaxMinBuildsPage from "~/components/builds/MaxMinBuildsPage";
 import { staticApi } from "~/trpc/server";
 import { type RouterInputs } from "~/trpc/shared";
 
-// 1 day
-export const revalidate = 86400 // secs
-
 export const metadata = {
   title: 'Max Builds'
 }

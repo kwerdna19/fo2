@@ -159,7 +159,7 @@ type BaseInputStats = Partial<Record<BasicStats, number | null>>
 
 export const combineBasicStats = (...inputs: (BaseInputStats | BaseInputStats[])[]) => {
 
-  return inputs.reduce<Record<BasicStats, number>>((acc, input, i) => {
+  return inputs.reduce<Record<BasicStats, number>>((acc, input) => {
 
     const stats = Array.isArray(input) ? input : [input]
 

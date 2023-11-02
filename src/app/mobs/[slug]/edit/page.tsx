@@ -9,9 +9,6 @@ import MobForm from "~/components/forms/MobForm"
 import { api } from "~/trpc/server"
 import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles"
 
-// 1 day
-export const revalidate = 86400 // secs
-
 interface Params { slug: string }
 
 export async function generateMetadata({ params }: { params: Params }) {

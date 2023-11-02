@@ -5,7 +5,7 @@ import { cn } from "~/utils/styles";
 import { Label } from "~/components/ui/label";
 import { useState } from "react";
 import { type z } from "zod";
-import { type dropsSchema, type saleItemsSchema } from "./schemas";
+import { type dropsSchema } from "./schemas";
 import { type Item } from "@prisma/client";
 import { Button } from "~/components/ui/button";
 import {
@@ -33,7 +33,6 @@ export default function DropItemsMultiField({ className, items }: { className?: 
 
   const [open, setOpen] = useState<Record<number, boolean>>({})
 
-  const errMessage = error?.errorMessage
 
   const onAdd = () => {
     field.onChange([...(field.value ?? []), {}])
