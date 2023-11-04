@@ -31,6 +31,7 @@ import { cn } from "~/utils/styles"
 import { ItemStats } from "./ItemStats"
 import { getAverageDamage, getSumOfBasicStats, isWeapon } from "~/utils/fo"
 import { SoldByList } from "./SoldByList"
+import { ItemRequiredStats } from "./ItemRequiredStats"
 
 
 type Data = RouterOutputs['item']['getAll']
@@ -57,6 +58,11 @@ export const columns = [
     id: 'stats',
     header: getSortButton('Stats'),
     cell: ({ row }) => <ItemStats stats={row.original} />
+  }),
+  columnHelper.display({
+    id: 'req-stats',
+    header: 'Req',
+    cell: ({ row }) => <ItemRequiredStats stats={row.original} />
   }),
   columnHelper.accessor(row => isWeapon(row) ? getAverageDamage(row) : null, {
     id: 'damage',

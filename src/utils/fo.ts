@@ -137,6 +137,8 @@ export const BASE_BASIC_STAT = 20;
 // --- stats
 
 export type BasicStats = 'str' | 'agi' | 'sta' | 'int' | 'armor'
+export type RequiredStats = 'reqStr' | 'reqAgi' | 'reqSta' | 'reqInt'
+
 export type DerivedStats = 'crit' | 'dodge' | 'atkPower' | 'armor' | 'health' | 'energy'
 
 export type PlayerStats = Record<BasicStats | DerivedStats | DamageKey, number>
