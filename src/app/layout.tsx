@@ -7,7 +7,6 @@ import { Footer } from '~/components/layout/Footer'
 import { Header } from '~/components/layout/Header.server'
 import { Toaster } from "~/components/ui/toaster"
 import { TRPCReactProvider } from '~/trpc/react';
-// import { headers } from 'next/headers';
 import { Inter } from "next/font/google"
 import { cn } from '~/utils/styles';
  

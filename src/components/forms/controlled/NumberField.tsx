@@ -8,7 +8,7 @@ import { Label } from "~/components/ui/label";
 export default function NumberField({className}: { className?: string }) {
 
   const { label, placeholder, isOptional } = useFieldInfo();
-  const { field, error } = useTsController<string>();
+  const { field, error } = useTsController<number>();
   const { maxValue, minValue } = useNumberFieldInfo()
   const id = field.name
 
@@ -26,7 +26,16 @@ export default function NumberField({className}: { className?: string }) {
         }
         aria-invalid={!!error}
         onChange={(e) => {
-          field.onChange(e.target.value);
+          if(typeof e.target.value === 'string') {
+            if(e.target.value) {
+              const num = parseInt(e.target.value)
+              if(!isNaN(num)) {
+                field.onChange(num);
+              }
+            } else {
+              field.onChange(undefined)
+            }
+          }
         }}
         type="number"
         max={maxValue}

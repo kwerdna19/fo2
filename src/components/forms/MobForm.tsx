@@ -2,25 +2,24 @@
 import { Form } from "~/components/forms/Form"
 import { type Item, type Area } from "@prisma/client"
 import { useToast } from "~/components/ui/use-toast"
-import { useTransition } from "react"
 import { mobSchema } from "./controlled/schemas"
 import { z } from "zod"
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from "next/navigation"
 import { type RouterOutputs } from "~/trpc/shared"
+import { api } from "~/trpc/react"
 
 
 export type MobSchema = z.infer<typeof mobSchema>
 
 type InputData = NonNullable<RouterOutputs['mob']['getBySlug']>
-
 interface Props {
   areas: Pick<Area, 'id' | 'name' | 'spriteUrl' | 'height' | 'width'>[]
   items: Pick<Item, 'id' | 'name' | 'spriteUrl'>[],
   sprites: string[],
-  onSubmit: (data: MobSchema, originalId?: string) => Promise<RouterOutputs['mob']['create']>
-  initialValues?: InputData
+  initialValues?: InputData,
+  onComplete: (paths: string[]) => Promise<unknown>
 }
 
 const getFormDataFromData = (mob: InputData): MobSchema => {
@@ -48,9 +47,8 @@ const getFormDataFromData = (mob: InputData): MobSchema => {
   }
 }
 
-export default function MobForm({ areas, items, sprites, onSubmit, initialValues }: Props) {
+export default function MobForm({ areas, items, sprites, initialValues, onComplete }: Props) {
 
-    const [isPending, startTransition] = useTransition()
 
     const vals = initialValues && getFormDataFromData(initialValues)
 
@@ -66,11 +64,50 @@ export default function MobForm({ areas, items, sprites, onSubmit, initialValues
     const { toast } = useToast()
     const router = useRouter()
 
+    const { mutate: create, isLoading: createLoading } = api.mob.create.useMutation({
+      onSuccess(data) {
+        toast({
+          title: "Success",
+          description: 'Mob Created'
+        })
+        router.push(`/mobs/${data.slug}`)
+        void onComplete(['/mobs'])
+      },
+      onError() {
+        toast({
+          title: "Oops",
+          description: "An error occurred.",
+          variant: "destructive"
+        })
+      }
+    })
+
+    const { mutate: update, isLoading: updateLoading } = api.mob.update.useMutation({
+      onSuccess(data) {
+        toast({
+          title: "Success",
+          description: 'Mob Updated'
+        })
+        if(data.slug !== initialValues?.slug) {
+          router.replace(`/mobs/${data.slug}/edit`)
+        }
+        router.refresh()
+        void onComplete(['/mobs', `/mobs/${data.slug}`])
+      },
+      onError() {
+        toast({
+          title: "Oops",
+          description: "An error occurred.",
+          variant: "destructive"
+        })
+      }
+    })
+
     return (<Form
         schema={mobSchema}
         form={form}
         formProps={{
-          loading: isPending,
+          loading: updateLoading || createLoading,
           dirty: form.formState.isDirty,
           button: initialValues ? 'Update' : 'Create'
         }}
@@ -85,22 +122,12 @@ export default function MobForm({ areas, items, sprites, onSubmit, initialValues
             options: sprites
           }
         }}
-        onSubmit={v => {
-          startTransition(async () => {
-            const response = await onSubmit(v, initialValues?.id)
-            if(response.slug !== initialValues?.slug) {
-              if(initialValues) {
-                router.replace(`/mobs/${response.slug}/edit`)
-              } else {
-                router.push(`/mobs/${response.slug}`)
-              }
-            }
-            toast({
-              title: "Success",
-              description: initialValues ? 'Updated' : 'Created'
-            })
-            router.refresh()
-          })
+        onSubmit={data => {
+          if(initialValues?.id) {
+            update({ data, id: initialValues.id })
+          } else {
+            create(data)
+          }
         }}
     />)
 }
