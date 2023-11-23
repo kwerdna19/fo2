@@ -10,7 +10,7 @@ export function CharacterPreview({ className, build }: { build: Build; className
 
   const itemSlugs = items.map(item => basename(item.spriteUrl).replace(/\.png$/, '').replace(/\-icon$/, ''));
 
-  const url = `https://art.fantasyonline2.com/api/character/ss?f=body-1_eyes-standard-blue_${itemSlugs.join('_')}`;
+  const url = `https://art.fantasyonline2.com/api/character/ss?f=body-0_eyes-standard-blue_nude-head${itemSlugs.length ? '_' + itemSlugs.join('_') : ''}`;
 
   const alt = `Character wearing ${items.map(item => item.name).join(', ')}`;
 

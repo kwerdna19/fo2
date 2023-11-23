@@ -127,28 +127,36 @@ export const getPossibleBuildFromItems = (items: Item[]): PossibleBuild => {
   }, {} as PossibleBuild)
 }
 
-export const LEVEL_CAP = 16;
+export const LEVEL_CAP = 25;
 export const STAT_POINTS_PER_LEVEL = 2;
 export const BASE_BASIC_STAT = 20;
 
+export const ENERGY_PER_LEVEL = 20
+export const ENERGY_PER_INT = 15
+
+export const HEALTH_PER_LEVEL = 18
+export const HEALTH_PER_STA = 18
 
 
 
 // --- stats
 
-export type BasicStats = 'str' | 'agi' | 'sta' | 'int' | 'armor'
+export type Stat = 'str' | 'agi' | 'sta' | 'int'
+
+export const stats: Stat[] = ['str', 'agi', 'sta', 'int']
+
+export type BasicStats =  Stat | 'armor'
 export type RequiredStats = 'reqStr' | 'reqAgi' | 'reqSta' | 'reqInt'
 
 export type DerivedStats = 'crit' | 'dodge' | 'atkPower' | 'armor' | 'health' | 'energy'
 
 export type PlayerStats = Record<BasicStats | DerivedStats | DamageKey, number>
 
-export const BASE_STATS: Record<BasicStats, number> = {
-  agi: 20,
-  int: 20,
-  sta: 20,
-  str: 20,
-  armor: 0
+export const BASE_STATS: Record<Stat, number> = {
+  agi: BASE_BASIC_STAT,
+  int: BASE_BASIC_STAT,
+  sta: BASE_BASIC_STAT,
+  str: BASE_BASIC_STAT,
 }
 
 
@@ -211,13 +219,10 @@ export const combineBasicStats = (...inputs: (BaseInputStats | BaseInputStats[])
   } as Record<BasicStats, number>)
 }
 
-export const getAttackPower = (stats: Record<BasicStats, number>) => {
+export const getAttackPower = (stats: Record<Stat, number>) => {
   const maxStat = Math.max(stats.agi, stats.int, stats.sta, stats.str)
   return Math.floor(2*maxStat + stats.str - 20)
 }
-
-const BASE_ATTACK_POWER = getAttackPower(BASE_STATS) // 40
-
 
 export const getCrit = (stats: Record<BasicStats, number>) => {
   return (50 + stats.agi + stats.int) / 14
@@ -236,18 +241,13 @@ const fistWeapon = {
 export const getDamageRange = (stats: Record<BasicStats, number>, weapon: Pick<Weapon, 'atkSpeed' | 'dmgMax' | 'dmgMin'>) => {
   
   const atkPower = getAttackPower(stats)
-  const power = (weapon.atkSpeed*(atkPower - BASE_ATTACK_POWER)/14)
+  const power = (weapon.atkSpeed*atkPower/14)
   const min = Math.floor(weapon.dmgMin + power)
   const max = Math.floor(weapon.dmgMax + power)
 
   return [min, max] as const
 }
 
-const ENERGY_PER_LEVEL = 20
-const ENERGY_PER_INT = 15
-
-const HEALTH_PER_LEVEL = 18
-const HEALTH_PER_STA = 18
 
 
 export const getMaxEnergy = (stats: Record<BasicStats, number>, level: number) => {
@@ -287,11 +287,11 @@ export const getArmor = (stats: Record<BasicStats, number>) => {
 export const getAllStats = (
   build: Build,
   level: number,
-  skillPointAssignment: Omit<BaseInputStats, 'armor'> = {},
+  skillPoints: Omit<BaseInputStats, 'armor'> = BASE_STATS,
 ) => {
 
   const buildItems = Object.values(build).filter(Boolean)
-  const basicStats = combineBasicStats(BASE_STATS, buildItems, skillPointAssignment)
+  const basicStats = combineBasicStats(buildItems, skillPoints)
   
   const mainHand = build[Slot.MAIN_HAND]
   const derivedStats = getDerivedStats(basicStats, level, mainHand && isWeapon(mainHand) ? mainHand : undefined)

@@ -1,20 +1,21 @@
 'use client'
 
-import { type Build, type Slot, playerSlots, equipmentSlotConfig, type NonCosmeticEquippableType } from "~/utils/fo"
+import { type Build, type PossibleBuild, type Slot, playerSlots } from "~/utils/fo"
 import { CharacterPreview } from "./CharacterPreview"
-import { BuildItem } from "./BuildItem"
-import { type Item } from "@prisma/client"
+import { PossibleBuildItem } from "./PossibleBuildItem"
 
 
 interface Props {
-  items: Item[]
-  build: Build,
-  updateSlot: (slot: Slot, newItemId: string | null | undefined) => void
+  stat?: string,
+  opt: 'max' | 'min',
+  possibleBuilds: PossibleBuild,
+  selectedBuild: Build,
+  updateSlot: (slot: Slot, inc: 1 | -1) => void
   health?: number
   energy?: number
 }
 
-export default function EquipmentBuild({ build, updateSlot, energy, health, items }: Props) {
+export default function PossibleEquipmentBuild({ possibleBuilds, selectedBuild, stat, updateSlot, energy, health }: Props) {
 
   return (<div className="grid grid-cols-[1fr_400px_1fr] gap-4 grid-rows-7">
       {playerSlots.map((slot, i) => {
@@ -25,30 +26,21 @@ export default function EquipmentBuild({ build, updateSlot, energy, health, item
         if(slot === null) {
           return (<div key={slot} style={{gridRow: row , gridColumn: col }} />)
         }
-        const item = build[slot]
 
-        const options = items.filter(item => {
-          if(item.equip === null) {
-            return false
-          }
-          const slotOrSlots = equipmentSlotConfig[item.equip as NonCosmeticEquippableType]
+        const possibleItems = possibleBuilds[slot]
+        const hasOptions = !!possibleItems && possibleItems.length > 1
 
-          if(Array.isArray(slotOrSlots)) {
-            return slotOrSlots.includes(slot)
-          }
-
-          return slotOrSlots === slot
-        }).sort((a, b) => (a.levelReq ?? 0) - (b.levelReq ?? 0))
+        const item = selectedBuild[slot]
 
         return (<div key={slot} style={{gridRow: row , gridColumn: col }}>
-       <BuildItem slot={slot} item={item} tooltipSide={col === 1 ? 'left' : 'right'} options={options} updateItem={(newItemId) => updateSlot(slot, newItemId)}/>
+       <PossibleBuildItem slot={slot} item={item} tooltipSide={col === 1 ? 'left' : 'right'} stat={stat} switchOptions={hasOptions ? (inc: 1 | -1) => updateSlot(slot, inc) : undefined}/>
       </div>)
       }
       )}
       <div className="border col-start-2 col-end-2 row-span-full flex items-center justify-center rounded-sm relative">
-        <CharacterPreview build={build} className="-mt-4" />
+        <CharacterPreview build={selectedBuild} className="-mt-4" />
 
-        <div className="absolute bottom-0 w-full flex flex-col sm:flex-row p-5 gap-x-5 gap-y-3">
+        <div className="absolute bottom-0 w-full flex p-5 gap-x-5">
 
           <div className="flex-1 flex items-center bg-blue-600 border-2 border-black text-white px-2 justify-between rounded-sm">
             <div className="pb-0.5">

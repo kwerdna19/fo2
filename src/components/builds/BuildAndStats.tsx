@@ -3,8 +3,8 @@
 import { type Item } from "@prisma/client"
 import { type BasicStats, type Build, type PossibleBuild, STAT_POINTS_PER_LEVEL, Slot, getPossibleBuildFromItems, playerSlots, getAllStats } from "~/utils/fo"
 import { useState } from "react"
-import EquipmentBuild from "./EquipmentBuild"
 import { cn } from "~/utils/styles"
+import PossibleEquipmentBuild from "./PossibleEquipmentBuild"
 
 export default function BuildAndStats({ items, stat, opt, level }: { items: Item[], stat?: BasicStats, opt: 'max' | 'min', level: number }) {
 
@@ -58,7 +58,7 @@ export default function BuildAndStats({ items, stat, opt, level }: { items: Item
   })
 
   return (<div>
-    <EquipmentBuild
+    <PossibleEquipmentBuild
       possibleBuilds={possibleBuilds}
       selectedBuild={build}
       opt={opt}

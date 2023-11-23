@@ -1,6 +1,7 @@
-import { type Item } from "@prisma/client";
+import { type EquippableType, type Item } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { equipmentSlotConfig } from "~/utils/fo";
 
 export const router = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
@@ -26,6 +27,18 @@ export const router = createTRPCRouter({
           orderBy: {
             price: 'asc'
           }
+        }
+      }
+    })
+  }),
+  getAllEquipment: publicProcedure.query(({ ctx }) => {
+    return ctx.db.item.findMany({
+      orderBy: {
+        name: 'asc'
+      },
+      where: {
+        equip: {
+          in: Object.keys(equipmentSlotConfig) as EquippableType[]
         }
       }
     })

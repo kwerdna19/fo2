@@ -1,54 +1,86 @@
 'use client';
 import { type Item } from "@prisma/client";
-import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from "../ui/tooltip";
-import Link from "next/link";
 import { ItemSprite } from "../ItemSprite";
 import { Slot, slotBackgroundSpriteMap } from "~/utils/fo";
-import { ItemStats } from "../tables/items/ItemStats";
-import { Button } from "../ui/button";
 import { cn } from "~/utils/styles";
-import { ChevronDown, ChevronUp } from "lucide-react";
-
-export function BuildItem({ item, tooltipSide, slot, stat, switchOptions }: { item?: Item | null; slot: Slot; tooltipSide: 'left' | 'right'; stat?: string; switchOptions?: (inc: 1 | -1) => void; }) {
-
-  const trigger = item ? <Link href={`/items/${item.slug}`}>
-    <ItemSprite
-      className="border-2 shadow-sm border-slate-200 bg-slate-50 rounded-sm"
-      url={item.spriteUrl}
-      name={item.name}
-      size="md" />
-  </Link> : <div className="border-2 shadow-sm border-slate-300 bg-slate-200 flex items-center justify-center rounded-sm w-[70px] h-[70px]">
-    <ItemSprite
-      url={slotBackgroundSpriteMap[slot]}
-      name={Slot[slot]}
-      size="sm" />
-  </div>;
-
-  const tooltip = item ? <>
-    <div className="mb-2 font-bold">{item.name}</div>
-    <ItemStats stats={item} />
-  </> : <div>You can use any item in the {Slot[slot].replace(/\_/g, ' ')} slot{`${stat ? ` that does not affect ${stat.toUpperCase()}` : ''}`}.</div>;
+import {
+  Command,
+  CommandEmpty, CommandInput,
+  CommandItem,
+  CommandList
+} from "~/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "~/components/ui/popover";
+import { useState } from "react";
+import { Button } from "../ui/button";
 
 
-  return (<div className={cn("flex gap-x-2", tooltipSide === 'left' ? 'flex-row-reverse' : '')}>
-    <TooltipProvider>
-      <Tooltip delayDuration={0}>
-        <TooltipTrigger>
-          {trigger}
-        </TooltipTrigger>
-        {<TooltipContent side={tooltipSide} sideOffset={10} className="min-w-[8rem] max-w-[12rem]">
-          {tooltip}
-        </TooltipContent>}
-      </Tooltip>
-    </TooltipProvider>
-    {switchOptions !== undefined ? <div className="flex flex-col justify-between py-1">
-      <Button size="icon" onClick={() => switchOptions(1)} className="h-7 w-7">
-        <ChevronUp className="h-5 w-5" />
+export function BuildItem({ item, tooltipSide, slot, options, updateItem }: { item?: Item | null | undefined; slot: Slot; tooltipSide: 'left' | 'right'; options: Item[], updateItem: (newItem: string | null | undefined) => void }) {
+
+  const [open, setOpen] = useState(false)
+
+  return (<div className={cn("flex gap-x-3 items-center", tooltipSide === 'left' ? 'flex-row-reverse' : '')}>
+    <Popover open={open} onOpenChange={setOpen}>
+      {/* <TooltipProvider>
+        <Tooltip delayDuration={0}>
+          <TooltipTrigger>
+            {trigger}
+          </TooltipTrigger>
+          <TooltipContent side={tooltipSide} sideOffset={10} className="min-w-[8rem] max-w-[12rem]">
+            {tooltip}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider> */}
+      <PopoverTrigger asChild>
+      <Button size="icon" variant="ghost" className="w-[70px] h-[70px]" disabled={options.length === 0}>
+        <ItemSprite
+          className="border-2 shadow-sm border-slate-200 bg-slate-50 rounded-sm"
+          url={item ? item.spriteUrl : slotBackgroundSpriteMap[slot]}
+          name={item ? item.name : Slot[slot]}
+          size="md"
+        />
       </Button>
-      <Button size="icon" onClick={() => switchOptions(-1)} className="h-7 w-7">
-        <ChevronDown className="h-5 w-5" />
-      </Button>
-    </div> : null}
+      </PopoverTrigger>
+      <PopoverContent className="w-[250px] p-0 overflow-y-auto">
+        <Command>
+          <CommandInput placeholder="Search item..." />
+          <CommandEmpty>No items found</CommandEmpty>
+          <CommandList className="max-h-[144px]">
+
+            {options.map((itemOption) => (
+              <CommandItem
+                key={itemOption.id}
+                onSelect={() => {
+                  if(item?.id === itemOption.id) {
+                    updateItem(null)
+                  } else {
+                    updateItem(itemOption.id)
+                  }
+                  setOpen(false)
+                }}
+                className={cn("gap-x-2",item?.id === itemOption.id && "font-bold")}
+              >
+                <ItemSprite
+                  name={itemOption.name}
+                  url={itemOption.spriteUrl}
+                  size="xs"
+                  className={cn("bg-slate-100 border-slate-300 border rounded-sm", item?.id === itemOption.id && "border-slate-400")}
+                />
+                {itemOption.name}
+              </CommandItem>
+            ))}
+
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+    {/* {item ? <Button size="icon" variant="destructive" className="h-7 w-7" onClick={() => updateItem(null)}>
+      <XIcon className="h-4 w-4" />
+    </Button> : null} */}
+
   </div>);
 
 
