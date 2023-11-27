@@ -9,18 +9,18 @@ import {
 } from "~/components/ui/tooltip";
 import { type Datum } from "./MobTable";
 import Link from "next/link";
-import { GoldCount } from "~/components/GoldCount";
+import { PriceDisplay } from "~/components/PriceDisplay";
 
 export function DropsList({ drops, className, infoInToolTip = false, size = 'md' }: { drops: Datum['drops']; className?: string; infoInToolTip?: boolean, size?: 'md' | 'sm' }) {
 
 
-  const getItemInfo = (dropRate: number | null  | undefined, sellPrice: number | null) => (<div className="text-sm pt-1 px-1 flex items-center justify-between space-x-1">
+  const getItemInfo = (dropRate: number | null  | undefined, sellPrice: number | null) => (<div className="text-sm pt-1 px-1 flex items-center space-x-1.5">
   <div>
-    <GoldCount size="xs" count={sellPrice} />
+    <PriceDisplay size="xs" count={sellPrice} />
   </div>
   <div className="h-4 border-r border-gray-300" />
   <div>
-  {dropRate ?? '?'}<span className="pl-0.5">%</span>
+  {dropRate ?? '?'}{'%'}
   </div>
 </div> )
 

@@ -25,7 +25,7 @@ import { DebouncedInput } from "../../DebouncedInput"
 import Link from "next/link";
 import { ItemSprite } from "~/components/ItemSprite";
 import { getSortButton } from "~/components/SortButton";
-import { GoldCount } from "~/components/GoldCount"
+import { PriceDisplay } from "~/components/PriceDisplay"
 import { DroppedByList } from "./DroppedByList"
 import { cn } from "~/utils/styles"
 import { ItemStats } from "./ItemStats"
@@ -78,7 +78,7 @@ export const columns = [
   }),
   columnHelper.accessor('sellPrice', {
     header: getSortButton('Sell Price'),
-    cell: info => <GoldCount count={info.getValue()} />,
+    cell: info => <PriceDisplay count={info.getValue()} />,
   }),
   columnHelper.accessor(row => row.droppedBy.map(d => d.mob.name).join(', '), {
     id: 'dropped-by',

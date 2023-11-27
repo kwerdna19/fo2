@@ -25,7 +25,7 @@ export function Header({ areas }: { areas: RouterOutputs['area']['getAllQuick'] 
   return (
     <div className="flex gap-x-4 items-center">
       <Link href="/" className="flex gap-x-4 items-center">
-        <UnitSprite type="gem" size="lg" />
+        <UnitSprite type="GEMS" size="lg" />
         <h1>FO2 DB</h1>
       </Link>
       <div className="pl-2 my-2 border-r-2 self-stretch" />

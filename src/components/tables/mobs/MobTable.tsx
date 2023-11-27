@@ -83,7 +83,7 @@ export const columns = [
   columnHelper.accessor(row => row.drops.map(d => d.item.name).join(', '), {
     id: 'loot',
     header: 'Loot',
-    cell: ({ row }) => <DropsList drops={row.original.drops} className="flex-nowrap" /> //className="hidden lg:flex"
+    cell: ({ row }) => <DropsList drops={row.original.drops} className="flex-nowrap" />
   }),
 ]
 

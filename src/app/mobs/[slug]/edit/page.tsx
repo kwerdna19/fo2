@@ -1,6 +1,6 @@
 import { Role } from "@prisma/client"
 import { notFound } from "next/navigation"
-import { getListOfImages, invalidate } from "~/utils/server"
+import { getListOfImages } from "~/utils/server"
 import { Button } from "~/components/ui/button"
 import { ChevronLeft } from "lucide-react"
 import Link from "next/link"
@@ -48,6 +48,6 @@ export default async function EditMob({ params }: { params: Params }) {
         Back to page
       </Link>
     </Button>
-    <MobForm areas={areas} items={items} sprites={sprites} initialValues={mob} onComplete={invalidate} />
+    <MobForm areas={areas} items={items} sprites={sprites} initialValues={mob} />
   </div>
 }

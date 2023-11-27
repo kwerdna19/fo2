@@ -9,7 +9,7 @@ import {
 import { type Datum } from "./ItemTable";
 import { MobSprite } from "~/components/MobSprite";
 import Link from "next/link";
-import { GoldCount } from "~/components/GoldCount";
+import { PriceDisplay } from "~/components/PriceDisplay";
 
 export function SoldByList({ npcs, className }: { npcs: Datum['soldBy']; className?: string; }) {
 
@@ -32,7 +32,7 @@ export function SoldByList({ npcs, className }: { npcs: Datum['soldBy']; classNa
       </Tooltip>
     </TooltipProvider>
       <div className="text-sm pb-1 -mt-3 px-1 flex justify-center space-x-1">
-        <GoldCount count={d.price} size="xs" />
+        <PriceDisplay count={d.price} size="xs" />
       </div>
     </div>
     )}

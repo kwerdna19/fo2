@@ -9,12 +9,13 @@ import {
 } from "~/components/ui/tooltip";
 import { type Datum } from "./NpcTable";
 import Link from "next/link";
-import { GoldCount } from "~/components/GoldCount";
+import { PriceDisplay } from "~/components/PriceDisplay";
+import { type Unit } from "@prisma/client";
 
 export function SaleItemsList({ items, className, infoInToolTip = false, size = 'md' }: { items: Datum['items']; className?: string; infoInToolTip?: boolean, size?: 'md' | 'sm' }) {
 
 
-  const getItemInfo = (salePrice: number | null) => {
+  const getItemInfo = (salePrice: number, unit: Unit) => {
 
     if(!salePrice) {
       return null
@@ -22,7 +23,7 @@ export function SaleItemsList({ items, className, infoInToolTip = false, size = 
 
     return ((<div className="text-sm pt-1 px-1 flex items-center justify-between space-x-1">
     <div>
-      <GoldCount size="xs" count={salePrice} />
+      <PriceDisplay size="xs" count={salePrice} unit={unit} />
     </div>
   </div>))
   }
@@ -42,11 +43,11 @@ export function SaleItemsList({ items, className, infoInToolTip = false, size = 
         </TooltipTrigger>
         <TooltipContent side="bottom">
           <div>{d.item.name}</div>
-          {infoInToolTip ? getItemInfo(d.price) : null}
+          {infoInToolTip ? getItemInfo(d.price, d.unit) : null}
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
-      {!infoInToolTip ?getItemInfo(d.price) : null}
+      {!infoInToolTip ?getItemInfo(d.price, d.unit) : null}
     </div>
     )}
   </div>);

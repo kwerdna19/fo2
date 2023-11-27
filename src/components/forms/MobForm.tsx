@@ -19,7 +19,7 @@ interface Props {
   items: Pick<Item, 'id' | 'name' | 'spriteUrl'>[],
   sprites: string[],
   initialValues?: InputData,
-  onComplete: (paths: string[]) => Promise<unknown>
+  onComplete?: (paths: string[]) => Promise<unknown>
 }
 
 const getFormDataFromData = (mob: InputData): MobSchema => {
@@ -47,7 +47,7 @@ const getFormDataFromData = (mob: InputData): MobSchema => {
   }
 }
 
-export default function MobForm({ areas, items, sprites, initialValues, onComplete }: Props) {
+export default function MobForm({ areas, items, sprites, initialValues }: Props) {
 
 
     const vals = initialValues && getFormDataFromData(initialValues)
@@ -71,7 +71,7 @@ export default function MobForm({ areas, items, sprites, initialValues, onComple
           description: 'Mob Created'
         })
         router.push(`/mobs/${data.slug}`)
-        void onComplete(['/mobs'])
+        // void onComplete(['/mobs'])
       },
       onError() {
         toast({
@@ -92,7 +92,7 @@ export default function MobForm({ areas, items, sprites, initialValues, onComple
           router.replace(`/mobs/${data.slug}/edit`)
         }
         router.refresh()
-        void onComplete(['/mobs', `/mobs/${data.slug}`])
+        // void onComplete(['/mobs', `/mobs/${data.slug}`])
       },
       onError() {
         toast({

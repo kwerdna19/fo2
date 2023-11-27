@@ -1,7 +1,7 @@
 import { Role } from "@prisma/client"
 import { notFound } from "next/navigation"
 import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles"
-import { getListOfImages, invalidate } from "~/utils/server"
+import { getListOfImages } from "~/utils/server"
 import MobForm from "~/components/forms/MobForm"
 import { api } from "~/trpc/server"
 
@@ -24,6 +24,6 @@ export default async function AddMob() {
 
     return <div className="w-full max-w-screen-xl">
     <h2 className="text-3xl mb-4">Add</h2>
-    <MobForm onComplete={invalidate} areas={areas} items={items} sprites={sprites} />
+    <MobForm areas={areas} items={items} sprites={sprites} />
   </div>
 }

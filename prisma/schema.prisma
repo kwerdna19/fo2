@@ -71,7 +71,7 @@ enum Unit {
 }
 model NpcSale {
 
-  npc       Npc     @relation(fields: [npcId], references: [id])
+  npc       Npc     @relation(fields: [npcId], references: [id], onDelete: Cascade)
   npcId     String
   item       Item     @relation(fields: [itemId], references: [id])
   itemId     String
