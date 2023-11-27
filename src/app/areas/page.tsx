@@ -1,7 +1,6 @@
 import dynamic from 'next/dynamic'
 import { staticApi } from '~/trpc/server'
 
-// import MultiAreaMap from "~/components/maps/MultiAreaMap"
 const MultiAreaMap = dynamic(() => import("~/components/maps/MultiAreaMap"), { ssr: false })
 
 export const metadata = {
