@@ -2,12 +2,12 @@ import { notFound } from "next/navigation"
 import { Pencil } from "lucide-react"
 import { AdminButton } from "~/components/AdminButton"
 import { MobSprite } from "~/components/MobSprite"
-import { api } from "~/trpc/server"
+import { getNpcBySlug } from "~/features/npcs/requests"
 
 interface Params { slug: string }
 
 export async function generateMetadata({ params }: { params: Params }) {
-  const item = await api.npc.getBySlug.query(params.slug)
+  const item = await getNpcBySlug(params.slug)
   if(!item) {
     return {}
   }
@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: Params }) {
 
 export default async function Npc({ params }: { params: Params }) {
 
-  const npc = await api.npc.getBySlug.query(params.slug)
+  const npc = await getNpcBySlug(params.slug)
 
   if(!npc) {
     notFound()

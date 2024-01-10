@@ -14,9 +14,11 @@ import {
 } from "~/components/ui/navigation-menu"
 import { UnitSprite } from "../UnitSprite"
 import { usePathname } from "next/navigation"
-import { type RouterOutputs } from "~/trpc/shared"
+import { type getAllAreasQuick } from "~/features/areas/requests"
 
-export function Header({ areas }: { areas: RouterOutputs['area']['getAllQuick'] }) {
+type Areas = NonNullable<Awaited<ReturnType<typeof getAllAreasQuick>>>
+
+export function Header({ areas }: { areas: Areas }) {
 
   const path = usePathname()
 

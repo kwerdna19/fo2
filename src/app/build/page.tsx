@@ -1,6 +1,6 @@
 
 import BuildPlayground from "~/components/builds/BuildPlayground";
-import { staticApi } from "~/trpc/server";
+import { getAllEquipment } from "~/features/items/requests";
 
 export const metadata = {
   title: 'Build'
@@ -8,7 +8,7 @@ export const metadata = {
 
 export default async function Builds() {
 
-  const items = await staticApi.item.getAllEquipment.fetch()
+  const items = await getAllEquipment()
 
 
   return <BuildPlayground items={items} />

@@ -1,11 +1,11 @@
 import { ItemTable } from "~/components/tables/items/ItemTable"
-import { staticApi } from "~/trpc/server"
+import { getAllItems } from "~/features/items/requests"
 
 export const metadata = {
   title: 'Items'
 }
 
 export default async function Mobs() {
-  const items = await staticApi.item.getAll.fetch()
+  const items = await getAllItems()
   return <ItemTable data={items} />
 }

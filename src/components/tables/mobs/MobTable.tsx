@@ -20,7 +20,6 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table"
-import { type RouterOutputs } from "~/trpc/shared"
 import { MobSprite } from "../../MobSprite"
 import { cn } from "~/utils/styles"
 import { DebouncedInput } from "../../DebouncedInput"
@@ -30,9 +29,12 @@ import { DropsList } from "./DropsList";
 import { DropGold } from "./DropGold";
 import { MobHealth } from "./MobHealth";
 import SortButton, { getSortButton } from "~/components/SortButton";
+import { type getAllMobs } from "~/features/mobs/requests";
 
 
-export type Datum = RouterOutputs['mob']['getAll'][number]
+type Data = Awaited<ReturnType<typeof getAllMobs>>
+
+export type Datum = Data[number]
 const columnHelper = createColumnHelper<Datum>()
 
 export const columns = [
@@ -87,8 +89,7 @@ export const columns = [
   }),
 ]
 
-
-export function MobTable({ data }: { data: RouterOutputs['mob']['getAll']}) {
+export function MobTable({ data }: { data: Data }) {
 
   const [sorting, setSorting] = useState<SortingState>([])
 

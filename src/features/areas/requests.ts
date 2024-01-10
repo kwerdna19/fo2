@@ -46,7 +46,7 @@ export async function getAllAreasPopulated() {
   })
 }
 
-export async function getAreasBySlug(slug: string) {
+export async function getAreaBySlug(slug: string) {
   return db.area.findUnique({
     where: { slug },
     include: {

@@ -20,7 +20,6 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table"
-import { type RouterOutputs } from "~/trpc/shared"
 import { DebouncedInput } from "../../DebouncedInput"
 import Link from "next/link";
 import { ItemSprite } from "~/components/ItemSprite";
@@ -32,9 +31,11 @@ import { ItemStats } from "./ItemStats"
 import { getAverageDamage, getSumOfBasicStats, isWeapon } from "~/utils/fo"
 import { SoldByList } from "./SoldByList"
 import { ItemRequiredStats } from "./ItemRequiredStats"
+import { type getAllItems } from "~/features/items/requests"
 
 
-type Data = RouterOutputs['item']['getAll']
+type Data = Awaited<ReturnType<typeof getAllItems>>
+
 export type Datum = Data[number]
 const columnHelper = createColumnHelper<Datum>()
 

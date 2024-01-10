@@ -11,8 +11,7 @@ Created and bootstrapped with the [T3 Stack](https://create.t3.gg/)
 ### Framework
 - [TypeScript](https://www.typescriptlang.org/)
 - [React](https://react.dev/)
-- [Next.js](https://nextjs.org)
-- [tRPC](https://trpc.io)
+- [Next 14](https://nextjs.org)
 
 ### Database
 - [PostgreSQL](https://www.postgresql.org/)

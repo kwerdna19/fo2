@@ -24,8 +24,8 @@ import {
 import { type FieldMetadata, getFieldsetProps, getInputProps, useInputControl, control, useFormMetadata } from "@conform-to/react";
 import { coordinatesSchema, type locationsSchema } from "../schemas";
 
-const SingleAreaMap = dynamic(() => import("~/components/maps/SingleAreaMap"), { ssr: false })
-const LocationInput = dynamic(() => import("~/components/maps/LocationInput"), { ssr: false })
+const SingleAreaMap = dynamic(() => import("~/features/areas/components/SingleAreaMap"), { ssr: false })
+const LocationInput = dynamic(() => import("~/features/areas/components/LocationInput"), { ssr: false })
 
 type Locations = z.infer<typeof locationsSchema>
 

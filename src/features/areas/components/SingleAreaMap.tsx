@@ -1,14 +1,14 @@
 'use client'
 
-import { type RouterOutputs } from "~/trpc/shared";
 import { MapContainer } from "react-leaflet"
 import * as L from "leaflet";
 import { MapBackground } from "./MapBackground";
 import { LocationLayers } from "./LocationLayers";
 import { type ReactNode } from "react";
 import { cn } from "~/utils/styles";
+import { type getAreaBySlug } from "../requests";
 
-type Area = NonNullable<RouterOutputs['area']['getBySlug']>
+type Area = NonNullable<Awaited<ReturnType<typeof getAreaBySlug>>>
 
 export default function SingleAreaMap({ area, className, children }: { area: Pick<Area, 'id' | 'spriteUrl' | 'height' | 'width'> & { locations?: Area['locations'] }, className?: string, children?: ReactNode }) {
 

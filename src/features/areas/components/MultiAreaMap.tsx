@@ -1,12 +1,12 @@
 'use client'
 
-import { type RouterOutputs } from "~/trpc/shared";
 import { MapContainer } from "react-leaflet"
 import * as L from "leaflet";
 import { MapBackground } from "./MapBackground";
 import { useState } from "react";
+import { type getAllAreasPopulated } from "../requests";
 
-type Areas = RouterOutputs['area']['getAllPopulated']
+type Areas = Awaited<ReturnType<typeof getAllAreasPopulated>>
 
 export default function MultiAreaMap({ areas: allAreas, bg }: { areas: Areas, bg?: string }) {
 

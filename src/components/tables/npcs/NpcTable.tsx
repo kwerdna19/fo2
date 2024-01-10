@@ -20,16 +20,17 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table"
-import { type RouterOutputs } from "~/trpc/shared"
 import { MobSprite } from "../../MobSprite"
 import { cn } from "~/utils/styles"
 import { DebouncedInput } from "../../DebouncedInput"
 import Link from "next/link";
 import { getSortButton } from "~/components/SortButton";
 import { SaleItemsList } from "./SaleItemsList";
+import { type getAllNpcs } from "~/features/npcs/requests"
 
+type Data = Awaited<ReturnType<typeof getAllNpcs>>
 
-export type Datum = RouterOutputs['npc']['getAll'][number]
+export type Datum = Data[number]
 const columnHelper = createColumnHelper<Datum>()
 
 export const columns = [
@@ -61,7 +62,7 @@ export const columns = [
 ]
 
 
-export function NpcTable({ data }: { data: RouterOutputs['npc']['getAll']}) {
+export function NpcTable({ data }: { data: Data }) {
 
   const [sorting, setSorting] = useState<SortingState>([])
 

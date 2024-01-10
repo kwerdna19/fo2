@@ -1,8 +1,8 @@
+import { getAllAreasQuick } from '~/features/areas/requests'
 import { Header as ClientHeader} from './Header'
-import { staticApi } from "~/trpc/server"
 
 export async function Header() {
-  const areas = await staticApi.area.getAllPopulated.fetch()
+  const areas = await getAllAreasQuick()
   return (<ClientHeader areas={areas} />)
 }
 
