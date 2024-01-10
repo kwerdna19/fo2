@@ -1,8 +1,7 @@
 'use client'
-import { useTsController, useFieldInfo } from "@ts-react/form";
 import { Input } from "~/components/ui/input";
 import { cn } from "~/utils/styles";
-import { FieldLabel, Label } from "~/components/ui/label";
+import { FieldLabel} from "~/components/ui/label";
 import { useState } from "react";
 import { type z } from "zod";
 import { type dropsSchema } from "../schemas";

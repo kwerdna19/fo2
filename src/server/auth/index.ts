@@ -1,6 +1,8 @@
-import NextAuth, { type DefaultSession } from "next-auth"
+import NextAuth, { type DefaultSession  } from "next-auth"
+
 import { PrismaAdapter } from "@auth/prisma-adapter"
-import Discord from "@auth/core/providers/discord"
+import Discord from "next-auth/providers/discord"
+
 import { env } from "~/env.mjs"
 import { db } from "~/server/db";
 import { type User } from "@prisma/client";
