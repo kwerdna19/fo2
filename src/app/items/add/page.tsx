@@ -4,31 +4,28 @@ import { getListOfImages } from "~/utils/server"
 import { Button } from "~/components/ui/button"
 import { ChevronLeft } from "lucide-react"
 import Link from "next/link"
-import { MobForm } from "~/features/mobs/components/MobForm"
-
 import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles"
 import { revalidatePath } from "next/cache"
 import { type ConformResult } from "~/types/actions"
-import { createMob } from "~/features/mobs/requests"
 import { parseWithZod } from "@conform-to/zod"
-import { mobSchema } from "~/features/mobs/schemas"
-import { getAllAreasQuick } from "~/features/areas/requests"
-import { getAllItemsQuick } from "~/features/items/requests"
+import { createItem } from "~/features/items/requests"
+import { itemSchema } from "~/features/items/schemas"
+import { ItemForm } from "~/features/items/components/ItemForm"
+import { getAllMobsQuick } from "~/features/mobs/requests"
 
 
 export function generateMetadata() {
   return {
-    title: `Add Mob`,
+    title: `Add Item`,
   }
 }
 
-export default async function AddMob() {
+export default async function AddItem() {
 
-  await userSatisfiesRoleOrRedirect(Role.MODERATOR, `/mobs`)
+  await userSatisfiesRoleOrRedirect(Role.MODERATOR, `/items`)
 
-  const areas = await getAllAreasQuick()
-  const items = await getAllItemsQuick()
-  const sprites = getListOfImages('mob')
+  const mobs = await getAllMobsQuick()
+  const sprites = getListOfImages('item')
 
   if(!sprites) {
     notFound()
@@ -37,7 +34,7 @@ export default async function AddMob() {
   async function action(result: ConformResult, formData: FormData) {
       'use server'
       const submission = parseWithZod(formData, {
-        schema: mobSchema,
+        schema: itemSchema,
       });
     
       if (submission.status !== 'success') {
@@ -45,14 +42,16 @@ export default async function AddMob() {
       }
   
       try {
+
         
-        const created = await createMob(submission.value)
+        const created = await createItem(submission.value)
         
         revalidatePath('/mobs')
         revalidatePath('/items')
         revalidatePath('/areas')
+        // revalidatePath('/npcs')
 
-        redirect(`/mobs/${created.slug}`)
+        redirect(`/items/${created.slug}`)
 
       } catch(e) {
   
@@ -65,11 +64,11 @@ export default async function AddMob() {
 
   return (<div className="w-full max-w-screen-xl">
   <Button size="sm" variant="outline" className="mb-5" asChild>
-    <Link href={`/mobs`}>
+    <Link href={`/items`}>
       <ChevronLeft className="mr-2 h-4 w-4" />
-      Back to mobs
+      Back to items
     </Link>
   </Button>
-  <MobForm action={action} areas={areas} items={items} sprites={sprites} />
+  <ItemForm action={action} sprites={sprites} mobs={mobs} />
 </div>)
 }

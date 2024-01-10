@@ -20,7 +20,7 @@ export default function SpriteSelect({ className, options }: { className?: strin
 
   const errMessage = error?.errorMessage
 
-  return <div className={cn("space-y-2 col-span-1", className)}>
+  return <div className={cn("space-y-1", className)}>
       <Label className={cn(error && "text-destructive", className)} htmlFor={id}>{label}{isOptional ? null : <span className="pl-0.5 text-red-600">*</span>}</Label>
       <Select
         value={field.value}

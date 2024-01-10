@@ -10,7 +10,7 @@ import { cn } from "~/utils/styles";
 
 type Area = NonNullable<RouterOutputs['area']['getBySlug']>
 
-export default function SingleAreaMap({ area, className, children }: { area: Pick<Area, 'id' | 'spriteUrl' | 'height' | 'width' | 'locations'>, className?: string, children?: ReactNode }) {
+export default function SingleAreaMap({ area, className, children }: { area: Pick<Area, 'id' | 'spriteUrl' | 'height' | 'width'> & { locations?: Area['locations'] }, className?: string, children?: ReactNode }) {
 
   const { spriteUrl: url, height, width, locations } = area
 
@@ -30,6 +30,6 @@ export default function SingleAreaMap({ area, className, children }: { area: Pic
     >
       {children}
       <MapBackground url={url} height={height} width={width} />
-      {locations.length > 0 ? <LocationLayers id={area.id} locations={locations}  /> : null}
+      {(locations && locations.length > 0) ? <LocationLayers id={area.id} locations={locations}  /> : null}
   </MapContainer>)
 }

@@ -5,9 +5,7 @@ import * as L from "leaflet";
 
 const LocationInput = ({ onChange, value }: { onChange: (coords: { x: number; y: number; } | undefined) => void; value: { x: number; y: number; } | undefined}) => {
 
-  const x = value?.x
-  const y = value?.y
-
+  const {x,y} = value ?? {}
   const hasValue = x!==undefined && y!==undefined
 
   useMapEvents({

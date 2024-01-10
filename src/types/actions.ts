@@ -1,12 +1,13 @@
 import { type SubmissionResult } from '@conform-to/dom'
 
-type BaseReturnType<Error> = SubmissionResult<Error> | undefined
 
 export type ErrorType = string[]
 
+export type ConformResult<Error = ErrorType> = SubmissionResult<Error> | undefined
+
 
 export type ConformServerAction<Error = ErrorType> = (
-  previous: BaseReturnType<Error> | undefined,
+  previous: ConformResult<Error> | undefined,
   formData: FormData,
-) => Promise<BaseReturnType<Error>>
+) => Promise<ConformResult<Error>>
 
