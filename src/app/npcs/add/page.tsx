@@ -4,31 +4,31 @@ import { getListOfImages } from "~/utils/server"
 import { Button } from "~/components/ui/button"
 import { ChevronLeft } from "lucide-react"
 import Link from "next/link"
+
 import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles"
 import { revalidatePath } from "next/cache"
 import { type ConformResult } from "~/types/actions"
 import { parseWithZod } from "@conform-to/zod"
-import { createItem } from "~/features/items/requests"
-import { itemSchema } from "~/features/items/schemas"
-import { ItemForm } from "~/features/items/components/ItemForm"
-import { getAllMobsQuick } from "~/features/mobs/requests"
-import { getAllNpcsQuick } from "~/features/npcs/requests"
+import { getAllAreasQuick } from "~/features/areas/requests"
+import { getAllItemsQuick } from "~/features/items/requests"
+import { NpcForm } from "~/features/npcs/components/NpcForm"
+import { npcSchema } from "~/features/npcs/schemas"
+import { createNpc } from "~/features/npcs/requests"
 
 
 export function generateMetadata() {
   return {
-    title: `Add Item`,
+    title: `Add Npc`,
   }
 }
 
-export default async function AddItem() {
+export default async function AddNpc() {
 
-  await userSatisfiesRoleOrRedirect(Role.MODERATOR, `/items`)
+  await userSatisfiesRoleOrRedirect(Role.MODERATOR, `/npcs`)
 
-  const mobs = await getAllMobsQuick()
-  const npcs = await getAllNpcsQuick()
-
-  const sprites = getListOfImages('item')
+  const areas = await getAllAreasQuick()
+  const items = await getAllItemsQuick()
+  const sprites = getListOfImages('npc')
 
   if(!sprites) {
     notFound()
@@ -37,7 +37,7 @@ export default async function AddItem() {
   async function action(result: ConformResult, formData: FormData) {
       'use server'
       const submission = parseWithZod(formData, {
-        schema: itemSchema,
+        schema: npcSchema,
       });
     
       if (submission.status !== 'success') {
@@ -47,14 +47,13 @@ export default async function AddItem() {
       try {
 
         
-        const created = await createItem(submission.value)
+        const created = await createNpc(submission.value)
         
-        revalidatePath('/mobs')
         revalidatePath('/items')
         revalidatePath('/areas')
         revalidatePath('/npcs')
 
-        redirect(`/items/${created.slug}`)
+        redirect(`/npcs/${created.slug}`)
 
       } catch(e) {
   
@@ -67,11 +66,11 @@ export default async function AddItem() {
 
   return (<div className="w-full max-w-screen-xl">
   <Button size="sm" variant="outline" className="mb-5" asChild>
-    <Link href={`/items`}>
+    <Link href={`/npcs`}>
       <ChevronLeft className="mr-2 h-4 w-4" />
-      Back to items
+      Back to npcs
     </Link>
   </Button>
-  <ItemForm action={action} sprites={sprites} mobs={mobs} npcs={npcs} />
+  <NpcForm action={action} areas={areas} items={items} sprites={sprites} />
 </div>)
 }

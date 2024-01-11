@@ -7,6 +7,12 @@ export const droppedBySchema = z.object({
   dropRate: z.number().optional(),
 }).array()
 
+export const soldBySchema = z.object({
+  npcId: z.string(),
+  gems: z.boolean().optional(),
+  price: z.number().int(),
+}).array()
+
 export const itemSchema = z.object({
   name: z.string(),
   desc: z.string().optional(),
@@ -35,5 +41,6 @@ export const itemSchema = z.object({
   dmgMin: z.number().int().optional(),
   dmgMax: z.number().int().optional(),
 
-  droppedBy: droppedBySchema.optional()
+  droppedBy: droppedBySchema.optional(),
+  soldBy: soldBySchema.optional()
 })

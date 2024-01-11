@@ -1,25 +1,27 @@
 'use client'
 import { Input } from "~/components/ui/input";
 import { cn } from "~/utils/styles";
-import { FieldLabel} from "~/components/ui/label";
+import { FieldLabel } from "~/components/ui/label";
 import { type z } from "zod";
-import { type dropsSchema } from "../schemas";
-import { type Item } from "@prisma/client";
+import { type soldBySchema } from "../schemas";
+import { type Npc } from "@prisma/client";
 import { Button } from "~/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { type FieldMetadata, control, getInputProps, useFormMetadata, getFieldsetProps } from "@conform-to/react";
-import { ItemField } from "~/features/items/components/ItemField";
+import FormCheckbox from "~/components/form-ui/FormCheckbox";
+import { NpcField } from "~/features/npcs/components/NpcField";
 
-type Drops = z.infer<typeof dropsSchema>
 
-export type Props = {
+type SoldBy = z.infer<typeof soldBySchema>
+
+type Props = {
   className?: string,
-  items: Pick<Item, 'id' | 'name' | 'spriteUrl'>[]
-  field: FieldMetadata<Drops | undefined>
+  npcs: Pick<Npc, 'id' | 'name' | 'spriteUrl'>[]
+  field: FieldMetadata<SoldBy | undefined>
   label: string
 }
 
-export default function DropItemsMultiField({ className, items, field, label }: Props) {
+export default function SoldByNpcsMultiField({ className, npcs, field, label }: Props) {
 
   const name = field.name
   const form = useFormMetadata(field.formId)
@@ -32,27 +34,31 @@ export default function DropItemsMultiField({ className, items, field, label }: 
       <div className="space-y-4">
         {fields.map((f, index) => {
 
-          const { dropRate, itemId } = f.getFieldset()
+          const { gems, npcId, price } = f.getFieldset()
 
           return <fieldset key={f.key} {...getFieldsetProps(f)} className="grid grid-cols-4 gap-x-6">
             <div className="grid grid-cols-4 col-span-3 gap-x-3">
-            <ItemField
-              field={itemId}
-              items={items}
-            />
-            <Input
-              placeholder="Drop Rate"
-              {...getInputProps(dropRate, { type: 'number' })}
-              key={dropRate.key}
-            />
+              <NpcField
+                field={npcId}
+                npcs={npcs}
+              />
+              <Input
+                placeholder="Price"
+                {...getInputProps(price, { type: 'number' })}
+                key={price.key}
+              />
+              <FormCheckbox
+                field={gems}
+                label="Gems?"
+              />
             </div>
             <Button size="icon" variant="destructive" {...form.getControlButtonProps(control.remove({ index, name }))}>
-                <Trash2 className="h-5 w-5" />
+              <Trash2 className="h-5 w-5" />
             </Button>
           </fieldset>
         })}
         
-        <Button {...form.getControlButtonProps(control.insert({ name }))}>Add Item</Button>
+        <Button {...form.getControlButtonProps(control.insert({ name }))}>Add Mob</Button>
       </div>
       {/* {placeholder && !errMessage ? <p id={`${id}-desc`} className="text-sm font-medium text-muted-foreground">
         {placeholder}

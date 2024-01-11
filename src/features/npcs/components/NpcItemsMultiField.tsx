@@ -1,25 +1,28 @@
 'use client'
 import { Input } from "~/components/ui/input";
 import { cn } from "~/utils/styles";
-import { FieldLabel} from "~/components/ui/label";
+import { FieldLabel } from "~/components/ui/label";
 import { type z } from "zod";
-import { type dropsSchema } from "../schemas";
+import { type saleItemsSchema } from "../schemas";
 import { type Item } from "@prisma/client";
 import { Button } from "~/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { type FieldMetadata, control, getInputProps, useFormMetadata, getFieldsetProps } from "@conform-to/react";
 import { ItemField } from "~/features/items/components/ItemField";
+import FormCheckbox from "~/components/form-ui/FormCheckbox";
 
-type Drops = z.infer<typeof dropsSchema>
 
-export type Props = {
+type SaleItems = z.infer<typeof saleItemsSchema>
+
+type Props = {
   className?: string,
   items: Pick<Item, 'id' | 'name' | 'spriteUrl'>[]
-  field: FieldMetadata<Drops | undefined>
+  field: FieldMetadata<SaleItems | undefined>
   label: string
 }
 
-export default function DropItemsMultiField({ className, items, field, label }: Props) {
+
+export function NpcItemsMultiField({ className, items, field, label }: Props) {
 
   const name = field.name
   const form = useFormMetadata(field.formId)
@@ -32,7 +35,7 @@ export default function DropItemsMultiField({ className, items, field, label }: 
       <div className="space-y-4">
         {fields.map((f, index) => {
 
-          const { dropRate, itemId } = f.getFieldset()
+          const { itemId, price, gems } = f.getFieldset()
 
           return <fieldset key={f.key} {...getFieldsetProps(f)} className="grid grid-cols-4 gap-x-6">
             <div className="grid grid-cols-4 col-span-3 gap-x-3">
@@ -41,9 +44,13 @@ export default function DropItemsMultiField({ className, items, field, label }: 
               items={items}
             />
             <Input
-              placeholder="Drop Rate"
-              {...getInputProps(dropRate, { type: 'number' })}
-              key={dropRate.key}
+              placeholder="Price"
+              {...getInputProps(price, { type: 'number' })}
+              key={price.key}
+            />
+            <FormCheckbox
+              label="Gems?"
+              field={gems}
             />
             </div>
             <Button size="icon" variant="destructive" {...form.getControlButtonProps(control.remove({ index, name }))}>

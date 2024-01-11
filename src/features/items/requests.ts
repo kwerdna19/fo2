@@ -1,4 +1,4 @@
-import { type EquippableType } from "@prisma/client";
+import { Unit, type EquippableType } from "@prisma/client";
 import { db } from "~/server/db";
 import { equipmentSlotConfig } from "~/utils/fo";
 import { type itemSchema } from "./schemas";
@@ -95,6 +95,11 @@ export async function getItemBySlug(slug: string) {
             level: 'asc'
           }
         }
+      },
+      soldBy: {
+        include: {
+          npc: true,
+        },
       }
     }
   })
@@ -103,7 +108,7 @@ export async function getItemBySlug(slug: string) {
 
 export async function createItem(input: z.infer<typeof itemSchema>) {
 
-  const { name, droppedBy, equip, ...rest } = input
+  const { name, droppedBy, equip, soldBy, ...rest } = input
 
   return db.item.create({
     data: {
@@ -113,6 +118,12 @@ export async function createItem(input: z.infer<typeof itemSchema>) {
       droppedBy: droppedBy && {
         create: droppedBy
       },
+      soldBy: soldBy && {
+        create: soldBy.map(({gems, ...d}) => ({
+          ...d,
+          unit: gems ? Unit.GEMS : Unit.COINS
+        }))
+      },
       ...rest
     }
   })
@@ -121,7 +132,7 @@ export async function createItem(input: z.infer<typeof itemSchema>) {
 
 export async function updateItem(id: string, data: z.infer<typeof itemSchema>) {
 
-  const { name, droppedBy, equip, ...rest } = data
+  const { name, droppedBy, equip, soldBy, ...rest } = data
 
   let updated = await db.item.update({
     where: {
@@ -144,20 +155,51 @@ export async function updateItem(id: string, data: z.infer<typeof itemSchema>) {
             }
           }
         }))
-      }      
+      },
+      soldBy: soldBy && {
+        upsert: soldBy.map(({ gems, ...d }) => ({
+          create: {
+            ...d,
+            unit: gems ? Unit.GEMS : Unit.COINS
+          },
+          update: {
+            ...d,
+            unit: gems ? Unit.GEMS : Unit.COINS
+          },
+          where: {
+            npcId_itemId: {
+              npcId: d.npcId,
+              itemId: id
+            }
+          }
+        }))
+      }     
     },
     include: {
-      droppedBy: true
+      droppedBy: true,
+      soldBy: true
     }
   })
 
   const dropsToRemove = droppedBy ? updated.droppedBy.filter(updatedDrop => {
     return !droppedBy.find(inputDrop => {
-      return inputDrop.mobId === updatedDrop.itemId
+      return (inputDrop.mobId === updatedDrop.mobId
+        && inputDrop.dropRate === updatedDrop.dropRate
+      )
     })
   }) : []
 
-  if(dropsToRemove.length) {
+  const salesToRemove = soldBy ? updated.soldBy.filter(updatedSale => {
+    return !soldBy.find(inputSale => {
+      return (
+        inputSale.npcId === updatedSale.npcId && 
+        inputSale.price === updatedSale.price && 
+        inputSale.gems === (updatedSale.unit === Unit.GEMS)
+      )
+    })
+  }) : []
+
+  if(dropsToRemove.length || salesToRemove.length) {
 
     updated = await db.item.update({
       where: {
@@ -171,10 +213,19 @@ export async function updateItem(id: string, data: z.infer<typeof itemSchema>) {
               itemId: id
             }
           })),
+        },
+        soldBy: {
+          delete: salesToRemove.map(s => ({
+            npcId_itemId: {
+              npcId: s.npcId,
+              itemId: id
+            }
+          }))
         }
       },
       include: {
-        droppedBy: true
+        droppedBy: true,
+        soldBy: true
       }
     })
 

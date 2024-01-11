@@ -1,5 +1,5 @@
 'use client'
-import { EquippableType, type Mob } from "@prisma/client"
+import { EquippableType, type Npc, type Mob } from "@prisma/client"
 import { type ConformServerAction } from "~/types/actions"
 import { useConform } from "~/hooks/useConform"
 import { itemSchema } from "../schemas"
@@ -13,17 +13,18 @@ import { Input } from "~/components/ui/input"
 import { Label } from "~/components/ui/label"
 import { Form } from "~/components/form-ui/Form"
 import DroppedByMobsMultiField from "./DroppedByMobsMultiField"
+import SoldByNpcsMultiField from "./SoldByNpcsMultiField"
 
 
 interface Props {
-  // areas: Pick<Area, 'id' | 'name' | 'spriteUrl' | 'height' | 'width'>[]
+  npcs: Pick<Npc, 'id' | 'name' | 'spriteUrl'>[],
   mobs: Pick<Mob, 'id' | 'name' | 'spriteUrl'>[],
   sprites: string[],
   defaultValue?: Awaited<ReturnType<typeof getItemBySlug>>,
   action: ConformServerAction
 }
 
-export function ItemForm({ sprites, mobs, action: serverAction, defaultValue }: Props) {
+export function ItemForm({ sprites, mobs, npcs, action: serverAction, defaultValue }: Props) {
   
     const [form, fields, action, lastResult] = useConform(serverAction, {
       schema: itemSchema,
@@ -86,6 +87,10 @@ export function ItemForm({ sprites, mobs, action: serverAction, defaultValue }: 
 
         <div className="col-span-2">
           <DroppedByMobsMultiField label="Dropped By" field={fields.droppedBy} mobs={mobs} />
+        </div>
+
+        <div className="col-span-2">
+          <SoldByNpcsMultiField label="Sold By" field={fields.soldBy} npcs={npcs} />
         </div>
 
     </Form>

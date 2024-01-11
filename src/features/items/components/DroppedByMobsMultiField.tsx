@@ -114,7 +114,7 @@ export default function DroppedByMobsMultiField({ className, mobs, field, label 
             />
             <Input
               placeholder="Drop Rate"
-              {...getInputProps(dropRate)}
+              {...getInputProps(dropRate, { type: 'number' })}
               key={dropRate.key}
             />
             </div>

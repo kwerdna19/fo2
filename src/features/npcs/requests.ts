@@ -1,8 +1,8 @@
 import { type z } from "zod";
 import { type npcSchema } from "./schemas";
 import { db } from "~/server/db";
-
-const getSlugFromName = (name: string) => name.replace(/\s+/g, '-').replace(/[^a-zA-Z\d-]/g, '').toLowerCase()
+import { getSlugFromName } from "~/utils/misc";
+import { Unit } from "@prisma/client";
 
 
 export async function getAllNpcs() {
@@ -65,160 +65,144 @@ export async function getNpcBySlug(slug: string) {
   })
 }
 
-// export async function createNpc(input: z.infer<typeof npcSchema>) {
 
-//   const { name, sprite: spriteUrl, items, locations, type } = input
+export async function getAllNpcsQuick() {
+  return db.npc.findMany({
+    orderBy: {
+      name: 'asc'
+    },
+    select: {
+      id: true,
+      name: true,
+      spriteUrl: true
+    }
+  })
+}
 
-//   return db.npc.create({
-//     data: {
-//       name,
-//       spriteUrl,
-//       slug: getSlugFromName(name),
-//       type: type,
-//       locations: {
-//         createMany: {
-//           data: locations.map(l => ({
-//             areaId: l.areaId,
-//             x: l.coordinates.x,
-//             y: l.coordinates.y
-//           }))
-//         }
-//       },
-//       items: {
-//         createMany: {
-//           data: items.map(item => ({
-//             itemId: item.item.id,
-//             price: item.price
-//           }))
-//         }
-//       }
-//     },
-//     include: {
-//       items: true,
-//       locations: true
-//     }
-//   })
+export async function createNpc(input: z.infer<typeof npcSchema>) {
 
-// }
+  const { name, items, locations, ...rest } = input
 
-// export async function updateNpc(id: string, data: z.infer<typeof npcSchema>) {
+  return db.npc.create({
+    data: {
+      name,
+      slug: getSlugFromName(name),
+      locations: locations && {
+        createMany: {
+          data: locations
+        }
+      },
+      items: items && {
+        createMany: {
+          data: items.map(({ gems, ...d }) => ({
+            ...d,
+            unit: gems ? Unit.GEMS : Unit.COINS
+          }))
+        }
+      },
+      ...rest
+    }
+  })
 
-//   const { sprite: spriteUrl, items, locations, ...fields } = data
+}
 
-//   let updated = await db.npc.update({
-//     where: {
-//       id
-//     },
-//     data: {
-//       ...fields,
-//       spriteUrl,
-//       slug: getSlugFromName(fields.name),
-//       updatedAt: new Date(),
-//       items: {
-//         upsert: items.map(({ item, price }) => ({
-//           create: {
-//             price: price,
-//             itemId: item.id
-//           },
-//           update: {
-//             price: price
-//           },
-//           where: {
-//             npcId_itemId: {
-//               itemId: item.id,
-//               npcId: id
-//             }
-//           }
-//         }))
-//       },
-//       locations: {
-//         upsert: locations.map(l => ({
-//           create: {
-//             x: l.coordinates.x,
-//             y: l.coordinates.y,
-//             areaId: l.areaId,
-//           },
-//           update: {
-//             x: l.coordinates.x,
-//             y: l.coordinates.y,
-//             areaId: l.areaId,
-//           },
-//           where: l.id ? {
-//             id: l.id
-//           } : {
-//             areaId_x_y_npcId: {
-//               areaId: l.areaId,
-//               x: l.coordinates.x,
-//               y: l.coordinates.y,
-//               npcId: id
-//             }
-//           }
-//         }))
-//       }
-//     },
-//     include: {
-//       items: true,
-//       locations: true
-//     }
-//   })
+export async function updateNpc(id: string, data: z.infer<typeof npcSchema>) {
 
-//   const itemsToRemove = updated.items.filter(updatedItem => {
-//     return !items.find(inputItem => {
-//       return inputItem.item.id === updatedItem.itemId
-//     })
-//   })
+  const { items, locations, ...fields } = data
 
-//   // TODO - verify
-//   const locationsToRemove = updated.locations.filter(updatedLocation => {
-//     return !locations.find(inputLocation => {
-//       return (
-//         updatedLocation.areaId === inputLocation.areaId &&
-//         updatedLocation.x === inputLocation.coordinates.x &&
-//         updatedLocation.y === inputLocation.coordinates.y &&
-//         updatedLocation.npcId === id
-//       )
-//     })
-//   })
+  let updated = await db.npc.update({
+    where: {
+      id
+    },
+    data: {
+      ...fields,
+      slug: getSlugFromName(fields.name),
+      updatedAt: new Date(),
+      items: items && {
+        upsert: items.map(({ gems, ...d }) => ({ 
+          create: {
+            ...d,
+            unit: gems ? Unit.GEMS : Unit.COINS
+          },
+          update: {},
+          where: {
+            npcId_itemId: {
+              itemId: d.itemId,
+              npcId: id
+            }
+          }
+        }))
+      },
+      locations: locations && {
+        upsert: locations.map(l => ({
+          create: l,
+          update: l,
+          where: {
+            areaId_x_y_mobId: {
+              areaId: l.areaId,
+              x: l.x,
+              y: l.y,
+              mobId: id
+            }
+          }
+        }))
+      }
+    },
+    include: {
+      items: true,
+      locations: true
+    }
+  })
 
-//   if(itemsToRemove.length || locationsToRemove.length) {
+  const itemsToRemove = items ? updated.items.filter(updatedItem => {
+    return !items.find(inputItem => {
+      return (inputItem.itemId === updatedItem.itemId &&
+        inputItem.price === updatedItem.price &&
+        inputItem.gems === (updatedItem.unit === Unit.GEMS)
+        )
+    })
+  }) : []
 
-//     updated = await db.npc.update({
-//       where: {
-//         id
-//       },
-//       data: {
-//         items: {
-//           delete: itemsToRemove.map(item => ({
-//             npcId_itemId: {
-//               npcId: id,
-//               itemId: item.itemId
-//             }
-//           })),
-//           // update: itemsToUpdate.map(({ item, ...otherFields }) => ({
-//           //   data: otherFields,
-//           //    where: {
-//           //     npcId_itemId: {
-//           //       itemId: item.id,
-//           //       npcId: id
-//           //     }
-//           //    }
-//           // }))
-//         },
-//         locations: {
-//           delete: locationsToRemove.map(l => ({
-//             id: l.id
-//           })),
-//         }
-//       },
-//       include: {
-//         items: true,
-//         locations: true
-//       }
-//     })
+  const locationsToRemove = locations ? updated.locations.filter(updatedLocation => {
+    return !locations.find(inputLocation => {
+      return (
+        updatedLocation.areaId === inputLocation.areaId &&
+        updatedLocation.x === inputLocation.x &&
+        updatedLocation.y === inputLocation.y
+      )
+    })
+  }) : []
 
-//   }
+  if(itemsToRemove.length || locationsToRemove.length) {
 
-//   return updated
+    updated = await db.npc.update({
+      where: {
+        id
+      },
+      data: {
+        items: {
+          delete: itemsToRemove.map(item => ({
+            npcId_itemId: {
+              npcId: id,
+              itemId: item.itemId
+            }
+          })),
+        },
+        locations: {
+          delete: locationsToRemove.map(l => ({
+            id: l.id
+          })),
+        }
+      },
+      include: {
+        items: true,
+        locations: true
+      }
+    })
+
+  }
+
+  return updated
 
 
-// }
+}

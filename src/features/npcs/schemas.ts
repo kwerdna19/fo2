@@ -1,20 +1,21 @@
 import { z } from "zod";
-import { itemSchema } from "../items/schemas";
 import { locationsSchema } from "../areas/schemas";
 
 export const saleItemsSchema = z.object({
-  item: itemSchema,
+  itemId: z.string(),
   price: z.number(),
+  gems: z.boolean().optional(),
 }).array()
 
-export const npcTypeSchema = z.enum(["Storage", "Shop", "Quest", "Market"])
+
+export const npcTypes = ["Storage", "Shop", "Quest", "Market", "Craft", "Teleport", "Service"]
 
 export const npcSchema = z.object({
   name: z.string(),
-  type: npcTypeSchema,
-  sprite: z.string(),
-  locations: locationsSchema,
-  items: saleItemsSchema,
+  type: z.string().refine(s => npcTypes.includes(s)),
+  spriteUrl: z.string(),
+  locations: locationsSchema.optional(),
+  items: saleItemsSchema.optional(),
 })
 
 
