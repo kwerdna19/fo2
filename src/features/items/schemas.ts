@@ -18,7 +18,7 @@ export const itemSchema = z.object({
   desc: z.string().optional(),
   note: z.string().optional(),
   spriteUrl: z.string(),
-  equip: z.string().refine(arg => !!EquippableType[arg as EquippableType]),
+  equip: z.string().refine(arg => !!EquippableType[arg as EquippableType]).optional(),
   levelReq: z.number().int(),
   twoHand: z.boolean().optional(),
   consumable: z.boolean().optional(),
