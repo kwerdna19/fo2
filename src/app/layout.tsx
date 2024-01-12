@@ -38,7 +38,7 @@ export default function RootLayout({
           <main className="flex flex-1 p-2 sm:p-3 md:p-4 lg:p-5 pt-0 max-w-screen-2xl w-full">
             {children}
           </main>
-          <footer className="flex p-2 sm:p-3 md:p-4 lg:p-5 max-w-screen-2xl w-full">
+          <footer className="flex pt-0 p-2 sm:p-4 sm:pt-0 md:p-5 md:pt-0 lg:p-6 lg:pt-0 max-w-screen-2xl w-full">
             <Footer />
           </footer>
           <Toaster />
