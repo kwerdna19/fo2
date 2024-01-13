@@ -29,6 +29,6 @@ Created and bootstrapped with the [T3 Stack](https://create.t3.gg/)
 ## Credit
 
 - Created by player `Ak`
-- Based on [spreadsheet](https://docs.google.com/spreadsheets/d/1PLZM8evK3MPBV-1xaQjsP0aEJ09okbKq4ipCZeASz2M/edit#gid=0) organized by player `MeanManSlayer`
+- Data contributions: `Dino`
 - Fantasy Online 2 Creator `Gamer` (Pixel Games)
-- Sprite artwork by `Lighterthief`
+- Sprite artwork by `Perseus`
