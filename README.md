@@ -32,3 +32,4 @@ Created and bootstrapped with the [T3 Stack](https://create.t3.gg/)
 - Data contributions: `Dino`
 - Fantasy Online 2 Creator `Gamer` (Pixel Games)
 - Sprite artwork by `Perseus`
+
