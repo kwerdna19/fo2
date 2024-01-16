@@ -27,6 +27,10 @@ export function MobForm({ areas, items, sprites, action: serverAction, defaultVa
       defaultValue,
     })
 
+    if(lastResult?.status === 'error') {
+      console.log('DEBUG', lastResult)
+    }
+
     const buttonText = defaultValue ? 'Update' : 'Create'
 
     return (<Form form={form} action={action} submit={buttonText}>

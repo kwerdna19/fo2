@@ -31,6 +31,10 @@ export function ItemForm({ sprites, mobs, npcs, action: serverAction, defaultVal
       defaultValue,
     })
 
+    if(lastResult?.status === 'error') {
+      console.log('DEBUG', lastResult)
+    }
+
     const buttonText = defaultValue ? 'Update' : 'Create'
 
     return (<Form form={form} action={action} submit={buttonText}>
