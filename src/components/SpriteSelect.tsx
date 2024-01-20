@@ -28,7 +28,6 @@ export default function SpriteSelect({ className, options, field, label, icon }:
         {
           options.map(o => <SelectItem key={o} value={o}>
 
-
             <div className="flex items-center gap-x-12">
               <div className={cn(!icon && "-mt-12 mb-1")}>
                 {icon ? <ItemSprite size="md" url={o} name="" /> : <MobSprite size="md" url={o} name=""/>}

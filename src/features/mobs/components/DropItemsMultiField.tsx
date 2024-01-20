@@ -39,6 +39,7 @@ export default function DropItemsMultiField({ className, items, field, label }: 
             <ItemField
               field={itemId}
               items={items}
+              className="col-span-3"
             />
             <Input
               placeholder="Drop Rate"

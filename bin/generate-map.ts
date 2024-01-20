@@ -91,8 +91,6 @@ const main = async () => {
 
   console.log(`Done. Generated ${name}.png`)
   
-
-  // action
 }
 
 

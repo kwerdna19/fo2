@@ -19,7 +19,7 @@ import { ItemSprite } from "~/components/ItemSprite";
 import { type FieldMetadata, getInputProps, useInputControl } from "@conform-to/react";
 import { type Item } from "@prisma/client";
 
-export function ItemField({ items, field }: { items: Pick<Item, 'id' | 'name' | 'spriteUrl'>[]; field: FieldMetadata<string>; }) {
+export function ItemField({ items, field, className }: { items: Pick<Item, 'id' | 'name' | 'spriteUrl'>[]; field: FieldMetadata<string>; className?: string }) {
 
   const control = useInputControl(field);
   const [open, setOpen] = useState(false);
@@ -32,7 +32,7 @@ export function ItemField({ items, field }: { items: Pick<Item, 'id' | 'name' | 
         variant="outline"
         role="combobox"
         aria-expanded={open}
-        className="justify-between col-span-3"
+        className={cn("justify-between", className)}
       >
         {selectedItem?.name ?? "Select item..."}
         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />

@@ -82,6 +82,35 @@ model NpcSale {
   @@unique([npcId, itemId])
 }
 
+model BattlePass {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String @unique()
+  slug      String @unique()
+  startDate DateTime
+  endDate DateTime?
+  desc      String?
+  note      String?
+
+  tiers     BattlePassTier[]
+}
+
+model BattlePassTier {
+
+  battlePass       BattlePass     @relation(fields: [battlePassId], references: [id], onDelete: Cascade)
+  battlePassId     String
+  tier      Int
+
+  item       Item?     @relation(fields: [itemId], references: [id])
+  itemId     String?
+
+  amount   Int?
+  unit    Unit?
+
+  @@unique([battlePassId, tier])
+}
+
 model Loot {
   mob       Mob     @relation(fields: [mobId], references: [id])
   mobId     String
@@ -130,6 +159,7 @@ model Item {
     stackSize Int @default(1)
     droppedBy Loot[]
     soldBy    NpcSale[]
+    battlePassTiers BattlePassTier[]
     // for items that provide a skill
     skillId  String?
     skillInfo Skill? @relation(fields: [skillId], references: [id])

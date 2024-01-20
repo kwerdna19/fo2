@@ -48,3 +48,5 @@ backup
 json-schema.json
 
 bin/tmp
+
+bin/database-backups

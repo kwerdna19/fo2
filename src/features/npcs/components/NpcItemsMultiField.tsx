@@ -42,6 +42,7 @@ export function NpcItemsMultiField({ className, items, field, label }: Props) {
             <ItemField
               field={itemId}
               items={items}
+              className="col-span-3"
             />
             <Input
               placeholder="Price"
