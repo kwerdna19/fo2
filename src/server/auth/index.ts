@@ -16,13 +16,19 @@ export const {
   signOut,
 } = NextAuth({
   callbacks: {
-    session: ({ session }) => {
-      return {
-        ...session,
-        user: {
-          ...session.user,
-        },
+    session: ({ session, ...data }) => {
+
+      if('user' in data) {
+        return {
+          ...session,
+          user: {
+            ...session.user,
+            ...data.user,
+          }
+        }
       }
+
+      return session
     },
   },
   adapter: PrismaAdapter(db),
