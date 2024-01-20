@@ -16,7 +16,7 @@ export function DroppedByList({ mobs, className }: { mobs: Datum['droppedBy']; c
     {mobs.map(d => <div key={d.mobId}><TooltipProvider>
       <Tooltip delayDuration={0}>
         <TooltipTrigger className="block pt-1">
-          <Link href={`/mobs/${d.mob.slug}`}>
+          <Link prefetch={false} href={`/mobs/${d.mob.slug}`}>
             <MobSprite
               url={d.mob.spriteUrl}
               name={d.mob.name}

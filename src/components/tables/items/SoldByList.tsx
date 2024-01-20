@@ -17,7 +17,7 @@ export function SoldByList({ npcs, className }: { npcs: Datum['soldBy']; classNa
     {npcs.map(d => <div key={d.npcId}><TooltipProvider>
       <Tooltip delayDuration={0}>
         <TooltipTrigger className="block pt-1">
-          <Link href={`/npcs/${d.npc.slug}`}>
+          <Link prefetch={false} href={`/npcs/${d.npc.slug}`}>
             <MobSprite
               url={d.npc.spriteUrl}
               name={d.npc.name}

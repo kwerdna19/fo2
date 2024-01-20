@@ -11,7 +11,7 @@ export async function AdminButton({ role: minRole = Role.MODERATOR, href, childr
   }
 
   return (<Button asChild {...rest}>
-    <Link href={href}>
+    <Link prefetch={false} href={href}>
       {children}
     </Link>
   </Button>)

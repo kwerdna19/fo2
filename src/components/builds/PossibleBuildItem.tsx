@@ -11,7 +11,7 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 
 export function PossibleBuildItem({ item, tooltipSide, slot, stat, switchOptions }: { item?: Item | null; slot: Slot; tooltipSide: 'left' | 'right'; stat?: string; switchOptions?: (inc: 1 | -1) => void; }) {
 
-  const trigger = item ? <Link href={`/items/${item.slug}`}>
+  const trigger = item ? <Link prefetch={false} href={`/items/${item.slug}`}>
     <ItemSprite
       className="border-2 shadow-sm border-slate-200 bg-slate-50 rounded-sm"
       url={item.spriteUrl}

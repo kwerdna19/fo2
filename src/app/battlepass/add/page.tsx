@@ -60,7 +60,7 @@ export default async function AddBattlePass() {
 
   return (<div className="w-full max-w-screen-xl">
   <Button size="sm" variant="outline" className="mb-5" asChild>
-    <Link href={`/battlepass/all`}>
+    <Link prefetch={false} href={`/battlepass/all`}>
       <ChevronLeft className="mr-2 h-4 w-4" />
       Back to passes
     </Link>

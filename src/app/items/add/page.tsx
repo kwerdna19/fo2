@@ -67,7 +67,7 @@ export default async function AddItem() {
 
   return (<div className="w-full max-w-screen-xl">
   <Button size="sm" variant="outline" className="mb-5" asChild>
-    <Link href={`/items`}>
+    <Link prefetch={false} href={`/items`}>
       <ChevronLeft className="mr-2 h-4 w-4" />
       Back to items
     </Link>

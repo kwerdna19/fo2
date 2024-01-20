@@ -36,7 +36,7 @@ export function LocationLayers({ id, locations }: { id: string; locations: Locat
             <Popup minWidth={56*(mob.drops.length || 1) + 8} closeButton={false}>
               <div className="p-2 pt-1 space-y-1">
                 <div className="flex items-center justify-between">
-                  <Link href={`/mobs/${mob.slug}`} className="text-sm font-bold">
+                  <Link prefetch={false} href={`/mobs/${mob.slug}`} className="text-sm font-bold">
                     {mob.name}
                   </Link>
                 </div>
@@ -71,7 +71,7 @@ export function LocationLayers({ id, locations }: { id: string; locations: Locat
             <Popup minWidth={npc.items.length ? (56*(Math.min(npc.items.length, 6) || 1) + 8) : 72} closeButton={false}>
               <div className="p-2 pt-1 space-y-1 max-w-[344px]">
                 <div className="flex items-center justify-between">
-                  <Link href={`/npcs/${npc.slug}`} className="text-sm font-bold">
+                  <Link prefetch={false} href={`/npcs/${npc.slug}`} className="text-sm font-bold">
                     {npc.name}
                   </Link>
                 </div>

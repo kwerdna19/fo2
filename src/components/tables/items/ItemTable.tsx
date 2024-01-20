@@ -43,12 +43,12 @@ export const columns = [
   columnHelper.display({
     id: 'sprite',
     header: () => null,
-    cell: ({ row }) => <Link href={`/items/${row.original.slug}`}>
+    cell: ({ row }) => <Link prefetch={false} href={`/items/${row.original.slug}`}>
       <ItemSprite url={row.original.spriteUrl} name={row.original.name} size="md" className="border-2 shadow-sm border-slate-200 bg-slate-50 rounded-sm" />
     </Link>,
   }),
   columnHelper.accessor('name', {
-    cell: info => <Link href={`/items/${info.row.original.slug}`}>{info.getValue()}</Link>,
+    cell: info => <Link prefetch={false} href={`/items/${info.row.original.slug}`}>{info.getValue()}</Link>,
     header: getSortButton('Name'),
   }),
   columnHelper.accessor('levelReq', {

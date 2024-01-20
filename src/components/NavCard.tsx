@@ -14,7 +14,7 @@ export default function NavCard({ image, label, className, href }: Props) {
 
 
   return <Button className={cn("max-w-md w-full h-24", className)} variant="outline" asChild>
-    <Link href={href}>
+    <Link prefetch={false} href={href}>
       <div className="flex-0 min-w-[80px]">
         {image}
       </div>

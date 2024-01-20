@@ -26,7 +26,7 @@ export function Header({ areas }: { areas: Areas }) {
 
   return (
     <div className="flex gap-x-4 items-center">
-      <Link href="/" className="flex gap-x-4 items-center">
+      <Link prefetch={false} href="/" className="flex gap-x-4 items-center">
         <UnitSprite type="GEMS" size="lg" />
         <h1>FO2 DB</h1>
       </Link>
@@ -36,21 +36,21 @@ export function Header({ areas }: { areas: Areas }) {
       <NavigationMenuList>
         <NavigationMenuItem>
           <NavigationMenuLink active={pathMatches('/mobs')} asChild className={navigationMenuTriggerStyle()}>
-            <Link href="/mobs">
+            <Link prefetch={false} href="/mobs">
               Mobs
             </Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink active={pathMatches('/items')} asChild className={navigationMenuTriggerStyle()}>
-            <Link href="/items">
+            <Link prefetch={false} href="/items">
               Items
             </Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink active={pathMatches('/npcs')} asChild className={navigationMenuTriggerStyle()}>
-            <Link href="/npcs">
+            <Link prefetch={false} href="/npcs">
               Npcs
             </Link>
           </NavigationMenuLink>
@@ -58,7 +58,7 @@ export function Header({ areas }: { areas: Areas }) {
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
             <NavigationMenuTrigger>
-              <Link href="/areas">
+              <Link prefetch={false} href="/areas">
                 Areas
               </Link>
             </NavigationMenuTrigger>
@@ -75,7 +75,7 @@ export function Header({ areas }: { areas: Areas }) {
         </NavigationMenuItem>
         {/* <NavigationMenuItem>
           <NavigationMenuLink active={pathMatches('/builds')} asChild className={navigationMenuTriggerStyle()}>
-            <Link href="/max-builds">
+            <Link prefetch={false} href="/max-builds">
               Max Builds
             </Link>
           </NavigationMenuLink>
@@ -95,7 +95,7 @@ const ListItem = React.forwardRef<
   return (
     <li>
       <NavigationMenuLink asChild>
-        <Link
+        <Link prefetch={false}
           ref={ref}
           className={cn(
             "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",

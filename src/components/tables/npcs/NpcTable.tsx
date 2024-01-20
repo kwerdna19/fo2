@@ -36,12 +36,12 @@ const columnHelper = createColumnHelper<Datum>()
 export const columns = [
   columnHelper.display({
     id: 'sprite',
-    cell: ({ row }) => <Link href={`/npcs/${row.original.slug}`} className="flex justify-center">
+    cell: ({ row }) => <Link prefetch={false} href={`/npcs/${row.original.slug}`} className="flex justify-center">
       <MobSprite url={row.original.spriteUrl} name={row.original.name} size="sm" className="pb-4 -mt-8" />
     </Link>
   }),
   columnHelper.accessor('name', {
-    cell: info => <Link href={`/npcs/${info.row.original.slug}`}>{info.getValue()}</Link>,
+    cell: info => <Link prefetch={false} href={`/npcs/${info.row.original.slug}`}>{info.getValue()}</Link>,
     header: getSortButton('Name')
   }),
   columnHelper.accessor('type', {
@@ -50,7 +50,7 @@ export const columns = [
   }),
   columnHelper.accessor(row => row.locations.map(l => l.area.name).join(','), {
     cell: ({ row }) => <div className="flex flex-wrap gap-2 text-sm">
-      {row.original.locations.map(({id, area}) => <Link href={`/areas/${area.slug}?npcId=${row.original.id}`} key={id} className="block bg-slate-100 border border-slate-200 px-2 py-1 rounded-full">{area.name}</Link>)}
+      {row.original.locations.map(({id, area}) => <Link prefetch={false} href={`/areas/${area.slug}?npcId=${row.original.id}`} key={id} className="block bg-slate-100 border border-slate-200 px-2 py-1 rounded-full">{area.name}</Link>)}
     </div>,
     header: 'Areas'
   }),

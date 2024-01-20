@@ -32,7 +32,7 @@ export function SaleItemsList({ items, className, infoInToolTip = false, size = 
     {items.map(d => <div key={d.itemId}><TooltipProvider>
       <Tooltip delayDuration={0}>
         <TooltipTrigger className="block">
-          <Link href={`/items/${d.item.slug}`}>
+          <Link prefetch={false} href={`/items/${d.item.slug}`}>
             <ItemSprite
               className="border-2 shadow-sm border-slate-200 bg-slate-50 rounded-sm"
               url={d.item.spriteUrl}

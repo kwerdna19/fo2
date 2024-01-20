@@ -45,12 +45,12 @@ export const columns = [
   }),
   columnHelper.display({
     id: 'sprite',
-    cell: ({ row }) => <Link href={`/mobs/${row.original.slug}`} className="flex justify-center">
+    cell: ({ row }) => <Link prefetch={false} href={`/mobs/${row.original.slug}`} className="flex justify-center">
       <MobSprite url={row.original.spriteUrl} name={row.original.name} size="sm" />
     </Link>
   }),
   columnHelper.accessor('name', {
-    cell: info => <Link href={`/mobs/${info.row.original.slug}`}>{info.getValue()}</Link>,
+    cell: info => <Link prefetch={false} href={`/mobs/${info.row.original.slug}`}>{info.getValue()}</Link>,
     header: getSortButton('Name')
   }),
   columnHelper.accessor('boss', {
