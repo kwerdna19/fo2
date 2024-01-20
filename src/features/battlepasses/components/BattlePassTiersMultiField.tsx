@@ -9,7 +9,6 @@ import { Button } from "~/components/ui/button";
 import { ArrowDown, ArrowUp, Trash2 } from "lucide-react";
 import { type FieldMetadata, control, getInputProps, useFormMetadata, getFieldsetProps } from "@conform-to/react";
 import { ItemField } from "~/features/items/components/ItemField";
-import FormCheckbox from "~/components/form-ui/FormCheckbox";
 import UnitSelect from "~/components/UnitSelect";
 
 

@@ -2,7 +2,7 @@
 
 import { type z } from 'zod'
 import { useFormState } from 'react-dom'
-import { getFormProps, useForm } from '@conform-to/react'
+import { useForm } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { type FormOptions } from '@conform-to/dom'
 import { type ErrorType, type ConformServerAction } from '~/types/actions'

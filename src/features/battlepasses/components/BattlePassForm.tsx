@@ -1,5 +1,5 @@
 'use client'
-import { type Item, type Area } from "@prisma/client"
+import { type Item } from "@prisma/client"
 import { type ConformServerAction } from "~/types/actions"
 import { useConform } from "~/hooks/useConform"
 import { battlePassSchema } from "../schemas"

@@ -22,9 +22,7 @@ export default function BuildPlayground({ items }: { items: Item[] }) {
 
   const {
     register,
-    handleSubmit,
     watch,
-    formState: { errors },
     setValue
   } = useForm<Config>({
     defaultValues: {
