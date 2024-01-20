@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic"
 export default async function Login() {
 
   const session = await auth()
-  if(session && session.user) {
+  if(session?.user) {
     redirect('/')
   }
 

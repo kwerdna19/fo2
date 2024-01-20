@@ -7,7 +7,7 @@
     "dev": "next dev",
     "postinstall": "prisma generate",
     "generate": "prisma generate",
-    "lint": "next lint",
+    "lint": "eslint .",
     "start": "next start",
     "generate:map": "ts-node ./bin/generate-map.ts",
     "db:backup": "source .env && pg_dump -h $POSTGRES_HOST -Fc -O -U $POSTGRES_USER $POSTGRES_DATABASE > ./bin/database-backups/fo2db-backup"
