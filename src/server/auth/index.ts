@@ -16,11 +16,10 @@ export const {
   signOut,
 } = NextAuth({
   callbacks: {
-    session: ({ session, user }) => {
+    session: ({ session }) => {
       return {
         ...session,
         user: {
-          ...user,
           ...session.user,
         },
       }
@@ -43,7 +42,7 @@ export const {
  */
 declare module "next-auth" {
   interface Session extends DefaultSession {
-    user: User & DefaultSession["user"];
+    user: User
   }
 
   // interface User {
