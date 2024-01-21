@@ -60,10 +60,10 @@ export default async function EditItem({ params }: { params: Params }) {
         
         const updated = await updateItem(item!.id, submission.value)
         
-        revalidatePath('/mobs')
-        revalidatePath('/items')
-        revalidatePath('/areas')
-        // revalidatePath('/npcs')
+        revalidatePath('/mobs', 'page')
+        revalidatePath('/items', 'page')
+        revalidatePath('/areas', 'page')
+        // revalidatePath('/npcs', 'page')
 
         if(updated.slug !== item!.slug) {
           redirect(`/items/${updated.slug}/edit`)

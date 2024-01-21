@@ -59,9 +59,9 @@ export default async function EditNpc({ params }: { params: Params }) {
         
         const updated = await updateNpc(npc!.id, submission.value)
         
-        revalidatePath('/npcs')
-        revalidatePath('/items')
-        revalidatePath('/areas')
+        revalidatePath('/npcs', 'page')
+        revalidatePath('/items', 'page')
+        revalidatePath('/areas', 'page')
 
         if(updated.slug !== npc!.slug) {
           redirect(`/npcs/${updated.slug}/edit`)

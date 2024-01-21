@@ -49,10 +49,10 @@ export default async function AddItem() {
         
         const created = await createItem(submission.value)
         
-        revalidatePath('/mobs')
-        revalidatePath('/items')
-        revalidatePath('/areas')
-        revalidatePath('/npcs')
+        revalidatePath('/mobs', 'page')
+        revalidatePath('/items', 'page')
+        revalidatePath('/areas', 'page')
+        revalidatePath('/npcs', 'page')
 
         redirect(`/items/${created.slug}`)
 

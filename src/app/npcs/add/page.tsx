@@ -49,9 +49,9 @@ export default async function AddNpc() {
         
         const created = await createNpc(submission.value)
         
-        revalidatePath('/items')
-        revalidatePath('/areas')
-        revalidatePath('/npcs')
+        revalidatePath('/items', 'page')
+        revalidatePath('/areas', 'page')
+        revalidatePath('/npcs', 'page')
 
         redirect(`/npcs/${created.slug}`)
 

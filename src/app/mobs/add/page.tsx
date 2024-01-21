@@ -48,9 +48,9 @@ export default async function AddMob() {
         
         const created = await createMob(submission.value)
         
-        revalidatePath('/mobs')
-        revalidatePath('/items')
-        revalidatePath('/areas')
+        revalidatePath('/mobs', 'page')
+        revalidatePath('/items', 'page')
+        revalidatePath('/areas', 'page')
 
         redirect(`/mobs/${created.slug}`)
 

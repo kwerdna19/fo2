@@ -40,9 +40,9 @@ export default async function AddBattlePass() {
 
         const created = await createBattlePass(submission.value)
         
-        revalidatePath('/items')
-        revalidatePath('/battlepass/all')
-        revalidatePath('/battlepass')
+        revalidatePath('/items', 'page')
+        revalidatePath('/battlepass/all', 'page')
+        revalidatePath('/battlepass', 'page')
 
         redirect(`/battlepass/${created.slug}`)
 

@@ -59,9 +59,9 @@ export default async function EditMob({ params }: { params: Params }) {
         
         const updated = await updateMob(mob!.id, submission.value)
         
-        revalidatePath('/mobs')
-        revalidatePath('/items')
-        revalidatePath('/areas')
+        revalidatePath('/mobs', 'page')
+        revalidatePath('/items', 'page')
+        revalidatePath('/areas', 'page')
 
         if(updated.slug !== mob!.slug) {
           redirect(`/mobs/${updated.slug}/edit`)

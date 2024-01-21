@@ -51,9 +51,9 @@ export default async function EditBattlePass({ params }: { params: Params }) {
         
         const updated = await updateBattlePass(pass!.id, submission.value)
         
-        revalidatePath('/items')
-        revalidatePath('/battlepass/all')
-        revalidatePath('/battlepass')
+        revalidatePath('/items', 'page')
+        revalidatePath('/battlepass/all', 'page')
+        revalidatePath('/battlepass', 'page')
 
         if(updated.slug !== pass!.slug) {
           redirect(`/battlepass/${updated.slug}/edit`)
