@@ -80,7 +80,7 @@ export default async function EditMob({ params }: { params: Params }) {
 
   return (<div className="w-full max-w-screen-xl">
   <Button size="sm" variant="outline" className="mb-5" asChild>
-    <Link prefetch={false} href={`/mobs/${mob.slug}`}>
+    <Link href={`/mobs/${mob.slug}`}>
       <ChevronLeft className="mr-2 h-4 w-4" />
       Back to page
     </Link>

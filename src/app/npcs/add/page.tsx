@@ -66,7 +66,7 @@ export default async function AddNpc() {
 
   return (<div className="w-full max-w-screen-xl">
   <Button size="sm" variant="outline" className="mb-5" asChild>
-    <Link prefetch={false} href={`/npcs`}>
+    <Link href={`/npcs`}>
       <ChevronLeft className="mr-2 h-4 w-4" />
       Back to npcs
     </Link>

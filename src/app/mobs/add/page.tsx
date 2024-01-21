@@ -65,7 +65,7 @@ export default async function AddMob() {
 
   return (<div className="w-full max-w-screen-xl">
   <Button size="sm" variant="outline" className="mb-5" asChild>
-    <Link prefetch={false} href={`/mobs`}>
+    <Link href={`/mobs`}>
       <ChevronLeft className="mr-2 h-4 w-4" />
       Back to mobs
     </Link>
