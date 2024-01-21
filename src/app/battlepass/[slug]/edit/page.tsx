@@ -12,6 +12,7 @@ import { type ConformResult } from "~/types/actions"
 import { parseWithZod } from "@conform-to/zod"
 import { battlePassSchema } from "~/features/battlepasses/schemas"
 import { revalidatePath } from "next/cache"
+import { recursivelyNullifyUndefinedValues } from "~/utils/misc"
 
 interface Params { slug: string }
 
@@ -49,7 +50,8 @@ export default async function EditBattlePass({ params }: { params: Params }) {
   
       try {
         
-        const updated = await updateBattlePass(pass!.id, submission.value)
+        const converted = recursivelyNullifyUndefinedValues(submission.value)
+        const updated = await updateBattlePass(pass!.id, converted)
         
         revalidatePath('/items', 'page')
         revalidatePath('/battlepass/all', 'page')

@@ -14,6 +14,7 @@ import { parseWithZod } from "@conform-to/zod"
 import { mobSchema } from "~/features/mobs/schemas"
 import { getAllAreasQuick } from "~/features/areas/requests"
 import { getAllItemsQuick } from "~/features/items/requests"
+import { recursivelyNullifyUndefinedValues } from "~/utils/misc"
 
 interface Params { slug: string }
 
@@ -56,8 +57,9 @@ export default async function EditMob({ params }: { params: Params }) {
       }
   
       try {
-        
-        const updated = await updateMob(mob!.id, submission.value)
+
+        const converted = recursivelyNullifyUndefinedValues(submission.value) 
+        const updated = await updateMob(mob!.id, converted)
         
         revalidatePath('/mobs', 'page')
         revalidatePath('/items', 'page')

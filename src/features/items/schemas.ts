@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { EquippableType } from '@prisma/client';
 
-
 export const droppedBySchema = z.object({
   mobId: z.string(),
   dropRate: z.number().optional(),
@@ -23,7 +22,7 @@ export const itemSchema = z.object({
   twoHand: z.boolean().optional(),
   consumable: z.boolean().optional(),
   sellPrice: z.number().int().optional(),
-  stackSize: z.number().int().optional(),
+  stackSize: z.number().int(),
   unobtainable: z.boolean().optional(),
   reqStr: z.number().int().optional(),
   reqSta: z.number().int().optional(),

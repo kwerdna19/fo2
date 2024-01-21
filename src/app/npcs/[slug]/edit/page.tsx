@@ -14,6 +14,7 @@ import { getAllItemsQuick } from "~/features/items/requests"
 import { getNpcBySlug, updateNpc } from "~/features/npcs/requests"
 import { npcSchema } from "~/features/npcs/schemas"
 import { NpcForm } from "~/features/npcs/components/NpcForm"
+import { recursivelyNullifyUndefinedValues } from "~/utils/misc"
 
 interface Params { slug: string }
 
@@ -57,7 +58,8 @@ export default async function EditNpc({ params }: { params: Params }) {
   
       try {
         
-        const updated = await updateNpc(npc!.id, submission.value)
+        const converted = recursivelyNullifyUndefinedValues(submission.value) 
+        const updated = await updateNpc(npc!.id, converted)
         
         revalidatePath('/npcs', 'page')
         revalidatePath('/items', 'page')

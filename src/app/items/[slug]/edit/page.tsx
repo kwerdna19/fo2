@@ -13,6 +13,7 @@ import { itemSchema } from "~/features/items/schemas"
 import { ItemForm } from "~/features/items/components/ItemForm"
 import { getAllMobsQuick } from "~/features/mobs/requests"
 import { getAllNpcsQuick } from "~/features/npcs/requests"
+import { recursivelyNullifyUndefinedValues } from "~/utils/misc"
 
 interface Params { slug: string }
 
@@ -56,14 +57,13 @@ export default async function EditItem({ params }: { params: Params }) {
   
       try {
 
-        console.log(submission.value)
-        
-        const updated = await updateItem(item!.id, submission.value)
+        const converted = recursivelyNullifyUndefinedValues(submission.value)        
+        const updated = await updateItem(item!.id, converted)
         
         revalidatePath('/mobs', 'page')
         revalidatePath('/items', 'page')
         revalidatePath('/areas', 'page')
-        // revalidatePath('/npcs', 'page')
+        revalidatePath('/npcs', 'page')
 
         if(updated.slug !== item!.slug) {
           redirect(`/items/${updated.slug}/edit`)
@@ -79,6 +79,22 @@ export default async function EditItem({ params }: { params: Params }) {
   
       }
   }
+
+  // TODO - figure out
+  // const action = createConformAction(itemSchema, async (input) => {
+
+  //   const updated = await updateItem(item.id, input)
+        
+  //   revalidatePath('/mobs', 'page')
+  //   revalidatePath('/items', 'page')
+  //   revalidatePath('/areas', 'page')
+  //   revalidatePath('/npcs', 'page')
+
+  //   if(updated.slug !== item.slug) {
+  //     redirect(`/items/${updated.slug}/edit`)
+  //   }
+
+  // })
 
   return (<div className="w-full max-w-screen-xl">
   <Button size="sm" variant="outline" className="mb-5" asChild>

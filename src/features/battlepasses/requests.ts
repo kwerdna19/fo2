@@ -110,9 +110,6 @@ export async function updateBattlePass(id: string, data: z.infer<typeof battlePa
     }
   })
 
-  console.log('updating tiers', tiers)
-
-
   const updated = await db.battlePass.update({
     where: {
       id
