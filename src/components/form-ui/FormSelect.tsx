@@ -8,8 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select"
-import { getInputProps, type FieldMetadata, useInputControl } from "@conform-to/react";
-
+import { type FieldMetadata, useInputControl } from "@conform-to/react";
 
 export default function FormSelect({ className, options, field, label }: { className?: string, options: string[], field: FieldMetadata<string>, label: string }) {
 
@@ -21,7 +20,6 @@ export default function FormSelect({ className, options, field, label }: { class
       <Select value={control.value} onValueChange={control.change}>
       <SelectTrigger id={field.id} className="flex items-center">
         <SelectValue placeholder={"Select " + label} />
-        <input {...getInputProps(field, { type: 'hidden' })} key={field.key} />
       </SelectTrigger>
       <SelectContent className="max-h-96">
         {
@@ -36,7 +34,7 @@ export default function FormSelect({ className, options, field, label }: { class
       </p> : null} */}
       {errMessage ? <p id={field.errorId} className="text-sm font-medium text-destructive">
         {errMessage}
-      </p> : null} 
+      </p> : null}
     </div>
 
 

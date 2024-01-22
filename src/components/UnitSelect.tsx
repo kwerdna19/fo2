@@ -20,15 +20,10 @@ export default function UnitSelect({ className, field, label }: { className?: st
   const errMessage = field.errors?.at(0)
 
   const control = useInputControl(field)
-  const props = getInputProps(field, { type: 'hidden' })
-  // @TODO temp workaround?
-  delete props.key
 
-  return <div className={cn("space-y-2", className)}>
+  return <div className={cn("space-y-1", className)}>
       {label ? <FieldLabel field={field}>{label}</FieldLabel> : null}
-      <Select required={required} value={control.value} onValueChange={v => {
-        return control.change(v === control.value ? '' : v)
-      }}>
+      <Select required={required} value={control.value} onValueChange={control.change}>
       <SelectTrigger id={field.id} className="flex items-center" onKeyDown={e => (!required && (e.key === 'Backspace' || e.key === 'Delete')) ? control.change('') : null}>
         <SelectValue placeholder={"Select Unit"} />
       </SelectTrigger>
@@ -53,8 +48,6 @@ export default function UnitSelect({ className, field, label }: { className?: st
       {errMessage ? <p id={field.errorId} className="text-sm font-medium text-destructive">
         {errMessage}
       </p> : null}
-      <input {...props} />
-
     </div>
 
 
