@@ -16,7 +16,7 @@ import { ItemSprite } from "./ItemSprite";
 export default function SpriteSelect({ className, options, field, label, icon }: { className?: string, options: string[], field: FieldMetadata<string>, label: string, icon?: boolean }) {
 
   const errMessage = field.errors?.at(0)
-  const { key, ...props } = getInputProps(field)
+  const { key, ...props } = getInputProps(field, { type: 'text' })
 
   return <div className={cn("space-y-2", className)}>
       <FieldLabel field={field}>{label}</FieldLabel>

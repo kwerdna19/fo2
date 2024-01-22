@@ -20,7 +20,7 @@ import {
   PopoverTrigger,
 } from "~/components/ui/popover";
 import { Check, ChevronsUpDown, Trash2 } from "lucide-react";
-import { type FieldMetadata, control, getInputProps, useFormMetadata, getFieldsetProps, useInputControl } from "@conform-to/react";
+import { type FieldMetadata, getInputProps, useFormMetadata, getFieldsetProps, useInputControl } from "@conform-to/react";
 import { MobSprite } from "~/components/MobSprite";
 
 
@@ -118,13 +118,13 @@ export default function DroppedByMobsMultiField({ className, mobs, field, label 
               key={dropRate.key}
             />
             </div>
-            <Button size="icon" variant="destructive" {...form.getControlButtonProps(control.remove({ index, name }))}>
+            <Button size="icon" variant="destructive" {...form.remove.getButtonProps({ index, name })}>
                 <Trash2 className="h-5 w-5" />
             </Button>
           </fieldset>
         })}
         
-        <Button {...form.getControlButtonProps(control.insert({ name }))}>Add Mob</Button>
+        <Button {...form.insert.getButtonProps({ name })}>Add Mob</Button>
       </div>
       {/* {placeholder && !errMessage ? <p id={`${id}-desc`} className="text-sm font-medium text-muted-foreground">
         {placeholder}

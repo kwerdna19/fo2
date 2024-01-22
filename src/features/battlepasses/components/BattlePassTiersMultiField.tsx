@@ -7,7 +7,7 @@ import { type battlePassSchema } from "../schemas";
 import { type Item } from "@prisma/client";
 import { Button } from "~/components/ui/button";
 import { ArrowDown, ArrowUp, Trash2 } from "lucide-react";
-import { type FieldMetadata, control, getInputProps, useFormMetadata, getFieldsetProps } from "@conform-to/react";
+import { type FieldMetadata, getInputProps, useFormMetadata, getFieldsetProps } from "@conform-to/react";
 import { ItemField } from "~/features/items/components/ItemField";
 import UnitSelect from "~/components/UnitSelect";
 
@@ -68,14 +68,14 @@ export function BattlePassTiersMultiField({ className, items, field, label }: Pr
               </div>
             </div>
             <div className="flex gap-x-3 px-3">
-              <Button size="icon" variant="destructive" {...form.getControlButtonProps(control.remove({ index, name }))}>
+              <Button size="icon" variant="destructive" {...form.remove.getButtonProps({ index, name })}>
                 <Trash2 className="h-5 w-5" />
               </Button>
 
-              <Button size="icon" variant="default" {...form.getControlButtonProps(control.reorder({ from: index, to: index-1, name }))}>
+              <Button size="icon" variant="default" {...form.reorder.getButtonProps({ from: index, to: index-1, name })}>
                 <ArrowUp className="h-5 w-5" />
               </Button>
-              <Button size="icon" variant="default" {...form.getControlButtonProps(control.reorder({ from: index, to: index+1, name }))}>
+              <Button size="icon" variant="default" {...form.reorder.getButtonProps({ from: index, to: index+1, name })}>
                 <ArrowDown className="h-5 w-5" />
               </Button>
 
@@ -83,7 +83,7 @@ export function BattlePassTiersMultiField({ className, items, field, label }: Pr
           </fieldset>
         })}
         
-        <Button {...form.getControlButtonProps(control.insert({ name }))}>Add Item</Button>
+        <Button {...form.insert.getButtonProps({ name })}>Add Item</Button>
       </div>
       {/* {placeholder && !errMessage ? <p id={`${id}-desc`} className="text-sm font-medium text-muted-foreground">
         {placeholder}

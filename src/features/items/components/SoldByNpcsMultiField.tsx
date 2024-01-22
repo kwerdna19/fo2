@@ -7,7 +7,7 @@ import { type soldBySchema } from "../schemas";
 import { type Npc } from "@prisma/client";
 import { Button } from "~/components/ui/button";
 import { Trash2 } from "lucide-react";
-import { type FieldMetadata, control, getInputProps, useFormMetadata, getFieldsetProps } from "@conform-to/react";
+import { type FieldMetadata, getInputProps, useFormMetadata, getFieldsetProps } from "@conform-to/react";
 import FormCheckbox from "~/components/form-ui/FormCheckbox";
 import { NpcField } from "~/features/npcs/components/NpcField";
 
@@ -52,13 +52,13 @@ export default function SoldByNpcsMultiField({ className, npcs, field, label }: 
                 label="Gems?"
               />
             </div>
-            <Button size="icon" variant="destructive" {...form.getControlButtonProps(control.remove({ index, name }))}>
+            <Button size="icon" variant="destructive" {...form.remove.getButtonProps({ index, name })}>
               <Trash2 className="h-5 w-5" />
             </Button>
           </fieldset>
         })}
         
-        <Button {...form.getControlButtonProps(control.insert({ name }))}>Add Mob</Button>
+        <Button {...form.insert.getButtonProps({ name })}>Add Mob</Button>
       </div>
       {/* {placeholder && !errMessage ? <p id={`${id}-desc`} className="text-sm font-medium text-muted-foreground">
         {placeholder}

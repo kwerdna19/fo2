@@ -1,6 +1,6 @@
 'use client'
 import { Button } from "~/components/ui/button"
-import { FormProvider, control, getFormProps } from "@conform-to/react"
+import { FormProvider, getFormProps } from "@conform-to/react"
 import { FormButton } from "~/components/FormButton"
 import { type FormHTMLAttributes, type ReactNode } from "react"
 import { cn } from "~/utils/styles"
@@ -23,7 +23,7 @@ export function Form({ form, action, className, children, submit = 'Submit' }: P
         {children}
       </div>
       <div className="flex justify-end pt-4 space-x-5">
-        <Button variant="ghost" {...form.getControlButtonProps(control.reset())}>Reset</Button>
+        <Button variant="ghost" {...form.reset.getButtonProps()}>Reset</Button>
         <FormButton disabled={!form.dirty}>{submit}</FormButton>
       </div>
       </form>

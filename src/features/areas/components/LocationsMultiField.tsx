@@ -21,7 +21,7 @@ import {
   DialogFooter,
   DialogTrigger,
 } from "~/components/ui/dialog"
-import { type FieldMetadata, getFieldsetProps, getInputProps, useInputControl, control, useFormMetadata } from "@conform-to/react";
+import { type FieldMetadata, getFieldsetProps, getInputProps, useInputControl, useFormMetadata } from "@conform-to/react";
 import { coordinatesSchema, type locationsSchema } from "../schemas";
 
 const SingleAreaMap = dynamic(() => import("~/features/areas/components/SingleAreaMap"), { ssr: false })
@@ -66,18 +66,16 @@ function MapCoordinatesField({ area, x, y }: { area: Pick<Area, 'id' | 'name' | 
   return <div className="grid grid-cols-5 gap-x-2 items-center justify-between">
   <Input
     className="col-span-2"
-    type="number"
     placeholder="x"
     disabled={area === undefined}
-    {...getInputProps(x)}
+    {...getInputProps(x, { type: 'number' })}
     key={x.key}
   />
   <Input
     className="col-span-2"
-    type="number"
     placeholder="y"
     disabled={area === undefined}
-    {...getInputProps(y)}
+    {...getInputProps(y, { type: 'number' })}
     key={y.key}
   />
   <Dialog
@@ -123,7 +121,7 @@ function LocationField({ field, areas }: { field: FieldMetadata<Locations[number
   const { areaId, x, y } = field.getFieldset()
   const [selectedArea, setSelectedArea] = useState(areas.find(a => a.id === areaId.value))
 
-  const { key, ...areaProps } = getInputProps(areaId)
+  const { key, ...areaProps } = getInputProps(areaId, { type: 'text' })
 
   return (<fieldset {...getFieldsetProps(field)} className="grid grid-cols-4 gap-x-4">
     <div className="col-span-3 space-y-2">
@@ -159,12 +157,12 @@ export default function LocationsMultiField({ areas, label, field, formId }: Pro
             <div className="col-span-5">
               <LocationField field={f} areas={areas} />
             </div>
-            <Button size="icon" variant="destructive" {...form.getControlButtonProps(control.remove({ name, index }))}>
+            <Button size="icon" variant="destructive" {...form.remove.getButtonProps({ name, index })}>
               <Trash2 className="h-5 w-5" />
             </Button>
           </div>
         })}
-        <Button {...form.getControlButtonProps(control.insert({ name }))}>Add Location</Button>
+        <Button {...form.insert.getButtonProps({ name })}>Add Location</Button>
       </div>
     </div>
 

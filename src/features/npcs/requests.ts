@@ -2,8 +2,6 @@ import { type z } from "zod";
 import { type npcSchema } from "./schemas";
 import { db } from "~/server/db";
 import { getSlugFromName } from "~/utils/misc";
-import { Unit } from "@prisma/client";
-
 
 export async function getAllNpcs() {
   return db.npc.findMany({
@@ -94,10 +92,7 @@ export async function createNpc(input: z.infer<typeof npcSchema>) {
       },
       items: items && {
         createMany: {
-          data: items.map(({ gems, ...d }) => ({
-            ...d,
-            unit: gems ? Unit.GEMS : Unit.COINS
-          }))
+          data: items
         }
       },
       ...rest
@@ -119,15 +114,9 @@ export async function updateNpc(id: string, data: z.infer<typeof npcSchema>) {
       slug: getSlugFromName(fields.name),
       updatedAt: new Date(),
       items: items && {
-        upsert: items.map(({ gems, ...d }) => ({ 
-          create: {
-            ...d,
-            unit: gems ? Unit.GEMS : Unit.COINS
-          },
-          update: {
-            ...d,
-            unit: gems ? Unit.GEMS : Unit.COINS
-          },
+        upsert: items.map(d => ({ 
+          create: d,
+          update: d,
           where: {
             npcId_itemId: {
               itemId: d.itemId,
@@ -159,8 +148,8 @@ export async function updateNpc(id: string, data: z.infer<typeof npcSchema>) {
     return !items.find(inputItem => {
       return (inputItem.itemId === updatedItem.itemId &&
         inputItem.price === updatedItem.price &&
-        inputItem.gems === (updatedItem.unit === Unit.GEMS)
-        )
+        inputItem.unit === updatedItem.unit
+      )
     })
   }) : []
 

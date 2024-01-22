@@ -1,10 +1,11 @@
 import { z } from "zod";
 import { locationsSchema } from "../areas/schemas";
+import { Unit } from "@prisma/client";
 
 export const saleItemsSchema = z.object({
   itemId: z.string(),
   price: z.number(),
-  gems: z.boolean().optional(),
+  unit: z.nativeEnum(Unit).optional(),
 }).array()
 
 

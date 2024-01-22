@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { getInputProps, type FieldMetadata, useInputControl } from "@conform-to/react";
+import { type FieldMetadata, useInputControl } from "@conform-to/react";
 import { Unit } from "@prisma/client";
 import { UnitSprite } from "./UnitSprite";
 
