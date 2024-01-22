@@ -72,7 +72,7 @@ export default async function EditNpc({ params }: { params: Params }) {
         return submission.reply()
 
       } catch(e) {
-  
+        console.error(e)
         return submission.reply({
           formErrors: ['Server error']
         })

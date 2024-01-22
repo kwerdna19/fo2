@@ -8,19 +8,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select"
-import { getInputProps, type FieldMetadata } from "@conform-to/react";
+import { getInputProps, type FieldMetadata, useInputControl } from "@conform-to/react";
 
 
 export default function FormSelect({ className, options, field, label }: { className?: string, options: string[], field: FieldMetadata<string>, label: string }) {
 
   const errMessage = field.errors?.at(0)
-  const { key, ...props } = getInputProps(field)
+  const control = useInputControl(field)
 
   return <div className={cn("space-y-1", className)}>
       <FieldLabel field={field}>{label}</FieldLabel>
-      <Select key={key} {...props}>
+      <Select value={control.value} onValueChange={control.change}>
       <SelectTrigger id={field.id} className="flex items-center">
         <SelectValue placeholder={"Select " + label} />
+        <input {...getInputProps(field, { type: 'hidden' })} key={field.key} />
       </SelectTrigger>
       <SelectContent className="max-h-96">
         {

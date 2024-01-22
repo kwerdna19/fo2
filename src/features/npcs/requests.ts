@@ -138,11 +138,9 @@ export async function updateNpc(id: string, data: z.infer<typeof npcSchema>) {
           create: l,
           update: l,
           where: {
-            areaId_x_y_mobId: {
-              areaId: l.areaId,
-              x: l.x,
-              y: l.y,
-              mobId: id
+            areaId_x_y_npcId: {
+              ...l,
+              npcId: id
             }
           }
         }))
