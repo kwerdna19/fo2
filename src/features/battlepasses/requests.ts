@@ -136,3 +136,9 @@ export async function updateBattlePass(id: string, data: z.infer<typeof battlePa
 
 
 }
+
+export async function deleteBattlePass(id: string) {
+  return db.battlePass.delete({
+    where: { id }
+  })
+}

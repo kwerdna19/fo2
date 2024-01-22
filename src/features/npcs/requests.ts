@@ -204,3 +204,9 @@ export async function updateNpc(id: string, data: z.infer<typeof npcSchema>) {
 
 
 }
+
+export async function deleteNpc(id: string) {
+  return db.npc.delete({
+    where: { id }
+  })
+}

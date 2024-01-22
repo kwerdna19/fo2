@@ -234,3 +234,9 @@ export async function updateItem(id: string, data: z.infer<typeof itemSchema>) {
   return updated
 
 }
+
+export async function deleteItem(id: string) {
+  return db.item.delete({
+    where: { id }
+  })
+}

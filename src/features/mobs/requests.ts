@@ -202,3 +202,9 @@ export async function updateMob(id: string, data: z.infer<typeof mobSchema>) {
 
 
 }
+
+export async function deleteMob(id: string) {
+  return db.mob.delete({
+    where: { id }
+  })
+}
