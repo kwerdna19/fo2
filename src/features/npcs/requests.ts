@@ -124,7 +124,10 @@ export async function updateNpc(id: string, data: z.infer<typeof npcSchema>) {
             ...d,
             unit: gems ? Unit.GEMS : Unit.COINS
           },
-          update: {},
+          update: {
+            ...d,
+            unit: gems ? Unit.GEMS : Unit.COINS
+          },
           where: {
             npcId_itemId: {
               itemId: d.itemId,
