@@ -55,7 +55,7 @@ export default async function EditBattlePass({ params }: { params: Params }) {
         
         revalidatePath('/items', 'page')
         revalidatePath('/battlepass/all', 'page')
-        revalidatePath('/battlepass', 'page')
+        revalidatePath('/battlepass/' + updated.slug) 
         // revalidatePath('/battlepass', 'page')
 
 
