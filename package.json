@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "start": "next start",
     "generate:map": "ts-node ./bin/generate-map.ts",
+    "add:component": "npx shadcn-ui@latest add",
     "db:backup": "source .env && pg_dump -h $POSTGRES_HOST -Fc -O -U $POSTGRES_USER $POSTGRES_DATABASE > ./bin/database-backups/fo2db-backup"
   },
   "dependencies": {
@@ -38,6 +39,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "cmdk": "^0.2.0",
+    "date-fns": "^3.3.1",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.314.0",
     "next": "^14.1.0",

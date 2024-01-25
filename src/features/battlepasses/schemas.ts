@@ -3,7 +3,6 @@ import { Unit } from "@prisma/client";
 
 
 export const battlePassTierSchema = z.object({
-  // tier: z.number(), // auto assign based on index
   itemId: z.string().optional(),
   amount: z.number().int().optional(),
   unit: z.nativeEnum(Unit).optional(),

@@ -9,7 +9,13 @@ export async function getAllBattlePasses() {
     include: {
       tiers: {
         include: {
-          item: true
+          item: {
+            select: {
+              slug: true,
+              name: true,
+              spriteUrl: true
+            }
+          }
         }
       }
     }
@@ -21,7 +27,13 @@ export async function getCurrentBattlePass() {
     include: {
       tiers: {
         include: {
-          item: true
+          item: {
+            select: {
+              slug: true,
+              name: true,
+              spriteUrl: true
+            }
+          }
         }
       }
     },
@@ -44,7 +56,13 @@ export async function getNextBattlePass() {
     include: {
       tiers: {
         include: {
-          item: true
+          item: {
+            select: {
+              slug: true,
+              name: true,
+              spriteUrl: true
+            }
+          }
         }
       }
     },
@@ -64,7 +82,13 @@ export async function getBattlePassBySlug(slug: string) {
     include: {
       tiers: {
         include: {
-          item: true
+          item: {
+            select: {
+              slug: true,
+              name: true,
+              spriteUrl: true
+            }
+          }
         }
       }
     },
