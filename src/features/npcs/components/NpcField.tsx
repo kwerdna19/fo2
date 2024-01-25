@@ -16,8 +16,9 @@ import {
   PopoverTrigger
 } from "~/components/ui/popover";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { type FieldMetadata, getInputProps, useInputControl } from "@conform-to/react";
+import { type FieldMetadata, useInputControl } from "@conform-to/react";
 import { MobSprite } from "~/components/MobSprite";
+import { ControlledHiddenField } from "~/components/form-ui/ControlledHiddenField";
 
 export function NpcField({ npcs, field }: { npcs: Pick<Npc, 'id' | 'name' | 'spriteUrl'>[]; field: FieldMetadata<string>; }) {
 
@@ -70,7 +71,7 @@ export function NpcField({ npcs, field }: { npcs: Pick<Npc, 'id' | 'name' | 'spr
         </CommandGroup>
       </Command>
     </PopoverContent>
-    <input {...getInputProps(field, { type: 'hidden' })} key={field.key} />
+    <ControlledHiddenField field={field} value={control.value} />
   </Popover>);
 
 

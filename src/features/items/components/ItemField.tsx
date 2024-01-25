@@ -18,13 +18,15 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { ItemSprite } from "~/components/ItemSprite";
 import { type FieldMetadata, getInputProps, useInputControl } from "@conform-to/react";
 import { type Item } from "@prisma/client";
+import { ControlledHiddenField } from "~/components/form-ui/ControlledHiddenField";
 
 export function ItemField({ items, field, className }: { items: Pick<Item, 'id' | 'name' | 'spriteUrl'>[]; field: FieldMetadata<string>; className?: string }) {
 
   const control = useInputControl(field);
   const [open, setOpen] = useState(false);
 
-  const [selectedItem, setSelectedItem] = useState(items.find(item => item.id === field.value));
+
+  const selectedItem = items.find(item => item.id === control.value)
 
   return (<Popover open={open} onOpenChange={setOpen}>
     <PopoverTrigger asChild>
@@ -38,7 +40,7 @@ export function ItemField({ items, field, className }: { items: Pick<Item, 'id' 
         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
       </Button>
     </PopoverTrigger>
-    <PopoverContent align="start" className="w-[--radix-popover-trigger-width] p-0">
+    <PopoverContent forceMount align="start" className="w-[--radix-popover-trigger-width] p-0">
       <Command>
         <CommandInput placeholder="Search items..." />
         <CommandEmpty>No items found.</CommandEmpty>
@@ -48,7 +50,6 @@ export function ItemField({ items, field, className }: { items: Pick<Item, 'id' 
               key={item.id}
               value={item.name}
               onSelect={() => {
-                setSelectedItem(item);
                 control.change(item.id);
                 setOpen(false);
               }}
@@ -67,7 +68,7 @@ export function ItemField({ items, field, className }: { items: Pick<Item, 'id' 
         </CommandGroup>
       </Command>
     </PopoverContent>
-    <input {...getInputProps(field, { type: 'hidden' })} key={field.key} />
+    <ControlledHiddenField field={field} value={control.value}  />
   </Popover>);
 
 

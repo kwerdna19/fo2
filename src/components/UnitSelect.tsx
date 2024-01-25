@@ -8,24 +8,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { type FieldMetadata, useInputControl } from "@conform-to/react";
+import { type FieldMetadata, useInputControl, getSelectProps } from "@conform-to/react";
 import { Unit } from "@prisma/client";
 import { UnitSprite } from "./UnitSprite";
 
 const options = Object.values(Unit)
 
-export default function UnitSelect({ className, field, label }: { className?: string, field: FieldMetadata<Unit>, label?: string }) {
+type Props = { className?: string, field: FieldMetadata<Unit>, label?: string }
+
+export default function UnitSelect({ className, field, label }: Props) {
 
   const { required } = field.constraint ?? {}
   const errMessage = field.errors?.at(0)
 
   const control = useInputControl(field)
+  const { defaultValue, key, ...selectProps } = getSelectProps(field, { value: false })
 
-  return <div className={cn("space-y-1", className)}>
+  return (<div className={cn("space-y-1", className)}>
       {label ? <FieldLabel field={field}>{label}</FieldLabel> : null}
-      <Select required={required} value={control.value} onValueChange={control.change}>
+      <Select key={key} required={required} value={control.value} onValueChange={control.change} defaultValue={defaultValue?.toString()} {...selectProps}>
       <SelectTrigger id={field.id} className="flex items-center" onKeyDown={e => (!required && (e.key === 'Backspace' || e.key === 'Delete')) ? control.change('') : null}>
-        <SelectValue placeholder={"Select Unit"} />
+        <SelectValue placeholder="Unit" />
       </SelectTrigger>
       <SelectContent>
         {
@@ -45,10 +48,10 @@ export default function UnitSelect({ className, field, label }: { className?: st
       {/* {placeholder && !errMessage ? <p id={`${id}-desc`} className="text-sm font-medium text-muted-foreground">
         {placeholder}
       </p> : null} */}
-      {errMessage ? <p id={field.errorId} className="text-sm font-medium text-destructive">
-        {errMessage}
-      </p> : null}
-    </div>
+    {errMessage ? <p id={field.errorId} className="text-sm font-medium text-destructive">
+      {errMessage}
+    </p> : null}
+  </div>)
 
 
 }

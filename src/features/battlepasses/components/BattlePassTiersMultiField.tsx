@@ -35,9 +35,9 @@ export function BattlePassTiersMultiField({ className, items, field, label }: Pr
       <div className="space-y-4">
         {fields.map((f, index) => {
 
-          const { itemId, amount, unit } = f.getFieldset()
+          const fieldset = f.getFieldset()
 
-          const amountProps = getInputProps(amount, { type: 'number' })
+          const amountProps = getInputProps(fieldset.amount, { type: 'number' })
           // @TODO - temp to fix issue causing text to disappear on move
           delete amountProps.key
 
@@ -47,10 +47,9 @@ export function BattlePassTiersMultiField({ className, items, field, label }: Pr
                 {index+1}
               </div>
               <ItemField
-                field={itemId}
+                field={fieldset.itemId}
                 items={items}
               />
-
               <div className="flex items-center justify-center text-muted-foreground text-xs">
                 and/or
               </div>
@@ -63,7 +62,7 @@ export function BattlePassTiersMultiField({ className, items, field, label }: Pr
                 />
                 <UnitSelect
                   className="basis-36 flex-shrink-0"
-                  field={unit}
+                  field={fieldset.unit}
                 />
               </div>
             </div>

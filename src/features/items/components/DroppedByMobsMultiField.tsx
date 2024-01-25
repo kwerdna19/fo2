@@ -22,6 +22,7 @@ import {
 import { Check, ChevronsUpDown, Trash2 } from "lucide-react";
 import { type FieldMetadata, getInputProps, useFormMetadata, getFieldsetProps, useInputControl } from "@conform-to/react";
 import { MobSprite } from "~/components/MobSprite";
+import { ControlledHiddenField } from "~/components/form-ui/ControlledHiddenField";
 
 
 type DroppedBy = z.infer<typeof droppedBySchema>
@@ -85,7 +86,7 @@ type Props = {
       </CommandGroup>
     </Command>
   </PopoverContent>
-  <input {...getInputProps(field, { type: 'hidden' })} key={field.key} />
+  <ControlledHiddenField field={field} value={control.value}  />
 </Popover>)
 
 

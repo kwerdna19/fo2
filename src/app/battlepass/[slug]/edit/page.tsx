@@ -49,13 +49,15 @@ export default async function EditBattlePass({ params }: { params: Params }) {
       }
   
       try {
-        
-        const converted = recursivelyNullifyUndefinedValues(submission.value)
+
+        const converted = recursivelyNullifyUndefinedValues(submission.value) 
         const updated = await updateBattlePass(pass!.id, converted)
         
         revalidatePath('/items', 'page')
         revalidatePath('/battlepass/all', 'page')
         revalidatePath('/battlepass', 'page')
+        // revalidatePath('/battlepass', 'page')
+
 
         if(updated.slug !== pass!.slug) {
           redirect(`/battlepass/${updated.slug}/edit`)

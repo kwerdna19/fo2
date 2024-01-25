@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation"
 import { Pencil } from "lucide-react"
 import { AdminButton } from "~/components/AdminButton"
-import { getBattlePassBySlug } from "~/features/battlepasses/requests"
+import { getAllBattlePasses, getBattlePassBySlug } from "~/features/battlepasses/requests"
 import { format } from 'date-fns'
 import { Badge } from "~/components/ui/badge"
 import { Card } from "~/components/ui/card"
@@ -19,6 +19,13 @@ export async function generateMetadata({ params }: { params: Params }) {
   return {
     title: pass.name,
   }
+}
+
+export async function generateStaticParams() {
+  const passes = await getAllBattlePasses()
+  return passes.map((pass) => ({
+    slug: pass.slug,
+  }))
 }
 
 export default async function BattlePass({ params }: { params: Params }) {
