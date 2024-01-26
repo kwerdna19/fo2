@@ -52,14 +52,17 @@ export function ItemForm({ sprites, mobs, npcs, action: serverAction, defaultVal
         <FormInput label="Desc" field={fields.desc} placeholder="In game description" />
         <FormInput label="Note" field={fields.note} />
 
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 gap-5">
           <FormCheckbox label="2-Handed" field={fields.twoHand} />
           <FormCheckbox label="Consumable" field={fields.consumable} />
-          <FormCheckbox label="Discontinued" field={fields.unobtainable} />
         </div>
         <div className="grid grid-cols-2 gap-5">
           <FormInput label="Sell Price" field={fields.sellPrice} type="number" />
           <FormInput label="Stack Size" field={fields.stackSize} type="number" />
+        </div>
+        <div className="grid grid-cols-2 gap-5">
+          <FormInput label="Availability Start Date" field={fields.availableStart} type="date" />
+          <FormInput label="Availability End Date" field={fields.availableEnd} type="date" />
         </div>
         <div className="space-y-1">
           <Label>Required Stats</Label>

@@ -32,15 +32,9 @@ export function BattlePassForm({ items, action: serverAction, defaultValue }: Pr
     return (<Form form={form} action={action} submit={buttonText}>
         <FormInput label="Name" field={fields.name} />
         <FormInput label="Desc" field={fields.desc} />
-        <div className="grid grid-cols-2 gap-4">
-          <FormInput label="Start Date" field={fields.startDate} type="date" />
-          <FormInput label="End Date" field={fields.endDate} type="date" />
-        </div>
+        <FormInput label="Duration (days)" field={fields.durationDays} type="number" />
+        <FormInput label="XP per tier" field={fields.xpPerTier} type="number" />
         <FormInput label="Note" field={fields.note} />
-
-
-
-
 
         <div className="col-span-2">
           <BattlePassTiersMultiField label="Tiers" items={items} field={fields.tiers}  />

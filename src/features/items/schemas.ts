@@ -23,7 +23,10 @@ export const itemSchema = z.object({
   consumable: z.boolean().optional(),
   sellPrice: z.number().int().optional(),
   stackSize: z.number().int(),
-  unobtainable: z.boolean().optional(),
+  
+  availableStart: z.date().optional(),
+  availableEnd: z.date().optional(),
+
   reqStr: z.number().int().optional(),
   reqSta: z.number().int().optional(),
   reqAgi: z.number().int().optional(),

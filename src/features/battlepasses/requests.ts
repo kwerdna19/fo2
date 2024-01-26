@@ -37,16 +37,9 @@ export async function getCurrentBattlePass() {
         }
       }
     },
-    where: {
-      startDate: {
-        lte: new Date()
-      },
-      endDate: {
-        gte: new Date()
-      }
-    },
+    // TODO - this wont work as a way to always get the "CURRENT" bp
     orderBy: {
-      startDate: 'asc'
+      createdAt: 'desc'
     }
   })
 }
@@ -66,13 +59,10 @@ export async function getNextBattlePass() {
         }
       }
     },
-    where: {
-      startDate: {
-        gte: new Date()
-      }
-    },
+    // TODO - this wont work as a way to always get the "NEXT" bp
+    skip: 1,
     orderBy: {
-      startDate: 'asc'
+      createdAt: 'desc'
     }
   })
 }

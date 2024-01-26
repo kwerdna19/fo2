@@ -58,6 +58,7 @@ model Npc {
     type String
     spriteUrl String
     items NpcSale[]
+    crafts  NpcCraft[]
     locations Location[]
     inGameId Int?
     // for npcs that TP to area
@@ -82,14 +83,33 @@ model NpcSale {
   @@unique([npcId, itemId])
 }
 
+model NpcCraft {
+
+  npc       Npc     @relation(fields: [npcId], references: [id], onDelete: Cascade)
+  npcId     String
+  item       Item     @relation(fields: [itemId], references: [id])
+  itemId     String
+  
+  price   Int
+  unit    Unit @default(COINS)
+  durationHours Int
+
+  @@unique([npcId, itemId])
+}
+
 model BattlePass {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String @unique()
   slug      String @unique()
-  startDate DateTime
-  endDate DateTime?
+  
+  durationDays Int?
+  xpPerTier    Int?
+
+  item       Item?     @relation(fields: [itemId], references: [id])
+  itemId     String? @unique()
+
   desc      String?
   note      String?
 
@@ -159,7 +179,12 @@ model Item {
     stackSize Int @default(1)
     droppedBy Loot[]
     soldBy    NpcSale[]
+    craftedBy NpcCraft[]
     battlePassTiers BattlePassTier[]
+
+    // for the item that unlocks the battlepass
+    battlePass BattlePass?
+
     // for items that provide a skill
     skillId  String?
     skillInfo Skill? @relation(fields: [skillId], references: [id])
@@ -168,7 +193,8 @@ model Item {
     areaId  String?
     area Area? @relation(name: "teleport-items", fields: [areaId], references: [id])
 
-    unobtainable Boolean @default(false)
+    availableStart  DateTime?
+    availableEnd  DateTime?
 
     inGameId Int?
 

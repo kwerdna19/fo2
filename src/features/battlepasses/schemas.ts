@@ -12,10 +12,10 @@ export const battlePassTierSchema = z.object({
 export const battlePassSchema = z.object({
   name: z.string(),
   tiers: battlePassTierSchema.array().optional(),
-  startDate: z.date(),
-  endDate: z.date().optional(),
   desc: z.string().optional(),
-  note: z.string().optional()
+  note: z.string().optional(),
+  durationDays: z.number().min(1).optional(),
+  xpPerTier: z.number().min(1).optional(),
 })
 
 
