@@ -10,8 +10,8 @@
     "lint": "eslint .",
     "start": "next start",
     "generate:map": "ts-node ./bin/generate-map.ts",
-    "add:component": "npx shadcn-ui@latest add",
-    "db:backup": "source .env && pg_dump -h $POSTGRES_HOST -Fc -O -U $POSTGRES_USER $POSTGRES_DATABASE > ./bin/database-backups/fo2db-backup"
+    "db:backup": "ts-node ./bin/backup-db.ts",
+    "add:component": "npx shadcn-ui@latest add"
   },
   "dependencies": {
     "@auth/core": "^0.22.0",
