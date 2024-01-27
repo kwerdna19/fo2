@@ -43,10 +43,11 @@ export default async function BattlePass({ params }: { params: Params }) {
         <Pencil className="w-4 h-4" />
       </AdminButton>
     </div>
-    {/* <div className="flex items-center gap-x-3 pt-2 pb-4">
-      {format(pass.startDate, 'PP')}
-      {pass.endDate ? ` - ${format(pass.endDate, 'PP')}` : <><Badge>Current</Badge></>}
-    </div> */}
+    <div className="flex items-center gap-x-3 pt-2 pb-4">
+      <Badge>{pass.durationDays} days</Badge>
+      {/* {format(pass.startDate, 'PP')}
+      {pass.endDate ? ` - ${format(pass.endDate, 'PP')}` : <><Badge>Current</Badge></>} */}
+    </div>
     <div className="space-y-3 max-w-screen-sm w-full pb-8">
       {pass.tiers.map(tier => {
 
