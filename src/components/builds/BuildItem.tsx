@@ -37,7 +37,7 @@ export function BuildItem({ item, tooltipSide, slot, options, updateItem }: { it
       <PopoverTrigger asChild>
       <Button size="icon" variant="ghost" className="w-[70px] h-[70px]" disabled={options.length === 0}>
         <ItemSprite
-          className="border-2 shadow-sm border-slate-200 bg-slate-50 rounded-sm"
+          bg
           url={item ? item.spriteUrl : slotBackgroundSpriteMap[slot]}
           name={item ? item.name : Slot[slot]}
           size="md"
@@ -67,7 +67,7 @@ export function BuildItem({ item, tooltipSide, slot, options, updateItem }: { it
                   name={itemOption.name}
                   url={itemOption.spriteUrl}
                   size="xs"
-                  className={cn("bg-slate-100 border-slate-300 border rounded-sm", item?.id === itemOption.id && "border-slate-400")}
+                  bg
                 />
                 {itemOption.name}
               </CommandItem>

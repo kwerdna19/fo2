@@ -60,7 +60,7 @@ export function ItemField({ items, field, className }: { items: Pick<Item, 'id' 
                   field.value === item.id ? "opacity-100" : "opacity-0"
                 )} />
               <div className="flex items-center gap-x-4">
-                <ItemSprite name={item.name} url={item.spriteUrl} size="sm" className="bg-slate-100 border border-slate-200 rounded-md" />
+                <ItemSprite name={item.name} url={item.spriteUrl} size="sm" bg />
                 <div className="text-md">{item.name}</div>
               </div>
             </CommandItem>
