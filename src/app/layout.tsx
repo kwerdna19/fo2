@@ -5,10 +5,11 @@ import { type Metadata } from "next"
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Footer } from '~/components/layout/Footer'
-import { Header } from '~/components/layout/Header.server'
+import { Header } from '~/components/layout/header/index'
 import { Toaster } from "~/components/ui/toaster"
 import { Inter } from "next/font/google"
 import { cn } from '~/utils/styles';
+import { ThemeProvider } from '~/components/ThemeProvider';
  
 const inter = Inter({
   subsets: ["latin"],
@@ -31,18 +32,31 @@ export default function RootLayout({
 }) {
 
   return (
-      <html lang="en">
-        <body className={cn("min-h-screen flex flex-col items-center bg-background font-sans antialiased", inter.variable)}>
-          <header className="p-4 sm:p-5 md:p-6 max-w-screen-2xl w-full">
-            <Header />
-          </header>
-          <main className="flex flex-1 p-2 sm:p-3 md:p-4 lg:p-5 pt-0 max-w-screen-2xl w-full">
-            {children}
-          </main>
-          <footer className="flex pt-0 p-2 sm:p-4 sm:pt-0 md:p-5 md:pt-0 lg:p-6 lg:pt-0 max-w-screen-2xl w-full">
-            <Footer />
-          </footer>
-          <Toaster />
+      <html
+        lang="en"
+        className={cn(
+          inter.variable,
+          "scroll-smooth antialiased",
+          "[font-feature-settings:'ss01']",
+        )}>
+        <body className="flex min-h-screen flex-col bg-background">
+      
+          <ThemeProvider>
+            <header className="supports-backdrop-blur:bg-background/60 fixed top-0 z-50 w-screen border-b bg-background/95 backdrop-blur">
+              <Header className="mx-auto max-w-screen-2xl" />
+            </header>
+            <main className="flex-1 pt-16">
+              <div className="mx-auto h-full max-w-screen-2xl p-3 md:p-4 lg:p-6">
+                {children}
+              </div>
+              <Toaster />
+            </main>
+            <footer className="flex p-2 sm:p-4 md:p-5 lg:p-6 max-w-screen-2xl w-full">
+              <Footer />
+            </footer>
+            <Toaster />
+          </ThemeProvider>
+
           <Analytics />
           <SpeedInsights />
         </body>

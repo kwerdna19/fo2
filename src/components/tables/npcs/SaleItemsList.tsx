@@ -34,7 +34,7 @@ export function SaleItemsList({ items, className, infoInToolTip = false, size = 
         <TooltipTrigger className="block">
           <Link prefetch={false} href={`/items/${d.item.slug}`}>
             <ItemSprite
-              className="border-2 shadow-sm border-slate-200 bg-slate-50 rounded-sm"
+              bg
               url={d.item.spriteUrl}
               name={d.item.name}
               size={size}

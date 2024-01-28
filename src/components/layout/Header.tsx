@@ -15,6 +15,7 @@ import {
 import { UnitSprite } from "../UnitSprite"
 import { usePathname } from "next/navigation"
 import { type getAllAreasQuick } from "~/features/areas/requests"
+import { ModeToggle } from "../ModeToggle"
 
 type Areas = NonNullable<Awaited<ReturnType<typeof getAllAreasQuick>>>
 
@@ -33,56 +34,59 @@ export function Header({ areas }: { areas: Areas }) {
       <div className="pl-2 my-2 border-r-2 self-stretch" />
       <div className="flex-1">
       <NavigationMenu>
-      <NavigationMenuList>
-        <NavigationMenuItem>
-          <NavigationMenuLink active={pathMatches('/mobs')} asChild className={navigationMenuTriggerStyle()}>
-            <Link prefetch={false} href="/mobs">
-              Mobs
-            </Link>
-          </NavigationMenuLink>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuLink active={pathMatches('/items')} asChild className={navigationMenuTriggerStyle()}>
-            <Link prefetch={false} href="/items">
-              Items
-            </Link>
-          </NavigationMenuLink>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuLink active={pathMatches('/npcs')} asChild className={navigationMenuTriggerStyle()}>
-            <Link prefetch={false} href="/npcs">
-              Npcs
-            </Link>
-          </NavigationMenuLink>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuLink asChild>
-            <NavigationMenuTrigger>
-              <Link prefetch={false} href="/areas">
-                Areas
+        <NavigationMenuList>
+          <NavigationMenuItem>
+            <NavigationMenuLink active={pathMatches('/mobs')} asChild className={navigationMenuTriggerStyle()}>
+              <Link prefetch={false} href="/mobs">
+                Mobs
               </Link>
-            </NavigationMenuTrigger>
-          </NavigationMenuLink>
-          <NavigationMenuContent>
-            <ul className="gap-3 p-3 md:w-[300px] lg:w-[400px]">
-              <ListItem href="/areas" title="World Map">
-                Full interactive world map.
-              </ListItem>
-              <hr className="my-2"/>
-              {areas.map(area => <ListItem key={area.id} href={`/areas/${area.slug}`} title={area.name}>{area.note}</ListItem>)}
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-        {/* <NavigationMenuItem>
-          <NavigationMenuLink active={pathMatches('/builds')} asChild className={navigationMenuTriggerStyle()}>
-            <Link prefetch={false} href="/max-builds">
-              Max Builds
-            </Link>
-          </NavigationMenuLink>
-        </NavigationMenuItem> */}
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavigationMenuLink active={pathMatches('/items')} asChild className={navigationMenuTriggerStyle()}>
+              <Link prefetch={false} href="/items">
+                Items
+              </Link>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavigationMenuLink active={pathMatches('/npcs')} asChild className={navigationMenuTriggerStyle()}>
+              <Link prefetch={false} href="/npcs">
+                Npcs
+              </Link>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavigationMenuLink asChild>
+              <NavigationMenuTrigger>
+                <Link prefetch={false} href="/areas">
+                  Areas
+                </Link>
+              </NavigationMenuTrigger>
+            </NavigationMenuLink>
+            <NavigationMenuContent>
+              <ul className="gap-3 p-3 md:w-[300px] lg:w-[400px]">
+                <ListItem href="/areas" title="World Map">
+                  Full interactive world map.
+                </ListItem>
+                <hr className="my-2"/>
+                {areas.map(area => <ListItem key={area.id} href={`/areas/${area.slug}`} title={area.name}>{area.note}</ListItem>)}
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+          {/* <NavigationMenuItem>
+            <NavigationMenuLink active={pathMatches('/builds')} asChild className={navigationMenuTriggerStyle()}>
+              <Link prefetch={false} href="/max-builds">
+                Max Builds
+              </Link>
+            </NavigationMenuLink>
+          </NavigationMenuItem> */}
 
-      </NavigationMenuList>
-    </NavigationMenu>
+        </NavigationMenuList>
+      </NavigationMenu>
+      </div>
+      <div>
+      <ModeToggle className="" />
       </div>
     </div>
   )

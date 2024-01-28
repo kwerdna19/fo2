@@ -27,6 +27,7 @@ import Link from "next/link";
 import { getSortButton } from "~/components/SortButton";
 import { SaleItemsList } from "./SaleItemsList";
 import { type getAllNpcs } from "~/features/npcs/requests"
+import { Badge } from "~/components/ui/badge"
 
 type Data = Awaited<ReturnType<typeof getAllNpcs>>
 
@@ -49,8 +50,8 @@ export const columns = [
     header: getSortButton('Type')
   }),
   columnHelper.accessor(row => row.locations.map(l => l.area.name).join(','), {
-    cell: ({ row }) => <div className="flex flex-wrap gap-2 text-sm">
-      {row.original.locations.map(({id, area}) => <Link prefetch={false} href={`/areas/${area.slug}?npcId=${row.original.id}`} key={id} className="block bg-slate-100 border border-slate-200 px-2 py-1 rounded-full">{area.name}</Link>)}
+    cell: ({ row }) => <div className="flex flex-wrap gap-3">
+      {row.original.locations.map(({id, area}) => <Link prefetch={false} href={`/areas/${area.slug}?npcId=${row.original.id}`} key={id}><Badge>{area.name}</Badge></Link>)}
     </div>,
     header: 'Areas'
   }),

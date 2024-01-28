@@ -12,9 +12,8 @@ type Locations = NonNullable<Awaited<ReturnType<typeof getAreaBySlug>>>['locatio
 
 export function LocationLayers({ id, locations }: { id: string; locations: Locations; }) {
 
-  const mobs = locations.filter(l => l.mob && l.mobId).map(l => ({ ...l.mob!, x: l.x, y: l.y }));
-
-  const npcs = locations.filter(l => l.npc && l.npcId).map(l => ({ ...l.npc!, x: l.x, y: l.y }));
+  const mobs = locations.filter(l => l.mob && l.mobId).map(l => ({ ...l.mob!, x: l.x, y: l.y, key: l.id }));
+  const npcs = locations.filter(l => l.npc && l.npcId).map(l => ({ ...l.npc!, x: l.x, y: l.y, key: l.id }));
 
 
   return (<LayersControl position="topright">
@@ -22,7 +21,7 @@ export function LocationLayers({ id, locations }: { id: string; locations: Locat
       <LayerGroup>
         {mobs.map((mob, i) => {
           return <Marker
-            key={mob.id}
+            key={mob.key}
             position={[mob.y, mob.x]}
             alt={mob.name}
             icon={L.divIcon({
@@ -57,7 +56,7 @@ export function LocationLayers({ id, locations }: { id: string; locations: Locat
       <LayerGroup>
         {npcs.map((npc, i) => {
           return <Marker
-            key={npc.id}
+            key={npc.key}
             position={[npc.y, npc.x]}
             alt={npc.name}
             icon={L.divIcon({

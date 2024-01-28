@@ -44,7 +44,7 @@ export const columns = [
     id: 'sprite',
     header: () => null,
     cell: ({ row }) => <Link prefetch={false} href={`/items/${row.original.slug}`}>
-      <ItemSprite url={row.original.spriteUrl} name={row.original.name} size="md" className="border-2 shadow-sm border-slate-200 bg-slate-50 rounded-sm" />
+      <ItemSprite url={row.original.spriteUrl} name={row.original.name} size="md" bg />
     </Link>,
   }),
   columnHelper.accessor('name', {
