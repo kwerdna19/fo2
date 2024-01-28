@@ -45,6 +45,8 @@ export default async function BattlePass({ params }: { params: Params }) {
     </div>
     <div className="flex items-center gap-x-3 pt-2 pb-4">
       <Badge>{pass.durationDays} days</Badge>
+      <Badge variant="secondary">{pass.tiers.length} tiers</Badge>
+      <Badge variant="outline">{pass.xpPerTier} XP / tier</Badge>
       {/* {format(pass.startDate, 'PP')}
       {pass.endDate ? ` - ${format(pass.endDate, 'PP')}` : <><Badge>Current</Badge></>} */}
     </div>
