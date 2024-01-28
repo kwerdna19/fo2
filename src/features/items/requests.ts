@@ -108,7 +108,7 @@ export async function getItemBySlug(slug: string) {
 
 export async function createItem(input: z.infer<typeof itemSchema>) {
 
-  const { name, droppedBy, equip, soldBy, ...rest } = input
+  const { name, droppedBy, equip, soldBy, craftedBy, ...rest } = input
 
   return db.item.create({
     data: {
@@ -116,13 +116,19 @@ export async function createItem(input: z.infer<typeof itemSchema>) {
       equip: equip as EquippableType,
       slug: getSlugFromName(name),
       droppedBy: droppedBy && {
-        create: droppedBy
+        createMany: {
+          data: droppedBy
+        }
       },
       soldBy: soldBy && {
-        create: soldBy.map(({gems, ...d}) => ({
-          ...d,
-          unit: gems ? Unit.GEMS : Unit.COINS
-        }))
+        createMany: {
+          data: soldBy
+        }
+      },
+      craftedBy: craftedBy && {
+        createMany: {
+          data: craftedBy
+        }
       },
       ...rest
     }
@@ -132,7 +138,7 @@ export async function createItem(input: z.infer<typeof itemSchema>) {
 
 export async function updateItem(id: string, data: z.infer<typeof itemSchema>) {
 
-  const { name, droppedBy, equip, soldBy, ...rest } = data
+  const { name, droppedBy, equip, soldBy, craftedBy, ...rest } = data
 
   let updated = await db.item.update({
     where: {
@@ -157,15 +163,9 @@ export async function updateItem(id: string, data: z.infer<typeof itemSchema>) {
         }))
       },
       soldBy: soldBy && {
-        upsert: soldBy.map(({ gems, ...d }) => ({
-          create: {
-            ...d,
-            unit: gems ? Unit.GEMS : Unit.COINS
-          },
-          update: {
-            ...d,
-            unit: gems ? Unit.GEMS : Unit.COINS
-          },
+        upsert: soldBy.map((d) => ({
+          create: d,
+          update: d,
           where: {
             npcId_itemId: {
               npcId: d.npcId,
@@ -173,11 +173,25 @@ export async function updateItem(id: string, data: z.infer<typeof itemSchema>) {
             }
           }
         }))
-      }     
+      },
+      craftedBy: craftedBy && {
+        upsert: craftedBy.map((d) => ({
+          create: d,
+          update: d,
+          where: {
+            npcId_itemId: {
+              npcId: d.npcId,
+              itemId: id
+            },
+          }
+        }))
+      },
+
     },
     include: {
       droppedBy: true,
-      soldBy: true
+      soldBy: true,
+      craftedBy: true
     }
   })
 
@@ -194,12 +208,23 @@ export async function updateItem(id: string, data: z.infer<typeof itemSchema>) {
       return (
         inputSale.npcId === updatedSale.npcId && 
         inputSale.price === updatedSale.price && 
-        inputSale.gems === (updatedSale.unit === Unit.GEMS)
+        inputSale.unit === updatedSale.unit
       )
     })
   }) : []
 
-  if(dropsToRemove.length || salesToRemove.length) {
+  const craftsToRemove = craftedBy ? updated.craftedBy.filter(updatedCraft => {
+    return !craftedBy.find(inputCraft => {
+      return (
+        inputCraft.npcId === updatedCraft.npcId && 
+        inputCraft.price === updatedCraft.price && 
+        inputCraft.unit === updatedCraft.unit && 
+        inputCraft.durationMinutes === updatedCraft.durationMinutes
+      )
+    })
+  }) : []
+
+  if(dropsToRemove.length || salesToRemove.length || craftsToRemove.length) {
 
     updated = await db.item.update({
       where: {
@@ -221,11 +246,20 @@ export async function updateItem(id: string, data: z.infer<typeof itemSchema>) {
               itemId: id
             }
           }))
+        },
+        craftedBy: {
+          delete: craftsToRemove.map(s => ({
+            npcId_itemId: {
+              npcId: s.npcId,
+              itemId: id
+            }
+          }))
         }
       },
       include: {
         droppedBy: true,
-        soldBy: true
+        soldBy: true,
+        craftedBy: true
       }
     })
 

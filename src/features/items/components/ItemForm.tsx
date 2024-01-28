@@ -14,6 +14,7 @@ import { Label } from "~/components/ui/label"
 import { Form } from "~/components/form-ui/Form"
 import DroppedByMobsMultiField from "./DroppedByMobsMultiField"
 import SoldByNpcsMultiField from "./SoldByNpcsMultiField"
+import CraftedByNpcsMultiField from "./CraftedByNpcsMultiField"
 
 
 interface Props {
@@ -98,6 +99,10 @@ export function ItemForm({ sprites, mobs, npcs, action: serverAction, defaultVal
 
         <div className="col-span-2">
           <SoldByNpcsMultiField label="Sold By" field={fields.soldBy} npcs={npcs} />
+        </div>
+
+        <div className="col-span-2">
+          <CraftedByNpcsMultiField label="Crafted By" field={fields.craftedBy} npcs={npcs} />
         </div>
 
     </Form>

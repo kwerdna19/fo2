@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { EquippableType } from '@prisma/client';
+import { EquippableType, Unit } from '@prisma/client';
 
 export const droppedBySchema = z.object({
   mobId: z.string(),
@@ -8,7 +8,14 @@ export const droppedBySchema = z.object({
 
 export const soldBySchema = z.object({
   npcId: z.string(),
-  gems: z.boolean().optional(),
+  unit: z.nativeEnum(Unit).optional(),
+  price: z.number().int(),
+}).array()
+
+export const craftedBySchema = z.object({
+  npcId: z.string(),
+  durationMinutes: z.number(),
+  unit: z.nativeEnum(Unit).optional(),
   price: z.number().int(),
 }).array()
 
@@ -44,5 +51,6 @@ export const itemSchema = z.object({
   dmgMax: z.number().int().optional(),
 
   droppedBy: droppedBySchema.optional(),
-  soldBy: soldBySchema.optional()
+  soldBy: soldBySchema.optional(),
+  craftedBy: craftedBySchema.optional()
 })

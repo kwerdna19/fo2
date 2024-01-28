@@ -39,24 +39,24 @@ export function NpcCraftsMultiField({ className, items, field, label }: Props) {
 
           return <fieldset key={f.key} {...getFieldsetProps(f)} className="grid grid-cols-4 gap-x-6">
             <div className="grid grid-cols-5 col-span-3 gap-x-3">
-            <ItemField
-              field={itemId}
-              items={items}
-              className="col-span-2"
-            />
-            <Input
-              placeholder="Duration (mins)"
-              {...getInputProps(durationMinutes, { type: 'number' })}
-              key={durationMinutes.key}
-            />
-            <Input
-              placeholder="Price"
-              {...getInputProps(price, { type: 'number' })}
-              key={price.key}
-            />
-            <UnitSelect
-              field={unit}
-            />
+              <ItemField
+                field={itemId}
+                items={items}
+                className="col-span-2"
+              />
+              <Input
+                placeholder="Duration (mins)"
+                {...getInputProps(durationMinutes, { type: 'number' })}
+                key={durationMinutes.key}
+              />
+              <Input
+                placeholder="Price"
+                {...getInputProps(price, { type: 'number' })}
+                key={price.key}
+              />
+              <UnitSelect
+                field={unit}
+              />
             </div>
             <Button size="icon" variant="destructive" {...form.remove.getButtonProps({ index, name })}>
                 <Trash2 className="h-5 w-5" />

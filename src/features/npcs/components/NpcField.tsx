@@ -20,7 +20,7 @@ import { type FieldMetadata, useInputControl } from "@conform-to/react";
 import { MobSprite } from "~/components/MobSprite";
 import { ControlledHiddenField } from "~/components/form-ui/ControlledHiddenField";
 
-export function NpcField({ npcs, field }: { npcs: Pick<Npc, 'id' | 'name' | 'spriteUrl'>[]; field: FieldMetadata<string>; }) {
+export function NpcField({ npcs, field, className }: { npcs: Pick<Npc, 'id' | 'name' | 'spriteUrl'>[]; field: FieldMetadata<string>; className?: string }) {
 
   const control = useInputControl(field);
   const [open, setOpen] = useState(false);
@@ -33,11 +33,11 @@ export function NpcField({ npcs, field }: { npcs: Pick<Npc, 'id' | 'name' | 'spr
         variant="outline"
         role="combobox"
         aria-expanded={open}
-        className="justify-between col-span-3"
+        className={cn("justify-between", className)}
       >
         <div className="flex items-center gap-x-3">
           {!!selectedItem && <MobSprite name={selectedItem.name} url={selectedItem.spriteUrl} size="xs" />}
-          {selectedItem?.name ?? "Select item..."}
+          {selectedItem?.name ?? "Select npc..."}
         </div>
         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
       </Button>
