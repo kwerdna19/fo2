@@ -85,16 +85,33 @@ model NpcSale {
 
 model NpcCraft {
 
+  id Int @id @default(autoincrement())
+
   npc       Npc     @relation(fields: [npcId], references: [id], onDelete: Cascade)
   npcId     String
   item       Item     @relation(fields: [itemId], references: [id])
   itemId     String
+
+  ingredients ItemQuantity[]
   
   price   Int
   unit    Unit @default(COINS)
-  durationHours Int
+  durationMinutes Int
 
   @@unique([npcId, itemId])
+}
+
+model ItemQuantity {
+
+  id Int @id
+ 
+  item       Item     @relation(fields: [itemId], references: [id])
+  itemId     String
+  quantity  Int @default(1)
+  
+  craftsInto  NpcCraft[]
+
+  @@unique([itemId, quantity])
 }
 
 model BattlePass {
@@ -180,6 +197,9 @@ model Item {
     droppedBy Loot[]
     soldBy    NpcSale[]
     craftedBy NpcCraft[]
+
+    usages ItemQuantity[]
+
     battlePassTiers BattlePassTier[]
 
     // for the item that unlocks the battlepass

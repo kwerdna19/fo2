@@ -1,6 +1,5 @@
 "use client";
 
-import { type User } from "@prisma/client";
 import { MenuIcon, XIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -10,7 +9,6 @@ import {
 	CollapsibleContent,
 	CollapsibleTrigger,
 } from "~/components/ui/collapsible";
-import { MobileNavMenu } from "./MobileNavMenu";
 import { NavMenu } from "./NavMenu";
 import { UnitSprite } from "~/components/UnitSprite";
 import { type getAllAreasQuick } from "~/features/areas/requests";

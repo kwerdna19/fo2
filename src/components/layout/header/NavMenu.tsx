@@ -15,6 +15,7 @@ import {
 } from "~/components/ui/navigation-menu";
 import { cn } from "~/utils/styles";
 import { type getAllAreasQuick } from "~/features/areas/requests";
+import { ModeToggle } from "~/components/ModeToggle";
 
 type Areas = NonNullable<Awaited<ReturnType<typeof getAllAreasQuick>>>
 
@@ -31,7 +32,7 @@ export function NavMenu({ className, areas, mobile }: { className?: string, area
 
 	return (
 		<NavigationMenu className={className}>
-		<NavigationMenuList className={cn(mobile && "flex flex-col gap-4 w-full")}>
+		<NavigationMenuList className={cn(mobile && "flex flex-col gap-4 w-full space-x-0")}>
 			<NavigationMenuItem className={itemClassName}>
 				<NavigationMenuLink active={pathMatches('/mobs')} asChild className={linkClassName}>
 					<Link prefetch={false} href="/mobs">
@@ -76,6 +77,10 @@ export function NavMenu({ className, areas, mobile }: { className?: string, area
 					</Link>
 				</NavigationMenuLink>
 			</NavigationMenuItem> */}
+
+			{mobile && <div className="w-full flex justify-end">
+				<ModeToggle />
+			</div>}
 
 		</NavigationMenuList>
 	</NavigationMenu>

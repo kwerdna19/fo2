@@ -3,7 +3,7 @@ import { Input } from "~/components/ui/input";
 import { cn } from "~/utils/styles";
 import { FieldLabel } from "~/components/ui/label";
 import { type z } from "zod";
-import { type saleItemsSchema } from "../schemas";
+import { type craftItemsSchema } from "../schemas";
 import { type Item } from "@prisma/client";
 import { Button } from "~/components/ui/button";
 import { Trash2 } from "lucide-react";
@@ -12,17 +12,17 @@ import { ItemField } from "~/features/items/components/ItemField";
 import UnitSelect from "~/components/UnitSelect";
 
 
-type SaleItems = z.infer<typeof saleItemsSchema>
+type CraftItems = z.infer<typeof craftItemsSchema>
 
 type Props = {
   className?: string,
   items: Pick<Item, 'id' | 'name' | 'spriteUrl'>[]
-  field: FieldMetadata<SaleItems | undefined>
+  field: FieldMetadata<CraftItems | undefined>
   label: string
 }
 
 
-export function NpcItemsMultiField({ className, items, field, label }: Props) {
+export function NpcCraftsMultiField({ className, items, field, label }: Props) {
 
   const name = field.name
   const form = useFormMetadata(field.formId)
@@ -35,14 +35,19 @@ export function NpcItemsMultiField({ className, items, field, label }: Props) {
       <div className="space-y-4">
         {fields.map((f, index) => {
 
-          const { itemId, price, unit } = f.getFieldset()
+          const { itemId, price, unit, durationMinutes } = f.getFieldset()
 
           return <fieldset key={f.key} {...getFieldsetProps(f)} className="grid grid-cols-4 gap-x-6">
-            <div className="grid grid-cols-4 col-span-3 gap-x-3">
+            <div className="grid grid-cols-5 col-span-3 gap-x-3">
             <ItemField
               field={itemId}
               items={items}
               className="col-span-2"
+            />
+            <Input
+              placeholder="Duration (mins)"
+              {...getInputProps(durationMinutes, { type: 'number' })}
+              key={durationMinutes.key}
             />
             <Input
               placeholder="Price"
@@ -59,7 +64,7 @@ export function NpcItemsMultiField({ className, items, field, label }: Props) {
           </fieldset>
         })}
         
-        <Button {...form.insert.getButtonProps({ name })}>Add Sale Item</Button>
+        <Button {...form.insert.getButtonProps({ name })}>Add Craft Item</Button>
       </div>
       {/* {placeholder && !errMessage ? <p id={`${id}-desc`} className="text-sm font-medium text-muted-foreground">
         {placeholder}

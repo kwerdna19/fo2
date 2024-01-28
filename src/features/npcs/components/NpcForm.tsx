@@ -10,6 +10,7 @@ import LocationsMultiField from "~/features/areas/components/LocationsMultiField
 import { Form } from "~/components/form-ui/Form"
 import FormSelect from "~/components/form-ui/FormSelect"
 import { NpcItemsMultiField } from "./NpcItemsMultiField"
+import { NpcCraftsMultiField } from "./NpcCraftsMultiField"
 
 
 interface Props {
@@ -52,6 +53,10 @@ export function NpcForm({ areas, items, sprites, action: serverAction, defaultVa
 
         <div className="col-span-2">
           <NpcItemsMultiField label="Sells" items={items} field={fields.items} />
+        </div>
+
+        <div className="col-span-2">
+          <NpcCraftsMultiField label="Crafts" items={items} field={fields.crafts} />
         </div>
 
     </Form>

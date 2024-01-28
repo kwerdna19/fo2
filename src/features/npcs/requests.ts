@@ -18,6 +18,11 @@ export async function getAllNpcs() {
         include: {
           area: true,
         }
+      },
+      crafts: {
+        include: {
+          item: true
+        }
       }
     }
   })
@@ -58,6 +63,11 @@ export async function getNpcBySlug(slug: string) {
         include: {
           area: true,
         }
+      },
+      crafts: {
+        include: {
+          item: true
+        }
       }
     }
   })
@@ -79,7 +89,7 @@ export async function getAllNpcsQuick() {
 
 export async function createNpc(input: z.infer<typeof npcSchema>) {
 
-  const { name, items, locations, ...rest } = input
+  const { name, items, locations, crafts, ...rest } = input
 
   return db.npc.create({
     data: {
@@ -95,6 +105,11 @@ export async function createNpc(input: z.infer<typeof npcSchema>) {
           data: items
         }
       },
+      crafts: crafts && {
+        createMany: {
+          data: crafts
+        }
+      },
       ...rest
     }
   })
@@ -103,7 +118,7 @@ export async function createNpc(input: z.infer<typeof npcSchema>) {
 
 export async function updateNpc(id: string, data: z.infer<typeof npcSchema>) {
 
-  const { items, locations, ...fields } = data
+  const { items, locations, crafts, ...fields } = data
 
   let updated = await db.npc.update({
     where: {
@@ -136,11 +151,24 @@ export async function updateNpc(id: string, data: z.infer<typeof npcSchema>) {
             }
           }
         }))
+      },
+      crafts: crafts && {
+        upsert: crafts.map(({ ingredients, ...c }) => ({
+          create: c,
+          update: c,
+          where: {
+            npcId_itemId: {
+              npcId: id,
+              itemId: c.itemId
+            }
+          }
+        }))
       }
     },
     include: {
       items: true,
-      locations: true
+      locations: true,
+      crafts: true,
     }
   })
 
@@ -163,7 +191,18 @@ export async function updateNpc(id: string, data: z.infer<typeof npcSchema>) {
     })
   }) : []
 
-  if(itemsToRemove.length || locationsToRemove.length) {
+  const craftsToRemove = crafts ? updated.crafts.filter(updatedCraft => {
+    return !crafts.find(inputCraft => {
+      return (
+        updatedCraft.durationMinutes === inputCraft.durationMinutes &&
+        updatedCraft.itemId === inputCraft.itemId &&
+        updatedCraft.price === inputCraft.price &&
+        updatedCraft.unit === inputCraft.unit
+      )
+    })
+  }) : []
+
+  if(itemsToRemove.length || locationsToRemove.length || craftsToRemove.length) {
 
     updated = await db.npc.update({
       where: {
@@ -182,11 +221,20 @@ export async function updateNpc(id: string, data: z.infer<typeof npcSchema>) {
           delete: locationsToRemove.map(l => ({
             id: l.id
           })),
+        },
+        crafts: {
+          delete: craftsToRemove.map(c => ({
+            npcId_itemId: {
+              npcId: id,
+              itemId: c.itemId
+            }
+          }))
         }
       },
       include: {
         items: true,
-        locations: true
+        locations: true,
+        crafts: true
       }
     })
 

@@ -56,9 +56,14 @@ export const columns = [
     header: 'Areas'
   }),
   columnHelper.display({
-    id: 'items',
+    id: 'sells',
     cell: ({ row }) => <SaleItemsList items={row.original.items}  />,
-    header: 'Items'
+    header: 'Sells'
+  }),
+  columnHelper.display({
+    id: 'crafts',
+    cell: ({ row }) => <SaleItemsList items={row.original.crafts} infoInToolTip />,
+    header: 'Crafts'
   }),
 ]
 
