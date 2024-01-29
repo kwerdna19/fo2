@@ -3,26 +3,33 @@
 import { MenuIcon, XIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { ModeToggle } from "~/components/ModeToggle";
+import { UnitSprite } from "~/components/UnitSprite";
 import { Button } from "~/components/ui/button";
 import {
 	Collapsible,
 	CollapsibleContent,
 	CollapsibleTrigger,
 } from "~/components/ui/collapsible";
-import { NavMenu } from "./NavMenu";
-import { UnitSprite } from "~/components/UnitSprite";
 import { type getAllAreasQuick } from "~/features/areas/requests";
-import { ModeToggle } from "~/components/ModeToggle";
+import { NavMenu } from "./NavMenu";
 
-type Areas = NonNullable<Awaited<ReturnType<typeof getAllAreasQuick>>>
+type Areas = NonNullable<Awaited<ReturnType<typeof getAllAreasQuick>>>;
 
-export function Header({ areas, className }: { areas: Areas, className?: string }) {
+export function Header({
+	areas,
+	className,
+}: { areas: Areas; className?: string }) {
 	const [open, setOpen] = useState(false);
 
 	return (
 		<Collapsible className={className} open={open} onOpenChange={setOpen}>
 			<div className="grid grid-cols-[auto_1fr_auto_auto] items-center gap-x-5 px-4 py-3">
-				<Link prefetch={false} href="/" className="flex gap-x-4 items-center px-3">
+				<Link
+					prefetch={false}
+					href="/"
+					className="flex gap-x-4 items-center px-3"
+				>
 					<UnitSprite type="GEMS" size="lg" />
 					<h1>FO2 DB</h1>
 				</Link>

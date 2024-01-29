@@ -1,44 +1,43 @@
-import NextAuth, { type DefaultSession  } from "next-auth"
+import NextAuth, { type DefaultSession } from "next-auth";
 
-import { PrismaAdapter } from "@auth/prisma-adapter"
-import Discord from "next-auth/providers/discord"
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import Discord from "next-auth/providers/discord";
 
-import { env } from "~/env.mjs"
-import { db } from "~/server/db";
 import { type User } from "@prisma/client";
+import { env } from "~/env.mjs";
+import { db } from "~/server/db";
 
 export const {
-  handlers: { GET, POST },
-  auth,
-  // eslint-disable-next-line @typescript-eslint/unbound-method
-  signIn,
-  // eslint-disable-next-line @typescript-eslint/unbound-method
-  signOut,
+	handlers: { GET, POST },
+	auth,
+	// eslint-disable-next-line @typescript-eslint/unbound-method
+	signIn,
+	// eslint-disable-next-line @typescript-eslint/unbound-method
+	signOut,
 } = NextAuth({
-  callbacks: {
-    session: ({ session, ...data }) => {
+	callbacks: {
+		session: ({ session, ...data }) => {
+			if ("user" in data) {
+				return {
+					...session,
+					user: {
+						...session.user,
+						...data.user,
+					},
+				};
+			}
 
-      if('user' in data) {
-        return {
-          ...session,
-          user: {
-            ...session.user,
-            ...data.user,
-          }
-        }
-      }
-
-      return session
-    },
-  },
-  adapter: PrismaAdapter(db),
-  providers: [
-    Discord({
-      clientId: env.DISCORD_CLIENT_ID,
-      clientSecret: env.DISCORD_CLIENT_SECRET,
-    })
-  ],
-})
+			return session;
+		},
+	},
+	adapter: PrismaAdapter(db),
+	providers: [
+		Discord({
+			clientId: env.DISCORD_CLIENT_ID,
+			clientSecret: env.DISCORD_CLIENT_SECRET,
+		}),
+	],
+});
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -47,13 +46,12 @@ export const {
  * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
  */
 declare module "next-auth" {
-  interface Session extends DefaultSession {
-    user: User
-  }
+	interface Session extends DefaultSession {
+		user: User;
+	}
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+	// interface User {
+	//   // ...other properties
+	//   // role: UserRole;
+	// }
 }
-
