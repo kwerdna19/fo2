@@ -10,7 +10,7 @@ const main = async () => {
 	const host = process.env.POSTGRES_HOST;
 	const user = process.env.POSTGRES_USER;
 	const db = process.env.POSTGRES_DATABASE;
-	const password = process.env.PGPASSWORD;
+	const password = process.env.POSTGRES_PASSWORD;
 
 	if (!host || !user || !db || !password) {
 		throw new Error("Missing DB env variables");
