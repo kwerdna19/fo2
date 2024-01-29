@@ -152,22 +152,22 @@ export async function updateMob(id: string, data: z.infer<typeof mobSchema>) {
     }
   })
 
-  const itemsToRemove = drops ? updated.drops.filter(updatedItem => {
-    return !drops.find(inputItem => {
+  const itemsToRemove = updated.drops.filter(updatedItem => {
+    return !drops?.find(inputItem => {
       return (inputItem.itemId === updatedItem.itemId &&
         inputItem.dropRate === updatedItem.dropRate)
     })
-  }) : []
+  })
 
-  const locationsToRemove = locations ? updated.locations.filter(updatedLocation => {
-    return !locations.find(inputLocation => {
+  const locationsToRemove = updated.locations.filter(updatedLocation => {
+    return !locations?.find(inputLocation => {
       return (
         updatedLocation.areaId === inputLocation.areaId &&
         updatedLocation.x === inputLocation.x &&
         updatedLocation.y === inputLocation.y
       )
     })
-  }) : []
+  })
 
   if(itemsToRemove.length || locationsToRemove.length) {
 

@@ -22,10 +22,10 @@ export function ItemStats(props: { stats: Pick<Item, BasicStats>; className?: st
   }
 
   return (<div className={cn(className, "text-sm")}>
-    {stats.length > 0 ? <div className="bg-slate-200 w-16 space-y-1.5 rounded-md p-1 mb-1">
+    {stats.length > 0 ? <div className="bg-slate-200 dark:bg-slate-600 w-16 space-y-1.5 rounded-md p-1 mb-1">
       {stats.map(({ stat, value }) => {
         return (<div key={stat} className="flex justify-between">
-          <div className="bg-slate-300 w-6 text-center rounded-sm">{value > 0 ? `+${value}` : value}</div>
+          <div className="bg-slate-300 dark:bg-slate-700 w-6 text-center rounded-sm">{value > 0 ? `+${value}` : value}</div>
           <div className="flex-1 text-center pl-1">{stat}</div>
         </div>);
       })}

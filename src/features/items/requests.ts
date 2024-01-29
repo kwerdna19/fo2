@@ -195,26 +195,26 @@ export async function updateItem(id: string, data: z.infer<typeof itemSchema>) {
     }
   })
 
-  const dropsToRemove = droppedBy ? updated.droppedBy.filter(updatedDrop => {
-    return !droppedBy.find(inputDrop => {
+  const dropsToRemove = updated.droppedBy.filter(updatedDrop => {
+    return !droppedBy?.find(inputDrop => {
       return (inputDrop.mobId === updatedDrop.mobId
         && inputDrop.dropRate === updatedDrop.dropRate
       )
     })
-  }) : []
+  })
 
-  const salesToRemove = soldBy ? updated.soldBy.filter(updatedSale => {
-    return !soldBy.find(inputSale => {
+  const salesToRemove = updated.soldBy.filter(updatedSale => {
+    return !soldBy?.find(inputSale => {
       return (
         inputSale.npcId === updatedSale.npcId && 
         inputSale.price === updatedSale.price && 
         inputSale.unit === updatedSale.unit
       )
     })
-  }) : []
+  })
 
-  const craftsToRemove = craftedBy ? updated.craftedBy.filter(updatedCraft => {
-    return !craftedBy.find(inputCraft => {
+  const craftsToRemove = updated.craftedBy.filter(updatedCraft => {
+    return !craftedBy?.find(inputCraft => {
       return (
         inputCraft.npcId === updatedCraft.npcId && 
         inputCraft.price === updatedCraft.price && 
@@ -222,7 +222,7 @@ export async function updateItem(id: string, data: z.infer<typeof itemSchema>) {
         inputCraft.durationMinutes === updatedCraft.durationMinutes
       )
     })
-  }) : []
+  })
 
   if(dropsToRemove.length || salesToRemove.length || craftsToRemove.length) {
 

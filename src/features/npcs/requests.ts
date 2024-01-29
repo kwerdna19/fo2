@@ -172,27 +172,28 @@ export async function updateNpc(id: string, data: z.infer<typeof npcSchema>) {
     }
   })
 
-  const itemsToRemove = items ? updated.items.filter(updatedItem => {
-    return !items.find(inputItem => {
+  const itemsToRemove = updated.items.filter(updatedItem => {
+    return !items?.find(inputItem => {
       return (inputItem.itemId === updatedItem.itemId &&
         inputItem.price === updatedItem.price &&
         inputItem.unit === updatedItem.unit
       )
     })
-  }) : []
+  })
 
-  const locationsToRemove = locations ? updated.locations.filter(updatedLocation => {
-    return !locations.find(inputLocation => {
+
+  const locationsToRemove = updated.locations.filter(updatedLocation => {
+    return !locations?.find(inputLocation => {
       return (
         updatedLocation.areaId === inputLocation.areaId &&
         updatedLocation.x === inputLocation.x &&
         updatedLocation.y === inputLocation.y
       )
     })
-  }) : []
+  })
 
-  const craftsToRemove = crafts ? updated.crafts.filter(updatedCraft => {
-    return !crafts.find(inputCraft => {
+  const craftsToRemove = updated.crafts.filter(updatedCraft => {
+    return !crafts?.find(inputCraft => {
       return (
         updatedCraft.durationMinutes === inputCraft.durationMinutes &&
         updatedCraft.itemId === inputCraft.itemId &&
@@ -200,7 +201,7 @@ export async function updateNpc(id: string, data: z.infer<typeof npcSchema>) {
         updatedCraft.unit === inputCraft.unit
       )
     })
-  }) : []
+  })
 
   if(itemsToRemove.length || locationsToRemove.length || craftsToRemove.length) {
 

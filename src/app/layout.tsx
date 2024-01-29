@@ -51,7 +51,7 @@ export default function RootLayout({
               </div>
               <Toaster />
             </main>
-            <footer className="flex p-2 sm:p-4 md:p-5 lg:p-6 max-w-screen-2xl w-full">
+            <footer className="mx-auto flex p-2 sm:p-4 md:p-5 lg:p-6 max-w-screen-2xl w-full">
               <Footer />
             </footer>
             <Toaster />

@@ -19,10 +19,10 @@ export function ItemRequiredStats(props: { stats: Pick<Item, RequiredStats>; cla
     return null;
   }
 
-  return (<div className={cn(className, "text-sm bg-amber-200 w-16 space-y-1.5 rounded-md p-1 mb-1")}>
+  return (<div className={cn(className, "text-sm bg-amber-200 dark:bg-amber-700 w-16 space-y-1.5 rounded-md p-1 mb-1")}>
       {stats.map(({ stat, value }) => {
         return (<div key={stat} className="flex justify-between">
-          <div className="bg-amber-300 w-6 text-center rounded-sm">{value}</div>
+          <div className="bg-amber-300 dark:bg-amber-800 w-6 text-center rounded-sm">{value}</div>
           <div className="flex-1 text-center pl-1">{stat}</div>
         </div>);
       })}

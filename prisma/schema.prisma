@@ -120,7 +120,8 @@ model BattlePass {
   updatedAt DateTime @updatedAt
   name      String @unique()
   slug      String @unique()
-  
+
+  spriteUrl String?
   durationDays Int?
   xpPerTier    Int?
 
