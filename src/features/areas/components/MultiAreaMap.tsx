@@ -18,6 +18,7 @@ export default function MultiAreaMap({
 
 	const maxX = areas.reduce((acc, area) => {
 		if (area.originXGlobal + area.width > acc) {
+			// biome-ignore lint/style/noParameterAssign: array reduce
 			acc = area.originXGlobal + area.width;
 		}
 		return acc;
@@ -25,6 +26,7 @@ export default function MultiAreaMap({
 
 	const maxY = areas.reduce((acc, area) => {
 		if (area.originYGlobal + area.height > acc) {
+			// biome-ignore lint/style/noParameterAssign: array reduce
 			acc = area.originYGlobal + area.height;
 		}
 		return acc;

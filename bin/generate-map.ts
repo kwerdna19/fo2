@@ -52,7 +52,7 @@ export interface Tileset {
 
 const tmpDir = "./bin/tmp";
 
-const baseURL = `https://dev.fantasyonline2.com`;
+const baseURL = "https://dev.fantasyonline2.com";
 
 const main = async () => {
 	const tmxPath = process.env.TMX_PATH;
@@ -74,7 +74,9 @@ const main = async () => {
 	}
 
 	const imageFileName = `${name}-mastersheet.png`;
-	map.tilesets[0]!.image = `./${imageFileName}`;
+	if (map.tilesets[0]) {
+		map.tilesets[0].image = `./${imageFileName}`;
+	}
 
 	const mapDataFilePath = join(tmpDir, `${name}.json`);
 	const outputPath = `./public/maps/${name}.png`;

@@ -53,19 +53,19 @@ export default async function EditMob({ params }: { params: Params }) {
 			schema: mobSchema,
 		});
 
-		if (submission.status !== "success") {
+		if (submission.status !== "success" || !mob) {
 			return submission.reply();
 		}
 
 		try {
 			const converted = recursivelyNullifyUndefinedValues(submission.value);
-			const updated = await updateMob(mob!.id, converted);
+			const updated = await updateMob(mob.id, converted);
 
 			revalidatePath("/mobs", "page");
 			revalidatePath("/items", "page");
 			revalidatePath("/areas", "page");
 
-			if (updated.slug !== mob!.slug) {
+			if (updated.slug !== mob.slug) {
 				redirect(`/mobs/${updated.slug}/edit`);
 			}
 

@@ -36,7 +36,7 @@ export default function SpriteSelect({
 					id={field.id}
 					className="flex items-center h-fit min-h-[118px]"
 				>
-					<SelectValue placeholder={"Select " + label} />
+					<SelectValue placeholder={`Select ${label}`} />
 				</SelectTrigger>
 				<SelectContent className="max-h-96">
 					{options.map((o) => (

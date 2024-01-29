@@ -232,7 +232,7 @@ export default function BuildPlayground({ items }: { items: Item[] }) {
 					</div>
 				</Card>
 			</div>
-			<div className="flex-1"></div>
+			<div className="flex-1" />
 		</div>
 	);
 }

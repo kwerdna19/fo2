@@ -17,12 +17,12 @@ import { type ConformResult } from "~/types/actions";
 
 export function generateMetadata() {
 	return {
-		title: `Add Npc`,
+		title: "Add Npc",
 	};
 }
 
 export default async function AddNpc() {
-	await userSatisfiesRoleOrRedirect(Role.MODERATOR, `/npcs`);
+	await userSatisfiesRoleOrRedirect(Role.MODERATOR, "/npcs");
 
 	const areas = await getAllAreasQuick();
 	const items = await getAllItemsQuick();
@@ -60,7 +60,7 @@ export default async function AddNpc() {
 	return (
 		<div className="w-full max-w-screen-xl">
 			<Button size="sm" variant="outline" className="mb-5" asChild>
-				<Link href={`/npcs`}>
+				<Link href="/npcs">
 					<ChevronLeft className="mr-2 h-4 w-4" />
 					Back to npcs
 				</Link>

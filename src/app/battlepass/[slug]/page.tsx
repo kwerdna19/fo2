@@ -85,7 +85,7 @@ export default async function BattlePass({ params }: { params: Params }) {
 
 					return (
 						<Card
-							key={tier.battlePassId + "." + tier.tier}
+							key={`${tier.battlePassId}.${tier.tier}`}
 							className="flex w-full p-5 gap-x-8"
 						>
 							<div className="text-xl font-sans flex justify-center items-center">

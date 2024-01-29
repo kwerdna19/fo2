@@ -17,12 +17,12 @@ import { type ConformResult } from "~/types/actions";
 
 export function generateMetadata() {
 	return {
-		title: `Add Mob`,
+		title: "Add Mob",
 	};
 }
 
 export default async function AddMob() {
-	await userSatisfiesRoleOrRedirect(Role.MODERATOR, `/mobs`);
+	await userSatisfiesRoleOrRedirect(Role.MODERATOR, "/mobs");
 
 	const areas = await getAllAreasQuick();
 	const items = await getAllItemsQuick();
@@ -60,7 +60,7 @@ export default async function AddMob() {
 	return (
 		<div className="w-full max-w-screen-xl">
 			<Button size="sm" variant="outline" className="mb-5" asChild>
-				<Link href={`/mobs`}>
+				<Link href="/mobs">
 					<ChevronLeft className="mr-2 h-4 w-4" />
 					Back to mobs
 				</Link>

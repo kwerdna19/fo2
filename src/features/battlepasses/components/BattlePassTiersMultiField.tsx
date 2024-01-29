@@ -46,11 +46,10 @@ export function BattlePassTiersMultiField({
 				{fields.map((f, index) => {
 					const fieldset = f.getFieldset();
 
-					const amountProps = getInputProps(fieldset.amount, {
+					// @TODO - temp to fix issue causing text to disappear on move
+					const { key: _, ...amountProps } = getInputProps(fieldset.amount, {
 						type: "number",
 					});
-					// @TODO - temp to fix issue causing text to disappear on move
-					delete amountProps.key;
 
 					return (
 						<fieldset

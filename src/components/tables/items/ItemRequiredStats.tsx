@@ -14,7 +14,7 @@ export function ItemRequiredStats(props: {
 		.map((s) => {
 			return {
 				stat: s.replace("req", "").toUpperCase(),
-				value: inputItem[s]!,
+				value: inputItem[s] as number,
 			};
 		});
 	//.sort((a, b) => b.value - a.value)

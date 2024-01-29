@@ -3,11 +3,10 @@ import { type ReactNode } from "react";
 import { TbArrowDown as ArrowDown, TbArrowUp as ArrowUp } from "react-icons/tb";
 import { Button } from "./ui/button";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function SortButton({
 	children,
 	column,
-}: { children: ReactNode; column: Column<any> }) {
+}: { children: ReactNode; column: Column<unknown> }) {
 	const sort = column.getIsSorted();
 	return (
 		<Button variant="ghost" onClick={() => column.toggleSorting()}>
@@ -23,8 +22,7 @@ export default function SortButton({
 	);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getSortButton = (label: string) =>
-	function SortButtonWithLabel({ column }: { column: Column<any> }) {
+	function SortButtonWithLabel({ column }: { column: Column<unknown> }) {
 		return <SortButton column={column}>{label}</SortButton>;
 	};

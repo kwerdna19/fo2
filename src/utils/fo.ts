@@ -186,7 +186,7 @@ export const combineBasicStats = (
 		(acc, input) => {
 			const stats = Array.isArray(input) ? input : [input];
 
-			stats.forEach((val) => {
+			for (const val of stats) {
 				if (acc.agi === undefined || acc.agi === null) {
 					acc.agi = val.agi ?? 0;
 				} else {
@@ -216,7 +216,7 @@ export const combineBasicStats = (
 				} else {
 					acc.armor += val.armor ?? 0;
 				}
-			});
+			}
 
 			return acc;
 		},

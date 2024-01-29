@@ -18,10 +18,10 @@ export function LocationLayers({
 }: { id: string; locations: Locations }) {
 	const mobs = locations
 		.filter((l) => l.mob && l.mobId)
-		.map((l) => ({ ...l.mob!, x: l.x, y: l.y, key: l.id }));
+		.map((l) => ({ ...l.mob, x: l.x, y: l.y, key: l.id }));
 	const npcs = locations
 		.filter((l) => l.npc && l.npcId)
-		.map((l) => ({ ...l.npc!, x: l.x, y: l.y, key: l.id }));
+		.map((l) => ({ ...l.npc, x: l.x, y: l.y, key: l.id }));
 
 	return (
 		<LayersControl position="topright">
@@ -42,7 +42,7 @@ export function LocationLayers({
 								})}
 							>
 								<Popup
-									minWidth={56 * (mob.drops.length || 1) + 8}
+									minWidth={56 * (mob?.drops?.length || 1) + 8}
 									closeButton={false}
 								>
 									<div className="p-2 pt-1 space-y-1">
@@ -55,7 +55,7 @@ export function LocationLayers({
 												{mob.name}
 											</Link>
 										</div>
-										{mob.drops.length > 0 ? (
+										{mob?.drops && mob.drops.length > 0 ? (
 											<DropsList size="sm" drops={mob.drops} infoInToolTip />
 										) : null}
 										<div className="flex items-center justify-between gap-x-4 pt-1">
@@ -63,7 +63,7 @@ export function LocationLayers({
 											<MobHealth
 												className="gap-x-1"
 												iconClassName="w-3 h-3 -mt-1"
-												health={mob.health}
+												health={mob.health ?? "?"}
 											/>
 										</div>
 									</div>
@@ -91,7 +91,7 @@ export function LocationLayers({
 							>
 								<Popup
 									minWidth={
-										npc.items.length
+										npc.items?.length
 											? 56 * (Math.min(npc.items.length, 6) || 1) + 8
 											: 72
 									}
@@ -107,10 +107,12 @@ export function LocationLayers({
 												{npc.name}
 											</Link>
 										</div>
-										{npc.items.length > 0 ? (
+										{npc.items && npc.items.length > 0 ? (
 											<SaleItemsList items={npc.items} size="sm" />
 										) : null}
-										{npc.type === "Shop" && npc.items.length > 0 ? null : (
+										{npc.type === "Shop" &&
+										npc.items &&
+										npc.items?.length > 0 ? null : (
 											<div className="italic">{npc.type}</div>
 										)}
 									</div>

@@ -7,7 +7,7 @@ import {
 	useInputControl,
 } from "@conform-to/react";
 import { type Area } from "@prisma/client";
-import { Map, Trash2 } from "lucide-react";
+import { Map as MapIcon, Trash2 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 import { type z } from "zod";
@@ -102,7 +102,7 @@ function MapCoordinatesField({
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogTrigger asChild>
 					<Button variant="outline" size="icon" disabled={area === undefined}>
-						<Map className="h-5 w-5" />
+						<MapIcon className="h-5 w-5" />
 					</Button>
 				</DialogTrigger>
 				<DialogContent forceMount className="max-w-screen-xl w-full">

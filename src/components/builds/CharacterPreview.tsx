@@ -19,7 +19,7 @@ export function CharacterPreview({
 	);
 
 	const url = `https://art.fantasyonline2.com/api/character/ss?f=body-0_eyes-standard-blue_nude-head${
-		itemSlugs.length ? "_" + itemSlugs.join("_") : ""
+		itemSlugs.length ? `_${itemSlugs.join("_")}` : ""
 	}`;
 
 	const alt = `Character wearing ${items.map((item) => item.name).join(", ")}`;

@@ -10,9 +10,7 @@ import { db } from "~/server/db";
 export const {
 	handlers: { GET, POST },
 	auth,
-	// eslint-disable-next-line @typescript-eslint/unbound-method
 	signIn,
-	// eslint-disable-next-line @typescript-eslint/unbound-method
 	signOut,
 } = NextAuth({
 	callbacks: {
@@ -40,7 +38,7 @@ export const {
 });
 
 /**
- * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
+ * Module augmentation for `next-auth` types. Allows us to add custom properties to the "session"
  * object and keep type safety.
  *
  * @see https://next-auth.js.org/getting-started/typescript#module-augmentation

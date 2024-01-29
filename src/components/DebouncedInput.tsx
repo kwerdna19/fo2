@@ -17,13 +17,13 @@ export function DebouncedInput({
 		setValue(initialValue);
 	}, [initialValue]);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: onChange doesnt have to be memo
 	useEffect(() => {
 		const timeout = setTimeout(() => {
 			onChange(value);
 		}, debounce);
 
 		return () => clearTimeout(timeout);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [value, debounce]);
 
 	return (

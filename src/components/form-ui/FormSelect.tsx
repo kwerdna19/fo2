@@ -41,7 +41,7 @@ export default function FormSelect({
 				{...selectProps}
 			>
 				<SelectTrigger id={field.id} className="flex items-center">
-					<SelectValue placeholder={"Select " + label} />
+					<SelectValue placeholder={`Select ${label}`} />
 				</SelectTrigger>
 				<SelectContent className="max-h-96">
 					{options.map((o) => (

@@ -53,19 +53,19 @@ export default async function EditNpc({ params }: { params: Params }) {
 			schema: npcSchema,
 		});
 
-		if (submission.status !== "success") {
+		if (submission.status !== "success" || !npc) {
 			return submission.reply();
 		}
 
 		try {
 			const converted = recursivelyNullifyUndefinedValues(submission.value);
-			const updated = await updateNpc(npc!.id, converted);
+			const updated = await updateNpc(npc.id, converted);
 
 			revalidatePath("/npcs", "page");
 			revalidatePath("/items", "page");
 			revalidatePath("/areas", "page");
 
-			if (updated.slug !== npc!.slug) {
+			if (updated.slug !== npc.slug) {
 				redirect(`/npcs/${updated.slug}/edit`);
 			}
 

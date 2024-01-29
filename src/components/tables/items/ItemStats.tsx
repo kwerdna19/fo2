@@ -3,8 +3,10 @@ import { type Item } from "@prisma/client";
 import { type BasicStats } from "~/utils/fo";
 import { cn } from "~/utils/styles";
 
+type Stats = Pick<Item, BasicStats>;
+
 export function ItemStats(props: {
-	stats: Pick<Item, BasicStats>;
+	stats: Stats;
 	className?: string;
 }) {
 	const { className, stats: inputItem } = props;
@@ -16,7 +18,7 @@ export function ItemStats(props: {
 		.map((s) => {
 			return {
 				stat: s.toUpperCase(),
-				value: inputItem[s]!,
+				value: inputItem[s] as number,
 			};
 		});
 	//.sort((a, b) => b.value - a.value)

@@ -52,20 +52,20 @@ export default async function EditItem({ params }: { params: Params }) {
 			schema: itemSchema,
 		});
 
-		if (submission.status !== "success") {
+		if (submission.status !== "success" || !item) {
 			return submission.reply();
 		}
 
 		try {
 			const converted = recursivelyNullifyUndefinedValues(submission.value);
-			const updated = await updateItem(item!.id, converted);
+			const updated = await updateItem(item.id, converted);
 
 			revalidatePath("/mobs", "page");
 			revalidatePath("/items", "page");
 			revalidatePath("/areas", "page");
 			revalidatePath("/npcs", "page");
 
-			if (updated.slug !== item!.slug) {
+			if (updated.slug !== item.slug) {
 				redirect(`/items/${updated.slug}/edit`);
 			}
 

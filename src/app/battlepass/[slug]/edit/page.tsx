@@ -51,20 +51,20 @@ export default async function EditBattlePass({ params }: { params: Params }) {
 			schema: battlePassSchema,
 		});
 
-		if (submission.status !== "success") {
+		if (submission.status !== "success" || !pass) {
 			return submission.reply();
 		}
 
 		try {
 			const converted = recursivelyNullifyUndefinedValues(submission.value);
-			const updated = await updateBattlePass(pass!.id, converted);
+			const updated = await updateBattlePass(pass.id, converted);
 
 			revalidatePath("/items", "page");
 			revalidatePath("/battlepass/all", "page");
-			revalidatePath("/battlepass/" + updated.slug);
+			revalidatePath(`/battlepass/${updated.slug}`);
 			// revalidatePath('/battlepass', 'page')
 
-			if (updated.slug !== pass!.slug) {
+			if (updated.slug !== pass.slug) {
 				redirect(`/battlepass/${updated.slug}/edit`);
 			}
 

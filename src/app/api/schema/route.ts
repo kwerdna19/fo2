@@ -22,7 +22,6 @@ export function GET() {
 		});
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 	const schema = JSON.parse(fs.readFileSync(filePath, { encoding: "utf-8" }));
 	const response = NextResponse.json(schema);
 

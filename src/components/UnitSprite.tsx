@@ -32,7 +32,6 @@ export const UnitSprite = ({
 	const height = spriteHeight * mult;
 	const width = spriteWidth * mult;
 
-	/* eslint-disable-next-line @next/next/no-img-element */
 	return (
 		<img
 			style={{ height, width }}

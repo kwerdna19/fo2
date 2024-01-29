@@ -67,7 +67,7 @@ export const MobSprite = ({
 	// (2,1) is default non-animated sprite slot
 	const [row, setRow] = useState<number>(defaultSprite[0]);
 	const [colIndex, setColIndex] = useState<number>(defaultSprite[1]);
-	const col = colSequence[colIndex]!;
+	const col = colSequence[colIndex] ?? 0;
 
 	useEffect(() => {
 		if (!animated) {
@@ -99,7 +99,7 @@ export const MobSprite = ({
 			clearInterval(intervalCol);
 			clearInterval(intervalRow);
 		};
-	}, [setRow, setColIndex, animated]);
+	}, [animated]);
 
 	const height = spriteHeight * mult;
 	const width = spriteWidth * mult;
@@ -115,7 +115,6 @@ export const MobSprite = ({
 			)}
 			style={{ height, width }}
 		>
-			{/* eslint-disable-next-line @next/next/no-img-element */}
 			<img
 				className={cn("block absolute max-w-none")}
 				style={{
@@ -125,7 +124,7 @@ export const MobSprite = ({
 					width: imgWidth,
 				}}
 				src={url}
-				alt={name + " sprite"}
+				alt={`${name} sprite`}
 			/>
 		</div>
 	);

@@ -15,12 +15,12 @@ import { type ConformResult } from "~/types/actions";
 
 export function generateMetadata() {
 	return {
-		title: `Add Battlepass`,
+		title: "Add Battlepass",
 	};
 }
 
 export default async function AddBattlePass() {
-	await userSatisfiesRoleOrRedirect(Role.MODERATOR, `/battlepass/all`);
+	await userSatisfiesRoleOrRedirect(Role.MODERATOR, "/battlepass/all");
 
 	const items = await getAllItemsQuick();
 
@@ -54,7 +54,7 @@ export default async function AddBattlePass() {
 	return (
 		<div className="w-full max-w-screen-xl">
 			<Button size="sm" variant="outline" className="mb-5" asChild>
-				<Link href={`/battlepass/all`}>
+				<Link href="/battlepass/all">
 					<ChevronLeft className="mr-2 h-4 w-4" />
 					Back to passes
 				</Link>
