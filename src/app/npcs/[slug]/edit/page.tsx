@@ -57,25 +57,32 @@ export default async function EditNpc({ params }: { params: Params }) {
 			return submission.reply();
 		}
 
+		let redirectUrl: undefined | string
+
 		try {
 			const converted = recursivelyNullifyUndefinedValues(submission.value);
 			const updated = await updateNpc(npc.id, converted);
-
-			revalidatePath("/npcs", "page");
-			revalidatePath("/items", "page");
-			revalidatePath("/areas", "page");
-
 			if (updated.slug !== npc.slug) {
-				redirect(`/npcs/${updated.slug}/edit`);
+				redirectUrl = updated.slug
 			}
-
-			return submission.reply();
 		} catch (e) {
 			console.error(e);
 			return submission.reply({
 				formErrors: ["Server error"],
 			});
 		}
+
+		revalidatePath("/npcs", "page");
+		revalidatePath("/items", "page");
+		revalidatePath("/areas", "page");
+
+		if (redirectUrl) {
+			redirect(redirectUrl);
+		}
+
+		return submission.reply();
+
+
 	}
 
 	return (
