@@ -281,7 +281,15 @@ model Area {
 
 }
 
-// type enum
+enum SkillType {
+  HEAL
+  DAMAGE
+  STAT_BUFF
+  ENERGY_REGEN
+  HEALTH_REGEN
+  TELEPORT
+}
+
 model Skill {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())
@@ -292,7 +300,7 @@ model Skill {
     desc      String?
     note      String?
     spriteUrl String
-    type      String?
+    type      SkillType?
     levelReq  Int @default(0)
 
     reqStr Int?
@@ -308,7 +316,21 @@ model Skill {
     agi Int?
     int Int?
     armor Int?
+    crit Float?
+    dodge Float?
+    health Int?
+    energy Int?
+
     atkSpeed Float?
+
+    minValue Int?
+    maxValue Int?
+    value Int?
+
+    castTimeSec Int?
+    durationMins Int?
+    energyCost Int?
+    tickDurationSec Int?
 
     inGameId Int?
 

@@ -1,9 +1,9 @@
 "use client";
-import { type Item } from "@prisma/client";
-import { type BasicStats } from "~/utils/fo";
+import { Skill, type Item } from "@prisma/client";
+import { DerivedStats, type BasicStats } from "~/utils/fo";
 import { cn } from "~/utils/styles";
 
-type Stats = Pick<Item, BasicStats>;
+type Stats = Pick<Skill, BasicStats | DerivedStats>;
 
 export function ItemStats(props: {
 	stats: Stats;
@@ -13,11 +13,15 @@ export function ItemStats(props: {
 
 	const armor = inputItem.armor;
 
-	const stats = (["str", "agi", "int", "sta"] as const)
+	const stats = (["str", "agi", "int", "sta", "crit", "dodge"
+,"atkPower"
+,"armor"
+,"health"
+,"energy"] as const)
 		.filter((s) => inputItem[s] !== null)
 		.map((s) => {
 			return {
-				stat: s.toUpperCase(),
+				stat: s.toUpperCase().replace('ATKPOWER', 'ATK'),
 				value: inputItem[s] as number,
 			};
 		});
@@ -27,13 +31,13 @@ export function ItemStats(props: {
 	}
 
 	return (
-		<div className={cn(className, "text-sm")}>
+		<div className={cn(className, "flex text-sm")}>
 			{stats.length > 0 ? (
-				<div className="bg-slate-200 dark:bg-slate-600 w-16 space-y-1.5 rounded-md p-1 mb-1">
+				<div className="bg-slate-200 dark:bg-slate-600 space-y-1.5 rounded-md p-1 mb-1">
 					{stats.map(({ stat, value }) => {
 						return (
-							<div key={stat} className="flex justify-between">
-								<div className="bg-slate-300 dark:bg-slate-700 w-6 text-center rounded-sm">
+							<div key={stat} className="flex justify-between gap-x-0.5">
+								<div className="bg-slate-300 dark:bg-slate-700 text-center rounded-sm px-0.5">
 									{value > 0 ? `+${value}` : value}
 								</div>
 								<div className="flex-1 text-center pl-1">{stat}</div>

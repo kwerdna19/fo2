@@ -5,6 +5,7 @@ import {
 	getInputProps,
 	useFormMetadata,
 	useInputControl,
+	getSelectProps,
 } from "@conform-to/react";
 import { type Area } from "@prisma/client";
 import { Map as MapIcon, Trash2 } from "lucide-react";
@@ -49,7 +50,7 @@ type Props = {
 	formId: string;
 };
 
-function MapCoordinatesField({
+export function MapCoordinatesField({
 	area,
 	x,
 	y,
@@ -145,19 +146,22 @@ function LocationField({
 	areas,
 }: { field: FieldMetadata<Locations[number]>; areas: Props["areas"] }) {
 	const { areaId, x, y } = field.getFieldset();
-	const [selectedArea, setSelectedArea] = useState(
-		areas.find((a) => a.id === areaId.value),
-	);
 
-	const { key, ...areaProps } = getInputProps(areaId, { type: "text" });
+	const control = useInputControl(areaId);
+	const { defaultValue, key, ...areaSelectProps } = getSelectProps(areaId, {
+		value: false,
+	});
+	const selectedArea = areas.find(a => a.id === control.value)
 
 	return (
 		<fieldset {...getFieldsetProps(field)} className="grid grid-cols-4 gap-x-4">
 			<div className="col-span-3 space-y-2">
 				<Select
 					key={key}
-					{...areaProps}
-					onValueChange={(v) => setSelectedArea(areas.find((a) => a.id === v))}
+					defaultValue={defaultValue?.toString()}
+					{...areaSelectProps}
+					onValueChange={control.change}
+					value={control.value}
 				>
 					<SelectTrigger>
 						<SelectValue placeholder="Select Area" />
