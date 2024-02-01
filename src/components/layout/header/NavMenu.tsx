@@ -29,7 +29,6 @@ export function NavMenu({
 	const pathMatches = (str: string) => path === str;
 	const pathStartsWith = (str: string) => path.startsWith(str);
 
-
 	const itemClassName = cn(mobile && "w-full");
 
 	const linkClassName = cn(navigationMenuTriggerStyle(), mobile && "w-full");

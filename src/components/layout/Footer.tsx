@@ -46,7 +46,11 @@ export function Footer() {
 				>
 					<GrGamepad className="h-6 w-6" />
 				</a>
-				<a className="block hover:text-foreground" href="https://github.com/kwerdna19/fo2" title="FO2DB GitHub">
+				<a
+					className="block hover:text-foreground"
+					href="https://github.com/kwerdna19/fo2"
+					title="FO2DB GitHub"
+				>
 					<BsGithub className="h-6 w-6" />
 				</a>
 			</div>

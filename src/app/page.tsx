@@ -21,10 +21,7 @@ export default function App() {
 				href="/items"
 				label="Items"
 				image={
-					<ItemSprite
-						size="sm"
-						url="/sprites/item/backpack-large-icon.png"
-					/>
+					<ItemSprite size="sm" url="/sprites/item/backpack-large-icon.png" />
 				}
 			/>
 			<NavCard

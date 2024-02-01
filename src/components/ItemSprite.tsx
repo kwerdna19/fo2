@@ -14,7 +14,6 @@ interface Variant {
 	size?: keyof (typeof variants)["size"];
 }
 
-
 const menuSpriteWidth = 25;
 const menuSpriteHeight = 25;
 
@@ -26,7 +25,7 @@ export interface ItemSpriteProps extends Variant {
 	name?: string;
 	className?: string;
 	bg?: boolean;
-	menuSprite?: boolean
+	menuSprite?: boolean;
 }
 
 export const ItemSprite = ({
@@ -35,7 +34,7 @@ export const ItemSprite = ({
 	className,
 	size = "xs",
 	bg,
-	menuSprite
+	menuSprite,
 }: ItemSpriteProps) => {
 	const mult = variants.size[size];
 	const height = (menuSprite ? menuSpriteHeight : spriteHeight) * mult;
