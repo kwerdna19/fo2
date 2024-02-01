@@ -14,14 +14,19 @@ interface Variant {
 	size?: keyof (typeof variants)["size"];
 }
 
+
+const menuSpriteWidth = 25;
+const menuSpriteHeight = 25;
+
 const spriteWidth = 22;
 const spriteHeight = 22;
 
 export interface ItemSpriteProps extends Variant {
 	url: string;
-	name: string;
+	name?: string;
 	className?: string;
 	bg?: boolean;
+	menuSprite?: boolean
 }
 
 export const ItemSprite = ({
@@ -30,10 +35,11 @@ export const ItemSprite = ({
 	className,
 	size = "xs",
 	bg,
+	menuSprite
 }: ItemSpriteProps) => {
 	const mult = variants.size[size];
-	const height = spriteHeight * mult;
-	const width = spriteWidth * mult;
+	const height = (menuSprite ? menuSpriteHeight : spriteHeight) * mult;
+	const width = (menuSprite ? menuSpriteWidth : spriteWidth) * mult;
 
 	return (
 		<img
@@ -45,7 +51,7 @@ export const ItemSprite = ({
 				className,
 			)}
 			src={url}
-			alt={`${name} sprite`}
+			alt={name ? `${name} sprite` : ""}
 		/>
 	);
 };

@@ -191,6 +191,8 @@ model Item {
     spriteUrl String
     equip     EquippableType?
     levelReq  Int?
+
+    globalLoot Boolean?
     twoHand   Boolean?
     consumable Boolean @default(false)
     sellPrice Int?

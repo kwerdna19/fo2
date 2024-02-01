@@ -66,9 +66,10 @@ export function ItemForm({
 			/>
 			<FormInput label="Note" field={fields.note} />
 
-			<div className="grid grid-cols-2 gap-5">
+			<div className="grid grid-cols-3 gap-5">
 				<FormCheckbox label="2-Handed" field={fields.twoHand} />
 				<FormCheckbox label="Consumable" field={fields.consumable} />
+				<FormCheckbox label="Global" field={fields.globalLoot} />
 			</div>
 			<div className="grid grid-cols-2 gap-5">
 				<FormInput label="Sell Price" field={fields.sellPrice} type="number" />

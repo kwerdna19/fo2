@@ -40,6 +40,8 @@ export const itemSchema = z.object({
 	sellPrice: z.number().int().optional(),
 	stackSize: z.number().int(),
 
+	globalLoot: z.boolean().optional(),
+
 	availableStart: z.date().optional(),
 	availableEnd: z.date().optional(),
 

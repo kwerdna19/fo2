@@ -27,6 +27,8 @@ export function NavMenu({
 	const path = usePathname();
 
 	const pathMatches = (str: string) => path === str;
+	const pathStartsWith = (str: string) => path.startsWith(str);
+
 
 	const itemClassName = cn(mobile && "w-full");
 
@@ -71,6 +73,17 @@ export function NavMenu({
 					</NavigationMenuLink>
 				</NavigationMenuItem>
 				<NavigationMenuItem className={itemClassName}>
+					<NavigationMenuLink
+						active={pathMatches("/skills")}
+						asChild
+						className={linkClassName}
+					>
+						<Link prefetch={false} href="/skills">
+							Skills
+						</Link>
+					</NavigationMenuLink>
+				</NavigationMenuItem>
+				<NavigationMenuItem className={itemClassName}>
 					<NavigationMenuLink asChild>
 						<NavigationMenuTrigger className={cn(mobile && "w-full")}>
 							Areas
@@ -93,6 +106,17 @@ export function NavMenu({
 							))}
 						</ul>
 					</NavigationMenuContent>
+				</NavigationMenuItem>
+				<NavigationMenuItem className={itemClassName}>
+					<NavigationMenuLink
+						active={pathStartsWith("/battlepass")}
+						asChild
+						className={linkClassName}
+					>
+						<Link prefetch={false} href="/battlepass">
+							Battlepass
+						</Link>
+					</NavigationMenuLink>
 				</NavigationMenuItem>
 				{/* <NavigationMenuItem>
 				<NavigationMenuLink active={pathMatches('/builds')} asChild className={linkClassName}>

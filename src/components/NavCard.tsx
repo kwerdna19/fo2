@@ -13,13 +13,13 @@ interface Props {
 export default function NavCard({ image, label, className, href }: Props) {
 	return (
 		<Button
-			className={cn("max-w-md w-full h-24", className)}
+			className={cn("max-w-sm w-full p-5 pl-24 flex relative justify-start h-auto", className)}
 			variant="outline"
 			asChild
 		>
 			<Link prefetch={false} href={href}>
-				<div className="flex-0 min-w-[80px]">{image}</div>
-				<div className="flex-1 px-3 text-3xl">{label}</div>
+				<div className="flex items-center justify-center absolute left-6 h-full">{image}</div>
+				<div className="text-2xl">{label}</div>
 			</Link>
 		</Button>
 	);

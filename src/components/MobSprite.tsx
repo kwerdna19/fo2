@@ -47,7 +47,7 @@ const defaultSprite = [2, 1] as const;
 
 export interface MobSpriteProps extends Variant {
 	url: string;
-	name: string;
+	name?: string;
 	className?: string;
 	animated?: boolean;
 }
@@ -124,7 +124,7 @@ export const MobSprite = ({
 					width: imgWidth,
 				}}
 				src={url}
-				alt={`${name} sprite`}
+				alt={name ? `${name} sprite` : ""}
 			/>
 		</div>
 	);

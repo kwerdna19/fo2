@@ -29,7 +29,7 @@ export function Footer() {
 			<div>
 				<TooltipProvider>
 					<Tooltip>
-						<TooltipTrigger className="text-3xl hover:text-black cursor-default">
+						<TooltipTrigger className="text-3xl hover:text-foreground cursor-default">
 							Δ
 						</TooltipTrigger>
 						<TooltipContent side="bottom">
@@ -40,13 +40,13 @@ export function Footer() {
 			</div>
 			<div className="flex gap-x-4 px-3 pt-1">
 				<a
-					className="block"
+					className="block hover:text-foreground"
 					href="https://fantasyonline2.com/"
 					title="Play Fantasy Online 2"
 				>
 					<GrGamepad className="h-6 w-6" />
 				</a>
-				<a className="block" href="https://github.com/kwerdna19/fo2">
+				<a className="block hover:text-foreground" href="https://github.com/kwerdna19/fo2" title="FO2DB GitHub">
 					<BsGithub className="h-6 w-6" />
 				</a>
 			</div>
