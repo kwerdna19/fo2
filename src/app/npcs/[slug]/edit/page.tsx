@@ -57,13 +57,13 @@ export default async function EditNpc({ params }: { params: Params }) {
 			return submission.reply();
 		}
 
-		let redirectUrl: undefined | string
+		let redirectUrl: undefined | string;
 
 		try {
 			const converted = recursivelyNullifyUndefinedValues(submission.value);
 			const updated = await updateNpc(npc.id, converted);
 			if (updated.slug !== npc.slug) {
-				redirectUrl = updated.slug
+				redirectUrl = updated.slug;
 			}
 		} catch (e) {
 			console.error(e);
@@ -81,8 +81,6 @@ export default async function EditNpc({ params }: { params: Params }) {
 		}
 
 		return submission.reply();
-
-
 	}
 
 	return (
