@@ -1,6 +1,13 @@
 "use client";
 import { getFieldsetProps, getInputProps } from "@conform-to/react";
-import { EquippableType, Item, SkillType, type Mob, type Npc, Area } from "@prisma/client";
+import {
+	Area,
+	EquippableType,
+	Item,
+	type Mob,
+	type Npc,
+	SkillType,
+} from "@prisma/client";
 import SpriteSelect from "~/components/SpriteSelect";
 import { Form } from "~/components/form-ui/Form";
 import FormCheckbox from "~/components/form-ui/FormCheckbox";
@@ -8,13 +15,13 @@ import FormInput from "~/components/form-ui/FormInput";
 import FormSelect from "~/components/form-ui/FormSelect";
 import { Input } from "~/components/ui/input";
 import { FieldLabel, Label } from "~/components/ui/label";
+import { AreaSelect } from "~/features/areas/components/AreaSelect";
+import { ItemField } from "~/features/items/components/ItemField";
+import ItemsMultiField from "~/features/items/components/ItemsMultiField";
 import { useConform } from "~/hooks/useConform";
 import { type ConformServerAction } from "~/types/actions";
 import { getSkillBySlug } from "../requests";
 import { skillSchema } from "../schemas";
-import { AreaSelect } from "~/features/areas/components/AreaSelect";
-import { ItemField } from "~/features/items/components/ItemField";
-import ItemsMultiField from "~/features/items/components/ItemsMultiField";
 
 interface Props {
 	items: Pick<Item, "id" | "name" | "spriteUrl">[];
@@ -55,7 +62,11 @@ export function SkillForm({
 
 			<FormInput label="Rank" field={fields.rank} type="number" />
 
-			<FormSelect label="Type" options={Object.values(SkillType)} field={fields.type} />
+			<FormSelect
+				label="Type"
+				options={Object.values(SkillType)}
+				field={fields.type}
+			/>
 
 			<FormInput
 				label="Desc"
@@ -66,11 +77,23 @@ export function SkillForm({
 
 			<FormInput label="Level Req" field={fields.levelReq} type="number" />
 
-			<FormInput label="Cast Time (sec)" field={fields.castTimeSec} type="number" />
-			<FormInput label="Duration (mins)" field={fields.durationMins} type="number" />
+			<FormInput
+				label="Cast Time (sec)"
+				field={fields.castTimeSec}
+				type="number"
+			/>
+			<FormInput
+				label="Duration (mins)"
+				field={fields.durationMins}
+				type="number"
+			/>
 			<FormInput label="Energy Cost" field={fields.energyCost} type="number" />
 
-			<FormInput label="Tick Duration (sec)" field={fields.tickDurationSec} type="number" />
+			<FormInput
+				label="Tick Duration (sec)"
+				field={fields.tickDurationSec}
+				type="number"
+			/>
 
 			<div className="space-y-1">
 				<Label>Required Stats</Label>
@@ -145,7 +168,6 @@ export function SkillForm({
 			<div className="col-span-2">
 				<ItemsMultiField label="Item/s" items={items} field={fields.items} />
 			</div>
-
 		</Form>
 	);
 }

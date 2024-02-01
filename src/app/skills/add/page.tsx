@@ -23,7 +23,7 @@ export function generateMetadata() {
 export default async function AddSkill() {
 	await userSatisfiesRoleOrRedirect(Role.MODERATOR, "/skills");
 
-	const areas = await getAllAreasQuick()
+	const areas = await getAllAreasQuick();
 	const items = await getAllItemsQuick();
 	const sprites = getListOfImages("skill");
 
@@ -41,13 +41,13 @@ export default async function AddSkill() {
 			return submission.reply();
 		}
 
-		let redirectUrl: undefined | string
+		let redirectUrl: undefined | string;
 
 		try {
 			const created = await createSkill(submission.value);
-			redirectUrl = `/skills/${created.slug}`
+			redirectUrl = `/skills/${created.slug}`;
 		} catch (e) {
-			console.log(e)
+			console.log(e);
 			return submission.reply({
 				formErrors: ["Server error"],
 			});
@@ -55,11 +55,10 @@ export default async function AddSkill() {
 
 		revalidatePath("/skills", "page");
 		revalidatePath("/items", "page");
-		if(redirectUrl) {
+		if (redirectUrl) {
 			redirect(redirectUrl);
 		}
-		notFound()
-
+		notFound();
 	}
 
 	return (
@@ -70,7 +69,12 @@ export default async function AddSkill() {
 					Back to skills
 				</Link>
 			</Button>
-			<SkillForm action={action} sprites={sprites} items={items} areas={areas} />
+			<SkillForm
+				action={action}
+				sprites={sprites}
+				items={items}
+				areas={areas}
+			/>
 		</div>
 	);
 }

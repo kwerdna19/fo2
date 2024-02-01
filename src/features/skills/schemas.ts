@@ -1,9 +1,8 @@
 import { z } from "zod";
 
-
 export const skillItemsSchema = z
 	.object({
-		id: z.string()
+		id: z.string(),
 	})
 	.array();
 
@@ -15,12 +14,12 @@ export const skillSchema = z.object({
 	spriteUrl: z.string(),
 	type: z.string().optional(),
 	levelReq: z.number().int().optional(),
-	
+
 	reqStr: z.number().int().optional(),
 	reqSta: z.number().int().optional(),
 	reqAgi: z.number().int().optional(),
 	reqInt: z.number().int().optional(),
-	
+
 	range: z.number().int().optional(),
 	atkPower: z.number().int().optional(),
 	str: z.number().int().optional(),

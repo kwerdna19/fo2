@@ -3,9 +3,9 @@ import {
 	type FieldMetadata,
 	getFieldsetProps,
 	getInputProps,
+	getSelectProps,
 	useFormMetadata,
 	useInputControl,
-	getSelectProps,
 } from "@conform-to/react";
 import { type Area } from "@prisma/client";
 import { Map as MapIcon, Trash2 } from "lucide-react";
@@ -151,7 +151,7 @@ function LocationField({
 	const { defaultValue, key, ...areaSelectProps } = getSelectProps(areaId, {
 		value: false,
 	});
-	const selectedArea = areas.find(a => a.id === control.value)
+	const selectedArea = areas.find((a) => a.id === control.value);
 
 	return (
 		<fieldset {...getFieldsetProps(field)} className="grid grid-cols-4 gap-x-4">

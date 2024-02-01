@@ -63,7 +63,6 @@ export default async function EditSkill({ params }: { params: Params }) {
 			revalidatePath("/skills", "page");
 			revalidatePath("/items", "page");
 
-
 			if (updated.slug !== skill.slug) {
 				redirect(`/skills/${updated.slug}/edit`);
 			}

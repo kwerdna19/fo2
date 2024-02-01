@@ -1,6 +1,6 @@
 "use client";
-import { Skill, type Item } from "@prisma/client";
-import { DerivedStats, type BasicStats } from "~/utils/fo";
+import { type Item, Skill } from "@prisma/client";
+import { type BasicStats, DerivedStats } from "~/utils/fo";
 import { cn } from "~/utils/styles";
 
 type Stats = Pick<Skill, BasicStats | DerivedStats>;
@@ -13,15 +13,24 @@ export function ItemStats(props: {
 
 	const armor = inputItem.armor;
 
-	const stats = (["str", "agi", "int", "sta", "crit", "dodge"
-,"atkPower"
-,"armor"
-,"health"
-,"energy"] as const)
+	const stats = (
+		[
+			"str",
+			"agi",
+			"int",
+			"sta",
+			"crit",
+			"dodge",
+			"atkPower",
+			"armor",
+			"health",
+			"energy",
+		] as const
+	)
 		.filter((s) => inputItem[s] !== null)
 		.map((s) => {
 			return {
-				stat: s.toUpperCase().replace('ATKPOWER', 'ATK'),
+				stat: s.toUpperCase().replace("ATKPOWER", "ATK"),
 				value: inputItem[s] as number,
 			};
 		});

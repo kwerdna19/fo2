@@ -28,7 +28,9 @@ export default async function Item({ params }: { params: Params }) {
 	return (
 		<div>
 			<div className="flex gap-x-4">
-				<h2 className="text-3xl">{skill.name} {skill.rank}</h2>
+				<h2 className="text-3xl">
+					{skill.name} {skill.rank}
+				</h2>
 				<AdminButton
 					size="icon"
 					variant="outline"

@@ -1,7 +1,8 @@
 "use client";
 import {
 	type FieldMetadata,
-	getFieldsetProps, useFormMetadata
+	getFieldsetProps,
+	useFormMetadata,
 } from "@conform-to/react";
 import { type Item } from "@prisma/client";
 import { Trash2 } from "lucide-react";
@@ -9,7 +10,6 @@ import { Button } from "~/components/ui/button";
 import { FieldLabel } from "~/components/ui/label";
 import { ItemField } from "~/features/items/components/ItemField";
 import { cn } from "~/utils/styles";
-
 
 export type Props = {
 	className?: string;
@@ -45,11 +45,7 @@ export default function ItemsMultiField({
 							{...getFieldsetProps(f)}
 							className="grid grid-cols-4 gap-x-6"
 						>
-							<ItemField
-								field={id}
-								items={items}
-								className="col-span-3"
-							/>
+							<ItemField field={id} items={items} className="col-span-3" />
 							<Button
 								size="icon"
 								variant="destructive"

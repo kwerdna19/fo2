@@ -1,4 +1,4 @@
-import { type EquippableType, Unit, SkillType } from "@prisma/client";
+import { type EquippableType, SkillType, Unit } from "@prisma/client";
 import { type z } from "zod";
 import { db } from "~/server/db";
 import { getSlugFromName } from "~/utils/misc";
@@ -10,7 +10,7 @@ export async function getAllSkills() {
 			name: "asc",
 		},
 		include: {
-			items: true
+			items: true,
 		},
 	});
 }
@@ -47,14 +47,17 @@ export async function createSkill(input: z.infer<typeof skillSchema>) {
 			type: type as SkillType,
 			slug: `${getSlugFromName(name)}-${rank}`,
 			items: items && {
-				connect: items
+				connect: items,
 			},
 			...rest,
 		},
 	});
 }
 
-export async function updateSkill(id: string, data: z.infer<typeof skillSchema>) {
+export async function updateSkill(
+	id: string,
+	data: z.infer<typeof skillSchema>,
+) {
 	const { name, rank, type, items, ...rest } = data;
 
 	let updated = await db.skill.update({
@@ -69,17 +72,17 @@ export async function updateSkill(id: string, data: z.infer<typeof skillSchema>)
 			updatedAt: new Date(),
 			...rest,
 			items: items && {
-				connect: items
+				connect: items,
 			},
 		},
 		include: {
-			items: true
+			items: true,
 		},
 	});
 
 	const itemsToRemove = updated.items.filter((item) => {
 		return !items?.find((inputItem) => {
-			return (inputItem.id === item.id);
+			return inputItem.id === item.id;
 		});
 	});
 
@@ -91,7 +94,7 @@ export async function updateSkill(id: string, data: z.infer<typeof skillSchema>)
 			data: {
 				items: {
 					disconnect: itemsToRemove,
-				}
+				},
 			},
 			include: {
 				items: true,
@@ -101,4 +104,3 @@ export async function updateSkill(id: string, data: z.infer<typeof skillSchema>)
 
 	return updated;
 }
-

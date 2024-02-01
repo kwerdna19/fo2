@@ -13,9 +13,12 @@ import {
 } from "@tanstack/react-table";
 import Link from "next/link";
 import { useState } from "react";
+import { DebouncedInput } from "~/components/DebouncedInput";
 import { ItemSprite } from "~/components/ItemSprite";
 import { PriceDisplay } from "~/components/PriceDisplay";
 import SortButton, { getSortButton } from "~/components/SortButton";
+import { ItemRequiredStats } from "~/components/tables/items/ItemRequiredStats";
+import { ItemStats } from "~/components/tables/items/ItemStats";
 import {
 	Table,
 	TableBody,
@@ -27,9 +30,6 @@ import {
 import { getAverageDamage, getSumOfBasicStats, isWeapon } from "~/utils/fo";
 import { cn } from "~/utils/styles";
 import { getAllSkills } from "../requests";
-import { ItemRequiredStats } from "~/components/tables/items/ItemRequiredStats";
-import { DebouncedInput } from "~/components/DebouncedInput";
-import { ItemStats } from "~/components/tables/items/ItemStats";
 
 type Data = Awaited<ReturnType<typeof getAllSkills>>;
 
@@ -60,7 +60,7 @@ export const columns = [
 		header: getSortButton("Name"),
 	}),
 	columnHelper.accessor("rank", {
-		header: getSortButton("Rank")
+		header: getSortButton("Rank"),
 	}),
 	columnHelper.display({
 		id: "effect",

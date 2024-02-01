@@ -23,8 +23,7 @@ export default function SortButton<T>({
 }
 
 export function getSortButton<T>(label: string) {
-	return 	function SortButtonWithLabel({ column }: { column: Column<T> }) {
+	return function SortButtonWithLabel({ column }: { column: Column<T> }) {
 		return <SortButton column={column}>{label}</SortButton>;
 	};
-
 }
