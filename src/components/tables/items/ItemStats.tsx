@@ -40,7 +40,7 @@ export function ItemStats(props: {
 	}
 
 	return (
-		<div className={cn(className, "flex text-sm")}>
+		<div className={cn(className, "flex flex-col items-center text-sm")}>
 			{stats.length > 0 ? (
 				<div className="bg-slate-200 dark:bg-slate-600 space-y-1.5 rounded-md p-1 mb-1">
 					{stats.map(({ stat, value }) => {
@@ -56,7 +56,7 @@ export function ItemStats(props: {
 				</div>
 			) : null}
 			{armor ? (
-				<div className="p-1">
+				<div className="p-1 text-center">
 					<span>{armor > 0 ? `+${armor}` : armor}</span> <span>Armor</span>
 				</div>
 			) : null}
