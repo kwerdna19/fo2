@@ -3,7 +3,7 @@ import { type Item, Skill } from "@prisma/client";
 import { type BasicStats, DerivedStats } from "~/utils/fo";
 import { cn } from "~/utils/styles";
 
-type Stats = Pick<Skill, BasicStats | DerivedStats>;
+type Stats = Partial<Pick<Skill, BasicStats | DerivedStats>>;
 
 export function ItemStats(props: {
 	stats: Stats;
@@ -27,7 +27,7 @@ export function ItemStats(props: {
 			"energy",
 		] as const
 	)
-		.filter((s) => inputItem[s] !== null)
+		.filter((s) => inputItem[s] !== null && typeof inputItem[s] !== 'undefined')
 		.map((s) => {
 			return {
 				stat: s.toUpperCase().replace("ATKPOWER", "ATK"),
