@@ -22,12 +22,12 @@ export function ItemStats(props: {
 			"crit",
 			"dodge",
 			"atkPower",
-			"armor",
+			// "armor",
 			"health",
 			"energy",
 		] as const
 	)
-		.filter((s) => inputItem[s] !== null && typeof inputItem[s] !== 'undefined')
+		.filter((s) => inputItem[s] !== null && typeof inputItem[s] !== "undefined")
 		.map((s) => {
 			return {
 				stat: s.toUpperCase().replace("ATKPOWER", "ATK"),
