@@ -27,11 +27,15 @@ export const skillSchema = z.object({
 	agi: z.number().int().optional(),
 	int: z.number().int().optional(),
 	armor: z.number().int().optional(),
+	crit: z.number().optional(),
+	dodge: z.number().optional(),
+
 	atkSpeed: z.number().optional(),
 	minValue: z.number().int().optional(),
 	maxValue: z.number().int().optional(),
 	value: z.number().int().optional(),
 	tickDurationSec: z.number().optional(),
+	castCooldownTimeSec: z.number().optional(),
 
 	castTimeSec: z.number().optional(),
 	durationMins: z.number().optional(),

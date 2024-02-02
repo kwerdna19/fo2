@@ -15,8 +15,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { DebouncedInput } from "~/components/DebouncedInput";
 import { ItemSprite } from "~/components/ItemSprite";
-import { PriceDisplay } from "~/components/PriceDisplay";
-import SortButton, { getSortButton } from "~/components/SortButton";
+import { getSortButton } from "~/components/SortButton";
 import { ItemRequiredStats } from "~/components/tables/items/ItemRequiredStats";
 import { ItemStats } from "~/components/tables/items/ItemStats";
 import {
@@ -27,7 +26,6 @@ import {
 	TableHeader,
 	TableRow,
 } from "~/components/ui/table";
-import { getAverageDamage, getSumOfBasicStats, isWeapon } from "~/utils/fo";
 import { cn } from "~/utils/styles";
 import { getAllSkills } from "../requests";
 
@@ -53,7 +51,7 @@ export const columns = [
 	}),
 	columnHelper.accessor("name", {
 		cell: (info) => (
-			<Link prefetch={false} href={`/items/${info.row.original.slug}`}>
+			<Link prefetch={false} href={`/skills/${info.row.original.slug}`}>
 				{info.getValue()}
 			</Link>
 		),

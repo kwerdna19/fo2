@@ -329,6 +329,7 @@ model Skill {
     maxValue Int?
     value Int?
 
+    castCooldownTimeSec Int?
     castTimeSec Int?
     durationMins Int?
     energyCost Int?

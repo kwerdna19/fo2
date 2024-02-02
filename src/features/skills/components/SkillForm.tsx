@@ -83,6 +83,11 @@ export function SkillForm({
 				type="number"
 			/>
 			<FormInput
+				label="Cooldown (sec)"
+				field={fields.castCooldownTimeSec}
+				type="number"
+			/>
+			<FormInput
 				label="Duration (mins)"
 				field={fields.durationMins}
 				type="number"
@@ -139,6 +144,14 @@ export function SkillForm({
 					<Input
 						placeholder="Armor"
 						{...getInputProps(fields.armor, { type: "number" })}
+					/>
+					<Input
+						placeholder="Crit"
+						{...getInputProps(fields.crit, { type: "number" })}
+					/>
+					<Input
+						placeholder="Dodge"
+						{...getInputProps(fields.dodge, { type: "number" })}
 					/>
 					<Input
 						placeholder="Range"
