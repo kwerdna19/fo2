@@ -13,6 +13,11 @@ export async function getAllNpcs() {
 				include: {
 					item: true,
 				},
+				orderBy: [{
+					unit: 'desc'
+				}, {
+					price: 'asc'
+				}]
 			},
 			locations: {
 				include: {
@@ -23,6 +28,11 @@ export async function getAllNpcs() {
 				include: {
 					item: true,
 				},
+				orderBy: [{
+					unit: 'desc'
+				}, {
+					price: 'asc'
+				}]
 			},
 		},
 	});
