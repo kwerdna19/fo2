@@ -34,6 +34,7 @@ export default function RootLayout({
 			lang="en"
 			className={cn(
 				inter.variable,
+				"font-sans",
 				"scroll-smooth antialiased",
 				"[font-feature-settings:'ss01']",
 			)}
