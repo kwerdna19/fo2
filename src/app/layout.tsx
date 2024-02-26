@@ -1,7 +1,9 @@
 import { Analytics } from "@vercel/analytics/react";
+import { GeistMono } from "geist/font/mono";
+import { GeistSans } from "geist/font/sans";
+
 import "leaflet/dist/leaflet.css";
 import { type Metadata } from "next";
-import { Inter } from "next/font/google";
 import { ThemeProvider } from "~/components/ThemeProvider";
 import { Footer } from "~/components/layout/Footer";
 import { Header } from "~/components/layout/header/index";
@@ -9,11 +11,6 @@ import { Toaster } from "~/components/ui/toaster";
 import "~/styles/globals.css";
 import "~/styles/map.css";
 import { cn } from "~/utils/styles";
-
-const inter = Inter({
-	subsets: ["latin"],
-	variable: "--font-sans",
-});
 
 export const metadata: Metadata = {
 	title: {
@@ -33,8 +30,8 @@ export default function RootLayout({
 		<html
 			lang="en"
 			className={cn(
-				inter.variable,
-				"font-sans",
+				GeistSans.variable,
+				GeistMono.variable,
 				"scroll-smooth antialiased",
 				"[font-feature-settings:'ss01']",
 			)}
