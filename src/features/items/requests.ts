@@ -90,7 +90,7 @@ export async function getItemBySlug(slug: string) {
 					mob: true,
 				},
 				orderBy: {
-					dropRate: 'desc',
+					dropRate: "desc",
 				},
 			},
 			soldBy: {

@@ -54,7 +54,7 @@ export async function getMobBySlug(slug: string) {
 					item: true,
 				},
 				orderBy: {
-					dropRate: 'desc',
+					dropRate: "desc",
 				},
 			},
 			locations: true,

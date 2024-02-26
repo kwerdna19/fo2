@@ -12,8 +12,9 @@ export function DurationDisplay({ mins }: { mins: number }) {
 
 	const text = formatDuration(duration, {
 		delimiter: "",
-	}).replace(/(\s?(?:seconds?|minutes?|hours?|days?|weeks?|months?|years?))/g, (val) =>
-		val.trim().charAt(0),
+	}).replace(
+		/(\s?(?:seconds?|minutes?|hours?|days?|weeks?|months?|years?))/g,
+		(val) => val.trim().charAt(0),
 	);
 
 	return (

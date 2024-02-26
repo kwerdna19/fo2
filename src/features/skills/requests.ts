@@ -6,9 +6,14 @@ import { skillSchema } from "./schemas";
 
 export async function getAllSkills() {
 	return db.skill.findMany({
-		orderBy: {
-			slug: "asc",
-		},
+		orderBy: [
+			{
+				slug: "asc",
+			},
+			{
+				rank: "asc",
+			},
+		],
 		include: {
 			items: true,
 		},
