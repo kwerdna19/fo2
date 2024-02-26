@@ -7,7 +7,7 @@ import { skillSchema } from "./schemas";
 export async function getAllSkills() {
 	return db.skill.findMany({
 		orderBy: {
-			name: "asc",
+			slug: "asc",
 		},
 		include: {
 			items: true,
