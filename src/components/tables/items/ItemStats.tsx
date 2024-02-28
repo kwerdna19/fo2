@@ -48,8 +48,11 @@ export function ItemStats(props: {
 					{stats.map(({ stat, value }) => {
 						return (
 							<div key={stat} className="flex justify-between gap-x-0.5">
-								<div className="bg-slate-300 dark:bg-slate-700 text-center rounded-sm px-0.5">
+								<div className="bg-slate-300 dark:bg-slate-700 text-center rounded-sm px-0.5 flex items-center">
 									{value > 0 ? `+${value}` : value}
+									{stat === "CRIT" ? (
+										<span className="text-xs ml-0.5">%</span>
+									) : null}
 								</div>
 								<div className="flex-1 text-center pl-1">{stat}</div>
 							</div>
