@@ -21,4 +21,6 @@ export const mobSchema = z.object({
 	dmgMax: z.number().optional(),
 	locations: locationsSchema.optional(),
 	drops: dropsSchema.optional(),
+	factionXp: z.number().int().optional(),
+	factionId: z.string().optional(),
 });

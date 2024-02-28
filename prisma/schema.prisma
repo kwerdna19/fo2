@@ -45,6 +45,9 @@ model Mob {
     crit Float?
     dodge Float?
 
+    factionXp Int?
+    factionId String?
+    faction Faction? @relation(fields: [factionId], references: [id])
 }
 
 // type Enum TBD
@@ -343,6 +346,20 @@ model Skill {
 
     items     Item[]
     @@unique([name, rank])
+}
+
+
+model Faction {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  spriteUrl String?
+  updatedAt DateTime @updatedAt
+  name      String @unique()
+  slug      String @unique()
+  note      String?
+  inGameId Int?
+
+  mobs  Mob[]
 }
 
 
