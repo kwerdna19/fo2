@@ -29,6 +29,14 @@ export async function getAllItems() {
 					price: "asc",
 				},
 			},
+			// craftedBy: {
+			// 	include: {
+			// 		npc: true,
+			// 	},
+			// 	orderBy: {
+			// 		durationMinutes: "asc",
+			// 	},
+			// },
 		},
 	});
 }
@@ -55,6 +63,7 @@ export async function getAllItemsQuick() {
 			id: true,
 			name: true,
 			spriteUrl: true,
+			slug: true,
 		},
 	});
 }
@@ -96,6 +105,14 @@ export async function getItemBySlug(slug: string) {
 			soldBy: {
 				include: {
 					npc: true,
+				},
+			},
+			craftedBy: {
+				include: {
+					npc: true,
+				},
+				orderBy: {
+					durationMinutes: "asc",
 				},
 			},
 		},

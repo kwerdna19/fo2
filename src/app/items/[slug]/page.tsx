@@ -1,8 +1,17 @@
+import { EquippableType } from "@prisma/client";
 import { Pencil } from "lucide-react";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AdminButton } from "~/components/AdminButton";
 import { ItemSprite } from "~/components/ItemSprite";
-import { getItemBySlug } from "~/features/items/requests";
+import { MobSprite } from "~/components/MobSprite";
+import { UnitSprite } from "~/components/UnitSprite";
+import { ItemRequiredStats } from "~/components/tables/items/ItemRequiredStats";
+import { ItemStats } from "~/components/tables/items/ItemStats";
+import { DurationDisplay } from "~/components/tables/npcs/DurationDisplay";
+import { Badge } from "~/components/ui/badge";
+import { Label } from "~/components/ui/label";
+import { getAllItemsQuick, getItemBySlug } from "~/features/items/requests";
 
 interface Params {
 	slug: string;
@@ -18,6 +27,13 @@ export async function generateMetadata({ params }: { params: Params }) {
 	};
 }
 
+export async function generateStaticParams() {
+	const items = await getAllItemsQuick();
+	return items.map((item) => ({
+		slug: item.slug,
+	}));
+}
+
 export default async function Item({ params }: { params: Params }) {
 	const item = await getItemBySlug(params.slug);
 
@@ -26,19 +42,184 @@ export default async function Item({ params }: { params: Params }) {
 	}
 
 	return (
-		<div>
-			<div className="flex gap-x-4">
-				<h2 className="text-3xl">{item.name}</h2>
-				<AdminButton
-					size="icon"
-					variant="outline"
-					href={`/items/${params.slug}/edit`}
-				>
-					<Pencil className="w-4 h-4" />
-				</AdminButton>
+		<div className="grid grid-cols-4 gap-8">
+			<div className="flex flex-col gap-6">
+				<div className="self-center">
+					<ItemSprite bg size="2xl" url={item.spriteUrl} name={item.name} />
+					<p className="text-muted-foreground pt-2 text-center">{item.name}</p>
+				</div>
+				<div>
+					<Label>Slot</Label>
+					<div className="flex items-center gap-4 flex-wrap capitalize">
+						{item.equip?.replace(/_/g, " ")?.toLowerCase() ?? "-"}
+						{item.equip === EquippableType.MAIN_HAND ? (
+							<Badge>{item.twoHand ? "2" : "1"}-H</Badge>
+						) : null}
+					</div>
+				</div>
+				<div>
+					<Label>Level Req</Label>
+					<div>{item.levelReq ?? "-"}</div>
+				</div>
+				<div className="space-y-6">
+					<div className="space-y-2">
+						<Label>Stats</Label>
+						<ItemStats
+							stats={item}
+							fallback={
+								<div className="text-muted-foreground leading-none">
+									No bonus stats
+								</div>
+							}
+						/>
+					</div>
+					<div className="space-y-2">
+						<Label>Required Stats</Label>
+						<ItemRequiredStats
+							stats={item}
+							fallback={
+								<div className="text-muted-foreground leading-none">
+									No bonus stats
+								</div>
+							}
+						/>
+					</div>
+				</div>
+				<div>
+					<Label>Sell Price</Label>
+					<div className="flex items-center gap-2">
+						{item.sellPrice ? (
+							<>
+								<UnitSprite type="COINS" size="sm" />
+								{item.sellPrice}
+							</>
+						) : (
+							"-"
+						)}
+					</div>
+				</div>
+				<div>
+					<Label>Stack size</Label>
+					<div className="flex items-center gap-2">{item.stackSize}</div>
+				</div>
+				{item.consumable ? (
+					<div>
+						<Badge>Consumable</Badge>
+					</div>
+				) : null}
 			</div>
-			<div>
-				<ItemSprite size="xl" url={item.spriteUrl} name={item.name} />
+
+			<div className="col-span-3 space-y-2 py-2">
+				<div className="flex gap-x-4">
+					<h1 className="text-3xl">{item.name}</h1>
+					<AdminButton
+						size="icon"
+						variant="outline"
+						href={`/items/${params.slug}/edit`}
+					>
+						<Pencil className="w-4 h-4" />
+					</AdminButton>
+				</div>
+				{item.desc ? <p className="italic">{item.desc}</p> : <p>-</p>}
+				{item.note ? <p className="py-2">{item.note}</p> : null}
+				<div className="py-12 space-y-6">
+					{item.droppedBy.length > 0 && (
+						<div>
+							<h2 className="text-xl mb-2">Dropped By</h2>
+							<div className="max-w-screen-md">
+								{item.droppedBy.map(({ itemId, mobId, mob, dropRate }) => {
+									return (
+										<div
+											className="grid items-center grid-cols-[0.5fr_1fr_0.5fr] gap-3"
+											key={`${itemId}_${mobId}`}
+										>
+											<Link prefetch={false} href={`/mob/${mob.slug}`}>
+												<MobSprite
+													url={mob.spriteUrl}
+													name={mob.name}
+													size="sm"
+												/>
+											</Link>
+											<Link prefetch={false} href={`/mob/${mob.slug}`}>
+												{mob.name}
+											</Link>
+											<div>{dropRate}%</div>
+										</div>
+									);
+								})}
+							</div>
+						</div>
+					)}
+
+					{item.soldBy.length > 0 && (
+						<div>
+							<h2 className="text-xl mb-2">Sold By</h2>
+							<div className="max-w-screen-md">
+								{item.soldBy.map(({ itemId, npcId, npc, price, unit }) => {
+									return (
+										<div
+											className="grid items-center grid-cols-[0.5fr_1fr_0.5fr] gap-3"
+											key={`${itemId}_${npcId}`}
+										>
+											<Link prefetch={false} href={`/npc/${npc.slug}`}>
+												<MobSprite
+													url={npc.spriteUrl}
+													name={npc.name}
+													size="sm"
+												/>
+											</Link>
+											<Link prefetch={false} href={`/npc/${npc.slug}`}>
+												{npc.name}
+											</Link>
+											<div className="flex gap-2 items-center">
+												<UnitSprite type={unit} size="sm" />
+												{price}
+											</div>
+										</div>
+									);
+								})}
+							</div>
+						</div>
+					)}
+
+					{item.craftedBy.length > 0 && (
+						<div>
+							<h2 className="text-xl mb-2">Crafted By</h2>
+							<div className="max-w-screen-md">
+								{item.craftedBy.map(
+									({ itemId, npcId, npc, price, unit, durationMinutes }) => {
+										return (
+											<div
+												className="grid items-center grid-cols-[0.5fr_1fr_0.5fr_0.5fr] gap-3"
+												key={`${itemId}_${npcId}`}
+											>
+												<Link prefetch={false} href={`/npc/${npc.slug}`}>
+													<MobSprite
+														url={npc.spriteUrl}
+														name={npc.name}
+														size="sm"
+													/>
+												</Link>
+												<Link prefetch={false} href={`/npc/${npc.slug}`}>
+													{npc.name}
+												</Link>
+												<div className="flex gap-2 items-center">
+													<UnitSprite type={unit} size="sm" />
+													{price}
+												</div>
+												<DurationDisplay
+													className="gap-x-2"
+													iconClass="h-4 w-4"
+													mins={durationMinutes}
+												/>
+											</div>
+										);
+									},
+								)}
+							</div>
+						</div>
+					)}
+				</div>
 			</div>
 		</div>
 	);

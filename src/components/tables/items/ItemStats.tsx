@@ -1,5 +1,6 @@
 "use client";
 import { type Item, Skill } from "@prisma/client";
+import { ReactNode } from "react";
 import { type BasicStats, DerivedStats } from "~/utils/fo";
 import { cn } from "~/utils/styles";
 
@@ -8,8 +9,9 @@ type Stats = Partial<Pick<Skill, BasicStats | DerivedStats>>;
 export function ItemStats(props: {
 	stats: Stats;
 	className?: string;
+	fallback?: ReactNode;
 }) {
-	const { className, stats: inputItem } = props;
+	const { className, stats: inputItem, fallback } = props;
 
 	const armor = inputItem.armor;
 
@@ -36,7 +38,7 @@ export function ItemStats(props: {
 		});
 	//.sort((a, b) => b.value - a.value)
 	if (stats.length === 0 && !armor) {
-		return null;
+		return fallback;
 	}
 
 	return (

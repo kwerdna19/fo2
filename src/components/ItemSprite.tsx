@@ -6,7 +6,8 @@ const variants = {
 		sm: 2,
 		md: 3,
 		lg: 4,
-		xl: 5,
+		xl: 6,
+		"2xl": 8,
 	},
 };
 

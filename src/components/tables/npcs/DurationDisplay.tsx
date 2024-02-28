@@ -1,8 +1,13 @@
 "use client";
 import { addMinutes, formatDuration, intervalToDuration } from "date-fns";
 import { Clock } from "lucide-react";
+import { cn } from "~/utils/styles";
 
-export function DurationDisplay({ mins }: { mins: number }) {
+export function DurationDisplay({
+	mins,
+	className,
+	iconClass,
+}: { mins: number; className?: string; iconClass?: string }) {
 	const d = new Date();
 
 	const duration = intervalToDuration({
@@ -18,8 +23,8 @@ export function DurationDisplay({ mins }: { mins: number }) {
 	);
 
 	return (
-		<div className="flex gap-x-1 items-center">
-			<Clock className="h-3 w-3" /> {text}
+		<div className={cn("flex gap-x-1 items-center", className)}>
+			<Clock className={cn("h-3 w-3", iconClass)} /> {text}
 		</div>
 	);
 }

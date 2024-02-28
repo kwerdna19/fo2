@@ -1,13 +1,15 @@
 "use client";
 import { type Item } from "@prisma/client";
+import { ReactNode } from "react";
 import { type RequiredStats } from "~/utils/fo";
 import { cn } from "~/utils/styles";
 
 export function ItemRequiredStats(props: {
 	stats: Pick<Item, RequiredStats>;
 	className?: string;
+	fallback?: ReactNode;
 }) {
-	const { className, stats: inputItem } = props;
+	const { className, stats: inputItem, fallback } = props;
 
 	const stats = (["reqStr", "reqAgi", "reqInt", "reqSta"] as const)
 		.filter((s) => inputItem[s] !== null)
@@ -19,7 +21,7 @@ export function ItemRequiredStats(props: {
 		});
 	//.sort((a, b) => b.value - a.value)
 	if (stats.length === 0) {
-		return null;
+		return fallback;
 	}
 
 	return (
