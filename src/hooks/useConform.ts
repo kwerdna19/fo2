@@ -31,7 +31,8 @@ export const useConform = <Schema extends z.ZodType>(
 	const [form, fields] = useForm<z.output<Schema>, ErrorType>({
 		lastResult,
 		onValidate({ formData }) {
-			return parseWithZod(formData, { schema });
+			const parsed = parseWithZod(formData, { schema });
+			return parsed;
 		},
 		constraint: getZodConstraint(schema),
 		shouldValidate: "onBlur",

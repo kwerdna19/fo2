@@ -4,7 +4,7 @@ import {
 	getSelectProps,
 	useInputControl,
 } from "@conform-to/react";
-import { Area } from "@prisma/client";
+import { Faction } from "@prisma/client";
 import { FieldLabel } from "~/components/ui/label";
 import {
 	Select,
@@ -14,13 +14,13 @@ import {
 	SelectValue,
 } from "~/components/ui/select";
 
-export function AreaSelect({
+export function FactionSelect({
 	field,
-	areas,
+	factions,
 	label,
 }: {
-	field: FieldMetadata<string>;
-	areas: Pick<Area, "id" | "name">[];
+	field: FieldMetadata<string | undefined>;
+	factions: Pick<Faction, "id" | "name">[];
 	label: string;
 }) {
 	const control = useInputControl(field);
@@ -28,23 +28,33 @@ export function AreaSelect({
 		value: false,
 	});
 
-	const selectedArea = areas.find((a) => a.id === control.value);
+	const { required } = field.constraint ?? {};
+
+	// const selectedFaction = factions.find((a) => a.id === control.value);
 
 	return (
 		<div className="space-y-1">
 			<FieldLabel field={field}>{label}</FieldLabel>
 			<Select
 				key={key}
+				required={required}
 				defaultValue={defaultValue?.toString()}
-				{...selectProps}
 				onValueChange={control.change}
 				value={control.value}
+				{...selectProps}
 			>
-				<SelectTrigger>
-					<SelectValue placeholder="Select Area" />
+				<SelectTrigger
+					onKeyDown={(e) =>
+						!required && (e.key === "Backspace" || e.key === "Delete")
+							? control.change("")
+							: null
+					}
+					onBlur={control.blur}
+				>
+					<SelectValue placeholder="Select Faction" />
 				</SelectTrigger>
 				<SelectContent>
-					{areas.map((o) => (
+					{factions.map((o) => (
 						<SelectItem key={o.id} value={o.id}>
 							{o.name}
 						</SelectItem>

@@ -9,6 +9,7 @@ import { getListOfImages } from "~/utils/server";
 import { parseWithZod } from "@conform-to/zod";
 import { revalidatePath } from "next/cache";
 import { getAllAreasQuick } from "~/features/areas/requests";
+import { getAllFactionsQuick } from "~/features/factions/requests";
 import { getAllItemsQuick } from "~/features/items/requests";
 import { getMobBySlug, updateMob } from "~/features/mobs/requests";
 import { mobSchema } from "~/features/mobs/schemas";
@@ -41,6 +42,7 @@ export default async function EditMob({ params }: { params: Params }) {
 
 	const areas = await getAllAreasQuick();
 	const items = await getAllItemsQuick();
+	const factions = await getAllFactionsQuick();
 	const sprites = getListOfImages("mob");
 
 	if (!sprites) {
@@ -89,6 +91,7 @@ export default async function EditMob({ params }: { params: Params }) {
 				action={action}
 				areas={areas}
 				items={items}
+				factions={factions}
 				sprites={sprites}
 				defaultValue={mob}
 			/>

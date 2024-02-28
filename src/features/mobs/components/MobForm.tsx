@@ -1,10 +1,11 @@
 "use client";
-import { type Area, type Item } from "@prisma/client";
+import { type Area, type Faction, type Item } from "@prisma/client";
 import SpriteSelect from "~/components/SpriteSelect";
 import { Form } from "~/components/form-ui/Form";
 import FormCheckbox from "~/components/form-ui/FormCheckbox";
 import FormInput from "~/components/form-ui/FormInput";
 import LocationsMultiField from "~/features/areas/components/LocationsMultiField";
+import { FactionSelect } from "~/features/factions/components/FactionSelect";
 import { useConform } from "~/hooks/useConform";
 import { type ConformServerAction } from "~/types/actions";
 import { type getMobBySlug } from "../requests";
@@ -14,6 +15,7 @@ import DropItemsMultiField from "./DropItemsMultiField";
 interface Props {
 	areas: Pick<Area, "id" | "name" | "spriteUrl" | "height" | "width">[];
 	items: Pick<Item, "id" | "name" | "spriteUrl">[];
+	factions: Pick<Faction, "id" | "name">[];
 	sprites: string[];
 	defaultValue?: Awaited<ReturnType<typeof getMobBySlug>>;
 	action: ConformServerAction;
@@ -22,6 +24,7 @@ interface Props {
 export function MobForm({
 	areas,
 	items,
+	factions,
 	sprites,
 	action: serverAction,
 	defaultValue,
@@ -56,6 +59,15 @@ export function MobForm({
 			<FormCheckbox field={fields.boss} label="Boss" />
 
 			<FormInput label="Atk Speed" field={fields.atkSpeed} type="number" />
+
+			<div className="grid grid-cols-2 gap-3">
+				<FactionSelect
+					label="Faction"
+					factions={factions}
+					field={fields.factionId}
+				/>
+				<FormInput label="Faction XP" field={fields.factionXp} type="number" />
+			</div>
 
 			<div className="col-span-2">
 				<LocationsMultiField
