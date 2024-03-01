@@ -8,12 +8,12 @@ const tmpDir = "./bin/tmp";
 
 const assetDir = "./public/sprites";
 
-const boardId = "yQJQRGg3";
+const boardId = "OEmhSVFl";
 const apiKey = process.env.TRELLO_API_KEY;
 const apiToken = process.env.TRELLO_API_TOKEN;
 const tokenAccessUrl = `https://trello.com/1/authorize?expiration=never&name=Fo2AssetUtility&scope=read,write&response_type=token&key=${apiKey}`;
 
-const LIST_NAME = "Doing";
+const LIST_NAME = "Request DB Updates + Files";
 
 const saveFile = async (url: string, outputPath: string) => {
 	const resp = await fetch(url.replace("//trello.com", "//api.trello.com"), {
