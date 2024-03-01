@@ -142,6 +142,8 @@ const main = async () => {
 
 				rmSync(downloadedPath);
 			}
+
+			// TODO: move card to done?
 		}
 	} catch (e) {
 		console.error(e);
