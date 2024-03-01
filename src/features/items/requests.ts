@@ -8,7 +8,7 @@ import { type itemSchema } from "./schemas";
 export async function getAllItems() {
 	return db.item.findMany({
 		orderBy: {
-			name: "asc",
+			slug: "asc",
 		},
 		include: {
 			droppedBy: {
@@ -44,7 +44,7 @@ export async function getAllItems() {
 export async function getAllEquipment() {
 	return db.item.findMany({
 		orderBy: {
-			name: "asc",
+			slug: "asc",
 		},
 		where: {
 			equip: {
@@ -57,7 +57,7 @@ export async function getAllEquipment() {
 export async function getAllItemsQuick() {
 	return db.item.findMany({
 		orderBy: {
-			name: "asc",
+			slug: "asc",
 		},
 		select: {
 			id: true,
