@@ -9,6 +9,7 @@ import { getListOfImages } from "~/utils/server";
 import { parseWithZod } from "@conform-to/zod";
 import { revalidatePath } from "next/cache";
 import { getAllAreasQuick } from "~/features/areas/requests";
+import { getAllFactionsQuick } from "~/features/factions/requests";
 import { getAllItemsQuick } from "~/features/items/requests";
 import { createMob } from "~/features/mobs/requests";
 import { mobSchema } from "~/features/mobs/schemas";
@@ -27,6 +28,7 @@ export default async function AddMob() {
 	const areas = await getAllAreasQuick();
 	const items = await getAllItemsQuick();
 	const sprites = getListOfImages("mob");
+	const factions = await getAllFactionsQuick();
 
 	if (!sprites) {
 		notFound();
@@ -65,7 +67,13 @@ export default async function AddMob() {
 					Back to mobs
 				</Link>
 			</Button>
-			<MobForm action={action} areas={areas} items={items} sprites={sprites} />
+			<MobForm
+				action={action}
+				areas={areas}
+				items={items}
+				sprites={sprites}
+				factions={factions}
+			/>
 		</div>
 	);
 }
