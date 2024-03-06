@@ -21,6 +21,15 @@ export async function getAllBattlePasses() {
 	});
 }
 
+export async function getAllBattlePassesQuick() {
+	return db.battlePass.findMany({
+		select: {
+			id: true,
+			name: true,
+		},
+	});
+}
+
 export async function getCurrentBattlePass() {
 	return db.battlePass.findFirst({
 		include: {

@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { Button } from "~/components/ui/button";
+import { getAllBattlePassesQuick } from "~/features/battlepasses/requests";
 import { ItemForm } from "~/features/items/components/ItemForm";
 import { createItem } from "~/features/items/requests";
 import { itemSchema } from "~/features/items/schemas";
@@ -25,6 +26,7 @@ export default async function AddItem() {
 
 	const mobs = await getAllMobsQuick();
 	const npcs = await getAllNpcsQuick();
+	const battlePasses = await getAllBattlePassesQuick();
 
 	const sprites = getListOfImages("item");
 
@@ -66,7 +68,13 @@ export default async function AddItem() {
 					Back to items
 				</Link>
 			</Button>
-			<ItemForm action={action} sprites={sprites} mobs={mobs} npcs={npcs} />
+			<ItemForm
+				action={action}
+				sprites={sprites}
+				mobs={mobs}
+				npcs={npcs}
+				battlePasses={battlePasses}
+			/>
 		</div>
 	);
 }

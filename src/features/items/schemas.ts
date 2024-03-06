@@ -1,5 +1,6 @@
 import { EquippableType, Unit } from "@prisma/client";
 import { z } from "zod";
+import { itemBattlePassTiersSchema } from "../battlepasses/schemas";
 
 export const droppedBySchema = z
 	.object({
@@ -29,6 +30,7 @@ export const itemSchema = z.object({
 	name: z.string(),
 	desc: z.string().optional(),
 	note: z.string().optional(),
+	artist: z.string().optional(),
 	spriteUrl: z.string(),
 	equip: z
 		.string()
@@ -64,4 +66,5 @@ export const itemSchema = z.object({
 	droppedBy: droppedBySchema.optional(),
 	soldBy: soldBySchema.optional(),
 	craftedBy: craftedBySchema.optional(),
+	battlePassTiers: itemBattlePassTiersSchema.optional(),
 });

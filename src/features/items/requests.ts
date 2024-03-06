@@ -120,7 +120,15 @@ export async function getItemBySlug(slug: string) {
 }
 
 export async function createItem(input: z.infer<typeof itemSchema>) {
-	const { name, droppedBy, equip, soldBy, craftedBy, ...rest } = input;
+	const {
+		name,
+		droppedBy,
+		equip,
+		soldBy,
+		craftedBy,
+		battlePassTiers,
+		...rest
+	} = input;
 
 	return db.item.create({
 		data: {
@@ -142,13 +150,26 @@ export async function createItem(input: z.infer<typeof itemSchema>) {
 					data: craftedBy,
 				},
 			},
+			battlePassTiers: battlePassTiers && {
+				createMany: {
+					data: battlePassTiers,
+				},
+			},
 			...rest,
 		},
 	});
 }
 
 export async function updateItem(id: string, data: z.infer<typeof itemSchema>) {
-	const { name, droppedBy, equip, soldBy, craftedBy, ...rest } = data;
+	const {
+		name,
+		droppedBy,
+		equip,
+		soldBy,
+		craftedBy,
+		battlePassTiers,
+		...rest
+	} = data;
 
 	let updated = await db.item.update({
 		where: {
@@ -196,11 +217,22 @@ export async function updateItem(id: string, data: z.infer<typeof itemSchema>) {
 					},
 				})),
 			},
+			battlePassTiers: battlePassTiers && {
+				upsert: battlePassTiers.map((p) => ({
+					create: p,
+					update: p,
+					where: {
+						battlePassId_tier: p,
+						itemId: id,
+					},
+				})),
+			},
 		},
 		include: {
 			droppedBy: true,
 			soldBy: true,
 			craftedBy: true,
+			battlePassTiers: true,
 		},
 	});
 
@@ -234,7 +266,21 @@ export async function updateItem(id: string, data: z.infer<typeof itemSchema>) {
 		});
 	});
 
-	if (dropsToRemove.length || salesToRemove.length || craftsToRemove.length) {
+	const tiersToRemove = updated.battlePassTiers.filter((updatedTier) => {
+		return !battlePassTiers?.find((inputTier) => {
+			return (
+				inputTier.battlePassId === updatedTier.battlePassId &&
+				inputTier.tier === updatedTier.tier
+			);
+		});
+	});
+
+	if (
+		dropsToRemove.length ||
+		salesToRemove.length ||
+		craftsToRemove.length ||
+		tiersToRemove.length
+	) {
 		updated = await db.item.update({
 			where: {
 				id,
@@ -264,11 +310,21 @@ export async function updateItem(id: string, data: z.infer<typeof itemSchema>) {
 						},
 					})),
 				},
+				battlePassTiers: {
+					delete: tiersToRemove.map((t) => ({
+						battlePassId_tier: {
+							battlePassId: t.battlePassId,
+							tier: t.tier,
+						},
+						itemId: id,
+					})),
+				},
 			},
 			include: {
 				droppedBy: true,
 				soldBy: true,
 				craftedBy: true,
+				battlePassTiers: true,
 			},
 		});
 	}

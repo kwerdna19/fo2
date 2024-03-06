@@ -7,6 +7,13 @@ export const battlePassTierSchema = z.object({
 	unit: z.nativeEnum(Unit).optional(),
 });
 
+export const itemBattlePassTiersSchema = z
+	.object({
+		battlePassId: z.string(),
+		tier: z.number().int(),
+	})
+	.array();
+
 export const battlePassSchema = z.object({
 	name: z.string(),
 	tiers: battlePassTierSchema.array().optional(),

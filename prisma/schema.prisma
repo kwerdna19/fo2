@@ -48,6 +48,8 @@ model Mob {
     factionXp Int?
     factionId String?
     faction Faction? @relation(fields: [factionId], references: [id])
+
+    artist String?
 }
 
 // type Enum TBD
@@ -240,6 +242,8 @@ model Item {
     atkSpeed Float?
     dmgMin Int?
     dmgMax Int?
+
+    artist String?
 }
 
 model Location {

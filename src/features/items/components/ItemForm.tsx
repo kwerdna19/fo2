@@ -1,6 +1,6 @@
 "use client";
 import { getInputProps } from "@conform-to/react";
-import { EquippableType, type Mob, type Npc } from "@prisma/client";
+import { BattlePass, EquippableType, type Mob, type Npc } from "@prisma/client";
 import SpriteSelect from "~/components/SpriteSelect";
 import { Form } from "~/components/form-ui/Form";
 import FormCheckbox from "~/components/form-ui/FormCheckbox";
@@ -8,6 +8,7 @@ import FormInput from "~/components/form-ui/FormInput";
 import FormSelect from "~/components/form-ui/FormSelect";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import AcquiredByBattlePassesMultiField from "~/features/battlepasses/components/AcquiredByBattlePassesMultiField";
 import { useConform } from "~/hooks/useConform";
 import { type ConformServerAction } from "~/types/actions";
 import { type getItemBySlug } from "../requests";
@@ -19,6 +20,7 @@ import SoldByNpcsMultiField from "./SoldByNpcsMultiField";
 interface Props {
 	npcs: Pick<Npc, "id" | "name" | "spriteUrl">[];
 	mobs: Pick<Mob, "id" | "name" | "spriteUrl">[];
+	battlePasses: Pick<BattlePass, "id" | "name">[];
 	sprites: string[];
 	defaultValue?: Awaited<ReturnType<typeof getItemBySlug>>;
 	action: ConformServerAction;
@@ -29,6 +31,7 @@ export function ItemForm({
 	mobs,
 	npcs,
 	action: serverAction,
+	battlePasses,
 	defaultValue,
 }: Props) {
 	const [form, fields, action, lastResult] = useConform(serverAction, {
@@ -64,6 +67,13 @@ export function ItemForm({
 				field={fields.desc}
 				placeholder="In game description"
 			/>
+
+			<FormInput
+				label="Artist"
+				field={fields.artist}
+				placeholder="E.g. Perseus, Lighterthief"
+			/>
+
 			<FormInput label="Note" field={fields.note} />
 
 			<div className="grid grid-cols-3 gap-5">
@@ -162,6 +172,14 @@ export function ItemForm({
 					label="Crafted By"
 					field={fields.craftedBy}
 					npcs={npcs}
+				/>
+			</div>
+
+			<div className="col-span-2">
+				<AcquiredByBattlePassesMultiField
+					label="Battle Passes"
+					battlePasses={battlePasses}
+					field={fields.battlePassTiers}
 				/>
 			</div>
 		</Form>
