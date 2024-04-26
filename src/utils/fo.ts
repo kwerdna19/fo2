@@ -1,3 +1,4 @@
+import { basename } from "path";
 import { EquippableType, type Item } from "@prisma/client";
 
 // not exported form prisma, bc unused in schemas, so moved here
@@ -76,7 +77,11 @@ export const isWeapon = <T extends Item>(item: T): item is Weapon<T> => {
 };
 
 export const getAverageDamage = (item: Weapon) => {
-	return (item.dmgMax - item.dmgMin) / 2;
+	return (item.dmgMax + item.dmgMin) / 2;
+};
+
+export const getAverageDPS = (item: Weapon) => {
+	return getAverageDamage(item) / item.atkSpeed;
 };
 
 export const getSumOfBasicStats = (item: Item) => {
@@ -327,11 +332,21 @@ const playerSpriteBaseUrl = "https://art.fantasyonline2.com/api/character/ss";
 
 const defaultSpriteAttributes = ["body-0", "eyes-standard-blue", "nude-head"];
 
-export const getPlayerSpriteUrlPreview = (itemSlugs?: string[]) => {
-	const attrs = defaultSpriteAttributes.concat(itemSlugs ?? []);
-	return `${playerSpriteBaseUrl}?f=body-0_eyes-standard-blue_nude-head${
-		itemSlugs?.length ? `_${attrs.join("_")}` : ""
-	}`;
+export const getPlayerSpriteUrlPreview = (
+	items?: Pick<Item, "spriteUrl">[],
+) => {
+	const itemSlugs =
+		items?.map((item) =>
+			basename(item.spriteUrl)
+				.replace(/\.png$/, "")
+				.replace(/\-icon$/, "")
+				.replace(/\s/g, ""),
+		) ?? [];
+
+	const attrs = defaultSpriteAttributes.concat(itemSlugs);
+	const f = attrs.join("_");
+
+	return getPlayerSpriteUrl(f);
 };
 
 export const getPlayerSpriteUrl = (spriteQuery: string) => {
@@ -347,3 +362,11 @@ export const guildRankMap = {
 } as const satisfies Record<number, string>;
 
 export type GuildRank = (typeof guildRankMap)[keyof typeof guildRankMap];
+
+export const isVisible = (item: Pick<Item, "equip">) => {
+	return (
+		item.equip !== null &&
+		((visibleEquipment as EquippableType[]).includes(item.equip) ||
+			(cosmeticEquipment as EquippableType[]).includes(item.equip))
+	);
+};

@@ -27,8 +27,8 @@ export function ItemRequiredStats(props: {
 	return (
 		<div
 			className={cn(
-				className,
 				"text-sm bg-amber-200 dark:bg-amber-700 w-16 space-y-1.5 rounded-md p-1 mb-1",
+				className,
 			)}
 		>
 			{stats.map(({ stat, value }) => {

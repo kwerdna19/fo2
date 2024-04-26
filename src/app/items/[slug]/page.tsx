@@ -17,6 +17,12 @@ import { Label } from "~/components/ui/label";
 import { addToCollection } from "~/features/collection/requests";
 import { getAllItemsQuick, getItemBySlug } from "~/features/items/requests";
 import { auth } from "~/server/auth";
+import {
+	getAverageDPS,
+	getPlayerSpriteUrlPreview,
+	isVisible,
+	isWeapon,
+} from "~/utils/fo";
 
 interface Params {
 	slug: string;
@@ -101,11 +107,36 @@ export default async function Item({ params }: { params: Params }) {
 					<Label>Level Req</Label>
 					<div>{item.levelReq ?? "-"}</div>
 				</div>
+
+				{isWeapon(item) ? (
+					<div className="grid grid-cols-2 gap-3">
+						<div className="space-y-2">
+							<Label>Damage</Label>
+							<div>
+								{item.dmgMin} - {item.dmgMax}
+							</div>
+						</div>
+						<div className="space-y-2">
+							<Label>Attack Speed</Label>
+							<div>{item.atkSpeed}</div>
+						</div>
+						<div className="space-y-2">
+							<Label>Average DPS</Label>
+							<div>{getAverageDPS(item).toFixed(2)}</div>
+						</div>
+						<div className="space-y-2">
+							<Label>Range</Label>
+							<div>{item.range}</div>
+						</div>
+					</div>
+				) : null}
+
 				<div className="space-y-6">
 					<div className="space-y-2">
 						<Label>Stats</Label>
 						<ItemStats
 							stats={item}
+							className="items-start"
 							fallback={
 								<div className="text-muted-foreground leading-none">
 									No bonus stats
@@ -117,6 +148,7 @@ export default async function Item({ params }: { params: Params }) {
 						<Label>Required Stats</Label>
 						<ItemRequiredStats
 							stats={item}
+							className="items-start"
 							fallback={
 								<div className="text-muted-foreground leading-none">
 									No bonus stats
@@ -256,6 +288,16 @@ export default async function Item({ params }: { params: Params }) {
 						</div>
 					)}
 				</div>
+
+				{isVisible(item) ? (
+					<div>
+						<MobSprite
+							animated
+							size="2xl"
+							url={getPlayerSpriteUrlPreview([item])}
+						/>
+					</div>
+				) : null}
 			</div>
 		</div>
 	);

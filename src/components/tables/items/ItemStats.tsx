@@ -42,7 +42,7 @@ export function ItemStats(props: {
 	}
 
 	return (
-		<div className={cn(className, "flex flex-col items-center text-sm")}>
+		<div className={cn("flex flex-col items-center text-sm", className)}>
 			{stats.length > 0 ? (
 				<div className="bg-slate-200 dark:bg-slate-600 space-y-1.5 rounded-md p-1 mb-1">
 					{stats.map(({ stat, value }) => {
