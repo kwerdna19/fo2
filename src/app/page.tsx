@@ -47,6 +47,17 @@ export default function App() {
 				}
 			/>
 			<NavCard
+				href="/guilds"
+				label="Guilds"
+				image={
+					<ItemSprite
+						size="sm"
+						url="/sprites/misc-ui/guildmenu-icon.png"
+						menuSprite
+					/>
+				}
+			/>
+			<NavCard
 				href="/battlepass"
 				label="Battlepass"
 				image={
