@@ -1,5 +1,5 @@
-import { type Column } from "@tanstack/react-table";
-import { type ReactNode } from "react";
+import type { Column } from "@tanstack/react-table";
+import type { ReactNode } from "react";
 import { TbArrowDown as ArrowDown, TbArrowUp as ArrowUp } from "react-icons/tb";
 import { Button } from "./ui/button";
 

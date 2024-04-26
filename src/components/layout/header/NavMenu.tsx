@@ -14,7 +14,7 @@ import {
 	NavigationMenuTrigger,
 	navigationMenuTriggerStyle,
 } from "~/components/ui/navigation-menu";
-import { type getAllAreasQuick } from "~/features/areas/requests";
+import type { getAllAreasQuick } from "~/features/areas/requests";
 import { cn } from "~/utils/styles";
 
 type Areas = NonNullable<Awaited<ReturnType<typeof getAllAreasQuick>>>;
@@ -105,6 +105,17 @@ export function NavMenu({
 							))}
 						</ul>
 					</NavigationMenuContent>
+				</NavigationMenuItem>
+				<NavigationMenuItem className={itemClassName}>
+					<NavigationMenuLink
+						active={pathMatches("/guilds")}
+						asChild
+						className={linkClassName}
+					>
+						<Link prefetch={false} href="/guilds">
+							Guilds
+						</Link>
+					</NavigationMenuLink>
 				</NavigationMenuItem>
 				<NavigationMenuItem className={itemClassName}>
 					<NavigationMenuLink

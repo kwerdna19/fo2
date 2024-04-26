@@ -3,7 +3,7 @@ import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 
 import "leaflet/dist/leaflet.css";
-import { type Metadata } from "next";
+import type { Metadata } from "next";
 import { ThemeProvider } from "~/components/ThemeProvider";
 import { Footer } from "~/components/layout/Footer";
 import { Header } from "~/components/layout/header/index";

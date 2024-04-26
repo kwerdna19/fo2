@@ -1,8 +1,8 @@
-import { type EquippableType, SkillType, Unit } from "@prisma/client";
-import { type z } from "zod";
+import { type EquippableType, type SkillType, Unit } from "@prisma/client";
+import type { z } from "zod";
 import { db } from "~/server/db";
 import { getSlugFromName } from "~/utils/misc";
-import { skillSchema } from "./schemas";
+import type { skillSchema } from "./schemas";
 
 export async function getAllSkills() {
 	return db.skill.findMany({

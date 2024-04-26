@@ -1,5 +1,5 @@
 "use client";
-import { type Item } from "@prisma/client";
+import type { Item } from "@prisma/client";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Link from "next/link";
 import { Slot, slotBackgroundSpriteMap } from "~/utils/fo";

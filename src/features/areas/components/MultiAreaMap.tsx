@@ -3,7 +3,7 @@
 import * as L from "leaflet";
 import { useState } from "react";
 import { MapContainer } from "react-leaflet";
-import { type getAllAreasPopulated } from "../requests";
+import type { getAllAreasPopulated } from "../requests";
 import { MapBackground } from "./MapBackground";
 
 type Areas = Awaited<ReturnType<typeof getAllAreasPopulated>>;

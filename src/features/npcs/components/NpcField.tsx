@@ -1,6 +1,6 @@
 "use client";
 import { type FieldMetadata, useInputControl } from "@conform-to/react";
-import { type Npc } from "@prisma/client";
+import type { Npc } from "@prisma/client";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useState } from "react";
 import { MobSprite } from "~/components/MobSprite";

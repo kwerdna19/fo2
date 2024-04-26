@@ -1,6 +1,6 @@
 "use client";
 
-import { type Item } from "@prisma/client";
+import type { Item } from "@prisma/client";
 import {
 	type Build,
 	type NonCosmeticEquippableType,

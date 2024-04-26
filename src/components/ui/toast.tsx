@@ -1,8 +1,9 @@
+"use client";
+
 import * as ToastPrimitives from "@radix-ui/react-toast";
 import { type VariantProps, cva } from "class-variance-authority";
 import { X } from "lucide-react";
 import * as React from "react";
-
 import { cn } from "~/utils/styles";
 
 const ToastProvider = ToastPrimitives.Provider;
@@ -30,6 +31,11 @@ const toastVariants = cva(
 				default: "border bg-background text-foreground",
 				destructive:
 					"destructive group border-destructive bg-destructive text-destructive-foreground",
+				success:
+					"success group border-success bg-success text-success-foreground",
+				warning:
+					"warning group border-warning bg-warning text-warning-foreground",
+				error: "error group border-error bg-error text-error-foreground",
 			},
 		},
 		defaultVariants: {

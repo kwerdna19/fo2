@@ -11,7 +11,7 @@ import {
 	CollapsibleContent,
 	CollapsibleTrigger,
 } from "~/components/ui/collapsible";
-import { type getAllAreasQuick } from "~/features/areas/requests";
+import type { getAllAreasQuick } from "~/features/areas/requests";
 import { NavMenu } from "./NavMenu";
 
 type Areas = NonNullable<Awaited<ReturnType<typeof getAllAreasQuick>>>;

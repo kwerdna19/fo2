@@ -1,10 +1,10 @@
 "use client";
 
 import * as L from "leaflet";
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { MapContainer } from "react-leaflet";
 import { cn } from "~/utils/styles";
-import { type getAreaBySlug } from "../requests";
+import type { getAreaBySlug } from "../requests";
 import { LocationLayers } from "./LocationLayers";
 import { MapBackground } from "./MapBackground";
 

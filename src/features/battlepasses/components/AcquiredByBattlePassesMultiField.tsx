@@ -6,10 +6,10 @@ import {
 	useFormMetadata,
 	useInputControl,
 } from "@conform-to/react";
-import { BattlePass } from "@prisma/client";
+import type { BattlePass } from "@prisma/client";
 import { Check, ChevronsUpDown, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { type z } from "zod";
+import type { z } from "zod";
 import { ControlledHiddenField } from "~/components/form-ui/ControlledHiddenField";
 import { Button } from "~/components/ui/button";
 import {
@@ -27,7 +27,7 @@ import {
 	PopoverTrigger,
 } from "~/components/ui/popover";
 import { cn } from "~/utils/styles";
-import { type itemBattlePassTiersSchema } from "../schemas";
+import type { itemBattlePassTiersSchema } from "../schemas";
 
 type AcquiredBy = z.infer<typeof itemBattlePassTiersSchema>;
 

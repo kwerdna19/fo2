@@ -17,13 +17,16 @@ export enum Slot {
 	OFFHAND = 12,
 }
 
-export type CosmeticEquippableType =
-	| typeof EquippableType.COSMETIC_HEAD
-	| typeof EquippableType.COSMETIC_FACE
-	| typeof EquippableType.COSMETIC_BACK
-	| typeof EquippableType.COSMETIC_SHOULDERS
-	| typeof EquippableType.COSMETIC_CHEST
-	| typeof EquippableType.COSMETIC_LEGS;
+export const cosmeticEquipment = [
+	EquippableType.COSMETIC_HEAD,
+	EquippableType.COSMETIC_FACE,
+	EquippableType.COSMETIC_BACK,
+	EquippableType.COSMETIC_SHOULDERS,
+	EquippableType.COSMETIC_CHEST,
+	EquippableType.COSMETIC_LEGS,
+] satisfies EquippableType[];
+
+export type CosmeticEquippableType = (typeof cosmeticEquipment)[number];
 
 export type NonCosmeticEquippableType = Exclude<
 	EquippableType,
@@ -56,7 +59,7 @@ export const visibleEquipment = [
 	EquippableType.LEGS,
 	EquippableType.MAIN_HAND,
 	EquippableType.OFFHAND,
-] as const;
+] satisfies EquippableType[];
 
 type DamageKey = "dmgMin" | "dmgMax" | "atkSpeed";
 type Weapon<T extends Item = Item> = {
@@ -319,3 +322,28 @@ export const getAllStats = (
 		...derivedStats,
 	};
 };
+
+const playerSpriteBaseUrl = "https://art.fantasyonline2.com/api/character/ss";
+
+const defaultSpriteAttributes = ["body-0", "eyes-standard-blue", "nude-head"];
+
+export const getPlayerSpriteUrlPreview = (itemSlugs?: string[]) => {
+	const attrs = defaultSpriteAttributes.concat(itemSlugs ?? []);
+	return `${playerSpriteBaseUrl}?f=body-0_eyes-standard-blue_nude-head${
+		itemSlugs?.length ? `_${attrs.join("_")}` : ""
+	}`;
+};
+
+export const getPlayerSpriteUrl = (spriteQuery: string) => {
+	return `${playerSpriteBaseUrl}?f=${spriteQuery}`;
+};
+
+export const guildRankMap = {
+	8: "Leader",
+	4: "Officer",
+	3: "Veteran",
+	2: "Member",
+	1: "Initiate",
+} as const satisfies Record<number, string>;
+
+export type GuildRank = (typeof guildRankMap)[keyof typeof guildRankMap];

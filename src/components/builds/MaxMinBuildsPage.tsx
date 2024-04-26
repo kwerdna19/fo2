@@ -1,7 +1,7 @@
 "use client";
 
-import { type Item } from "@prisma/client";
-import { type BasicStats } from "~/utils/fo";
+import type { Item } from "@prisma/client";
+import type { BasicStats } from "~/utils/fo";
 import { MaxMinStatTabs } from "./MaxMinStatTabs";
 
 export type Data = Record<BasicStats, Item[] | undefined>;

@@ -4,7 +4,7 @@ import * as LabelPrimitive from "@radix-ui/react-label";
 import { type VariantProps, cva } from "class-variance-authority";
 import * as React from "react";
 
-import { type FieldMetadata } from "@conform-to/react";
+import type { FieldMetadata } from "@conform-to/react";
 import { cn } from "~/utils/styles";
 
 const labelVariants = cva(
@@ -32,8 +32,6 @@ const FieldLabel = React.forwardRef<
 		field: FieldMetadata<unknown>;
 	} & VariantProps<typeof labelVariants>
 >(({ className, children, field, ...props }, ref) => {
-	const { required } = field.constraint ?? {};
-
 	return (
 		<Label
 			ref={ref}
@@ -46,7 +44,9 @@ const FieldLabel = React.forwardRef<
 			{...props}
 		>
 			{children}
-			{required ? <span className="text-destructive pl-0.5">*</span> : null}
+			{field.required ? (
+				<span className="text-destructive pl-0.5">*</span>
+			) : null}
 		</Label>
 	);
 });

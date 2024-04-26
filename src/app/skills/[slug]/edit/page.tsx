@@ -11,7 +11,7 @@ import { SkillForm } from "~/features/skills/components/SkillForm";
 import { getSkillBySlug, updateSkill } from "~/features/skills/requests";
 import { skillSchema } from "~/features/skills/schemas";
 import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles";
-import { type ConformResult } from "~/types/actions";
+import type { ConformResult } from "~/types/actions";
 import { recursivelyNullifyUndefinedValues } from "~/utils/misc";
 import { getListOfImages } from "~/utils/server";
 

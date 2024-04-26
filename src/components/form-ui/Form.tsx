@@ -1,9 +1,9 @@
 "use client";
 import { FormProvider, getFormProps } from "@conform-to/react";
-import { type FormHTMLAttributes, type ReactNode } from "react";
+import type { FormHTMLAttributes, ReactNode } from "react";
 import { FormButton } from "~/components/FormButton";
 import { Button } from "~/components/ui/button";
-import { type useConform } from "~/hooks/useConform";
+import type { useConform } from "~/hooks/useConform";
 import { cn } from "~/utils/styles";
 
 interface Props {

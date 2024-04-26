@@ -10,7 +10,7 @@ import {
 import { cn } from "~/utils/styles";
 import { ItemSprite } from "../../ItemSprite";
 import { DurationDisplay } from "./DurationDisplay";
-import { type Datum } from "./NpcTable";
+import type { Datum } from "./NpcTable";
 
 type Items = Datum["items"] | Datum["crafts"];
 

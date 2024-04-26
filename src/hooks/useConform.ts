@@ -1,11 +1,11 @@
 "use client";
 
-import { type FormOptions } from "@conform-to/dom";
+import type { FormOptions } from "@conform-to/dom";
 import { useForm } from "@conform-to/react";
 import { getZodConstraint, parseWithZod } from "@conform-to/zod";
 import { useFormState } from "react-dom";
-import { type z } from "zod";
-import { type ConformServerAction, type ErrorType } from "~/types/actions";
+import type { z } from "zod";
+import type { ConformServerAction, ErrorType } from "~/types/actions";
 
 // serverAction must be passed in from prop from a Server Component
 export const useConform = <Schema extends z.ZodType>(

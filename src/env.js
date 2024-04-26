@@ -21,9 +21,10 @@ export const env = createEnv({
 			// VERCEL_URL doesn't include `https` so it cant be validated as a URL
 			process.env.VERCEL ? z.string().min(1) : z.string().url(),
 		),
-		DISCORD_CLIENT_ID: z.string(),
-		DISCORD_CLIENT_SECRET: z.string(),
+		AUTH_DISCORD_ID: z.string(),
+		AUTH_DISCORD_SECRET: z.string(),
 		NODE_ENV: z.enum(["development", "test", "production"]),
+		FO_API_KEY: z.string(),
 	},
 
 	/**
@@ -44,10 +45,11 @@ export const env = createEnv({
 		POSTGRES_PRISMA_URL: process.env.POSTGRES_PRISMA_URL,
 		POSTGRES_URL_NON_POOLING: process.env.POSTGRES_URL_NON_POOLING,
 		NODE_ENV: process.env.NODE_ENV,
-		DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
-		DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
+		AUTH_DISCORD_ID: process.env.AUTH_DISCORD_ID,
+		AUTH_DISCORD_SECRET: process.env.AUTH_DISCORD_SECRET,
 		NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
 		NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+		FO_API_KEY: process.env.FO_API_KEY,
 	},
 	/**
 	 * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.

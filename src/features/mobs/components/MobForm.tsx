@@ -1,5 +1,5 @@
 "use client";
-import { type Area, type Faction, type Item } from "@prisma/client";
+import type { Area, Faction, Item } from "@prisma/client";
 import SpriteSelect from "~/components/SpriteSelect";
 import { Form } from "~/components/form-ui/Form";
 import FormCheckbox from "~/components/form-ui/FormCheckbox";
@@ -7,8 +7,8 @@ import FormInput from "~/components/form-ui/FormInput";
 import LocationsMultiField from "~/features/areas/components/LocationsMultiField";
 import { FactionSelect } from "~/features/factions/components/FactionSelect";
 import { useConform } from "~/hooks/useConform";
-import { type ConformServerAction } from "~/types/actions";
-import { type getMobBySlug } from "../requests";
+import type { ConformServerAction } from "~/types/actions";
+import type { getMobBySlug } from "../requests";
 import { mobSchema } from "../schemas";
 import DropItemsMultiField from "./DropItemsMultiField";
 

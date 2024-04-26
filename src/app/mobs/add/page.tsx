@@ -14,7 +14,7 @@ import { getAllItemsQuick } from "~/features/items/requests";
 import { createMob } from "~/features/mobs/requests";
 import { mobSchema } from "~/features/mobs/schemas";
 import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles";
-import { type ConformResult } from "~/types/actions";
+import type { ConformResult } from "~/types/actions";
 
 export function generateMetadata() {
 	return {

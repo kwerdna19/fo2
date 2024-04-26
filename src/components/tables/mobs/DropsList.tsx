@@ -9,7 +9,7 @@ import {
 } from "~/components/ui/tooltip";
 import { cn } from "~/utils/styles";
 import { ItemSprite } from "../../ItemSprite";
-import { type Datum } from "./MobTable";
+import type { Datum } from "./MobTable";
 
 export function DropsList({
 	drops,

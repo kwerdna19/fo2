@@ -6,10 +6,10 @@ import {
 	useFormMetadata,
 	useInputControl,
 } from "@conform-to/react";
-import { type Mob } from "@prisma/client";
+import type { Mob } from "@prisma/client";
 import { Check, ChevronsUpDown, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { type z } from "zod";
+import type { z } from "zod";
 import { MobSprite } from "~/components/MobSprite";
 import { ControlledHiddenField } from "~/components/form-ui/ControlledHiddenField";
 import { Button } from "~/components/ui/button";
@@ -28,7 +28,7 @@ import {
 	PopoverTrigger,
 } from "~/components/ui/popover";
 import { cn } from "~/utils/styles";
-import { type droppedBySchema } from "../schemas";
+import type { droppedBySchema } from "../schemas";
 
 type DroppedBy = z.infer<typeof droppedBySchema>;
 

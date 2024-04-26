@@ -1,17 +1,22 @@
 import { EquippableType } from "@prisma/client";
 import { Pencil } from "lucide-react";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { AdminButton } from "~/components/AdminButton";
+import { FormButton } from "~/components/FormButton";
 import { ItemSprite } from "~/components/ItemSprite";
 import { MobSprite } from "~/components/MobSprite";
+import QueryParamToast from "~/components/QueryParamToast";
 import { UnitSprite } from "~/components/UnitSprite";
 import { ItemRequiredStats } from "~/components/tables/items/ItemRequiredStats";
 import { ItemStats } from "~/components/tables/items/ItemStats";
 import { DurationDisplay } from "~/components/tables/npcs/DurationDisplay";
 import { Badge } from "~/components/ui/badge";
+import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
+import { addToCollection } from "~/features/collection/requests";
 import { getAllItemsQuick, getItemBySlug } from "~/features/items/requests";
+import { auth } from "~/server/auth";
 
 interface Params {
 	slug: string;
@@ -57,6 +62,22 @@ export default async function Item({ params }: { params: Params }) {
 			{item.note ? <p className="py-2">{item.note}</p> : null}
 		</>
 	);
+
+	async function addToCollectionAction() {
+		"use server";
+
+		const session = await auth();
+		if (!session || !session.user || !item) {
+			redirect("/login");
+		}
+
+		await addToCollection({
+			itemId: item.id,
+			userId: session.user.id,
+		});
+
+		redirect(`/items/${item.slug}?added`);
+	}
 
 	return (
 		<div className="grid lg:grid-cols-4 gap-8">
@@ -126,6 +147,13 @@ export default async function Item({ params }: { params: Params }) {
 						<Badge>Consumable</Badge>
 					</div>
 				) : null}
+				<form action={addToCollectionAction}>
+					<FormButton variant="outline">Add to Collection</FormButton>
+					<QueryParamToast
+						name="added"
+						success={`Added ${item.name} to collection`}
+					/>
+				</form>
 			</div>
 
 			<div className="lg:col-span-3 py-2">

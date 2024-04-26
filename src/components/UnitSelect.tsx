@@ -21,7 +21,6 @@ const options = Object.values(Unit);
 type Props = { className?: string; field: FieldMetadata<Unit>; label?: string };
 
 export default function UnitSelect({ className, field, label }: Props) {
-	const { required } = field.constraint ?? {};
 	const errMessage = field.errors?.at(0);
 
 	const control = useInputControl(field);
@@ -34,7 +33,7 @@ export default function UnitSelect({ className, field, label }: Props) {
 			{label ? <FieldLabel field={field}>{label}</FieldLabel> : null}
 			<Select
 				key={key}
-				required={required}
+				required={field.required}
 				value={control.value}
 				onValueChange={control.change}
 				defaultValue={defaultValue?.toString()}
@@ -44,7 +43,7 @@ export default function UnitSelect({ className, field, label }: Props) {
 					id={field.id}
 					className="flex items-center"
 					onKeyDown={(e) =>
-						!required && (e.key === "Backspace" || e.key === "Delete")
+						!field.required && (e.key === "Backspace" || e.key === "Delete")
 							? control.change("")
 							: null
 					}

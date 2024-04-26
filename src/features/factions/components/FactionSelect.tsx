@@ -4,7 +4,7 @@ import {
 	getSelectProps,
 	useInputControl,
 } from "@conform-to/react";
-import { Faction } from "@prisma/client";
+import type { Faction } from "@prisma/client";
 import { FieldLabel } from "~/components/ui/label";
 import {
 	Select,
@@ -28,8 +28,6 @@ export function FactionSelect({
 		value: false,
 	});
 
-	const { required } = field.constraint ?? {};
-
 	// const selectedFaction = factions.find((a) => a.id === control.value);
 
 	return (
@@ -37,7 +35,7 @@ export function FactionSelect({
 			<FieldLabel field={field}>{label}</FieldLabel>
 			<Select
 				key={key}
-				required={required}
+				required={field.required}
 				defaultValue={defaultValue?.toString()}
 				onValueChange={control.change}
 				value={control.value}
@@ -45,7 +43,7 @@ export function FactionSelect({
 			>
 				<SelectTrigger
 					onKeyDown={(e) =>
-						!required && (e.key === "Backspace" || e.key === "Delete")
+						!field.required && (e.key === "Backspace" || e.key === "Delete")
 							? control.change("")
 							: null
 					}

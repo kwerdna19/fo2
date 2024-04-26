@@ -13,7 +13,7 @@ import { NpcForm } from "~/features/npcs/components/NpcForm";
 import { getNpcBySlug, updateNpc } from "~/features/npcs/requests";
 import { npcSchema } from "~/features/npcs/schemas";
 import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles";
-import { type ConformResult } from "~/types/actions";
+import type { ConformResult } from "~/types/actions";
 import { recursivelyNullifyUndefinedValues } from "~/utils/misc";
 
 interface Params {

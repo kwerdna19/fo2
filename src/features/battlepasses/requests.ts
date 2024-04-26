@@ -1,7 +1,7 @@
-import { type z } from "zod";
+import type { z } from "zod";
 import { db } from "~/server/db";
 import { getSlugFromName } from "~/utils/misc";
-import { type battlePassSchema } from "./schemas";
+import type { battlePassSchema } from "./schemas";
 
 export async function getAllBattlePasses() {
 	return db.battlePass.findMany({
@@ -15,6 +15,9 @@ export async function getAllBattlePasses() {
 							spriteUrl: true,
 						},
 					},
+				},
+				orderBy: {
+					tier: "asc",
 				},
 			},
 		},
@@ -43,6 +46,9 @@ export async function getCurrentBattlePass() {
 						},
 					},
 				},
+				orderBy: {
+					tier: "asc",
+				},
 			},
 		},
 		// TODO - this wont work as a way to always get the "CURRENT" bp
@@ -64,6 +70,9 @@ export async function getNextBattlePass() {
 							spriteUrl: true,
 						},
 					},
+				},
+				orderBy: {
+					tier: "asc",
 				},
 			},
 		},
@@ -87,6 +96,9 @@ export async function getBattlePassBySlug(slug: string) {
 							spriteUrl: true,
 						},
 					},
+				},
+				orderBy: {
+					tier: "asc",
 				},
 			},
 		},

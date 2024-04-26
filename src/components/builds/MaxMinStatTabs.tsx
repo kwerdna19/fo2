@@ -2,7 +2,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { LEVEL_CAP } from "../../utils/fo";
 import BuildAndStats from "./BuildAndStats";
-import { type Data } from "./MaxMinBuildsPage";
+import type { Data } from "./MaxMinBuildsPage";
 
 const stats = ["str", "agi", "sta", "int", "armor"] as const;
 export function MaxMinStatTabs({

@@ -4,7 +4,7 @@ import {
 	getFieldsetProps,
 	useFormMetadata,
 } from "@conform-to/react";
-import { type Item } from "@prisma/client";
+import type { Item } from "@prisma/client";
 import { Trash2 } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { FieldLabel } from "~/components/ui/label";

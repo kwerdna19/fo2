@@ -1,9 +1,9 @@
 import { type EquippableType, Unit } from "@prisma/client";
-import { type z } from "zod";
+import type { z } from "zod";
 import { db } from "~/server/db";
 import { equipmentSlotConfig } from "~/utils/fo";
 import { getSlugFromName } from "~/utils/misc";
-import { type itemSchema } from "./schemas";
+import type { itemSchema } from "./schemas";
 
 export async function getAllItems() {
 	return db.item.findMany({

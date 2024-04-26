@@ -5,16 +5,16 @@ import {
 	getInputProps,
 	useFormMetadata,
 } from "@conform-to/react";
-import { type Item } from "@prisma/client";
+import type { Item } from "@prisma/client";
 import { ArrowDown, ArrowUp, Trash2 } from "lucide-react";
-import { type z } from "zod";
+import type { z } from "zod";
 import UnitSelect from "~/components/UnitSelect";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { FieldLabel } from "~/components/ui/label";
 import { ItemField } from "~/features/items/components/ItemField";
 import { cn } from "~/utils/styles";
-import { type battlePassSchema } from "../schemas";
+import type { battlePassSchema } from "../schemas";
 
 type Tiers = z.infer<typeof battlePassSchema>["tiers"];
 

@@ -22,7 +22,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "~/components/ui/table";
-import { type getAllMobs } from "~/features/mobs/requests";
+import type { getAllMobs } from "~/features/mobs/requests";
 import { cn } from "~/utils/styles";
 import { DebouncedInput } from "../../DebouncedInput";
 import { MobSprite } from "../../MobSprite";
@@ -182,7 +182,7 @@ export function MobTable({ data }: { data: Data }) {
 												: flexRender(
 														header.column.columnDef.header,
 														header.getContext(),
-												  )}
+													)}
 										</TableHead>
 									);
 								})}

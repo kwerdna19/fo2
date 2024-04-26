@@ -4,7 +4,7 @@ import {
 	getInputProps,
 	useInputControl,
 } from "@conform-to/react";
-import { type Item } from "@prisma/client";
+import type { Item } from "@prisma/client";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useState } from "react";
 import { ItemSprite } from "~/components/ItemSprite";

@@ -1,7 +1,7 @@
-import { type z } from "zod";
+import type { z } from "zod";
 import { db } from "~/server/db";
 import { getSlugFromName } from "~/utils/misc";
-import { type npcSchema } from "./schemas";
+import type { npcSchema } from "./schemas";
 
 export async function getAllNpcs() {
 	return db.npc.findMany({

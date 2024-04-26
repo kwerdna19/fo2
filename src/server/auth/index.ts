@@ -3,8 +3,7 @@ import NextAuth, { type DefaultSession } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import Discord from "next-auth/providers/discord";
 
-import { type User } from "@prisma/client";
-import { env } from "~/env.mjs";
+import type { User } from "@prisma/client";
 import { db } from "~/server/db";
 
 export const {
@@ -29,12 +28,7 @@ export const {
 		},
 	},
 	adapter: PrismaAdapter(db),
-	providers: [
-		Discord({
-			clientId: env.DISCORD_CLIENT_ID,
-			clientSecret: env.DISCORD_CLIENT_SECRET,
-		}),
-	],
+	providers: [Discord],
 });
 
 /**

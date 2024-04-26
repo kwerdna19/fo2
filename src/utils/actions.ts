@@ -1,6 +1,6 @@
 import { parseWithZod } from "@conform-to/zod";
-import { type z } from "zod";
-import { type ConformServerAction, type ErrorType } from "~/types/actions";
+import type { z } from "zod";
+import type { ConformServerAction, ErrorType } from "~/types/actions";
 import { recursivelyNullifyUndefinedValues } from "./misc";
 
 export const createConformAction = <Schema extends z.ZodTypeAny>(

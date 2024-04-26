@@ -12,7 +12,7 @@ import { itemSchema } from "~/features/items/schemas";
 import { getAllMobsQuick } from "~/features/mobs/requests";
 import { getAllNpcsQuick } from "~/features/npcs/requests";
 import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles";
-import { type ConformResult } from "~/types/actions";
+import type { ConformResult } from "~/types/actions";
 import { getListOfImages } from "~/utils/server";
 
 export function generateMetadata() {

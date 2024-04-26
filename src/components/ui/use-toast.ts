@@ -6,7 +6,10 @@ import type { ToastActionElement, ToastProps } from "~/components/ui/toast";
 const TOAST_LIMIT = 1;
 const TOAST_REMOVE_DELAY = 1000000;
 
-type ToasterToast = ToastProps & {
+type ToasterToast = Pick<
+	ToastProps,
+	"variant" | "open" | "onOpenChange" | "duration"
+> & {
 	id: string;
 	title?: React.ReactNode;
 	description?: React.ReactNode;
@@ -23,7 +26,7 @@ const actionTypes = {
 let count = 0;
 
 function genId() {
-	count = (count + 1) % Number.MAX_VALUE;
+	count = (count + 1) % Number.MAX_SAFE_INTEGER;
 	return count.toString();
 }
 
@@ -105,7 +108,7 @@ export const reducer = (state: State, action: Action): State => {
 						? {
 								...t,
 								open: false,
-						  }
+							}
 						: t,
 				),
 			};
@@ -169,7 +172,7 @@ function toast({ ...props }: Toast) {
 function useToast() {
 	const [state, setState] = React.useState<State>(memoryState);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: toast needs to listen to state effects
+	// biome-ignore lint/correctness/useExhaustiveDependencies: need to use effect based on state
 	React.useEffect(() => {
 		listeners.push(setState);
 		return () => {

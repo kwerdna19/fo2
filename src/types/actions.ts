@@ -1,4 +1,4 @@
-import { type SubmissionResult } from "@conform-to/dom";
+import type { SubmissionResult } from "@conform-to/dom";
 
 export type ErrorType = string[];
 

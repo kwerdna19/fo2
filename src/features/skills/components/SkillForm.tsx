@@ -1,9 +1,9 @@
 "use client";
 import { getFieldsetProps, getInputProps } from "@conform-to/react";
 import {
-	Area,
+	type Area,
 	EquippableType,
-	Item,
+	type Item,
 	type Mob,
 	type Npc,
 	SkillType,
@@ -19,8 +19,8 @@ import { AreaSelect } from "~/features/areas/components/AreaSelect";
 import { ItemField } from "~/features/items/components/ItemField";
 import ItemsMultiField from "~/features/items/components/ItemsMultiField";
 import { useConform } from "~/hooks/useConform";
-import { type ConformServerAction } from "~/types/actions";
-import { getSkillBySlug } from "../requests";
+import type { ConformServerAction } from "~/types/actions";
+import type { getSkillBySlug } from "../requests";
 import { skillSchema } from "../schemas";
 
 interface Props {

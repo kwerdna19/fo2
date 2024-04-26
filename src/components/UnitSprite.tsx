@@ -1,4 +1,4 @@
-import { type Unit } from "@prisma/client";
+import type { Unit } from "@prisma/client";
 import { cn } from "~/utils/styles";
 
 const variants = {

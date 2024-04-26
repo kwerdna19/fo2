@@ -1,10 +1,10 @@
 "use client";
-import { type Item } from "@prisma/client";
+import type { Item } from "@prisma/client";
 import { Form } from "~/components/form-ui/Form";
 import FormInput from "~/components/form-ui/FormInput";
 import { useConform } from "~/hooks/useConform";
-import { type ConformServerAction } from "~/types/actions";
-import { type getBattlePassBySlug } from "../requests";
+import type { ConformServerAction } from "~/types/actions";
+import type { getBattlePassBySlug } from "../requests";
 import { battlePassSchema } from "../schemas";
 import { BattlePassTiersMultiField } from "./BattlePassTiersMultiField";
 

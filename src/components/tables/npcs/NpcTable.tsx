@@ -23,7 +23,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "~/components/ui/table";
-import { type getAllNpcs } from "~/features/npcs/requests";
+import type { getAllNpcs } from "~/features/npcs/requests";
 import { cn } from "~/utils/styles";
 import { DebouncedInput } from "../../DebouncedInput";
 import { MobSprite } from "../../MobSprite";
@@ -144,7 +144,7 @@ export function NpcTable({ data }: { data: Data }) {
 												: flexRender(
 														header.column.columnDef.header,
 														header.getContext(),
-												  )}
+													)}
 										</TableHead>
 									);
 								})}

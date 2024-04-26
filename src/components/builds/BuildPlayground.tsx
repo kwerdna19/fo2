@@ -1,6 +1,6 @@
 "use client";
 
-import { type Item } from "@prisma/client";
+import type { Item } from "@prisma/client";
 import { ChevronsDown, ChevronsUp, Minus, Plus } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";

@@ -27,7 +27,7 @@ import {
 	TableRow,
 } from "~/components/ui/table";
 import { cn } from "~/utils/styles";
-import { getAllSkills } from "../requests";
+import type { getAllSkills } from "../requests";
 
 type Data = Awaited<ReturnType<typeof getAllSkills>>;
 
@@ -120,7 +120,7 @@ export function SkillTable({ data }: { data: Data }) {
 												: flexRender(
 														header.column.columnDef.header,
 														header.getContext(),
-												  )}
+													)}
 										</TableHead>
 									);
 								})}

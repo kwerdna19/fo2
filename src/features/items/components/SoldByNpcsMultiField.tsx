@@ -5,9 +5,9 @@ import {
 	getInputProps,
 	useFormMetadata,
 } from "@conform-to/react";
-import { type Npc } from "@prisma/client";
+import type { Npc } from "@prisma/client";
 import { Trash2 } from "lucide-react";
-import { type z } from "zod";
+import type { z } from "zod";
 import UnitSelect from "~/components/UnitSelect";
 import FormCheckbox from "~/components/form-ui/FormCheckbox";
 import { Button } from "~/components/ui/button";
@@ -15,7 +15,7 @@ import { Input } from "~/components/ui/input";
 import { FieldLabel } from "~/components/ui/label";
 import { NpcField } from "~/features/npcs/components/NpcField";
 import { cn } from "~/utils/styles";
-import { type soldBySchema } from "../schemas";
+import type { soldBySchema } from "../schemas";
 
 type SoldBy = z.infer<typeof soldBySchema>;
 

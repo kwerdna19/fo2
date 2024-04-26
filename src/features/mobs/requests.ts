@@ -1,7 +1,7 @@
-import { type z } from "zod";
+import type { z } from "zod";
 import { db } from "~/server/db";
 import { getSlugFromName } from "~/utils/misc";
-import { type mobSchema } from "./schemas";
+import type { mobSchema } from "./schemas";
 
 export async function getAllMobs() {
 	return db.mob.findMany({

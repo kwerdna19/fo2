@@ -7,11 +7,11 @@ import {
 	useFormMetadata,
 	useInputControl,
 } from "@conform-to/react";
-import { type Area } from "@prisma/client";
+import type { Area } from "@prisma/client";
 import { Map as MapIcon, Trash2 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useState } from "react";
-import { type z } from "zod";
+import type { z } from "zod";
 import { Button } from "~/components/ui/button";
 import {
 	Dialog,
@@ -66,8 +66,8 @@ export function MapCoordinatesField({
 			return;
 		}
 		const parsed = coordinatesSchema.safeParse({
-			x: parseInt(x.initialValue),
-			y: parseInt(y.initialValue),
+			x: Number.parseInt(x.initialValue),
+			y: Number.parseInt(y.initialValue),
 		});
 		return parsed.success ? parsed.data : undefined;
 	});

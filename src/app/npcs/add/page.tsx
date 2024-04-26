@@ -13,7 +13,7 @@ import { NpcForm } from "~/features/npcs/components/NpcForm";
 import { createNpc } from "~/features/npcs/requests";
 import { npcSchema } from "~/features/npcs/schemas";
 import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles";
-import { type ConformResult } from "~/types/actions";
+import type { ConformResult } from "~/types/actions";
 
 export function generateMetadata() {
 	return {

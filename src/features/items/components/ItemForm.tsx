@@ -1,6 +1,11 @@
 "use client";
 import { getInputProps } from "@conform-to/react";
-import { BattlePass, EquippableType, type Mob, type Npc } from "@prisma/client";
+import {
+	type BattlePass,
+	EquippableType,
+	type Mob,
+	type Npc,
+} from "@prisma/client";
 import SpriteSelect from "~/components/SpriteSelect";
 import { Form } from "~/components/form-ui/Form";
 import FormCheckbox from "~/components/form-ui/FormCheckbox";
@@ -10,8 +15,8 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import AcquiredByBattlePassesMultiField from "~/features/battlepasses/components/AcquiredByBattlePassesMultiField";
 import { useConform } from "~/hooks/useConform";
-import { type ConformServerAction } from "~/types/actions";
-import { type getItemBySlug } from "../requests";
+import type { ConformServerAction } from "~/types/actions";
+import type { getItemBySlug } from "../requests";
 import { itemSchema } from "../schemas";
 import CraftedByNpcsMultiField from "./CraftedByNpcsMultiField";
 import DroppedByMobsMultiField from "./DroppedByMobsMultiField";

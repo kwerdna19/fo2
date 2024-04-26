@@ -6,7 +6,7 @@ import { spriteHeight, spriteWidth } from "../../../components/MobSprite";
 import { DropsList } from "../../../components/tables/mobs/DropsList";
 import { MobHealth } from "../../../components/tables/mobs/MobHealth";
 import { SaleItemsList } from "../../../components/tables/npcs/SaleItemsList";
-import { type getAreaBySlug } from "../requests";
+import type { getAreaBySlug } from "../requests";
 
 type Locations = NonNullable<
 	Awaited<ReturnType<typeof getAreaBySlug>>

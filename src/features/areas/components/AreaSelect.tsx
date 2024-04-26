@@ -4,7 +4,7 @@ import {
 	getSelectProps,
 	useInputControl,
 } from "@conform-to/react";
-import { Area } from "@prisma/client";
+import type { Area } from "@prisma/client";
 import { FieldLabel } from "~/components/ui/label";
 import {
 	Select,

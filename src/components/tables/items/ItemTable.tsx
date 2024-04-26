@@ -24,7 +24,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "~/components/ui/table";
-import { type getAllItems } from "~/features/items/requests";
+import type { getAllItems } from "~/features/items/requests";
 import { getAverageDamage, getSumOfBasicStats, isWeapon } from "~/utils/fo";
 import { cn } from "~/utils/styles";
 import { DebouncedInput } from "../../DebouncedInput";
@@ -163,7 +163,7 @@ export function ItemTable({ data }: { data: Data }) {
 												: flexRender(
 														header.column.columnDef.header,
 														header.getContext(),
-												  )}
+													)}
 										</TableHead>
 									);
 								})}

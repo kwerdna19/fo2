@@ -11,7 +11,7 @@ import { createBattlePass } from "~/features/battlepasses/requests";
 import { battlePassSchema } from "~/features/battlepasses/schemas";
 import { getAllItemsQuick } from "~/features/items/requests";
 import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles";
-import { type ConformResult } from "~/types/actions";
+import type { ConformResult } from "~/types/actions";
 
 export function generateMetadata() {
 	return {

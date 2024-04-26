@@ -1,120 +1,113 @@
 generator client {
-    provider = "prisma-client-js"
-}
-
-generator jsonSchema {
-  provider = "prisma-json-schema-generator"
-  output = "."
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgres"
-  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  provider          = "postgres"
+  url               = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl         = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
   shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING") // used for migrations
 }
 
 model Mob {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    name String @unique()
-    slug String @unique()
-    desc String?
-    note String?
-    level Int
-    health Int
-    goldMin Int
-    goldMax Int
-    spriteUrl String
-    boss Boolean @default(false)
-    drops Loot[]
-    locations Location[]
-    atkSpeed Float?
-    dmgMin Int?
-    dmgMax Int?
+  id        String     @id @default(cuid())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  name      String     @unique()
+  slug      String     @unique()
+  desc      String?
+  note      String?
+  level     Int
+  health    Int
+  goldMin   Int
+  goldMax   Int
+  spriteUrl String
+  boss      Boolean    @default(false)
+  drops     Loot[]
+  locations Location[]
+  atkSpeed  Float?
+  dmgMin    Int?
+  dmgMax    Int?
 
-    spawnTimeSec Int?
+  spawnTimeSec Int?
 
-    range Int?
-    str Int?
-    sta Int?
-    agi Int?
-    int Int?
-    armor Int?
-    crit Float?
-    dodge Float?
+  range Int?
+  str   Int?
+  sta   Int?
+  agi   Int?
+  int   Int?
+  armor Int?
+  crit  Float?
+  dodge Float?
 
-    factionXp Int?
-    factionId String?
-    faction Faction? @relation(fields: [factionId], references: [id])
+  factionXp Int?
+  factionId String?
+  faction   Faction? @relation(fields: [factionId], references: [id])
 
-    artist String?
+  artist String?
 }
 
 // type Enum TBD
 model Npc {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    name String
-    slug String @unique()
-    note String?
-    type String
-    spriteUrl String
-    items NpcSale[]
-    crafts  NpcCraft[]
-    locations Location[]
-    inGameId Int?
-    // for npcs that TP to area
-    areaId  String?
-    area Area? @relation(name: "teleport-npcs", fields: [areaId], references: [id])
+  id        String     @id @default(cuid())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  name      String
+  slug      String     @unique()
+  note      String?
+  type      String
+  spriteUrl String
+  items     NpcSale[]
+  crafts    NpcCraft[]
+  locations Location[]
+  inGameId  Int?
+  // for npcs that TP to area
+  areaId    String?
+  area      Area?      @relation(name: "teleport-npcs", fields: [areaId], references: [id])
 }
 
 enum Unit {
   GEMS
   COINS
 }
-model NpcSale {
 
-  npc       Npc     @relation(fields: [npcId], references: [id], onDelete: Cascade)
-  npcId     String
-  item       Item     @relation(fields: [itemId], references: [id])
-  itemId     String
-  
-  unit    Unit @default(COINS)
-  price   Int
+model NpcSale {
+  npc    Npc    @relation(fields: [npcId], references: [id], onDelete: Cascade)
+  npcId  String
+  item   Item   @relation(fields: [itemId], references: [id])
+  itemId String
+
+  unit  Unit @default(COINS)
+  price Int
 
   @@unique([npcId, itemId])
 }
 
 model NpcCraft {
-
   id Int @id @default(autoincrement())
 
-  npc       Npc     @relation(fields: [npcId], references: [id], onDelete: Cascade)
-  npcId     String
-  item       Item     @relation(fields: [itemId], references: [id])
-  itemId     String
+  npc    Npc    @relation(fields: [npcId], references: [id], onDelete: Cascade)
+  npcId  String
+  item   Item   @relation(fields: [itemId], references: [id])
+  itemId String
 
   ingredients ItemQuantity[]
-  
-  price   Int
-  unit    Unit @default(COINS)
+
+  price           Int
+  unit            Unit @default(COINS)
   durationMinutes Int
 
   @@unique([npcId, itemId])
 }
 
 model ItemQuantity {
-
   id Int @id
- 
-  item       Item     @relation(fields: [itemId], references: [id])
-  itemId     String
-  quantity  Int @default(1)
-  
-  craftsInto  NpcCraft[]
+
+  item     Item   @relation(fields: [itemId], references: [id])
+  itemId   String
+  quantity Int    @default(1)
+
+  craftsInto NpcCraft[]
 
   @@unique([itemId, quantity])
 }
@@ -123,44 +116,43 @@ model BattlePass {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  name      String @unique()
-  slug      String @unique()
+  name      String   @unique()
+  slug      String   @unique()
 
-  spriteUrl String?
+  spriteUrl    String?
   durationDays Int?
   xpPerTier    Int?
 
-  item       Item?     @relation(fields: [itemId], references: [id])
-  itemId     String? @unique()
+  item   Item?   @relation(fields: [itemId], references: [id])
+  itemId String? @unique()
 
-  desc      String?
-  note      String?
+  desc String?
+  note String?
 
-  tiers     BattlePassTier[]
+  tiers BattlePassTier[]
 }
 
 model BattlePassTier {
+  battlePass   BattlePass @relation(fields: [battlePassId], references: [id], onDelete: Cascade)
+  battlePassId String
+  tier         Int
 
-  battlePass       BattlePass     @relation(fields: [battlePassId], references: [id], onDelete: Cascade)
-  battlePassId     String
-  tier      Int
+  item   Item?   @relation(fields: [itemId], references: [id])
+  itemId String?
 
-  item       Item?     @relation(fields: [itemId], references: [id])
-  itemId     String?
-
-  amount   Int?
-  unit    Unit?
+  amount Int?
+  unit   Unit?
 
   @@unique([battlePassId, tier])
 }
 
 model Loot {
-  mob       Mob     @relation(fields: [mobId], references: [id])
-  mobId     String
-  item       Item     @relation(fields: [itemId], references: [id])
-  itemId     String
-  
-  dropRate   Float?
+  mob    Mob    @relation(fields: [mobId], references: [id])
+  mobId  String
+  item   Item   @relation(fields: [itemId], references: [id])
+  itemId String
+
+  dropRate Float?
 
   @@id([mobId, itemId])
 }
@@ -185,109 +177,110 @@ enum EquippableType {
   COSMETIC_CHEST
   COSMETIC_LEGS
 }
+
 model Item {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    name      String @unique()
-    slug      String @unique()
-    desc      String?
-    note      String?
-    spriteUrl String
-    equip     EquippableType?
-    levelReq  Int?
+  id        String          @id @default(cuid())
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  name      String          @unique()
+  slug      String          @unique()
+  desc      String?
+  note      String?
+  spriteUrl String
+  equip     EquippableType?
+  levelReq  Int?
 
-    globalLoot Boolean?
-    twoHand   Boolean?
-    consumable Boolean @default(false)
-    sellPrice Int?
-    stackSize Int @default(1)
-    droppedBy Loot[]
-    soldBy    NpcSale[]
-    craftedBy NpcCraft[]
+  globalLoot Boolean?
+  twoHand    Boolean?
+  consumable Boolean    @default(false)
+  sellPrice  Int?
+  stackSize  Int        @default(1)
+  droppedBy  Loot[]
+  soldBy     NpcSale[]
+  craftedBy  NpcCraft[]
 
-    usages ItemQuantity[]
+  usages ItemQuantity[]
 
-    battlePassTiers BattlePassTier[]
+  battlePassTiers BattlePassTier[]
 
-    // for the item that unlocks the battlepass
-    battlePass BattlePass?
+  // for the item that unlocks the battlepass
+  battlePass BattlePass?
 
-    // for items that provide a skill
-    skillId  String?
-    skillInfo Skill? @relation(fields: [skillId], references: [id])
+  // for items that provide a skill
+  skillId   String?
+  skillInfo Skill?  @relation(fields: [skillId], references: [id])
 
-    // for items that TP to area
-    areaId  String?
-    area Area? @relation(name: "teleport-items", fields: [areaId], references: [id])
+  // for items that TP to area
+  areaId String?
+  area   Area?   @relation(name: "teleport-items", fields: [areaId], references: [id])
 
-    availableStart  DateTime?
-    availableEnd  DateTime?
+  availableStart DateTime?
+  availableEnd   DateTime?
 
-    inGameId Int?
+  inGameId Int?
 
-    // stats - requirements
-    reqStr Int?
-    reqSta Int?
-    reqAgi Int?
-    reqInt Int?
-    
-    // stats - for equipable
-    range Int?
-    str Int?
-    sta Int?
-    agi Int?
-    int Int?
-    armor Int?
-    atkSpeed Float?
-    dmgMin Int?
-    dmgMax Int?
+  // stats - requirements
+  reqStr Int?
+  reqSta Int?
+  reqAgi Int?
+  reqInt Int?
 
-    artist String?
+  // stats - for equipable
+  range    Int?
+  str      Int?
+  sta      Int?
+  agi      Int?
+  int      Int?
+  armor    Int?
+  atkSpeed Float?
+  dmgMin   Int?
+  dmgMax   Int?
+
+  artist String?
+
+  collections CollectionItem[]
 }
 
 model Location {
-  id        String   @id @default(cuid())
-  area       Area     @relation(fields: [areaId], references: [id])
-  areaId     String
-  x     Int
-  y     Int
-  npc   Npc?   @relation(fields: [npcId], references: [id])
-  npcId     String?
-  mob   Mob?   @relation(fields: [mobId], references: [id])
-  mobId     String?
+  id     String  @id @default(cuid())
+  area   Area    @relation(fields: [areaId], references: [id])
+  areaId String
+  x      Int
+  y      Int
+  npc    Npc?    @relation(fields: [npcId], references: [id])
+  npcId  String?
+  mob    Mob?    @relation(fields: [mobId], references: [id])
+  mobId  String?
 
   connectedArea   Area?   @relation(name: "portals", fields: [connectedAreaId], references: [id])
   connectedAreaId String?
 
-  @@unique([areaId,x,y,npcId])
-  @@unique([areaId,x,y,mobId])
-  @@unique([areaId,x,y,connectedAreaId])
-
+  @@unique([areaId, x, y, npcId])
+  @@unique([areaId, x, y, mobId])
+  @@unique([areaId, x, y, connectedAreaId])
 }
 
 model Area {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  spriteUrl String
-  updatedAt DateTime @updatedAt
-  name      String @unique()
-  slug      String @unique()
-  note      String?
-  height    Int
-  width     Int
-  locations Location[]
-  region    Int
+  id            String     @id @default(cuid())
+  createdAt     DateTime   @default(now())
+  spriteUrl     String
+  updatedAt     DateTime   @updatedAt
+  name          String     @unique()
+  slug          String     @unique()
+  note          String?
+  height        Int
+  width         Int
+  locations     Location[]
+  region        Int
   originXGlobal Int
   originYGlobal Int
-  portals Location[] @relation(name: "portals")
+  portals       Location[] @relation(name: "portals")
 
   inGameId Int?
 
-  items  Item[] @relation(name: "teleport-items")
+  items  Item[]  @relation(name: "teleport-items")
   skills Skill[] @relation(name: "teleport-skills")
-  npcs  Npc[] @relation(name: "teleport-npcs")
-
+  npcs   Npc[]   @relation(name: "teleport-npcs")
 }
 
 enum SkillType {
@@ -300,88 +293,87 @@ enum SkillType {
 }
 
 model Skill {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    name      String
-    slug      String @unique()
-    rank      Int
-    desc      String?
-    note      String?
-    spriteUrl String
-    type      SkillType?
-    levelReq  Int @default(0)
+  id        String     @id @default(cuid())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  name      String
+  slug      String     @unique()
+  rank      Int
+  desc      String?
+  note      String?
+  spriteUrl String
+  type      SkillType?
+  levelReq  Int        @default(0)
 
-    reqStr Int?
-    reqSta Int?
-    reqAgi Int?
-    reqInt Int?
+  reqStr Int?
+  reqSta Int?
+  reqAgi Int?
+  reqInt Int?
 
-    // stats - for stat bonuses
-    range Int?
-    atkPower Int?
-    str Int?
-    sta Int?
-    agi Int?
-    int Int?
-    armor Int?
-    crit Float?
-    dodge Float?
-    health Int?
-    energy Int?
+  // stats - for stat bonuses
+  range    Int?
+  atkPower Int?
+  str      Int?
+  sta      Int?
+  agi      Int?
+  int      Int?
+  armor    Int?
+  crit     Float?
+  dodge    Float?
+  health   Int?
+  energy   Int?
 
-    atkSpeed Float?
+  atkSpeed Float?
 
-    minValue Int?
-    maxValue Int?
-    value Int?
+  minValue Int?
+  maxValue Int?
+  value    Int?
 
-    castCooldownTimeSec Int?
-    castTimeSec Int?
-    durationMins Int?
-    energyCost Int?
-    tickDurationSec Int?
+  castCooldownTimeSec Int?
+  castTimeSec         Int?
+  durationMins        Int?
+  energyCost          Int?
+  tickDurationSec     Int?
 
-    inGameId Int?
+  inGameId Int?
 
-    // for skills that TP to area
-    areaId  String?
-    area Area? @relation(name: "teleport-skills", fields: [areaId], references: [id])
+  // for skills that TP to area
+  areaId String?
+  area   Area?   @relation(name: "teleport-skills", fields: [areaId], references: [id])
 
-    items     Item[]
-    @@unique([name, rank])
+  items Item[]
+
+  @@unique([name, rank])
 }
-
 
 model Faction {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   spriteUrl String?
   updatedAt DateTime @updatedAt
-  name      String @unique()
-  slug      String @unique()
+  name      String   @unique()
+  slug      String   @unique()
   note      String?
-  inGameId Int?
+  inGameId  Int?
 
-  mobs  Mob[]
+  mobs Mob[]
 }
-
 
 // User tables for Next Auth
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.Text
-  session_state      String?
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -404,7 +396,9 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  role          Role @default(USER)
+  role          Role      @default(USER)
+
+  collection CollectionItem[]
 }
 
 model VerificationToken {
@@ -415,11 +409,23 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-
 // custom
 
 enum Role {
   USER
   MODERATOR
   ADMIN
+}
+
+model CollectionItem {
+  addedAt DateTime @default(now())
+
+  quantity Int @default(1)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+  itemId String
+  item   Item   @relation(fields: [itemId], references: [id])
+
+  @@unique([userId, itemId])
 }

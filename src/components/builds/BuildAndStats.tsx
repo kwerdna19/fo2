@@ -1,6 +1,6 @@
 "use client";
 
-import { type Item } from "@prisma/client";
+import type { Item } from "@prisma/client";
 import { useState } from "react";
 import {
 	type BasicStats,

@@ -1,6 +1,6 @@
 "use client";
 import { basename } from "path";
-import { type Item } from "@prisma/client";
+import type { Item } from "@prisma/client";
 import { type Build, Slot, visibleEquipment } from "~/utils/fo";
 import { MobSprite } from "../MobSprite";
 
@@ -15,7 +15,8 @@ export function CharacterPreview({
 	const itemSlugs = items.map((item) =>
 		basename(item.spriteUrl)
 			.replace(/\.png$/, "")
-			.replace(/\-icon$/, ""),
+			.replace(/\-icon$/, "")
+			.replace(/\s/g, ""),
 	);
 
 	const url = `https://art.fantasyonline2.com/api/character/ss?f=body-0_eyes-standard-blue_nude-head${
@@ -24,12 +25,5 @@ export function CharacterPreview({
 
 	const alt = `Character wearing ${items.map((item) => item.name).join(", ")}`;
 
-	return (
-		<MobSprite
-			size="3xl"
-			className={className}
-			url={url.replace(/\s/g, "")}
-			name={alt}
-		/>
-	);
+	return <MobSprite size="3xl" className={className} url={url} name={alt} />;
 }

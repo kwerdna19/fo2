@@ -1,13 +1,13 @@
 "use client";
-import { type Area, type Item } from "@prisma/client";
+import type { Area, Item } from "@prisma/client";
 import SpriteSelect from "~/components/SpriteSelect";
 import { Form } from "~/components/form-ui/Form";
 import FormInput from "~/components/form-ui/FormInput";
 import FormSelect from "~/components/form-ui/FormSelect";
 import LocationsMultiField from "~/features/areas/components/LocationsMultiField";
 import { useConform } from "~/hooks/useConform";
-import { type ConformServerAction } from "~/types/actions";
-import { type getNpcBySlug } from "../requests";
+import type { ConformServerAction } from "~/types/actions";
+import type { getNpcBySlug } from "../requests";
 import { npcSchema, npcTypes } from "../schemas";
 import { NpcCraftsMultiField } from "./NpcCraftsMultiField";
 import { NpcItemsMultiField } from "./NpcItemsMultiField";

@@ -8,7 +8,7 @@ import {
 	TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { cn } from "~/utils/styles";
-import { type Datum } from "./ItemTable";
+import type { Datum } from "./ItemTable";
 
 export function DroppedByList({
 	mobs,
