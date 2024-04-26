@@ -29,13 +29,13 @@ export default async function Mob({ params }: { params: Params }) {
 		<div>
 			<div className="flex gap-x-4">
 				<h2 className="text-3xl">{mob.name}</h2>
-				<AdminButton
+				{/* <AdminButton
 					size="icon"
 					variant="outline"
 					href={`/mobs/${params.slug}/edit`}
 				>
 					<Pencil className="w-4 h-4" />
-				</AdminButton>
+				</AdminButton> */}
 			</div>
 			<div>
 				<MobSprite size="xl" url={mob.spriteUrl} name={mob.name} />

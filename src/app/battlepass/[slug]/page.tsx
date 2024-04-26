@@ -44,13 +44,13 @@ export default async function BattlePass({ params }: { params: Params }) {
 		<div className="w-full">
 			<div className="flex gap-x-4">
 				<h2 className="text-3xl">{pass.name}</h2>
-				<AdminButton
+				{/* <AdminButton
 					size="icon"
 					variant="outline"
 					href={`/battlepass/${params.slug}/edit`}
 				>
 					<Pencil className="w-4 h-4" />
-				</AdminButton>
+				</AdminButton> */}
 			</div>
 			<div className="flex items-center gap-x-3 pt-2 pb-4">
 				<Badge>{pass.durationDays} days</Badge>

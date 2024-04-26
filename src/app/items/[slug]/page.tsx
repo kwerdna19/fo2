@@ -56,13 +56,13 @@ export default async function Item({ params }: { params: Params }) {
 		<>
 			<div className="flex gap-x-4">
 				<h1 className="text-3xl">{item.name}</h1>
-				<AdminButton
+				{/* <AdminButton
 					size="icon"
 					variant="outline"
 					href={`/items/${params.slug}/edit`}
 				>
 					<Pencil className="w-4 h-4" />
-				</AdminButton>
+				</AdminButton> */}
 			</div>
 			{item.desc ? <p className="italic">{item.desc}</p> : <p>-</p>}
 			{item.note ? <p className="py-2">{item.note}</p> : null}
