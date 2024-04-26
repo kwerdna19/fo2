@@ -6,10 +6,6 @@ import { Card } from "~/components/ui/card";
 import { env } from "~/env";
 import { GuildService } from "~/utils/fo-api";
 
-interface Params {
-	slug: string;
-}
-
 export const metadata = {
 	title: "Guilds",
 };

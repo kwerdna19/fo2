@@ -17,7 +17,7 @@ export const revalidate = 86400; // 1 day
 
 export async function generateMetadata({ params }: { params: Params }) {
 	return {
-		title: decodeURI(params.name),
+		title: `Guilds | ${decodeURI(params.name)}`,
 	};
 }
 
