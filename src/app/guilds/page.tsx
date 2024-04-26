@@ -31,7 +31,7 @@ export default async function Guilds() {
 	);
 
 	return (
-		<div className="w-full">
+		<div className="w-full space-y-8">
 			<div className="flex gap-x-4">
 				<h2 className="text-3xl">Guilds</h2>
 			</div>
