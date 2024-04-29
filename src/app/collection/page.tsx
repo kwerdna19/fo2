@@ -94,10 +94,10 @@ export default async function Collection() {
 					);
 				})}
 			</form>
-			<QueryParamToast
+			{/* <QueryParamToast
 				name="removed"
 				success="{placeholder} removed from collection"
-			/>
+			/> */}
 		</div>
 	);
 }

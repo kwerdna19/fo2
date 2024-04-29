@@ -181,10 +181,10 @@ export default async function Item({ params }: { params: Params }) {
 				) : null}
 				<form action={addToCollectionAction}>
 					<FormButton variant="outline">Add to Collection</FormButton>
-					<QueryParamToast
+					{/* <QueryParamToast
 						name="added"
 						success={`Added ${item.name} to collection`}
-					/>
+					/> */}
 				</form>
 			</div>
 
