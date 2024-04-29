@@ -1,5 +1,5 @@
 import { User } from "lucide-react";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { MobSprite } from "~/components/MobSprite";
 import { PriceDisplay } from "~/components/PriceDisplay";
 import { Badge } from "~/components/ui/badge";
@@ -12,8 +12,6 @@ import { GuildService } from "~/utils/fo-api";
 interface Params {
 	name: string;
 }
-
-export const revalidate = 86400; // 1 day
 
 export async function generateMetadata({ params }: { params: Params }) {
 	return {
@@ -39,7 +37,7 @@ export default async function Guild({ params }: { params: Params }) {
 	}).catch(() => null);
 
 	if (!info) {
-		redirect("/guilds");
+		notFound();
 	}
 
 	const [members, leaderBoard] = await Promise.all([
