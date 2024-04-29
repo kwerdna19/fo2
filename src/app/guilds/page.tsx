@@ -1,7 +1,6 @@
-import { PersonStanding, User } from "lucide-react";
+import { User } from "lucide-react";
 import Link from "next/link";
 import { PriceDisplay } from "~/components/PriceDisplay";
-import { UnitSprite } from "~/components/UnitSprite";
 import { Card } from "~/components/ui/card";
 import { env } from "~/env";
 import { GuildService } from "~/utils/fo-api";
@@ -11,8 +10,6 @@ export const metadata = {
 };
 
 const xApiKey = env.FO_API_KEY;
-
-export const revalidate = 86400; // 1 day
 
 export default async function Guilds() {
 	const topGuilds = await GuildService.getGuildLeaderboard({ xApiKey });

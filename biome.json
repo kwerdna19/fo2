@@ -13,6 +13,6 @@
 		}
 	},
 	"files": {
-		"ignore": [".next", "src/utils/fo-api"]
+		"ignore": [".next", "src/utils/fo-openapi-client"]
 	}
 }
