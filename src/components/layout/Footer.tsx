@@ -57,12 +57,10 @@ export function Footer() {
 					</a>
 				</div>
 			</div>
-			<div className="text-center text-sm text-muted-foreground">
-				We are looking for UI/UX design help.{" "}
-				<Link className="underline hover:font-semibold" href="/">
-					Learn more
-				</Link>
-			</div>
+			{/* <div className="text-center text-sm text-muted-foreground">
+				We are looking for UI/UX design help. For more info, message{" "}
+				<code>Ak</code>
+			</div> */}
 		</div>
 	);
 }
