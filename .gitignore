@@ -47,3 +47,5 @@ backup
 
 bin/tmp
 bin/database-backups
+
+*:Zone.Identifier
