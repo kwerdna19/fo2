@@ -1,5 +1,12 @@
 export type ApiRequestOptions = {
-	readonly method: 'GET' | 'PUT' | 'POST' | 'DELETE' | 'OPTIONS' | 'HEAD' | 'PATCH';
+	readonly method:
+		| "GET"
+		| "PUT"
+		| "POST"
+		| "DELETE"
+		| "OPTIONS"
+		| "HEAD"
+		| "PATCH";
 	readonly url: string;
 	readonly path?: Record<string, unknown>;
 	readonly cookies?: Record<string, unknown>;
@@ -9,5 +16,5 @@ export type ApiRequestOptions = {
 	readonly body?: any;
 	readonly mediaType?: string;
 	readonly responseHeader?: string;
-	readonly errors?: Record<number, string>;
+	readonly errors?: Record<number | string, string>;
 };
