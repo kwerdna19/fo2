@@ -100,3 +100,31 @@
     image-rendering: crisp-edges;
   }
 }
+
+
+.fo-ornate {
+
+  @apply pixelated;
+
+  border-style: solid;
+  border-image-source: url("/ui/ornate-border-1.png");
+  border-image-slice: 5 6 fill;
+  border-image-width: 10px 12px;  
+  border-width: 6px 12px 6px 12px;
+  overflow: hidden;
+}
+
+.fo-ornate-2 {
+
+  @apply pixelated;
+
+  border-style: solid;
+  border-image-source: url("/ui/ornate-border-2.png");
+  border-image-slice: 5 7 fill;
+  border-image-width: 10px 14px;
+
+  border-width: 8px 14px 8px 14px;
+
+  overflow: hidden;
+
+}

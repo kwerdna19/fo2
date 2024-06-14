@@ -1,45 +1,126 @@
-import { type EquippableType, Unit } from "@prisma/client";
+"use server";
+
+import { type EquippableType, type Prisma, Unit } from "@prisma/client";
 import type { z } from "zod";
+import { createServerAction } from "zsa";
 import { db } from "~/server/db";
 import { equipmentSlotConfig } from "~/utils/fo";
 import { getSlugFromName } from "~/utils/misc";
-import type { itemSchema } from "./schemas";
+import { type itemSchema, itemSearchFilterSchema } from "./schemas";
 
-export async function getAllItems() {
-	return db.item.findMany({
-		orderBy: {
-			slug: "asc",
-		},
-		include: {
-			droppedBy: {
-				include: {
-					mob: true,
+export const getAllItems = createServerAction()
+	.input(itemSearchFilterSchema)
+	.handler(async ({ input }) => {
+		const conditions: Prisma.ItemWhereInput[] = [];
+
+		if (input.query) {
+			conditions.push({
+				OR: [
+					{
+						name: {
+							contains: input.query,
+						},
+					},
+					{
+						desc: {
+							contains: input.query,
+						},
+					},
+					{
+						slug: {
+							contains: input.query,
+						},
+					},
+				],
+			});
+		}
+
+		if (typeof input.minLevel === "number") {
+			conditions.push({
+				levelReq: {
+					gte: input.minLevel,
 				},
-				orderBy: {
-					mob: {
-						level: "asc",
+			});
+		}
+
+		if (typeof input.maxLevel === "number") {
+			conditions.push({
+				levelReq: {
+					lte: input.maxLevel,
+				},
+			});
+		}
+
+		if (typeof input.equipTypes === "object" && input.equipTypes) {
+			conditions.push({
+				equip: {
+					in: input.equipTypes as EquippableType[],
+				},
+			});
+		}
+
+		const where =
+			conditions.length === 1
+				? conditions[0]
+				: conditions.length > 1
+					? {
+							AND: conditions,
+						}
+					: {};
+
+		const nonNullSorts = ["slug"];
+
+		const data = await db.item.findMany({
+			orderBy: {
+				[input.sort]: nonNullSorts.includes(input.sort)
+					? input.sortDirection
+					: {
+							sort: input.sortDirection,
+							nulls: "last",
+						},
+			},
+			include: {
+				droppedBy: {
+					include: {
+						mob: true,
+					},
+					orderBy: {
+						mob: {
+							level: "asc",
+						},
 					},
 				},
-			},
-			soldBy: {
-				include: {
-					npc: true,
+				soldBy: {
+					include: {
+						npc: true,
+					},
+					orderBy: {
+						price: "asc",
+					},
 				},
-				orderBy: {
-					price: "asc",
-				},
+				// craftedBy: {
+				// 	include: {
+				// 		npc: true,
+				// 	},
+				// 	orderBy: {
+				// 		durationMinutes: "asc",
+				// 	},
+				// },
 			},
-			// craftedBy: {
-			// 	include: {
-			// 		npc: true,
-			// 	},
-			// 	orderBy: {
-			// 		durationMinutes: "asc",
-			// 	},
-			// },
-		},
+			where,
+			take: input.perPage,
+			skip: (input.page - 1) * input.perPage,
+		});
+
+		const totalCount = await db.item.count({ where });
+
+		return {
+			data,
+			totalCount,
+			page: input.page,
+			totalPages: Math.ceil(totalCount / input.perPage),
+		};
 	});
-}
 
 export async function getAllEquipment() {
 	return db.item.findMany({

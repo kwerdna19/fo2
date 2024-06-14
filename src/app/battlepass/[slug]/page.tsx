@@ -61,9 +61,11 @@ export default async function BattlePass({ params }: { params: Params }) {
 			</div>
 			<div className="space-y-3 max-w-screen-sm w-full pb-8">
 				{pass.tiers.map((tier) => {
+					const key = `${tier.battlePassId}.${tier.tier}`;
+
 					const currency =
 						tier.unit !== null ? (
-							<div className="flex gap-x-4 items-center text-lg">
+							<div key={key} className="flex gap-x-4 items-center text-lg">
 								<UnitSprite size="lg" type={tier.unit} />
 								{tier.amount ?? "???"}
 							</div>
@@ -71,7 +73,7 @@ export default async function BattlePass({ params }: { params: Params }) {
 
 					const item =
 						tier.item !== null ? (
-							<div className="flex gap-x-4 items-center text-lg">
+							<div key={key} className="flex gap-x-4 items-center text-lg">
 								<ItemSprite
 									size="sm"
 									name={tier.item.name}
@@ -84,10 +86,7 @@ export default async function BattlePass({ params }: { params: Params }) {
 						) : null;
 
 					return (
-						<Card
-							key={`${tier.battlePassId}.${tier.tier}`}
-							className="flex w-full p-5 gap-x-8"
-						>
+						<Card key={key} className="flex w-full p-5 gap-x-8">
 							<div className="text-xl font-sans flex justify-center items-center">
 								<div className="text-center">
 									<p className="text-xs text-muted-foreground">Tier</p>

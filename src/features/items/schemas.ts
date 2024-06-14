@@ -1,5 +1,12 @@
-import { EquippableType, Unit } from "@prisma/client";
+import { EquippableType, type Item, Unit } from "@prisma/client";
+import {
+	parseAsArrayOf,
+	parseAsInteger,
+	parseAsString,
+	parseAsStringEnum,
+} from "nuqs/server";
 import { z } from "zod";
+import { LEVEL_CAP } from "~/utils/fo";
 import { itemBattlePassTiersSchema } from "../battlepasses/schemas";
 
 export const droppedBySchema = z
@@ -67,4 +74,69 @@ export const itemSchema = z.object({
 	soldBy: soldBySchema.optional(),
 	craftedBy: craftedBySchema.optional(),
 	battlePassTiers: itemBattlePassTiersSchema.optional(),
+});
+
+export const itemSearchParamParser = {
+	query: parseAsString,
+	page: parseAsInteger.withDefault(1),
+	perPage: parseAsInteger.withDefault(10),
+	minLevel: parseAsInteger,
+	maxLevel: parseAsInteger,
+	sort: parseAsString.withDefault("slug"),
+	sortDirection: parseAsStringEnum(["asc", "desc"]).withDefault("asc"),
+	equipTypes: parseAsArrayOf(parseAsString),
+};
+
+export const itemSorts = [
+	{
+		key: "slug",
+		name: "Name",
+	},
+	{
+		key: "sellPrice",
+		name: "Sell Price",
+	},
+	{
+		key: "dmgMax",
+		name: "Max Damage",
+	},
+	{
+		key: "dmgMin",
+		name: "Min Damage",
+	},
+	{
+		key: "range",
+		name: "Range",
+	},
+	{
+		key: "agi",
+		name: "Bonus AGI",
+	},
+	{
+		key: "str",
+		name: "Bonus STR",
+	},
+	{
+		key: "sta",
+		name: "Bonus STA",
+	},
+	{
+		key: "int",
+		name: "Bonus INT",
+	},
+] satisfies { key: keyof Item; name: string }[];
+
+export const itemSearchFilterSchema = z.object({
+	query: z.string().nullish(),
+	page: z.number().int().min(1).default(1),
+	perPage: z.number().int().min(10).max(100).default(10),
+	minLevel: z.number().int().min(0).nullish(),
+	maxLevel: z
+		.number()
+		.int()
+		.max(LEVEL_CAP * 2)
+		.nullish(),
+	sort: z.string(),
+	sortDirection: z.enum(["asc", "desc"]),
+	equipTypes: z.string().array().nullish(),
 });

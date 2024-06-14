@@ -1,21 +1,44 @@
 "use client";
 
 import {
-	type ColumnFiltersState,
-	type SortingState,
 	createColumnHelper,
 	flexRender,
 	getCoreRowModel,
-	getExpandedRowModel,
-	getFilteredRowModel,
-	getSortedRowModel,
 	useReactTable,
 } from "@tanstack/react-table";
 import Link from "next/link";
-import { useState } from "react";
+import { useQueryStates } from "nuqs";
 import { ItemSprite } from "~/components/ItemSprite";
 import { PriceDisplay } from "~/components/PriceDisplay";
 import { getSortButton } from "~/components/SortButton";
+
+import { EquippableType } from "@prisma/client";
+import { CommandList } from "cmdk";
+import { Check, ChevronDown, XIcon } from "lucide-react";
+import { useState } from "react";
+import { Controller } from "react-hook-form";
+import { Pager } from "~/components/Pager";
+import { SortSelect } from "~/components/SortSelect";
+import RangeField from "~/components/form/RangeField";
+import { TextField } from "~/components/form/TextField";
+import { Form, SubmitButton, useZodForm } from "~/components/form/zod-form";
+import { Badge } from "~/components/ui/badge";
+import { Button } from "~/components/ui/button";
+import { Card } from "~/components/ui/card";
+import {
+	Collapsible,
+	CollapsibleContent,
+	CollapsibleTrigger,
+} from "~/components/ui/collapsible";
+import {
+	Command,
+	CommandEmpty,
+	CommandGroup,
+	CommandInput,
+	CommandItem,
+} from "~/components/ui/command";
+import { Label } from "~/components/ui/label";
+import { ScrollArea } from "~/components/ui/scroll-area";
 import {
 	Table,
 	TableBody,
@@ -24,18 +47,29 @@ import {
 	TableHeader,
 	TableRow,
 } from "~/components/ui/table";
-import type { getAllItems } from "~/features/items/requests";
-import { getAverageDamage, getSumOfBasicStats, isWeapon } from "~/utils/fo";
+import { ToggleGroup, ToggleGroupItem } from "~/components/ui/toggle-group";
+import { getAllItems } from "~/features/items/requests";
+import {
+	itemSearchFilterSchema,
+	itemSearchParamParser,
+} from "~/features/items/schemas";
+import { useServerActionQuery } from "~/hooks/zsa";
+import {
+	LEVEL_CAP,
+	getAverageDamage,
+	getSumOfBasicStats,
+	isWeapon,
+} from "~/utils/fo";
 import { cn } from "~/utils/styles";
-import { DebouncedInput } from "../../DebouncedInput";
+import { itemSorts } from "../../../features/items/schemas";
 import { DroppedByList } from "./DroppedByList";
 import { ItemRequiredStats } from "./ItemRequiredStats";
 import { ItemStats } from "./ItemStats";
 import { SoldByList } from "./SoldByList";
 
-type Data = Awaited<ReturnType<typeof getAllItems>>;
+type Data = NonNullable<Awaited<ReturnType<typeof getAllItems>>[0]>;
 
-export type Datum = Data[number];
+export type Datum = Data["data"][0];
 const columnHelper = createColumnHelper<Datum>();
 
 export const columns = [
@@ -59,17 +93,17 @@ export const columns = [
 				{info.getValue()}
 			</Link>
 		),
-		header: getSortButton("Name"),
+		header: "Name",
 	}),
 	columnHelper.accessor("levelReq", {
-		header: getSortButton("Level"),
+		header: "Level",
 	}),
 	// sort will be by sum of basic stats, using armor as a secondary sort
 	columnHelper.accessor(
 		(row) => getSumOfBasicStats(row) + (row.armor ?? 0) / 1_000_000,
 		{
 			id: "stats",
-			header: getSortButton("Stats"),
+			header: "Stats",
 			cell: ({ row }) => <ItemStats stats={row.original} />,
 		},
 	),
@@ -82,7 +116,7 @@ export const columns = [
 		(row) => (isWeapon(row) ? getAverageDamage(row) : null),
 		{
 			id: "damage",
-			header: getSortButton("Damage"),
+			header: "Damage",
 			cell: ({ row }) =>
 				isWeapon(row.original)
 					? `${row.original.dmgMin}-${row.original.dmgMax}`
@@ -90,14 +124,14 @@ export const columns = [
 		},
 	),
 	columnHelper.accessor("atkSpeed", {
-		header: getSortButton("Atk Speed"),
+		header: "Atk Speed",
 		cell: (info) => {
 			const sp = info.getValue();
 			return sp && sp * 1000;
 		},
 	}),
 	columnHelper.accessor("sellPrice", {
-		header: getSortButton("Sell Price"),
+		header: "Sell Price",
 		cell: (info) => <PriceDisplay count={info.getValue()} />,
 	}),
 	columnHelper.accessor(
@@ -115,39 +149,179 @@ export const columns = [
 	}),
 ];
 
-export function ItemTable({ data }: { data: Data }) {
-	const [sorting, setSorting] = useState<SortingState>([]);
+const ignoreKeys = ["page", "perPage", "sort", "sortDirection"];
 
-	const [globalFilter, setGlobalFilter] = useState("");
-	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+const equipTypeOptions = Object.values(EquippableType)
+	// .sort((a, b) => a.localeCompare(b))
+	.map((type) => ({
+		value: type,
+		name: type.replace(/_/g, " ").replace("COSMETIC", "OUTFIT").toLowerCase(),
+	}));
 
-	const table = useReactTable({
-		data: data ?? [],
-		columns,
-		onSortingChange: setSorting,
-		onColumnFiltersChange: setColumnFilters,
-		onGlobalFilterChange: setGlobalFilter,
-		getCoreRowModel: getCoreRowModel(),
-		// getPaginationRowModel: getPaginationRowModel(),
-		getExpandedRowModel: getExpandedRowModel(),
-		getSortedRowModel: getSortedRowModel(),
-		getFilteredRowModel: getFilteredRowModel(),
-		getRowCanExpand: () => true,
-		state: {
-			sorting,
-			columnFilters,
-			globalFilter,
-		},
+function ItemFiltersForm() {
+	const [filters, setFilters] = useQueryStates(itemSearchParamParser);
+
+	const form = useZodForm({
+		schema: itemSearchFilterSchema.omit({
+			page: true,
+			perPage: true,
+			sort: true,
+			sortDirection: true,
+		}),
+		values: filters,
 	});
 
+	const hasFilters =
+		Object.entries(filters).filter(
+			([k, v]) => !ignoreKeys.includes(k) && v !== null,
+		).length > 0;
+
 	return (
-		<div className="w-full">
-			<div className="flex items-center mb-4 gap-8">
-				<DebouncedInput
-					placeholder="Filter by mob or item..."
-					value={globalFilter ?? ""}
-					onChange={(value) => setGlobalFilter(String(value))}
-					className="max-w-sm"
+		<Form
+			handleSubmit={(values) => setFilters(values)}
+			persist
+			form={form}
+			className="grid gap-6 grid-cols-4"
+		>
+			<TextField
+				label="Keyword"
+				control={form.control}
+				setNullOnEmpty
+				name="query"
+				placeholder="Search by name..."
+			/>
+			<RangeField
+				label="Level Req"
+				control={form.control}
+				nameMax="maxLevel"
+				nameMin="minLevel"
+				maxValue={LEVEL_CAP}
+			/>
+
+			<Controller
+				control={form.control}
+				name="equipTypes"
+				render={({ field }) => (
+					<div className="space-y-3">
+						<Label>Equip Slot</Label>
+						<ScrollArea className="h-40 rounded-lg border shadow-md">
+							<Command>
+								<CommandList>
+									{equipTypeOptions.map(({ name, value }) => (
+										<CommandItem
+											key={value}
+											value={value}
+											className="capitalize"
+											onSelect={(c) => {
+												const oldVal = field.value;
+												if (oldVal?.includes(c)) {
+													field.onChange(oldVal.filter((o) => o !== c));
+												} else {
+													field.onChange([...(oldVal ?? []), c]);
+												}
+											}}
+										>
+											<Check
+												className={cn(
+													"mr-2 h-4 w-4",
+													field.value?.includes(value)
+														? "opacity-100"
+														: "opacity-0",
+												)}
+											/>
+											{name}
+										</CommandItem>
+									))}
+								</CommandList>
+							</Command>
+						</ScrollArea>
+					</div>
+				)}
+			/>
+
+			<div className="col-span-full flex justify-end gap-6">
+				{hasFilters && (
+					<Button
+						variant="outline"
+						type="button"
+						onClick={() =>
+							setFilters({
+								maxLevel: null,
+								minLevel: null,
+								equipTypes: null,
+								query: null,
+							})
+						}
+					>
+						<XIcon className="h-4 w-4 mr-2" /> Clear
+					</Button>
+				)}
+				<SubmitButton>Apply</SubmitButton>
+			</div>
+		</Form>
+	);
+}
+
+export function ItemTable({ data: initialData }: { data: Data }) {
+	const [filtersOpen, setFiltersOpen] = useState(true);
+	const [filters, setFilters] = useQueryStates(itemSearchParamParser);
+
+	const {
+		data: { data, totalPages, totalCount },
+	} = useServerActionQuery(getAllItems, {
+		queryKey: ["getAllItems", filters],
+		input: filters,
+		initialData,
+	});
+
+	const table = useReactTable({
+		data,
+		columns,
+		getCoreRowModel: getCoreRowModel(),
+	});
+
+	const coupledFields = [["minLevel", "maxLevel"]] as const;
+
+	const numToRemove = coupledFields.filter((fields) =>
+		fields.every((f) => filters[f]),
+	).length;
+
+	const numFilters =
+		Object.entries(filters).filter(
+			([k, v]) => !ignoreKeys.includes(k) && v !== null,
+		).length - numToRemove;
+
+	return (
+		<div className="w-full space-y-4">
+			<Card className="w-full">
+				<Collapsible open={filtersOpen} onOpenChange={setFiltersOpen}>
+					<CollapsibleTrigger className="w-full px-6 py-4 flex justify-start items-center leading-none">
+						Filters
+						{numFilters > 0 && (
+							<Badge variant="secondary" className="ml-3">
+								{numFilters}
+							</Badge>
+						)}
+						<ChevronDown
+							className={cn(
+								"ml-4 h-5 w-5 self-end transition-transform",
+								filtersOpen && "rotate-180",
+							)}
+						/>
+					</CollapsibleTrigger>
+					<CollapsibleContent className="p-4 border-t">
+						<ItemFiltersForm />
+					</CollapsibleContent>
+				</Collapsible>
+			</Card>
+			<div className="flex justify-between">
+				<div className="text-sm text-muted-foreground px-3 flex items-end">
+					Showing {data.length} of {totalCount} results
+				</div>
+				<SortSelect
+					sorts={itemSorts}
+					filters={filters}
+					setFilters={setFilters}
 				/>
 			</div>
 			<div className="rounded-md border">
@@ -211,6 +385,11 @@ export function ItemTable({ data }: { data: Data }) {
 					</TableBody>
 				</Table>
 			</div>
+			<Pager
+				page={filters.page}
+				totalPages={totalPages}
+				onChange={setFilters}
+			/>
 		</div>
 	);
 }

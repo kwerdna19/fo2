@@ -1,0 +1,63 @@
+@import "node_modules/pixel-borders/src/styles/pixel-borders.scss";
+
+.fo-btn-sm {
+
+  color: hsl(210 40% 98%);
+
+  @include pixel-box(
+    $corner-size: 1,
+    $border-size: 1px,
+    $background-color: #8C0202,
+    $border-color: #BABABA,
+    $border-inset-sides: 'all',
+    $border-inset-color-br: #5E0202,
+    $border-inset-color-tl: #BA0202
+  );
+
+  &:active {
+    @include pixel-box(
+      $corner-size: 1,
+      $border-size: 1px,
+      $background-color: #8C0202,
+      $border-color: #BABABA,
+      $border-inset-sides: false,
+      $border-inset-color-br: #5E0202,
+      $border-inset-color-tl: #BA0202
+    );
+  }
+
+}
+
+
+.fo-btn-lg {
+
+  color: hsl(210 40% 98%);
+
+  @include pixel-box(
+    $corner-size: 1,
+    $border-size: 4px,
+    $background-color: #8C0202,
+    $border-color: #BABABA,
+    $border-inset-sides: 'all',
+    $border-inset-color-br: #5E0202,
+    $border-inset-color-tl: #BA0202
+  );
+
+  &:active {
+    @include pixel-box(
+      $corner-size: 1,
+      $border-size: 4px,
+      $background-color: #8C0202,
+      $border-color: #BABABA,
+      $border-inset-sides: false,
+      $border-inset-color-br: #5E0202,
+      $border-inset-color-tl: #BA0202
+    );
+  }
+
+}
+
+
+
+
+
