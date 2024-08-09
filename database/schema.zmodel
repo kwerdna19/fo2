@@ -49,6 +49,8 @@ model Mob {
   faction      Faction?   @relation(fields: [factionId], references: [id])
 
   artist       String?
+
+  @@allow('read', true)
 }
 
 // type Enum TBD
