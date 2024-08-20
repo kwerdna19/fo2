@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { type SearchParams, createSearchParamsCache } from "nuqs/server";
-import { ItemTable } from "~/components/tables/items/ItemTable";
+import { ItemTable } from "~/features/items/components/ItemTable";
 import { getAllItems } from "~/features/items/requests";
 import {
 	itemSearchFilterSchema,
