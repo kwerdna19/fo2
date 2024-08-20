@@ -2,6 +2,15 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator jsonSchema {
+  provider = "prisma-json-schema-generator"
+  output = "./"
+  includeRequiredFields = "true"
+  keepRelationFields = "true"
+  persistOriginalType = "true"
+  keepRelationScalarFields = "true"
+}
+
 datasource db {
   provider  = "postgresql"
   url       = env("POSTGRES_PRISMA_URL")
@@ -13,10 +22,18 @@ plugin prisma {
   output = './generated.prisma'
 }
 
+plugin openapi {
+  title = 'FO2DB'
+  provider = '@zenstackhq/openapi'
+  flavor = 'rest'
+  prefix = '/api/rest'
+  output = './open-api.json'
+}
+
 model Mob {
   id           String     @id @default(cuid())
   createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  updatedAt    DateTime   @updatedAt @default(now())
   name         String     @unique()
   slug         String     @unique()
   desc         String?
@@ -29,10 +46,12 @@ model Mob {
   boss         Boolean    @default(false)
   drops        Loot[]
   locations    Location[]
+  /// Attack speed in milliseconds
   atkSpeed     Float?
   dmgMin       Int?
   dmgMax       Int?
 
+  numSpawns    Int?
   spawnTimeSec Int?
 
   range        Int?
@@ -57,7 +76,7 @@ model Mob {
 model Npc {
   id        String     @id @default(cuid())
   createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  updatedAt DateTime   @updatedAt @default(now())
   name      String
   slug      String     @unique()
   note      String?
@@ -121,7 +140,7 @@ model ItemQuantity {
 model BattlePass {
   id           String           @id @default(cuid())
   createdAt    DateTime         @default(now())
-  updatedAt    DateTime         @updatedAt
+  updatedAt    DateTime         @updatedAt @default(now())
   name         String           @unique()
   slug         String           @unique()
 
@@ -187,7 +206,7 @@ enum EquippableType {
 model Item {
   id              String           @id @default(cuid())
   createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
+  updatedAt       DateTime         @updatedAt @default(now())
   name            String           @unique()
   slug            String           @unique()
   desc            String?
@@ -270,7 +289,7 @@ model Area {
   id            String     @id @default(cuid())
   createdAt     DateTime   @default(now())
   spriteUrl     String
-  updatedAt     DateTime   @updatedAt
+  updatedAt     DateTime   @updatedAt @default(now())
   name          String     @unique()
   slug          String     @unique()
   note          String?
@@ -301,7 +320,7 @@ enum SkillType {
 model Skill {
   id                  String     @id @default(cuid())
   createdAt           DateTime   @default(now())
-  updatedAt           DateTime   @updatedAt
+  updatedAt           DateTime   @updatedAt @default(now())
   name                String
   slug                String     @unique()
   rank                Int
@@ -356,7 +375,7 @@ model Faction {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   spriteUrl String?
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @updatedAt @default(now())
   name      String   @unique()
   slug      String   @unique()
   note      String?

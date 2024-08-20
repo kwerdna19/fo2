@@ -1,8 +1,5 @@
 {
 	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
-	"organizeImports": {
-		"enabled": true
-	},
 	"linter": {
 		"enabled": true,
 		"rules": {
@@ -13,6 +10,6 @@
 		}
 	},
 	"files": {
-		"ignore": [".next", "src/utils/fo-openapi-client"]
+		"ignore": [".next", "src/utils/fo-api/client"]
 	}
 }

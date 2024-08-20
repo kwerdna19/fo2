@@ -26,7 +26,8 @@
 		/* Path Aliases */
 		"baseUrl": ".",
 		"paths": {
-			"~/*": ["./src/*"]
+			"~/*": ["./src/*"],
+			"db/*": ["./database/*"]
 		}
 	},
 	"include": [
@@ -40,13 +41,5 @@
 		"src/env.js",
 		"next.config.js"
 	],
-	"exclude": ["node_modules"],
-	"ts-node": {
-		"files": true,
-		"compilerOptions": {
-			"module": "commonjs",
-			"strict": false
-		},
-		"require": ["ts-node/register", "tsconfig-paths/register", "dotenv/config"]
-	}
+	"exclude": ["node_modules"]
 }
