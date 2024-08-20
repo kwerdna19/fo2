@@ -10,6 +10,11 @@
 		}
 	},
 	"files": {
-		"ignore": [".next", "src/utils/fo-api/client"]
+		"ignore": [
+			".next",
+			"src/utils/fo-api/client",
+			"schema.d.ts",
+			"open-api.json"
+		]
 	}
 }
