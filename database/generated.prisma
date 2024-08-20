@@ -13,6 +13,15 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator jsonSchema {
+  provider                 = "prisma-json-schema-generator"
+  output                   = "./"
+  includeRequiredFields    = "true"
+  keepRelationFields       = "true"
+  persistOriginalType      = "true"
+  keepRelationScalarFields = "true"
+}
+
 enum Unit {
   GEMS
   COINS
@@ -57,7 +66,7 @@ enum Role {
 model Mob {
   id           String     @id() @default(cuid())
   createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt()
+  updatedAt    DateTime   @default(now()) @updatedAt()
   name         String     @unique()
   slug         String     @unique()
   desc         String?
@@ -70,9 +79,11 @@ model Mob {
   boss         Boolean    @default(false)
   drops        Loot[]
   locations    Location[]
+  /// Attack speed in milliseconds
   atkSpeed     Float?
   dmgMin       Int?
   dmgMax       Int?
+  numSpawns    Int?
   spawnTimeSec Int?
   range        Int?
   str          Int?
@@ -91,7 +102,7 @@ model Mob {
 model Npc {
   id        String     @id() @default(cuid())
   createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt()
+  updatedAt DateTime   @default(now()) @updatedAt()
   name      String
   slug      String     @unique()
   note      String?
@@ -143,7 +154,7 @@ model ItemQuantity {
 model BattlePass {
   id           String           @id() @default(cuid())
   createdAt    DateTime         @default(now())
-  updatedAt    DateTime         @updatedAt()
+  updatedAt    DateTime         @default(now()) @updatedAt()
   name         String           @unique()
   slug         String           @unique()
   spriteUrl    String?
@@ -181,7 +192,7 @@ model Loot {
 model Item {
   id              String           @id() @default(cuid())
   createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt()
+  updatedAt       DateTime         @default(now()) @updatedAt()
   name            String           @unique()
   slug            String           @unique()
   desc            String?
@@ -246,7 +257,7 @@ model Area {
   id            String     @id() @default(cuid())
   createdAt     DateTime   @default(now())
   spriteUrl     String
-  updatedAt     DateTime   @updatedAt()
+  updatedAt     DateTime   @default(now()) @updatedAt()
   name          String     @unique()
   slug          String     @unique()
   note          String?
@@ -266,7 +277,7 @@ model Area {
 model Skill {
   id                  String     @id() @default(cuid())
   createdAt           DateTime   @default(now())
-  updatedAt           DateTime   @updatedAt()
+  updatedAt           DateTime   @default(now()) @updatedAt()
   name                String
   slug                String     @unique()
   rank                Int
@@ -311,7 +322,7 @@ model Faction {
   id        String   @id() @default(cuid())
   createdAt DateTime @default(now())
   spriteUrl String?
-  updatedAt DateTime @updatedAt()
+  updatedAt DateTime @default(now()) @updatedAt()
   name      String   @unique()
   slug      String   @unique()
   note      String?
