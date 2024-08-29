@@ -8,8 +8,9 @@ export function DropGold({
 }: { goldMin: number; goldMax: number; className?: string }) {
 	return (
 		<PriceDisplay
-			count={goldMax === goldMin ? goldMin : `${goldMin}-${goldMax}`}
+			count={goldMax === goldMin ? goldMin : [goldMin, goldMax]}
 			className={className}
+			size="xs"
 		/>
 	);
 }

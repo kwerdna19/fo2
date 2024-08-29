@@ -1,3 +1,5 @@
+"use client";
+
 // Inspired by react-hot-toast library
 import * as React from "react";
 
@@ -6,10 +8,7 @@ import type { ToastActionElement, ToastProps } from "~/components/ui/toast";
 const TOAST_LIMIT = 1;
 const TOAST_REMOVE_DELAY = 1000000;
 
-type ToasterToast = Pick<
-	ToastProps,
-	"variant" | "open" | "onOpenChange" | "duration"
-> & {
+type ToasterToast = ToastProps & {
 	id: string;
 	title?: React.ReactNode;
 	description?: React.ReactNode;
@@ -96,9 +95,10 @@ export const reducer = (state: State, action: Action): State => {
 			if (toastId) {
 				addToRemoveQueue(toastId);
 			} else {
-				for (const toast of state.toasts) {
+				// biome-ignore lint/complexity/noForEach: shadcn
+				state.toasts.forEach((toast) => {
 					addToRemoveQueue(toast.id);
-				}
+				});
 			}
 
 			return {
@@ -133,9 +133,10 @@ let memoryState: State = { toasts: [] };
 
 function dispatch(action: Action) {
 	memoryState = reducer(memoryState, action);
-	for (const listener of listeners) {
+	// biome-ignore lint/complexity/noForEach: shadcn
+	listeners.forEach((listener) => {
 		listener(memoryState);
-	}
+	});
 }
 
 type Toast = Omit<ToasterToast, "id">;
@@ -172,7 +173,7 @@ function toast({ ...props }: Toast) {
 function useToast() {
 	const [state, setState] = React.useState<State>(memoryState);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: need to use effect based on state
+	// biome-ignore lint/correctness/useExhaustiveDependencies: shadcn
 	React.useEffect(() => {
 		listeners.push(setState);
 		return () => {

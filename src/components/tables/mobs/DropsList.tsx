@@ -42,7 +42,7 @@ export function DropsList({
 		<div
 			className={cn(
 				"flex flex-wrap items-center",
-				size === "md" ? "gap-4" : "gap-2",
+				size === "md" ? "gap-4" : "gap-3",
 				className,
 			)}
 		>

@@ -32,7 +32,7 @@ export default function QueryParamToast({ name, success, error }: Props) {
 		const isSuccess = val !== "false" && val !== "0" && val !== "error";
 		if (isSuccess && success) {
 			toast({
-				variant: "success",
+				variant: "destructive",
 				title: "Success",
 				description: getMessage(success),
 				duration: 4000,
@@ -40,7 +40,7 @@ export default function QueryParamToast({ name, success, error }: Props) {
 		}
 		if (!isSuccess && error) {
 			toast({
-				variant: "error",
+				variant: "destructive",
 				title: "Error",
 				description: getMessage(error),
 				duration: 4000,
