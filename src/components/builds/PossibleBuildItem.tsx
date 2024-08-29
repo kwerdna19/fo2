@@ -4,8 +4,8 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import Link from "next/link";
 import { Slot, slotBackgroundSpriteMap } from "~/utils/fo";
 import { cn } from "~/utils/styles";
+import { ItemStats } from "../../features/items/components/ItemStats";
 import { ItemSprite } from "../ItemSprite";
-import { ItemStats } from "../tables/items/ItemStats";
 import { Button } from "../ui/button";
 import {
 	Tooltip,

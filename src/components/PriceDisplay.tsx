@@ -11,7 +11,7 @@ export function PriceDisplay({
 	notation = "compact",
 	maximumFractionDigits = 1,
 }: {
-	count: number | null | string;
+	count: number | null | string | [number, number];
 	className?: string;
 	size?: "sm" | "xs";
 	unit?: Unit;
@@ -30,6 +30,11 @@ export function PriceDisplay({
 			notation,
 			maximumFractionDigits,
 		});
+
+		if (Array.isArray(count)) {
+			return `${formatter.format(count[0])}-${formatter.format(count[1])}`;
+		}
+
 		return formatter.format(count);
 	};
 
@@ -38,7 +43,7 @@ export function PriceDisplay({
 			className={cn(
 				className,
 				"flex items-center",
-				size === "xs" ? "gap-x-1" : "gap-x-2",
+				size === "xs" ? "gap-x-1.5" : "gap-x-2",
 			)}
 		>
 			<UnitSprite type={unit} size={size} />

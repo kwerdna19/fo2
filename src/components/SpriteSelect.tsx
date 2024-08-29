@@ -1,7 +1,6 @@
 "use client";
 import { type FieldMetadata, getInputProps } from "@conform-to/react";
 import { MobSprite } from "~/components/MobSprite";
-import { FieldLabel } from "~/components/ui/label";
 import {
 	Select,
 	SelectContent,
@@ -11,6 +10,7 @@ import {
 } from "~/components/ui/select";
 import { cn } from "~/utils/styles";
 import { ItemSprite } from "./ItemSprite";
+import { FieldLabel } from "./ui/label";
 
 export default function SpriteSelect({
 	className,

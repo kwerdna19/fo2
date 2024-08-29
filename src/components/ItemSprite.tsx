@@ -47,7 +47,7 @@ export const ItemSprite = ({
 			className={cn(
 				"box-content pixelated aspect-square",
 				bg &&
-					"border-2 shadow-sm border-slate-200 bg-slate-50 dark:bg-slate-800 dark:border-slate-950 rounded-sm",
+					"border shadow-sm border-slate-200 bg-slate-50 dark:bg-slate-800 dark:border-slate-950 rounded-sm",
 				className,
 			)}
 			src={url}

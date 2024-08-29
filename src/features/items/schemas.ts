@@ -4,7 +4,7 @@ import {
 	parseAsInteger,
 	parseAsString,
 	parseAsStringEnum,
-} from "nuqs/server";
+} from "nuqs";
 import { z } from "zod";
 import { LEVEL_CAP } from "~/utils/fo";
 import { itemBattlePassTiersSchema } from "../battlepasses/schemas";

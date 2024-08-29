@@ -4,7 +4,7 @@ generator client {
 
 generator jsonSchema {
   provider = "prisma-json-schema-generator"
-  output = "./"
+  output = "../src/server/db"
   includeRequiredFields = "true"
   keepRelationFields = "true"
   persistOriginalType = "true"

@@ -16,8 +16,6 @@ import { useState } from "react";
 import { DebouncedInput } from "~/components/DebouncedInput";
 import { ItemSprite } from "~/components/ItemSprite";
 import { getSortButton } from "~/components/SortButton";
-import { ItemRequiredStats } from "~/components/tables/items/ItemRequiredStats";
-import { ItemStats } from "~/components/tables/items/ItemStats";
 import {
 	Table,
 	TableBody,
@@ -26,6 +24,8 @@ import {
 	TableHeader,
 	TableRow,
 } from "~/components/ui/table";
+import { ItemRequiredStats } from "~/features/items/components/ItemRequiredStats";
+import { ItemStats } from "~/features/items/components/ItemStats";
 import { cn } from "~/utils/styles";
 import type { getAllSkills } from "../requests";
 

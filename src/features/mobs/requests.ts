@@ -1,7 +1,12 @@
+"use server";
+
+import type { Prisma } from "@prisma/client";
 import type { z } from "zod";
+import { createServerAction } from "zsa";
 import { db } from "~/server/db";
+import schema from "~/server/db/json-schema.json";
 import { getSlugFromName } from "~/utils/misc";
-import type { mobSchema } from "./schemas";
+import { type mobSchema, mobSearchFilterSchema } from "./schemas";
 
 export async function getAllMobs() {
 	return db.mob.findMany({
@@ -22,6 +27,72 @@ export async function getAllMobs() {
 		},
 	});
 }
+
+const searchFields = ["name", "desc", "slug"];
+
+export const getAllMobsAction = createServerAction()
+	.input(mobSearchFilterSchema)
+	.handler(async ({ input }) => {
+		const { pageIndex, pageSize, sort, sortDirection, query } = input;
+
+		const isSortRequired = schema.definitions.Mob.required.includes(sort);
+
+		const conditions: Prisma.MobWhereInput[] = [];
+
+		if (query) {
+			conditions.push({
+				OR: searchFields.map((f) => ({
+					[f]: {
+						contains: query,
+					},
+				})),
+			});
+		}
+
+		const where =
+			conditions.length === 1
+				? conditions[0]
+				: conditions.length > 1
+					? {
+							AND: conditions,
+						}
+					: {};
+
+		const data = await db.mob.findMany({
+			orderBy: {
+				[sort]: isSortRequired
+					? sortDirection
+					: { sort: sortDirection, nulls: "last" },
+			},
+			include: {
+				_count: true,
+				drops: {
+					include: {
+						item: true,
+					},
+					orderBy: {
+						item: {
+							sellPrice: "asc",
+						},
+					},
+				},
+			},
+			where,
+			take: pageSize,
+			skip: pageIndex * pageSize,
+		});
+
+		const totalCount = await db.mob.count({ where });
+
+		return {
+			data,
+			totalCount,
+			page: pageIndex + 1,
+			pageIndex,
+			pageSize,
+			totalPages: Math.ceil(totalCount / pageSize),
+		};
+	});
 
 export async function getMobById(id: string) {
 	return db.mob.findUniqueOrThrow({

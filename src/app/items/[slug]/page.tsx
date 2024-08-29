@@ -8,13 +8,13 @@ import { ItemSprite } from "~/components/ItemSprite";
 import { MobSprite } from "~/components/MobSprite";
 import QueryParamToast from "~/components/QueryParamToast";
 import { UnitSprite } from "~/components/UnitSprite";
-import { ItemRequiredStats } from "~/components/tables/items/ItemRequiredStats";
-import { ItemStats } from "~/components/tables/items/ItemStats";
 import { DurationDisplay } from "~/components/tables/npcs/DurationDisplay";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
 import { addToCollection } from "~/features/collection/requests";
+import { ItemRequiredStats } from "~/features/items/components/ItemRequiredStats";
+import { ItemStats } from "~/features/items/components/ItemStats";
 import { getAllItemsQuick, getItemBySlug } from "~/features/items/requests";
 import { auth } from "~/server/auth";
 import {
