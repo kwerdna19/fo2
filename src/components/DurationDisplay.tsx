@@ -16,7 +16,7 @@ export function DurationDisplay({
 	});
 
 	const text = formatDuration(duration, {
-		delimiter: "",
+		delimiter: " ",
 	}).replace(
 		/(\s?(?:seconds?|minutes?|hours?|days?|weeks?|months?|years?))/g,
 		(val) => val.trim().charAt(0),

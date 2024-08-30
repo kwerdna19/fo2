@@ -2,10 +2,10 @@
 import * as L from "leaflet";
 import Link from "next/link";
 import { LayerGroup, LayersControl, Marker, Popup } from "react-leaflet";
+import { SaleItemsList } from "~/features/npcs/components/SaleItemsList";
 import { spriteHeight, spriteWidth } from "../../../components/MobSprite";
 import { DropsList } from "../../mobs/components/DropsList";
 import { MobHealth } from "../../mobs/components/MobHealth";
-import { SaleItemsList } from "../../../components/tables/npcs/SaleItemsList";
 import type { getAreaBySlug } from "../requests";
 
 type Locations = NonNullable<

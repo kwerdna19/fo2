@@ -24,9 +24,8 @@ export function ItemStats(props: {
 			"crit",
 			"dodge",
 			"atkPower",
-			// "armor",
-			"health",
-			"energy",
+			// "health",
+			// "energy",
 		] as const
 	)
 		.filter((s) => inputItem[s] !== null && typeof inputItem[s] !== "undefined")
@@ -37,32 +36,32 @@ export function ItemStats(props: {
 			};
 		});
 	//.sort((a, b) => b.value - a.value)
-	if (stats.length === 0 && !armor) {
+	if (stats.length === 0) {
 		return fallback;
 	}
 
 	return (
-		<div className={cn("flex flex-col items-center text-sm", className)}>
+		<div className={cn("text-sm flex justify-start", className)}>
 			{stats.length > 0 ? (
-				<div className="bg-slate-200 dark:bg-slate-600 space-y-1.5 rounded-md p-1 mb-1">
+				<div
+					className={cn(
+						"bg-slate-200 dark:bg-slate-600 gap-y-1 gap-x-4 rounded-md p-1 px-2 grid",
+						stats.length > 1 ? "grid-cols-2" : "grid-cols-1",
+					)}
+				>
 					{stats.map(({ stat, value }) => {
 						return (
-							<div key={stat} className="flex justify-between gap-x-0.5">
+							<div key={stat} className="flex gap-x-1.5">
 								<div className="bg-slate-300 dark:bg-slate-700 text-center rounded-sm px-0.5 flex items-center">
 									{value > 0 ? `+${value}` : value}
 									{stat === "CRIT" ? (
 										<span className="text-xs ml-0.5">%</span>
 									) : null}
 								</div>
-								<div className="flex-1 text-center pl-1">{stat}</div>
+								<div className="flex-1">{stat}</div>
 							</div>
 						);
 					})}
-				</div>
-			) : null}
-			{armor ? (
-				<div className="p-1 text-center">
-					<span>{armor > 0 ? `+${armor}` : armor}</span> <span>Armor</span>
 				</div>
 			) : null}
 		</div>

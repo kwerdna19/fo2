@@ -19,7 +19,16 @@ export const getAllItems = async (searchParams: SearchParams) => {
 		.and(baseDataTableQuerySchema)
 		.parse(itemSearchParamCache.parse(searchParams));
 
-	const { page, per_page, sort, sort_dir, query, maxLevel, minLevel } = input;
+	const {
+		page,
+		per_page,
+		sort,
+		sort_dir,
+		query,
+		maxLevel,
+		minLevel,
+		equipTypes,
+	} = input;
 
 	const isSortFieldRequired = requiredFields.includes(sort);
 
@@ -34,6 +43,14 @@ export const getAllItems = async (searchParams: SearchParams) => {
 					contains: query,
 				},
 			})),
+		});
+	}
+
+	if (equipTypes) {
+		conditions.push({
+			equip: {
+				in: equipTypes as EquippableType[],
+			},
 		});
 	}
 
@@ -95,14 +112,17 @@ export const getAllItems = async (searchParams: SearchParams) => {
 					price: "asc",
 				},
 			},
-			// craftedBy: {
-			// 	include: {
-			// 		npc: true,
-			// 	},
-			// 	orderBy: {
-			// 		durationMinutes: "asc",
-			// 	},
-			// },
+			craftedBy: {
+				include: {
+					npc: {
+						select: {
+							name: true,
+							spriteUrl: true,
+							slug: true,
+						},
+					},
+				},
+			},
 		},
 		where,
 		take: per_page,
@@ -114,7 +134,7 @@ export const getAllItems = async (searchParams: SearchParams) => {
 	return {
 		data,
 		totalCount,
-		totalPages: Math.ceil(totalCount / input.perPage),
+		totalPages: Math.ceil(totalCount / per_page),
 	};
 };
 

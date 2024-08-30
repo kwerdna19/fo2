@@ -52,7 +52,7 @@ export function DataTable<T, Data extends { totalCount: number; data: T[] }>({
 }) {
 	const { totalCount, data: rows } = data;
 
-	const [showControls, setShowControls] = useState(true);
+	const [showControls, setShowControls] = useState(Boolean(filtersComponent));
 	const { pagination, setPagination, sorting, setSorting, search, setSearch } =
 		useDataTableQueryParams();
 
@@ -75,24 +75,28 @@ export function DataTable<T, Data extends { totalCount: number; data: T[] }>({
 	});
 
 	return (
-		<div className="flex w-full gap-4">
-			<DataTableSideBar
-				open={showControls}
-				setOpen={setShowControls}
-				title={`Filter ${title}`}
-			>
-				{filtersComponent}
-			</DataTableSideBar>
+		<div className="flex w-full gap-3">
+			{filtersComponent ? (
+				<DataTableSideBar
+					open={showControls}
+					setOpen={setShowControls}
+					title={`Filter ${title}`}
+				>
+					{filtersComponent}
+				</DataTableSideBar>
+			) : null}
 
-			<div className="flex max-w-full flex-1 flex-col gap-4 overflow-hidden">
+			<div className="flex max-w-full flex-1 flex-col gap-4 overflow-hidden px-1 pb-1">
 				<DataTableSearchBar search={search} setSearch={setSearch} />
 				<div className="flex items-center gap-x-6 gap-y-2 justify-between flex-wrap">
 					<div className="flex items-center gap-x-8">
-						<DataTableControlsToggle
-							controlsOpen={showControls}
-							setControlsOpen={setShowControls}
-						/>
-						<div className="text-sm text-muted-foreground">
+						{filtersComponent ? (
+							<DataTableControlsToggle
+								controlsOpen={showControls}
+								setControlsOpen={setShowControls}
+							/>
+						) : null}
+						<div className="text-sm text-muted-foreground px-2">
 							Showing {table.getRowModel().rows.length.toLocaleString()} of{" "}
 							{totalCount.toLocaleString()} {title.toLocaleLowerCase()}
 						</div>
@@ -138,7 +142,12 @@ export function DataTable<T, Data extends { totalCount: number; data: T[] }>({
 													<TableCell
 														key={cell.id}
 														className={cn({
-															"py-1 px-2": cell.column.id === "sprite",
+															"py-1 px-2": [
+																"droppedBy",
+																"soldBy",
+																"craftedBy",
+																"sprite",
+															].includes(cell.column.id),
 														})}
 													>
 														{flexRender(

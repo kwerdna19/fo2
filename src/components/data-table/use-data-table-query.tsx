@@ -46,12 +46,23 @@ export const useDataTableQueryParams = () => {
 		});
 	};
 
+	const resetPage = () => setParams({ page: null });
+
 	const search = params.query ?? "";
 	const setSearch = (s: string | undefined | null) => {
 		setParams({
 			query: !s ? null : s,
+			page: 1,
 		});
 	};
 
-	return { pagination, setPagination, sorting, setSorting, search, setSearch };
+	return {
+		pagination,
+		setPagination,
+		sorting,
+		setSorting,
+		search,
+		setSearch,
+		resetPage,
+	};
 };
