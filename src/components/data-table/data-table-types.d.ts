@@ -7,5 +7,7 @@ declare module "@tanstack/react-table" {
 			id: string;
 			name: string;
 		}[];
+		sortFieldReplacement?: string;
+		hidden?: boolean;
 	}
 }

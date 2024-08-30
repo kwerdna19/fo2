@@ -33,7 +33,9 @@ export function DataTableViewOptions<TData>({
 				<DropdownMenuSeparator />
 				{table
 					.getAllColumns()
-					.filter((column) => column.getCanHide())
+					.filter(
+						(column) => column.getCanHide() && !column.columnDef.meta?.hidden,
+					)
 					.map((column) => {
 						const label =
 							typeof column.columnDef.header === "string"

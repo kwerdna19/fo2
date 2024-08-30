@@ -8,8 +8,7 @@ import {
 	TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { cn } from "~/utils/styles";
-import { ItemSprite } from "../../ItemSprite";
-import type { Datum } from "./MobTable";
+import { ItemSprite } from "../../../components/ItemSprite";
 
 export function DropsList({
 	drops,

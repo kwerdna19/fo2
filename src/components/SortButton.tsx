@@ -79,14 +79,18 @@ export default function SortButton<T>({
 		);
 	}
 
+	const sortFieldId = column.columnDef.meta?.sortFieldReplacement;
+
+	const sortCol = sortFieldId ? table.getColumn(sortFieldId) ?? column : column;
+
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
 				<Button variant="ghost" size="sm" className={className}>
 					<span>{label}</span>
-					{column.getIsSorted() === "desc" ? (
+					{sortCol.getIsSorted() === "desc" ? (
 						<ArrowUp className="ml-2 h-4 w-4" />
-					) : column.getIsSorted() === "asc" ? (
+					) : sortCol.getIsSorted() === "asc" ? (
 						<ArrowDown className="ml-2 h-4 w-4" />
 					) : (
 						<ChevronsUpDown className="ml-2 h-4 w-4" />
@@ -94,11 +98,11 @@ export default function SortButton<T>({
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="start">
-				<DropdownMenuItem onClick={() => column.toggleSorting(false)}>
+				<DropdownMenuItem onClick={() => sortCol.toggleSorting(false)}>
 					<ArrowDown className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
 					Asc
 				</DropdownMenuItem>
-				<DropdownMenuItem onClick={() => column.toggleSorting(true)}>
+				<DropdownMenuItem onClick={() => sortCol.toggleSorting(true)}>
 					<ArrowUp className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
 					Desc
 				</DropdownMenuItem>

@@ -24,7 +24,7 @@ export function Header({
 
 	return (
 		<Collapsible className={className} open={open} onOpenChange={setOpen}>
-			<div className="grid grid-cols-[auto_1fr_auto_auto] items-center gap-x-5 px-4 py-3">
+			<div className="grid grid-cols-[auto_1fr_auto_auto] items-center gap-x-5 px-4 py-3 h-full">
 				<Link
 					prefetch={false}
 					href="/"
