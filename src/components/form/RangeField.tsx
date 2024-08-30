@@ -33,30 +33,30 @@ function RangeField<FormShape extends FieldValues>({
 	] satisfies [number, number];
 
 	return (
-		<div className="space-y-5">
+		<div className="space-y-4">
 			<Label>
 				{label}
 				<span className="ml-2">
-					{value[0] === minValue && value[1] === maxValue
-						? "(any)"
-						: value[0] === value[1]
-							? `(${value[0]})`
-							: `(${value[0]} - ${value[1]})`}
+					{value[0] === value[1]
+						? `(${value[0]})`
+						: `(${value[0]} - ${value[1]})`}
 				</span>
 			</Label>
-			<Slider
-				min={minValue}
-				max={maxValue}
-				onValueChange={(vals) => {
-					console.log(vals);
-					minField.onChange(vals[0] === minValue ? null : vals[0]);
-					maxField.onChange(vals[1] === maxValue ? null : vals[1]);
-				}}
-				value={value}
-				step={1}
-			>
-				<SliderThumb />
-			</Slider>
+			<div className="px-1">
+				<Slider
+					min={minValue}
+					max={maxValue}
+					onValueChange={(vals) => {
+						console.log(vals);
+						minField.onChange(vals[0] === minValue ? null : vals[0]);
+						maxField.onChange(vals[1] === maxValue ? null : vals[1]);
+					}}
+					value={value}
+					step={1}
+				>
+					<SliderThumb />
+				</Slider>
+			</div>
 		</div>
 	);
 }

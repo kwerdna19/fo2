@@ -48,7 +48,7 @@ export default function RootLayout({
 				<ReactQueryProvider>
 					<ThemeProvider>
 						<header className="supports-backdrop-blur:bg-background/60 fixed top-0 z-50 w-screen border-b bg-background/95 backdrop-blur">
-							<Header className="mx-auto w-full max-w-screen-2xl" />
+							<Header className="mx-auto w-full max-w-screen-2xl h-16" />
 						</header>
 						<main className="flex-1 pt-16">
 							<div className="mx-auto h-full w-full max-w-screen-2xl p-3 md:p-4 lg:p-6">

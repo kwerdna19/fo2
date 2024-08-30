@@ -1,22 +1,83 @@
 "use server";
 
 import type { Prisma } from "@prisma/client";
+import type { SearchParams } from "nuqs/parsers";
 import type { z } from "zod";
-import { createServerAction } from "zsa";
+import { baseDataTableQuerySchema } from "~/components/data-table/data-table-utils";
 import { db } from "~/server/db";
 import schema from "~/server/db/json-schema.json";
 import { getSlugFromName } from "~/utils/misc";
-import { type mobSchema, mobSearchFilterSchema } from "./schemas";
+import type { mobSchema } from "./schemas";
+import { mobSearchFilterSchema, mobSearchParamCache } from "./search-params";
 
-export async function getAllMobs() {
-	return db.mob.findMany({
+const requiredFields = schema.definitions.Mob.required;
+const searchFields = ["name", "desc", "slug"];
+
+export const getAllMobs = async (searchParams: SearchParams) => {
+	const input = mobSearchFilterSchema
+		.and(baseDataTableQuerySchema)
+		.parse(mobSearchParamCache.parse(searchParams));
+
+	const { page, per_page, sort, sort_dir, query, maxLevel, minLevel } = input;
+
+	const pageIndex = page - 1;
+
+	const isSortFieldRequired = requiredFields.includes(sort);
+
+	const conditions: Prisma.MobWhereInput[] = [];
+
+	if (query) {
+		conditions.push({
+			OR: searchFields.map((f) => ({
+				[f]: {
+					contains: query,
+				},
+			})),
+		});
+	}
+
+	if (typeof minLevel === "number") {
+		conditions.push({
+			level: {
+				gte: minLevel,
+			},
+		});
+	}
+
+	if (typeof maxLevel === "number") {
+		conditions.push({
+			level: {
+				lte: maxLevel,
+			},
+		});
+	}
+
+	const where =
+		conditions.length === 1
+			? conditions[0]
+			: conditions.length > 1
+				? {
+						AND: conditions,
+					}
+				: {};
+
+	const data = await db.mob.findMany({
 		orderBy: {
-			level: "asc",
+			[sort]: isSortFieldRequired
+				? sort_dir
+				: { sort: sort_dir, nulls: "last" },
 		},
 		include: {
 			drops: {
 				include: {
-					item: true,
+					item: {
+						select: {
+							slug: true,
+							spriteUrl: true,
+							name: true,
+							sellPrice: true,
+						},
+					},
 				},
 				orderBy: {
 					item: {
@@ -24,75 +85,33 @@ export async function getAllMobs() {
 					},
 				},
 			},
-		},
-	});
-}
-
-const searchFields = ["name", "desc", "slug"];
-
-export const getAllMobsAction = createServerAction()
-	.input(mobSearchFilterSchema)
-	.handler(async ({ input }) => {
-		const { pageIndex, pageSize, sort, sortDirection, query } = input;
-
-		const isSortRequired = schema.definitions.Mob.required.includes(sort);
-
-		const conditions: Prisma.MobWhereInput[] = [];
-
-		if (query) {
-			conditions.push({
-				OR: searchFields.map((f) => ({
-					[f]: {
-						contains: query,
-					},
-				})),
-			});
-		}
-
-		const where =
-			conditions.length === 1
-				? conditions[0]
-				: conditions.length > 1
-					? {
-							AND: conditions,
-						}
-					: {};
-
-		const data = await db.mob.findMany({
-			orderBy: {
-				[sort]: isSortRequired
-					? sortDirection
-					: { sort: sortDirection, nulls: "last" },
-			},
-			include: {
-				_count: true,
-				drops: {
-					include: {
-						item: true,
-					},
-					orderBy: {
-						item: {
-							sellPrice: "asc",
+			faction: true,
+			locations: {
+				select: {
+					area: {
+						select: {
+							id: true,
+							slug: true,
+							name: true,
 						},
 					},
 				},
 			},
-			where,
-			take: pageSize,
-			skip: pageIndex * pageSize,
-		});
-
-		const totalCount = await db.mob.count({ where });
-
-		return {
-			data,
-			totalCount,
-			page: pageIndex + 1,
-			pageIndex,
-			pageSize,
-			totalPages: Math.ceil(totalCount / pageSize),
-		};
+		},
+		where,
+		take: per_page,
+		skip: pageIndex * per_page,
 	});
+
+	const totalCount = await db.mob.count({ where });
+
+	return {
+		data,
+		totalCount,
+		page: pageIndex + 1,
+		totalPages: Math.ceil(totalCount / per_page),
+	};
+};
 
 export async function getMobById(id: string) {
 	return db.mob.findUniqueOrThrow({

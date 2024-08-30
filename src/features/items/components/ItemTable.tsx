@@ -13,12 +13,14 @@ import { PriceDisplay } from "~/components/PriceDisplay";
 import { getSortButton } from "~/components/SortButton";
 
 import { EquippableType } from "@prisma/client";
+import type { ColumnDef } from "@tanstack/react-table";
 import { CommandList } from "cmdk";
 import { Check, ChevronDown, XIcon } from "lucide-react";
 import { useState } from "react";
 import { Controller } from "react-hook-form";
 import { Pager } from "~/components/Pager";
 import { SortSelect } from "~/components/SortSelect";
+import { DataTable } from "~/components/data-table/data-table";
 import RangeField from "~/components/form/RangeField";
 import { TextField } from "~/components/form/TextField";
 import { Form, SubmitButton, useZodForm } from "~/components/form/zod-form";
@@ -48,11 +50,7 @@ import {
 	TableRow,
 } from "~/components/ui/table";
 import { ToggleGroup, ToggleGroupItem } from "~/components/ui/toggle-group";
-import { getAllItems } from "~/features/items/requests";
-import {
-	itemSearchFilterSchema,
-	itemSearchParamParser,
-} from "~/features/items/schemas";
+import type { getAllItems } from "~/features/items/requests";
 import { useServerActionQuery } from "~/hooks/zsa";
 import {
 	LEVEL_CAP,
@@ -61,18 +59,22 @@ import {
 	isWeapon,
 } from "~/utils/fo";
 import { cn } from "~/utils/styles";
-import { itemSorts } from "../../../features/items/schemas";
+import {
+	itemSearchFilterSchema,
+	itemSearchParamParser,
+} from "../search-params";
 import { DroppedByList } from "./DroppedByList";
 import { ItemRequiredStats } from "./ItemRequiredStats";
 import { ItemStats } from "./ItemStats";
 import { SoldByList } from "./SoldByList";
 
-type Data = NonNullable<Awaited<ReturnType<typeof getAllItems>>[0]>;
+type AllItemsResponse = Awaited<ReturnType<typeof getAllItems>>;
 
-export type Datum = Data["data"][0];
+export type Datum = AllItemsResponse["data"][number];
 const columnHelper = createColumnHelper<Datum>();
 
-export const columns = [
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+export const columns: ColumnDef<Datum, any>[] = [
 	columnHelper.display({
 		id: "sprite",
 		header: () => null,
@@ -149,8 +151,6 @@ export const columns = [
 	}),
 ];
 
-const ignoreKeys = ["page", "perPage", "sort", "sortDirection"];
-
 const equipTypeOptions = Object.values(EquippableType)
 	// .sort((a, b) => a.localeCompare(b))
 	.map((type) => ({
@@ -158,38 +158,23 @@ const equipTypeOptions = Object.values(EquippableType)
 		name: type.replace(/_/g, " ").replace("COSMETIC", "OUTFIT").toLowerCase(),
 	}));
 
-function ItemFiltersForm() {
+function ItemSearchFilters() {
 	const [filters, setFilters] = useQueryStates(itemSearchParamParser);
 
 	const form = useZodForm({
-		schema: itemSearchFilterSchema.omit({
-			page: true,
-			perPage: true,
-			sort: true,
-			sortDirection: true,
-		}),
+		schema: itemSearchFilterSchema,
 		values: filters,
 	});
 
-	const hasFilters =
-		Object.entries(filters).filter(
-			([k, v]) => !ignoreKeys.includes(k) && v !== null,
-		).length > 0;
+	const hasFilters = false;
 
 	return (
 		<Form
 			handleSubmit={(values) => setFilters(values)}
 			persist
 			form={form}
-			className="grid gap-6 grid-cols-4"
+			className="flex-1 flex h-full flex-col gap-y-8"
 		>
-			<TextField
-				label="Keyword"
-				control={form.control}
-				setNullOnEmpty
-				name="query"
-				placeholder="Search by name..."
-			/>
 			<RangeField
 				label="Level Req"
 				control={form.control}
@@ -198,7 +183,7 @@ function ItemFiltersForm() {
 				maxValue={LEVEL_CAP}
 			/>
 
-			<Controller
+			{/* <Controller
 				control={form.control}
 				name="equipTypes"
 				render={({ field }) => (
@@ -237,159 +222,45 @@ function ItemFiltersForm() {
 						</ScrollArea>
 					</div>
 				)}
-			/>
+			/> */}
 
-			<div className="col-span-full flex justify-end gap-6">
-				{hasFilters && (
-					<Button
-						variant="outline"
-						type="button"
-						onClick={() =>
-							setFilters({
-								maxLevel: null,
-								minLevel: null,
-								equipTypes: null,
-								query: null,
-							})
-						}
-					>
-						<XIcon className="h-4 w-4 mr-2" /> Clear
-					</Button>
-				)}
-				<SubmitButton>Apply</SubmitButton>
+			<div className="pt-8 flex justify-end items-end gap-4 flex-1">
+				<Button
+					type="button"
+					size="sm"
+					variant="ghost"
+					onClick={() =>
+						setFilters((prev) =>
+							Object.keys(prev).reduce(
+								(acc, key) => {
+									acc[key] = null;
+									return acc;
+								},
+								{} as Record<string, unknown>,
+							),
+						)
+					}
+				>
+					Clear
+				</Button>
+				<SubmitButton size="sm">Apply</SubmitButton>
 			</div>
 		</Form>
 	);
 }
 
-export function ItemTable({ data: initialData }: { data: Data }) {
-	const [filtersOpen, setFiltersOpen] = useState(true);
-	const [filters, setFilters] = useQueryStates(itemSearchParamParser);
-
-	const {
-		data: { data, totalPages, totalCount },
-	} = useServerActionQuery(getAllItems, {
-		queryKey: ["getAllItems", filters],
-		input: filters,
-		initialData,
-	});
-
-	const table = useReactTable({
-		data,
-		columns,
-		getCoreRowModel: getCoreRowModel(),
-	});
-
-	const coupledFields = [["minLevel", "maxLevel"]] as const;
-
-	const numToRemove = coupledFields.filter((fields) =>
-		fields.every((f) => filters[f]),
-	).length;
-
-	const numFilters =
-		Object.entries(filters).filter(
-			([k, v]) => !ignoreKeys.includes(k) && v !== null,
-		).length - numToRemove;
-
+export function ItemTable({ data }: { data: AllItemsResponse }) {
 	return (
-		<div className="w-full space-y-4">
-			<Card className="w-full">
-				<Collapsible open={filtersOpen} onOpenChange={setFiltersOpen}>
-					<CollapsibleTrigger className="w-full px-6 py-4 flex justify-start items-center leading-none">
-						Filters
-						{numFilters > 0 && (
-							<Badge variant="secondary" className="ml-3">
-								{numFilters}
-							</Badge>
-						)}
-						<ChevronDown
-							className={cn(
-								"ml-4 h-5 w-5 self-end transition-transform",
-								filtersOpen && "rotate-180",
-							)}
-						/>
-					</CollapsibleTrigger>
-					<CollapsibleContent className="p-4 border-t">
-						<ItemFiltersForm />
-					</CollapsibleContent>
-				</Collapsible>
-			</Card>
-			<div className="flex justify-between">
-				<div className="text-sm text-muted-foreground px-3 flex items-end">
-					Showing {data.length} of {totalCount} results
-				</div>
-				<SortSelect
-					sorts={itemSorts}
-					filters={filters}
-					setFilters={setFilters}
-				/>
-			</div>
-			<div className="rounded-md border">
-				<Table>
-					<TableHeader>
-						{table.getHeaderGroups().map((headerGroup) => (
-							<TableRow key={headerGroup.id}>
-								{headerGroup.headers.map((header) => {
-									return (
-										<TableHead key={header.id}>
-											{header.isPlaceholder
-												? null
-												: flexRender(
-														header.column.columnDef.header,
-														header.getContext(),
-													)}
-										</TableHead>
-									);
-								})}
-							</TableRow>
-						))}
-					</TableHeader>
-					<TableBody>
-						{table.getRowModel().rows?.length ? (
-							table.getRowModel().rows.map((row) => {
-								return (
-									<TableRow
-										key={row.id}
-										aria-expanded={row.getIsExpanded()}
-										onClick={row.getToggleExpandedHandler()}
-									>
-										{row.getVisibleCells().map((cell) => {
-											return (
-												<TableCell
-													key={cell.id}
-													className={cn(
-														"text-lg",
-														cell.column.id === "dropped-by" && "p-0",
-													)}
-												>
-													{flexRender(
-														cell.column.columnDef.cell,
-														cell.getContext(),
-													)}
-												</TableCell>
-											);
-										})}
-									</TableRow>
-								);
-							})
-						) : (
-							<TableRow>
-								<TableCell
-									colSpan={columns.length}
-									className="h-24 text-center"
-								>
-									No results.
-								</TableCell>
-							</TableRow>
-						)}
-					</TableBody>
-				</Table>
-			</div>
-			<Pager
-				page={filters.page}
-				totalPages={totalPages}
-				onChange={setFilters}
-			/>
-		</div>
+		<DataTable
+			title="Items"
+			data={data}
+			columns={columns}
+			filtersComponent={<ItemSearchFilters />}
+			defaultColumnVisibility={
+				{
+					// TBD
+				}
+			}
+		/>
 	);
 }

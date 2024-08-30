@@ -81,23 +81,6 @@ export function Form<TInput extends FieldValues>(
 						try {
 							await handleSubmit(values);
 						} catch (cause) {
-							// TO BE REPLACED
-							// if (cause && cause instanceof TRPCClientError) {
-							// 	const data = cause.data?.zodError as
-							// 		| { fieldErrors: Record<string, string[]> }
-							// 		| undefined;
-							// 	if (data?.fieldErrors) {
-							// 		Object.keys(data.fieldErrors).map((fieldName) => {
-							// 			return form.setError(fieldName as Path<TInput>, {
-							// 				message:
-							// 					data.fieldErrors[fieldName]?.join(", ") ??
-							// 					"Unknown error",
-							// 			});
-							// 		});
-							// 		return;
-							// 	}
-							// }
-
 							form.setError("root", {
 								message: (cause as Error)?.message ?? "Unknown error",
 								type: "server",

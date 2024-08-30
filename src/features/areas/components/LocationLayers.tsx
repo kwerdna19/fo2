@@ -3,8 +3,8 @@ import * as L from "leaflet";
 import Link from "next/link";
 import { LayerGroup, LayersControl, Marker, Popup } from "react-leaflet";
 import { spriteHeight, spriteWidth } from "../../../components/MobSprite";
-import { DropsList } from "../../../components/tables/mobs/DropsList";
-import { MobHealth } from "../../../components/tables/mobs/MobHealth";
+import { DropsList } from "../../mobs/components/DropsList";
+import { MobHealth } from "../../mobs/components/MobHealth";
 import { SaleItemsList } from "../../../components/tables/npcs/SaleItemsList";
 import type { getAreaBySlug } from "../requests";
 

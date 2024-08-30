@@ -145,7 +145,7 @@ export const getPossibleBuildFromItems = (items: Item[]): PossibleBuild => {
 	}, {} as PossibleBuild);
 };
 
-export const LEVEL_CAP = 39;
+export const LEVEL_CAP = 45;
 export const STAT_POINTS_PER_LEVEL = 2;
 export const BASE_BASIC_STAT = 20;
 
