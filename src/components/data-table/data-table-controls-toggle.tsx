@@ -28,11 +28,11 @@ export function DataTableControlsToggle({
 					>
 						{controlsOpen ? (
 							<>
-								<PanelLeftClose className="mr-2 h-4 w-4" /> Hide Controls
+								<PanelLeftClose className="mr-2 h-4 w-4" /> Hide Filters
 							</>
 						) : (
 							<>
-								<PanelLeftOpen className="mr-2 h-4 w-4" /> Show Controls
+								<PanelLeftOpen className="mr-2 h-4 w-4" /> Show Filters
 							</>
 						)}
 					</Button>

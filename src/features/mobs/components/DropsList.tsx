@@ -1,4 +1,5 @@
 "use client";
+import type { Item, Loot } from "@prisma/client";
 import Link from "next/link";
 import { PriceDisplay } from "~/components/PriceDisplay";
 import {
@@ -10,13 +11,17 @@ import {
 import { cn } from "~/utils/styles";
 import { ItemSprite } from "../../../components/ItemSprite";
 
+type Drop = Loot & {
+	item: Pick<Item, "name" | "spriteUrl" | "slug" | "sellPrice">;
+};
+
 export function DropsList({
 	drops,
 	className,
 	infoInToolTip = false,
 	size = "md",
 }: {
-	drops: Datum["drops"];
+	drops: Drop[];
 	className?: string;
 	infoInToolTip?: boolean;
 	size?: "md" | "sm";
@@ -25,11 +30,10 @@ export function DropsList({
 		dropRate: number | null | undefined,
 		sellPrice: number | null,
 	) => (
-		<div className="text-sm pt-1 px-1 flex items-center space-x-1.5">
+		<div className="max-w-24 text-sm flex items-center justify-between space-x-1.5">
 			<div>
 				<PriceDisplay size="xs" count={sellPrice} />
 			</div>
-			<div className="h-4 border-r border-gray-300" />
 			<div>
 				{dropRate ?? "?"}
 				{"%"}
@@ -59,11 +63,21 @@ export function DropsList({
 									/>
 								</Link>
 							</TooltipTrigger>
-							<TooltipContent side="bottom">
-								<div>{d.item.name}</div>
-								{infoInToolTip
-									? getItemInfo(d.dropRate, d.item.sellPrice)
-									: null}
+							<TooltipContent className="min-w-32 space-y-1" side="bottom">
+								<p className="text-sm font-semibold">{d.item.name}</p>
+								<div className="max-w-32">
+									<p className="flex justify-between">
+										<div>Drop Rate</div>
+										<div>
+											{d.dropRate ?? "?"}
+											<span className="pl-0.5">%</span>
+										</div>
+									</p>
+									<p className="flex justify-between">
+										<div>Sell Price</div>
+										<PriceDisplay size="xs" count={d.item.sellPrice} />
+									</p>
+								</div>
 							</TooltipContent>
 						</Tooltip>
 					</TooltipProvider>

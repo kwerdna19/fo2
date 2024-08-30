@@ -1,6 +1,8 @@
 "use client";
 import Link from "next/link";
+import { DurationDisplay } from "~/components/DurationDisplay";
 import { MobSprite } from "~/components/MobSprite";
+import { PriceDisplay } from "~/components/PriceDisplay";
 import {
 	Tooltip,
 	TooltipContent,
@@ -9,36 +11,39 @@ import {
 } from "~/components/ui/tooltip";
 import type { Datum } from "./ItemTable";
 
-export function DroppedByList({ mobs }: { mobs: Datum["droppedBy"] }) {
+export function CraftedByList({ npcs }: { npcs: Datum["craftedBy"] }) {
 	return (
 		<div className="flex items-center h-[64px]">
-			{mobs.map((d) => (
-				<div key={d.mobId}>
+			{npcs.map((d) => (
+				<div key={d.npcId}>
 					<TooltipProvider>
 						<Tooltip delayDuration={0}>
 							<TooltipTrigger className="block pt-1">
 								<Link
 									className="flex justify-center items-center h-[64px] max-h-full overflow-hidden group-hover:overflow-visible"
 									prefetch={false}
-									href={`/mobs/${d.mob.slug}`}
+									href={`/npcs/${d.npc.slug}`}
 								>
 									<MobSprite
-										url={d.mob.spriteUrl}
-										name={d.mob.name}
+										url={d.npc.spriteUrl}
+										name={d.npc.name}
 										size="sm"
-										className="-mt-[12px]"
+										className="-mt-[36px]"
 									/>
 								</Link>
 							</TooltipTrigger>
 							<TooltipContent className="min-w-32 space-y-1" side="bottom">
-								<p className="text-sm font-semibold">{d.mob.name}</p>
-								<p className="flex justify-between max-w-32">
-									<div>Drop Rate</div>
-									<div>
-										{d.dropRate ?? "?"}
-										<span className="pl-0.5">%</span>
-									</div>
-								</p>
+								<p className="text-sm font-semibold">{d.npc.name}</p>
+								<div className="max-w-32">
+									<p className="flex justify-between">
+										<div>Cost</div>
+										<PriceDisplay size="xs" unit={d.unit} count={d.price} />
+									</p>
+									<p className="flex justify-between">
+										<div>Duration</div>
+										<DurationDisplay mins={d.durationMinutes} />
+									</p>
+								</div>
 							</TooltipContent>
 						</Tooltip>
 					</TooltipProvider>

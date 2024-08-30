@@ -50,7 +50,7 @@ export default function MultiAreaMap({
 			maxZoom={1}
 			zoom={-2}
 			crs={L.CRS.Simple}
-			className="border shadow-lg border-slate-500 flex-1 rounded-md w-full max-w-screen-lg min-h-[24rem] box-border"
+			className="border shadow-lg border-slate-500 flex-1 rounded-md w-full max-w-screen-xl min-h-[48rem] box-border"
 			style={{
 				maxHeight: 600,
 				backgroundColor: bg,

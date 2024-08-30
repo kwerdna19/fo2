@@ -1,12 +1,53 @@
+import type { Prisma } from "@prisma/client";
+import type { SearchParams } from "nuqs/parsers";
 import type { z } from "zod";
+import { baseDataTableQuerySchema } from "~/components/data-table/data-table-utils";
 import { db } from "~/server/db";
+import schema from "~/server/db/json-schema.json";
 import { getSlugFromName } from "~/utils/misc";
 import type { npcSchema } from "./schemas";
+import { npcSearchFilterSchema, npcSearchParamCache } from "./search-params";
 
-export async function getAllNpcs() {
-	return db.npc.findMany({
+const requiredFields = schema.definitions.Npc.required;
+const searchFields = ["name", "slug"];
+
+export async function getAllNpcs(searchParams: SearchParams) {
+	const input = npcSearchFilterSchema
+		.and(baseDataTableQuerySchema)
+		.parse(npcSearchParamCache.parse(searchParams));
+
+	const { page, per_page, sort, sort_dir, query } = input;
+
+	const pageIndex = page - 1;
+
+	const isSortFieldRequired = requiredFields.includes(sort);
+
+	const conditions: Prisma.NpcWhereInput[] = [];
+
+	if (query) {
+		conditions.push({
+			OR: searchFields.map((f) => ({
+				[f]: {
+					contains: query,
+				},
+			})),
+		});
+	}
+
+	const where =
+		conditions.length === 1
+			? conditions[0]
+			: conditions.length > 1
+				? {
+						AND: conditions,
+					}
+				: {};
+
+	const data = await db.npc.findMany({
 		orderBy: {
-			name: "asc",
+			[sort]: isSortFieldRequired
+				? sort_dir
+				: { sort: sort_dir, nulls: "last" },
 		},
 		include: {
 			items: {
@@ -41,7 +82,19 @@ export async function getAllNpcs() {
 				],
 			},
 		},
+		where,
+		take: per_page,
+		skip: pageIndex * per_page,
 	});
+
+	const totalCount = await db.npc.count({ where });
+
+	return {
+		data,
+		totalCount,
+		page: pageIndex + 1,
+		totalPages: Math.ceil(totalCount / per_page),
+	};
 }
 
 export async function getNpcById(id: string) {

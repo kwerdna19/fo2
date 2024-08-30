@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useQueryStates } from "nuqs";
 import { TbCrown as Crown } from "react-icons/tb";
 import SortButton from "~/components/SortButton";
+import { useDataTableQueryParams } from "~/components/data-table/use-data-table-query";
 import RangeField from "~/components/form/RangeField";
 import { TextField } from "~/components/form/TextField";
 import {
@@ -38,7 +39,7 @@ const columns: ColumnDef<Datum, any>[] = [
 			<Link
 				prefetch={false}
 				href={`/mobs/${row.original.slug}`}
-				className="flex justify-center items-center h-[62px] max-h-full overflow-hidden group-hover:overflow-visible"
+				className="flex justify-center items-center h-[64px] max-h-full overflow-hidden group-hover:overflow-visible"
 			>
 				<MobSprite
 					url={row.original.spriteUrl}
@@ -158,6 +159,7 @@ const columns: ColumnDef<Datum, any>[] = [
 
 function MobSearchFilters() {
 	const [filters, setFilters] = useQueryStates(mobSearchParamParser);
+	const { resetPage } = useDataTableQueryParams();
 
 	const form = useZodForm({
 		schema: mobSearchFilterSchema,
@@ -166,7 +168,10 @@ function MobSearchFilters() {
 
 	return (
 		<Form
-			handleSubmit={setFilters}
+			handleSubmit={(f) => {
+				resetPage();
+				setFilters(f);
+			}}
 			persist
 			form={form}
 			className="flex-1 flex h-full flex-col gap-y-8"

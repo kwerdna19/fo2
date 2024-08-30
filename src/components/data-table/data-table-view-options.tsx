@@ -28,9 +28,10 @@ export function DataTableViewOptions<TData>({
 					View
 				</Button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent align="end" className="w-[150px]">
-				<DropdownMenuLabel>Display properties</DropdownMenuLabel>
-				<DropdownMenuSeparator />
+			<DropdownMenuContent
+				align="end"
+				className="w-[160px] max-h-72 overflow-y-auto"
+			>
 				{table
 					.getAllColumns()
 					.filter(

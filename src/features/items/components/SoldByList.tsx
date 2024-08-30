@@ -16,29 +16,34 @@ export function SoldByList({
 	className,
 }: { npcs: Datum["soldBy"]; className?: string }) {
 	return (
-		<div className={cn("flex flex-wrap items-center gap-x-4", className)}>
+		<div className={cn("flex flex-wrap items-center", className)}>
 			{npcs.map((d) => (
 				<div key={d.npcId}>
 					<TooltipProvider>
 						<Tooltip delayDuration={0}>
 							<TooltipTrigger className="block pt-1">
-								<Link prefetch={false} href={`/npcs/${d.npc.slug}`}>
+								<Link
+									className="flex justify-center items-center h-[64px] max-h-full overflow-hidden group-hover:overflow-visible"
+									prefetch={false}
+									href={`/npcs/${d.npc.slug}`}
+								>
 									<MobSprite
 										url={d.npc.spriteUrl}
 										name={d.npc.name}
 										size="sm"
-										className="pb-4 -mt-8"
+										className="-mt-[36px]"
 									/>
 								</Link>
 							</TooltipTrigger>
-							<TooltipContent side="bottom">
-								<p>{d.npc.name}</p>
+							<TooltipContent className="min-w-32 space-y-1" side="bottom">
+								<p className="text-sm font-semibold">{d.npc.name}</p>
+								<p className="flex justify-between max-w-32">
+									<div>Buy Price</div>
+									<PriceDisplay count={d.price} size="xs" />
+								</p>
 							</TooltipContent>
 						</Tooltip>
 					</TooltipProvider>
-					<div className="text-sm pb-1 -mt-3 px-1 flex justify-center space-x-1">
-						<PriceDisplay count={d.price} size="xs" />
-					</div>
 				</div>
 			))}
 		</div>

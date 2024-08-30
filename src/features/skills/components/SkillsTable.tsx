@@ -1,49 +1,33 @@
 "use client";
 
-import {
-	type ColumnFiltersState,
-	type SortingState,
-	createColumnHelper,
-	flexRender,
-	getCoreRowModel,
-	getExpandedRowModel,
-	getFilteredRowModel,
-	getSortedRowModel,
-	useReactTable,
-} from "@tanstack/react-table";
+import { createColumnHelper } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
-import { useState } from "react";
-import { DebouncedInput } from "~/components/DebouncedInput";
 import { ItemSprite } from "~/components/ItemSprite";
-import { getSortButton } from "~/components/SortButton";
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from "~/components/ui/table";
+import SortButton from "~/components/SortButton";
+import { DataTable } from "~/components/data-table/data-table";
 import { ItemRequiredStats } from "~/features/items/components/ItemRequiredStats";
 import { ItemStats } from "~/features/items/components/ItemStats";
-import { cn } from "~/utils/styles";
 import type { getAllSkills } from "../requests";
 
-type Data = Awaited<ReturnType<typeof getAllSkills>>;
+type AllSkillsResponse = Awaited<ReturnType<typeof getAllSkills>>;
 
-export type Datum = Data[number];
+export type Datum = AllSkillsResponse["data"][number];
 const columnHelper = createColumnHelper<Datum>();
 
 export const columns = [
 	columnHelper.display({
 		id: "sprite",
-		header: () => null,
 		cell: ({ row }) => (
-			<Link prefetch={false} href={`/skills/${row.original.slug}`}>
+			<Link
+				className="flex justify-center"
+				prefetch={false}
+				href={`/skills/${row.original.slug}`}
+			>
 				<ItemSprite
 					url={row.original.spriteUrl}
 					name={row.original.name}
-					size="md"
+					size="sm"
 					bg
 				/>
 			</Link>
@@ -55,14 +39,22 @@ export const columns = [
 				{info.getValue()}
 			</Link>
 		),
-		header: getSortButton("Name"),
+		header: SortButton,
+		meta: {
+			sortFieldReplacement: "slug",
+		},
+	}),
+	columnHelper.accessor("slug", {
+		meta: {
+			hidden: true,
+		},
 	}),
 	columnHelper.accessor("rank", {
-		header: getSortButton("Rank"),
+		header: SortButton,
 	}),
 	columnHelper.display({
-		id: "effect",
-		header: "Effect",
+		id: "stats",
+		header: "Stats",
 		cell: ({ row }) => <ItemStats stats={row.original} />,
 	}),
 	columnHelper.display({
@@ -70,104 +62,17 @@ export const columns = [
 		header: "Req Stats",
 		cell: ({ row }) => <ItemRequiredStats stats={row.original} />,
 	}),
-];
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+] as ColumnDef<Datum, any>[];
 
-export function SkillTable({ data }: { data: Data }) {
-	const [sorting, setSorting] = useState<SortingState>([]);
-
-	const [globalFilter, setGlobalFilter] = useState("");
-	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-
-	const table = useReactTable({
-		data: data ?? [],
-		columns,
-		onSortingChange: setSorting,
-		onColumnFiltersChange: setColumnFilters,
-		onGlobalFilterChange: setGlobalFilter,
-		getCoreRowModel: getCoreRowModel(),
-		// getPaginationRowModel: getPaginationRowModel(),
-		getExpandedRowModel: getExpandedRowModel(),
-		getSortedRowModel: getSortedRowModel(),
-		getFilteredRowModel: getFilteredRowModel(),
-		getRowCanExpand: () => true,
-		state: {
-			sorting,
-			columnFilters,
-			globalFilter,
-		},
-	});
-
+export function SkillTable({ data }: { data: AllSkillsResponse }) {
 	return (
-		<div className="w-full">
-			<div className="flex items-center mb-4 gap-8">
-				<DebouncedInput
-					placeholder="Filter by mob or item..."
-					value={globalFilter ?? ""}
-					onChange={(value) => setGlobalFilter(String(value))}
-					className="max-w-sm"
-				/>
-			</div>
-			<div className="rounded-md border">
-				<Table>
-					<TableHeader>
-						{table.getHeaderGroups().map((headerGroup) => (
-							<TableRow key={headerGroup.id}>
-								{headerGroup.headers.map((header) => {
-									return (
-										<TableHead key={header.id}>
-											{header.isPlaceholder
-												? null
-												: flexRender(
-														header.column.columnDef.header,
-														header.getContext(),
-													)}
-										</TableHead>
-									);
-								})}
-							</TableRow>
-						))}
-					</TableHeader>
-					<TableBody>
-						{table.getRowModel().rows?.length ? (
-							table.getRowModel().rows.map((row) => {
-								return (
-									<TableRow
-										key={row.id}
-										aria-expanded={row.getIsExpanded()}
-										onClick={row.getToggleExpandedHandler()}
-									>
-										{row.getVisibleCells().map((cell) => {
-											return (
-												<TableCell
-													key={cell.id}
-													className={cn(
-														"text-lg",
-														cell.column.id === "dropped-by" && "p-0",
-													)}
-												>
-													{flexRender(
-														cell.column.columnDef.cell,
-														cell.getContext(),
-													)}
-												</TableCell>
-											);
-										})}
-									</TableRow>
-								);
-							})
-						) : (
-							<TableRow>
-								<TableCell
-									colSpan={columns.length}
-									className="h-24 text-center"
-								>
-									No results.
-								</TableCell>
-							</TableRow>
-						)}
-					</TableBody>
-				</Table>
-			</div>
-		</div>
+		<DataTable
+			title="Skills"
+			data={data}
+			columns={columns}
+			// filtersComponent={<MobSearchFilters />}
+			// defaultColumnVisibility={{}}
+		/>
 	);
 }

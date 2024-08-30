@@ -1,24 +1,101 @@
-import { type EquippableType, type SkillType, Unit } from "@prisma/client";
+import type { Prisma, SkillType } from "@prisma/client";
 import type { z } from "zod";
 import { db } from "~/server/db";
 import { getSlugFromName } from "~/utils/misc";
 import type { skillSchema } from "./schemas";
 
-export async function getAllSkills() {
-	return db.skill.findMany({
-		orderBy: [
-			{
-				slug: "asc",
-			},
-			{
-				rank: "asc",
-			},
-		],
+import type { SearchParams } from "nuqs/parsers";
+import { baseDataTableQuerySchema } from "~/components/data-table/data-table-utils";
+import schema from "~/server/db/json-schema.json";
+import {
+	skillSearchFilterSchema,
+	skillSearchParamCache,
+} from "./search-params";
+
+const requiredFields = schema.definitions.Skill.required;
+const searchFields = ["name", "slug"];
+
+export async function getAllSkills(searchParams: SearchParams) {
+	const input = skillSearchFilterSchema
+		.and(baseDataTableQuerySchema)
+		.parse(skillSearchParamCache.parse(searchParams));
+
+	const { page, per_page, sort, sort_dir, query } = input;
+
+	const pageIndex = page - 1;
+
+	const isSortFieldRequired = requiredFields.includes(sort);
+
+	const conditions: Prisma.SkillWhereInput[] = [];
+
+	if (query) {
+		conditions.push({
+			OR: searchFields.map((f) => ({
+				[f]: {
+					contains: query,
+				},
+			})),
+		});
+	}
+
+	const where =
+		conditions.length === 1
+			? conditions[0]
+			: conditions.length > 1
+				? {
+						AND: conditions,
+					}
+				: {};
+
+	const orderBy: Prisma.SkillOrderByWithRelationInput[] = [
+		{
+			[sort]: isSortFieldRequired
+				? sort_dir
+				: { sort: sort_dir, nulls: "last" },
+		},
+	];
+
+	if (sort === "slug") {
+		orderBy.push({
+			rank: sort_dir,
+		});
+	}
+
+	const data = await db.skill.findMany({
+		orderBy: orderBy,
 		include: {
 			items: true,
 		},
+		where,
+		take: per_page,
+		skip: pageIndex * per_page,
 	});
+
+	const totalCount = await db.skill.count({ where });
+
+	return {
+		data,
+		totalCount,
+		page: pageIndex + 1,
+		totalPages: Math.ceil(totalCount / per_page),
+	};
 }
+
+// export async function getAllSkills() {
+// 	return db.skill.findMany({
+// 		orderBy: [
+// 			{
+// 				slug: "asc",
+// 			},
+// 			{
+// 				rank: "asc",
+// 			},
+// 		],
+// 		include: {
+// 			items: true,
+// 		},
+// 	});
+// }
 
 export async function getSkillById(id: string) {
 	return db.skill.findUniqueOrThrow({
