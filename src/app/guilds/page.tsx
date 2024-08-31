@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import { User } from "lucide-react";
 import Link from "next/link";
 import { PriceDisplay } from "~/components/PriceDisplay";
@@ -10,6 +11,8 @@ export const metadata = {
 };
 
 const xApiKey = env.FO_API_KEY;
+
+export const revalidate = 3600;
 
 export default async function Guilds() {
 	const topGuilds = await GuildService.getGuildLeaderboard({ xApiKey });
@@ -24,8 +27,8 @@ export default async function Guilds() {
 	);
 
 	return (
-		<div className="w-full space-y-8">
-			<div className="flex gap-x-4">
+		<div className="w-full">
+			<div className="pb-4">
 				<h2 className="text-3xl">Guilds</h2>
 			</div>
 			<div className="space-y-3 max-w-screen-sm w-full pb-8">
@@ -57,6 +60,9 @@ export default async function Guilds() {
 					);
 				})}
 			</div>
+			<p className="text-sm text-muted-foreground px-2">
+				Last Updated: {format(new Date(), "Pp")}
+			</p>
 		</div>
 	);
 }

@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import { User } from "lucide-react";
 import { notFound } from "next/navigation";
 import { MobSprite } from "~/components/MobSprite";
@@ -20,6 +21,8 @@ export async function generateMetadata({ params }: { params: Params }) {
 }
 
 const xApiKey = env.FO_API_KEY;
+
+export const revalidate = 3600;
 
 export async function generateStaticParams() {
 	const guilds = await GuildService.getGuildLeaderboard({ xApiKey });
@@ -82,7 +85,8 @@ export default async function Guild({ params }: { params: Params }) {
 				),
 			};
 		})
-		.sort((a, b) => b.rankId - a.rankId);
+		.sort((a, b) => b.rankId - a.rankId)
+		.filter((g) => g.members.length > 0);
 
 	const rank = leaderBoard.findIndex((l) => l.Name === info.Name) + 1;
 
@@ -146,6 +150,10 @@ export default async function Guild({ params }: { params: Params }) {
 						);
 					})}
 				</div>
+
+				<p className="text-sm text-muted-foreground px-2">
+					Last Updated: {format(new Date(), "Pp")}
+				</p>
 			</div>
 		</TooltipProvider>
 	);
