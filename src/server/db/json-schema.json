@@ -737,9 +737,11 @@
           "originalType": "Int"
         },
         "sellPriceUnit": {
-          "type": "string",
+          "type": [
+            "string",
+            "null"
+          ],
           "originalType": "Unit",
-          "default": "COINS",
           "enum": [
             "GEMS",
             "COINS"

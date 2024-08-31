@@ -214,7 +214,7 @@ model Item {
   twoHand            Boolean?
   consumable         Boolean          @default(false)
   sellPrice          Int?
-  sellPriceUnit      Unit             @default(COINS)
+  sellPriceUnit      Unit?
   stackSize          Int              @default(1)
   droppedBy          Loot[]
   soldBy             NpcSale[]
