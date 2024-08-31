@@ -5,14 +5,17 @@ import { UnitSprite } from "./UnitSprite";
 
 export const getNumberDisplay = (
 	count: number | string | [number, number],
-	fractionDigits = 1,
+	ops?: {
+		fractionDigits?: number;
+		notation?: "standard" | "compact";
+	},
 ) => {
 	if (typeof count === "string") {
 		return count;
 	}
 	const formatter = Intl.NumberFormat("en-US", {
-		notation: "compact",
-		maximumFractionDigits: fractionDigits,
+		notation: ops?.notation ?? "compact",
+		maximumFractionDigits: ops?.fractionDigits ?? 1,
 	});
 	if (Array.isArray(count)) {
 		return `${formatter.format(count[0])}-${formatter.format(count[1])}`;
@@ -25,11 +28,13 @@ export function PriceDisplay({
 	className,
 	size = "sm",
 	unit = "COINS",
+	...ops
 }: {
 	count: number | null | string | [number, number];
 	className?: string;
 	size?: "sm" | "xs";
 	unit?: Unit;
+	notation?: "standard" | "compact";
 }) {
 	if (count === null) {
 		return null;
@@ -44,7 +49,7 @@ export function PriceDisplay({
 			)}
 		>
 			<UnitSprite type={unit} size={size} />
-			{getNumberDisplay(count)}
+			{getNumberDisplay(count, ops)}
 		</div>
 	);
 }

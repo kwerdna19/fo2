@@ -22,14 +22,6 @@ plugin prisma {
   output = './generated.prisma'
 }
 
-plugin openapi {
-  title = 'FO2DB'
-  provider = '@zenstackhq/openapi'
-  flavor = 'rest'
-  prefix = '/api/rest'
-  output = './open-api.json'
-}
-
 model Mob {
   id           String     @id @default(cuid())
   createdAt    DateTime   @default(now())

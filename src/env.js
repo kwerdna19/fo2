@@ -33,7 +33,7 @@ export const env = createEnv({
 	 * `NEXT_PUBLIC_`.
 	 */
 	client: {
-		NEXT_PUBLIC_FULL_URL: z.string().url(),
+		// NEXT_PUBLIC_FULL_URL: z.string().url(),
 	},
 
 	/**
@@ -50,7 +50,7 @@ export const env = createEnv({
 		NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
 		AUTH_URL: process.env.AUTH_URL,
 		FO_API_KEY: process.env.FO_API_KEY,
-		NEXT_PUBLIC_FULL_URL: process.env.NEXT_PUBLIC_FULL_URL,
+		// NEXT_PUBLIC_FULL_URL: process.env.NEXT_PUBLIC_FULL_URL,
 	},
 	/**
 	 * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.
