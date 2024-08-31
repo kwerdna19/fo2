@@ -66,17 +66,17 @@ export function DropsList({
 							<TooltipContent className="min-w-32 space-y-1" side="bottom">
 								<p className="text-sm font-semibold">{d.item.name}</p>
 								<div className="max-w-32">
-									<p className="flex justify-between">
-										<div>Drop Rate</div>
+									<div className="flex justify-between">
+										<p>Drop Rate</p>
 										<div>
 											{d.dropRate ?? "?"}
 											<span className="pl-0.5">%</span>
 										</div>
-									</p>
-									<p className="flex justify-between">
-										<div>Sell Price</div>
+									</div>
+									<div className="flex justify-between">
+										<p>Sell Price</p>
 										<PriceDisplay size="xs" count={d.item.sellPrice} />
-									</p>
+									</div>
 								</div>
 							</TooltipContent>
 						</Tooltip>

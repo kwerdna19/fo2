@@ -36,7 +36,7 @@ export default function SingleAreaMap({
 			zoom={-2}
 			crs={L.CRS.Simple}
 			className={cn(
-				"border shadow-lg border-slate-500 flex-1 rounded-md w-full max-w-screen-lg h-full min-h-[44rem] box-border",
+				"border shadow-lg border-slate-500 flex-1 rounded-md w-full max-w-screen-lg min-h-[44rem] box-border",
 				className,
 			)}
 			style={{
