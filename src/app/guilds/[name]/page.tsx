@@ -23,14 +23,14 @@ const xApiKey = env.FO_API_KEY;
 
 export async function generateStaticParams() {
 	const guilds = await GuildService.getGuildLeaderboard({ xApiKey });
-	return guilds.map((g) => ({
-		name: encodeURI(g.Name as string),
+	const params = guilds.map((g) => ({
+		name: g.Name,
 	}));
+	return params;
 }
 
 export default async function Guild({ params }: { params: Params }) {
 	const name = decodeURI(params.name);
-
 	const info = await GuildService.getGuildDetails({
 		xApiKey,
 		requestBody: { name },
