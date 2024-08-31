@@ -32,13 +32,13 @@ export function DroppedByList({ mobs }: { mobs: Datum["droppedBy"] }) {
 							</TooltipTrigger>
 							<TooltipContent className="min-w-32 space-y-1" side="bottom">
 								<p className="text-sm font-semibold">{d.mob.name}</p>
-								<p className="flex justify-between max-w-32">
-									<div>Drop Rate</div>
+								<div className="flex justify-between max-w-32">
+									<p>Drop Rate</p>
 									<div>
 										{d.dropRate ?? "?"}
 										<span className="pl-0.5">%</span>
 									</div>
-								</p>
+								</div>
 							</TooltipContent>
 						</Tooltip>
 					</TooltipProvider>

@@ -179,13 +179,9 @@ export default async function Item({ params }: { params: Params }) {
 						<Badge>Consumable</Badge>
 					</div>
 				) : null}
-				<form action={addToCollectionAction}>
+				{/* <form action={addToCollectionAction}>
 					<FormButton variant="outline">Add to Collection</FormButton>
-					{/* <QueryParamToast
-						name="added"
-						success={`Added ${item.name} to collection`}
-					/> */}
-				</form>
+				</form> */}
 			</div>
 
 			<div className="lg:col-span-3 py-2">

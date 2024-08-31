@@ -35,14 +35,14 @@ export function CraftedByList({ npcs }: { npcs: Datum["craftedBy"] }) {
 							<TooltipContent className="min-w-32 space-y-1" side="bottom">
 								<p className="text-sm font-semibold">{d.npc.name}</p>
 								<div className="max-w-32">
-									<p className="flex justify-between">
-										<div>Cost</div>
+									<div className="flex justify-between">
+										<p>Cost</p>
 										<PriceDisplay size="xs" unit={d.unit} count={d.price} />
-									</p>
-									<p className="flex justify-between">
-										<div>Duration</div>
+									</div>
+									<div className="flex justify-between">
+										<p>Duration</p>
 										<DurationDisplay mins={d.durationMinutes} />
-									</p>
+									</div>
 								</div>
 							</TooltipContent>
 						</Tooltip>

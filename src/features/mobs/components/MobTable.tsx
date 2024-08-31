@@ -69,11 +69,7 @@ const columns: ColumnDef<Datum, any>[] = [
 	columnHelper.accessor("boss", {
 		header: SortButton,
 		cell: ({ row }) =>
-			row.original.boss ? (
-				<div className="flex justify-center">
-					<Crown className="h-5 w-5 text-yellow-600" />
-				</div>
-			) : null,
+			row.original.boss ? <Crown className="h-5 w-5 text-yellow-600" /> : null,
 	}),
 	columnHelper.display({
 		id: "gold",

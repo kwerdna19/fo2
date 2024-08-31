@@ -37,10 +37,10 @@ export function SoldByList({
 							</TooltipTrigger>
 							<TooltipContent className="min-w-32 space-y-1" side="bottom">
 								<p className="text-sm font-semibold">{d.npc.name}</p>
-								<p className="flex justify-between max-w-32">
-									<div>Buy Price</div>
+								<div className="flex justify-between max-w-32">
+									<p>Buy Price</p>
 									<PriceDisplay count={d.price} size="xs" />
-								</p>
+								</div>
 							</TooltipContent>
 						</Tooltip>
 					</TooltipProvider>

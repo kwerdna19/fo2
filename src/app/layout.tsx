@@ -43,6 +43,7 @@ export default function RootLayout({
 				"scroll-smooth antialiased",
 				"[font-feature-settings:'ss01']",
 			)}
+			suppressHydrationWarning
 		>
 			<body className="flex min-h-screen flex-col bg-background">
 				<ReactQueryProvider>

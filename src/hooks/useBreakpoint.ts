@@ -10,7 +10,7 @@ const {
 } = fullConfig;
 export function useBreakpoint(query: keyof typeof screens) {
 	const mediaQuery = `(min-width: ${screens[query]})`;
-	const [isMatch, setMatch] = useState<boolean>(false);
+	const [isMatch, setMatch] = useState<boolean | null>(null);
 
 	useEffect(() => {
 		const matchQueryList = window.matchMedia(mediaQuery);

@@ -13,6 +13,7 @@ import {
 	ChevronsRight,
 } from "lucide-react";
 import { Fragment, type ReactNode, useState } from "react";
+import { useLocalStorage } from "usehooks-ts";
 import { Button } from "~/components/ui/button";
 import {
 	Select,
@@ -30,7 +31,7 @@ import {
 	TableRow,
 } from "~/components/ui/table";
 import { cn } from "~/utils/styles";
-import { DataTableControlsToggle } from "./data-table-controls-toggle";
+import { DataTableFiltersToggle } from "./data-table-filters-toggle";
 import { DataTableSearchBar } from "./data-table-search-bar";
 import { DataTableSideBar } from "./data-table-sidebar";
 import { pageSizeOptions } from "./data-table-utils";
@@ -52,9 +53,19 @@ export function DataTable<T, Data extends { totalCount: number; data: T[] }>({
 }) {
 	const { totalCount, data: rows } = data;
 
-	const [showControls, setShowControls] = useState(Boolean(filtersComponent));
+	const [sidebar, setSidebar] = useState(true);
+	const [drawer, setDrawer] = useState(false);
+
+	const hasFilters = Boolean(filtersComponent);
+
 	const { pagination, setPagination, sorting, setSorting, search, setSearch } =
 		useDataTableQueryParams();
+
+	const [columnVisibility, setColumnVisibility] = useLocalStorage(
+		`${title}-col-vis`,
+		defaultColumnVisibility ?? {},
+		{ initializeWithValue: false },
+	);
 
 	const table = useReactTable({
 		data: rows,
@@ -65,35 +76,35 @@ export function DataTable<T, Data extends { totalCount: number; data: T[] }>({
 		onPaginationChange: setPagination,
 		manualPagination: true,
 		manualSorting: true,
-		initialState: {
-			columnVisibility: defaultColumnVisibility,
-		},
+		onColumnVisibilityChange: setColumnVisibility,
 		state: {
 			pagination,
 			sorting,
+			columnVisibility,
 		},
 	});
 
 	return (
 		<div className="flex w-full gap-3">
-			{filtersComponent ? (
-				<DataTableSideBar
-					open={showControls}
-					setOpen={setShowControls}
-					title={`Filter ${title}`}
-				>
-					{filtersComponent}
-				</DataTableSideBar>
-			) : null}
-
+			<DataTableSideBar
+				title={`Filter ${title}`}
+				sideBarOpen={sidebar}
+				setSideBarOpen={setSidebar}
+				setDrawerOpen={setDrawer}
+				drawerOpen={drawer}
+			>
+				{filtersComponent}
+			</DataTableSideBar>
 			<div className="flex max-w-full flex-1 flex-col gap-4 overflow-hidden px-1 pb-1">
 				<DataTableSearchBar search={search} setSearch={setSearch} />
 				<div className="flex items-center gap-x-6 gap-y-2 justify-between flex-wrap">
 					<div className="flex items-center gap-x-8">
-						{filtersComponent ? (
-							<DataTableControlsToggle
-								controlsOpen={showControls}
-								setControlsOpen={setShowControls}
+						{hasFilters ? (
+							<DataTableFiltersToggle
+								setSideBarOpen={setSidebar}
+								sideBarOpen={sidebar}
+								setDrawerOpen={setDrawer}
+								drawerOpen={drawer}
 							/>
 						) : null}
 						<div className="text-sm text-muted-foreground px-2">
