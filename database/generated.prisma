@@ -15,7 +15,7 @@ generator client {
 
 generator jsonSchema {
   provider                 = "prisma-json-schema-generator"
-  output                   = "./"
+  output                   = "../src/server/db"
   includeRequiredFields    = "true"
   keepRelationFields       = "true"
   persistOriginalType      = "true"
@@ -45,6 +45,13 @@ enum EquippableType {
   COSMETIC_SHOULDERS
   COSMETIC_CHEST
   COSMETIC_LEGS
+}
+
+enum Stat {
+  STR
+  AGI
+  STA
+  INT
 }
 
 enum SkillType {
@@ -190,49 +197,53 @@ model Loot {
 }
 
 model Item {
-  id              String           @id() @default(cuid())
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @default(now()) @updatedAt()
-  name            String           @unique()
-  slug            String           @unique()
-  desc            String?
-  note            String?
-  spriteUrl       String
-  equip           EquippableType?
-  levelReq        Int?
-  globalLoot      Boolean?
-  twoHand         Boolean?
-  consumable      Boolean          @default(false)
-  sellPrice       Int?
-  stackSize       Int              @default(1)
-  droppedBy       Loot[]
-  soldBy          NpcSale[]
-  craftedBy       NpcCraft[]
-  usages          ItemQuantity[]
-  battlePassTiers BattlePassTier[]
-  battlePass      BattlePass?
-  skillId         String?
-  skillInfo       Skill?           @relation(fields: [skillId], references: [id])
-  areaId          String?
-  area            Area?            @relation(name: "teleport-items", fields: [areaId], references: [id])
-  availableStart  DateTime?
-  availableEnd    DateTime?
-  inGameId        Int?
-  reqStr          Int?
-  reqSta          Int?
-  reqAgi          Int?
-  reqInt          Int?
-  range           Int?
-  str             Int?
-  sta             Int?
-  agi             Int?
-  int             Int?
-  armor           Int?
-  atkSpeed        Float?
-  dmgMin          Int?
-  dmgMax          Int?
-  artist          String?
-  collections     CollectionItem[]
+  id                 String           @id() @default(cuid())
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @default(now()) @updatedAt()
+  name               String           @unique()
+  slug               String           @unique()
+  desc               String?
+  note               String?
+  spriteUrl          String
+  equip              EquippableType?
+  levelReq           Int?
+  globalLoot         Boolean?
+  globalLootDropRate Float?
+  tier               Int?
+  tierStat           Stat?
+  twoHand            Boolean?
+  consumable         Boolean          @default(false)
+  sellPrice          Int?
+  sellPriceUnit      Unit             @default(COINS)
+  stackSize          Int              @default(1)
+  droppedBy          Loot[]
+  soldBy             NpcSale[]
+  craftedBy          NpcCraft[]
+  usages             ItemQuantity[]
+  battlePassTiers    BattlePassTier[]
+  battlePass         BattlePass?
+  skillId            String?
+  skillInfo          Skill?           @relation(fields: [skillId], references: [id])
+  areaId             String?
+  area               Area?            @relation(name: "teleport-items", fields: [areaId], references: [id])
+  availableStart     DateTime?
+  availableEnd       DateTime?
+  inGameId           Int?
+  reqStr             Int?
+  reqSta             Int?
+  reqAgi             Int?
+  reqInt             Int?
+  range              Int?
+  str                Int?
+  sta                Int?
+  agi                Int?
+  int                Int?
+  armor              Int?
+  atkSpeed           Float?
+  dmgMin             Int?
+  dmgMax             Int?
+  artist             String?
+  collections        CollectionItem[]
 }
 
 model Location {

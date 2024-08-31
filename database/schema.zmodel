@@ -195,67 +195,79 @@ enum EquippableType {
   COSMETIC_LEGS
 }
 
+enum Stat {
+  STR
+  AGI
+  STA
+  INT
+}
+
 model Item {
-  id              String           @id @default(cuid())
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt @default(now())
-  name            String           @unique()
-  slug            String           @unique()
-  desc            String?
-  note            String?
-  spriteUrl       String
-  equip           EquippableType?
-  levelReq        Int?
+  id                 String           @id @default(cuid())
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt @default(now())
+  name               String           @unique()
+  slug               String           @unique()
+  desc               String?
+  note               String?
+  spriteUrl          String
+  equip              EquippableType?
+  levelReq           Int?
 
-  globalLoot      Boolean?
-  twoHand         Boolean?
-  consumable      Boolean          @default(false)
-  sellPrice       Int?
-  stackSize       Int              @default(1)
-  droppedBy       Loot[]
-  soldBy          NpcSale[]
-  craftedBy       NpcCraft[]
+  globalLoot         Boolean?
+  globalLootDropRate Float?
+  tier               Int?
+  tierStat           Stat?
 
-  usages          ItemQuantity[]
+  twoHand            Boolean?
+  consumable         Boolean          @default(false)
+  sellPrice          Int?
+  sellPriceUnit      Unit             @default(COINS)
+  stackSize          Int              @default(1)
+  droppedBy          Loot[]
+  soldBy             NpcSale[]
+  craftedBy          NpcCraft[]
 
-  battlePassTiers BattlePassTier[]
+  usages             ItemQuantity[]
+
+  battlePassTiers    BattlePassTier[]
 
   // for the item that unlocks the battlepass
-  battlePass      BattlePass?
+  battlePass         BattlePass?
 
   // for items that provide a skill
-  skillId         String?
-  skillInfo       Skill?           @relation(fields: [skillId], references: [id])
+  skillId            String?
+  skillInfo          Skill?           @relation(fields: [skillId], references: [id])
 
   // for items that TP to area
-  areaId          String?
-  area            Area?            @relation(name: "teleport-items", fields: [areaId], references: [id])
+  areaId             String?
+  area               Area?            @relation(name: "teleport-items", fields: [areaId], references: [id])
 
-  availableStart  DateTime?
-  availableEnd    DateTime?
+  availableStart     DateTime?
+  availableEnd       DateTime?
 
-  inGameId        Int?
+  inGameId           Int?
 
   // stats - requirements
-  reqStr          Int?
-  reqSta          Int?
-  reqAgi          Int?
-  reqInt          Int?
+  reqStr             Int?
+  reqSta             Int?
+  reqAgi             Int?
+  reqInt             Int?
 
   // stats - for equipable
-  range           Int?
-  str             Int?
-  sta             Int?
-  agi             Int?
-  int             Int?
-  armor           Int?
-  atkSpeed        Float?
-  dmgMin          Int?
-  dmgMax          Int?
+  range              Int?
+  str                Int?
+  sta                Int?
+  agi                Int?
+  int                Int?
+  armor              Int?
+  atkSpeed           Float?
+  dmgMin             Int?
+  dmgMax             Int?
 
-  artist          String?
+  artist             String?
 
-  collections     CollectionItem[]
+  collections        CollectionItem[]
 }
 
 model Location {

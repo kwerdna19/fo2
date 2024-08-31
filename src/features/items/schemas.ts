@@ -40,6 +40,7 @@ export const itemSchema = z.object({
 	twoHand: z.boolean().optional(),
 	consumable: z.boolean().optional(),
 	sellPrice: z.number().int().optional(),
+	sellPriceUnit: z.nativeEnum(Unit).optional(),
 	stackSize: z.number().int(),
 
 	globalLoot: z.boolean().optional(),

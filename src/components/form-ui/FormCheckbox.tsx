@@ -18,7 +18,7 @@ export default function FormCheckbox({
 				className="block"
 				{...getInputProps(field, { type: "checkbox" })}
 				key={field.key}
-				type={undefined}
+				type="button"
 			/>
 			{/* {placeholder && !errMessage ? <p id={`${id}-desc`} className="text-sm font-medium text-muted-foreground">
         {placeholder}
