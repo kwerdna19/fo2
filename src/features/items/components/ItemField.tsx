@@ -13,9 +13,9 @@ import { Button } from "~/components/ui/button";
 import {
 	Command,
 	CommandEmpty,
-	CommandGroup,
 	CommandInput,
 	CommandItem,
+	CommandList,
 } from "~/components/ui/command";
 import {
 	Popover,
@@ -35,13 +35,13 @@ export function ItemField({
 }) {
 	const control = useInputControl(field);
 	const [open, setOpen] = useState(false);
-
 	const selectedItem = items.find((item) => item.id === control.value);
 
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>
 				<Button
+					type="button"
 					variant="outline"
 					role="combobox"
 					aria-expanded={open}
@@ -58,12 +58,12 @@ export function ItemField({
 			>
 				<Command>
 					<CommandInput placeholder="Search items..." />
-					<CommandEmpty>No items found.</CommandEmpty>
-					<CommandGroup className="max-h-48 overflow-auto">
+					<CommandList className="max-h-48 overflow-auto">
+						<CommandEmpty>No items found.</CommandEmpty>
 						{items.map((item) => (
 							<CommandItem
 								key={item.id}
-								value={item.name}
+								value={item.name ?? ""}
 								onSelect={() => {
 									control.change(item.id);
 									setOpen(false);
@@ -86,7 +86,7 @@ export function ItemField({
 								</div>
 							</CommandItem>
 						))}
-					</CommandGroup>
+					</CommandList>
 				</Command>
 			</PopoverContent>
 			<ControlledHiddenField field={field} value={control.value} />

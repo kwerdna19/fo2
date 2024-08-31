@@ -23,7 +23,7 @@ export default function LoginCard() {
 					{providers.map((p) => {
 						return (
 							<Button
-								onClick={() => void signIn(p.id)}
+								onClick={() => signIn(p.id)}
 								key={p.id}
 								variant="outline"
 								className="gap-x-3"

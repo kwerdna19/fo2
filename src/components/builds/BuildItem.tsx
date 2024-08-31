@@ -69,8 +69,8 @@ export function BuildItem({
 				<PopoverContent className="w-[250px] p-0 overflow-y-auto">
 					<Command>
 						<CommandInput placeholder="Search item..." />
-						<CommandEmpty>No items found</CommandEmpty>
 						<CommandList className="max-h-[144px]">
+							<CommandEmpty>No items found</CommandEmpty>
 							{options.map((itemOption) => (
 								<CommandItem
 									key={itemOption.id}

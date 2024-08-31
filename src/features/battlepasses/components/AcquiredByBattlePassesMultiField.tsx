@@ -15,9 +15,9 @@ import { Button } from "~/components/ui/button";
 import {
 	Command,
 	CommandEmpty,
-	CommandGroup,
 	CommandInput,
 	CommandItem,
+	CommandList,
 } from "~/components/ui/command";
 import { Input } from "~/components/ui/input";
 import { FieldLabel } from "~/components/ui/label";
@@ -70,8 +70,9 @@ function BattlePassField({
 			>
 				<Command>
 					<CommandInput placeholder="Search items..." />
-					<CommandEmpty>No items found.</CommandEmpty>
-					<CommandGroup className="max-h-48 overflow-auto">
+					<CommandList className="max-h-48 overflow-auto">
+						<CommandEmpty>No items found.</CommandEmpty>
+
 						{battlePasses.map((p) => (
 							<CommandItem
 								key={p.id}
@@ -91,7 +92,7 @@ function BattlePassField({
 								<div className="text-md">{p.name}</div>
 							</CommandItem>
 						))}
-					</CommandGroup>
+					</CommandList>
 				</Command>
 			</PopoverContent>
 			<ControlledHiddenField field={field} value={control.value} />

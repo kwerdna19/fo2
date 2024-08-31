@@ -16,9 +16,9 @@ import { Button } from "~/components/ui/button";
 import {
 	Command,
 	CommandEmpty,
-	CommandGroup,
 	CommandInput,
 	CommandItem,
+	CommandList,
 } from "~/components/ui/command";
 import { Input } from "~/components/ui/input";
 import { FieldLabel } from "~/components/ui/label";
@@ -78,8 +78,9 @@ function MobField({
 			>
 				<Command>
 					<CommandInput placeholder="Search items..." />
-					<CommandEmpty>No items found.</CommandEmpty>
-					<CommandGroup className="max-h-48 overflow-auto">
+					<CommandList className="max-h-48 overflow-auto">
+						<CommandEmpty>No items found.</CommandEmpty>
+
 						{mobs.map((mob) => (
 							<CommandItem
 								key={mob.id}
@@ -107,7 +108,7 @@ function MobField({
 								</div>
 							</CommandItem>
 						))}
-					</CommandGroup>
+					</CommandList>
 				</Command>
 			</PopoverContent>
 			<ControlledHiddenField field={field} value={control.value} />
