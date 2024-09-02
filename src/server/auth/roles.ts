@@ -1,6 +1,6 @@
 import { Role } from "@prisma/client";
 import { type RedirectType, redirect } from "next/navigation";
-import { auth } from ".";
+import { auth } from "./auth";
 
 export const rolePriorities = [Role.USER, Role.MODERATOR, Role.ADMIN];
 

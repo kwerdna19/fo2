@@ -12,7 +12,7 @@ import {
 	getNumCollectibleItems,
 	removeFromCollection,
 } from "~/features/collection/requests";
-import { auth } from "~/server/auth";
+import { auth } from "~/server/auth/auth";
 
 export const metadata = {
 	title: "My Collection",

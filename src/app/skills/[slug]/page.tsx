@@ -2,14 +2,14 @@ import { Pencil } from "lucide-react";
 import { notFound } from "next/navigation";
 import { AdminButton } from "~/components/AdminButton";
 import { ItemSprite } from "~/components/ItemSprite";
-import { getSkillBySlug } from "~/features/skills/requests";
+import { api } from "~/trpc/server";
 
 interface Params {
 	slug: string;
 }
 
 export async function generateMetadata({ params }: { params: Params }) {
-	const skill = await getSkillBySlug(params.slug);
+	const skill = await api.skill.getBySlug(params);
 	if (!skill) {
 		return {};
 	}
@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: { params: Params }) {
 }
 
 export default async function Item({ params }: { params: Params }) {
-	const skill = await getSkillBySlug(params.slug);
+	const skill = await api.skill.getBySlug(params);
 
 	if (!skill) {
 		notFound();

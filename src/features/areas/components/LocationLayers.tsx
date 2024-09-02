@@ -2,15 +2,13 @@
 import * as L from "leaflet";
 import Link from "next/link";
 import { LayerGroup, LayersControl, Marker, Popup } from "react-leaflet";
+import { spriteHeight, spriteWidth } from "~/components/MobSprite";
+import { DropsList } from "~/features/mobs/components/DropsList";
+import { MobHealth } from "~/features/mobs/components/MobHealth";
 import { SaleItemsList } from "~/features/npcs/components/SaleItemsList";
-import { spriteHeight, spriteWidth } from "../../../components/MobSprite";
-import { DropsList } from "../../mobs/components/DropsList";
-import { MobHealth } from "../../mobs/components/MobHealth";
-import type { getAreaBySlug } from "../requests";
+import type { RouterOutputs } from "~/trpc/react";
 
-type Locations = NonNullable<
-	Awaited<ReturnType<typeof getAreaBySlug>>
->["locations"];
+type Locations = NonNullable<RouterOutputs["area"]["getBySlug"]>["locations"];
 
 export function LocationLayers({
 	id,

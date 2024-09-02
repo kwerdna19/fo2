@@ -2,14 +2,14 @@ import { Pencil } from "lucide-react";
 import { notFound } from "next/navigation";
 import { AdminButton } from "~/components/AdminButton";
 import { MobSprite } from "~/components/MobSprite";
-import { getMobBySlug } from "~/features/mobs/requests";
+import { api } from "~/trpc/server";
 
 interface Params {
 	slug: string;
 }
 
 export async function generateMetadata({ params }: { params: Params }) {
-	const mob = await getMobBySlug(params.slug);
+	const mob = await api.mob.getBySlug(params);
 	if (!mob) {
 		return {};
 	}
@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: { params: Params }) {
 }
 
 export default async function Mob({ params }: { params: Params }) {
-	const mob = await getMobBySlug(params.slug);
+	const mob = await api.mob.getBySlug(params);
 
 	if (!mob) {
 		notFound();

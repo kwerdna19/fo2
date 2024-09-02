@@ -7,10 +7,9 @@ import { parseWithZod } from "@conform-to/zod";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { BattlePassForm } from "~/features/battlepasses/components/BattlePassForm";
-import { createBattlePass } from "~/features/battlepasses/requests";
 import { battlePassSchema } from "~/features/battlepasses/schemas";
-import { getAllItemsQuick } from "~/features/items/requests";
 import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles";
+import { api } from "~/trpc/server";
 import type { ConformResult } from "~/types/actions";
 
 export function generateMetadata() {
@@ -22,7 +21,7 @@ export function generateMetadata() {
 export default async function AddBattlePass() {
 	await userSatisfiesRoleOrRedirect(Role.MODERATOR, "/battlepass/all");
 
-	const items = await getAllItemsQuick();
+	const items = await api.item.getAllQuick();
 
 	async function action(result: ConformResult, formData: FormData) {
 		"use server";
@@ -35,7 +34,7 @@ export default async function AddBattlePass() {
 		}
 
 		try {
-			const created = await createBattlePass(submission.value);
+			const created = await api.battlePass.create(submission.value);
 
 			revalidatePath("/items", "page");
 			revalidatePath("/battlepass/all", "page");

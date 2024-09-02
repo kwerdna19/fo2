@@ -31,6 +31,7 @@ import {
 	TableRow,
 } from "~/components/ui/table";
 import { cn } from "~/utils/styles";
+import { Skeleton } from "../ui/skeleton";
 import { DataTableFiltersToggle } from "./data-table-filters-toggle";
 import { DataTableSearchBar } from "./data-table-search-bar";
 import { DataTableSideBar } from "./data-table-sidebar";
@@ -38,18 +39,24 @@ import { pageSizeOptions } from "./data-table-utils";
 import { DataTableViewOptions } from "./data-table-view-options";
 import { useDataTableQueryParams } from "./use-data-table-query";
 
+function LoadingView() {
+	return <Skeleton />;
+}
+
 export function DataTable<T, Data extends { totalCount: number; data: T[] }>({
 	data,
 	columns,
 	filtersComponent,
 	title,
 	defaultColumnVisibility,
+	loading = false,
 }: {
 	data: Data;
 	columns: ColumnDef<T>[];
 	filtersComponent?: ReactNode;
 	title: string;
 	defaultColumnVisibility?: Record<string, boolean>;
+	loading?: boolean;
 }) {
 	const { totalCount, data: rows } = data;
 
@@ -76,6 +83,7 @@ export function DataTable<T, Data extends { totalCount: number; data: T[] }>({
 		onPaginationChange: setPagination,
 		manualPagination: true,
 		manualSorting: true,
+		manualFiltering: true,
 		onColumnVisibilityChange: setColumnVisibility,
 		state: {
 			pagination,
@@ -115,75 +123,79 @@ export function DataTable<T, Data extends { totalCount: number; data: T[] }>({
 
 					<DataTableViewOptions table={table} />
 				</div>
-				<Table>
-					<TableHeader className="bg-muted/50 text-sm">
-						{table.getHeaderGroups().map((headerGroup) => (
-							<TableRow className="hover:bg-transparent" key={headerGroup.id}>
-								{headerGroup.headers.map((header) => {
-									if (header.column.columnDef.meta?.hidden) {
-										return null;
-									}
+				{loading ? (
+					<LoadingView />
+				) : (
+					<Table>
+						<TableHeader className="bg-muted/50 text-sm">
+							{table.getHeaderGroups().map((headerGroup) => (
+								<TableRow className="hover:bg-transparent" key={headerGroup.id}>
+									{headerGroup.headers.map((header) => {
+										if (header.column.columnDef.meta?.hidden) {
+											return null;
+										}
 
-									return (
-										<TableHead key={header.id}>
-											{header.isPlaceholder
-												? null
-												: flexRender(
-														header.column.columnDef.header,
-														header.getContext(),
-													)}
-										</TableHead>
-									);
-								})}
-							</TableRow>
-						))}
-					</TableHeader>
-					<TableBody>
-						{table.getRowModel().rows?.length ? (
-							table.getRowModel().rows.map((row) => {
-								return (
-									<Fragment key={row.id}>
-										<TableRow className="relative group">
-											{row.getVisibleCells().map((cell) => {
-												if (cell.column.columnDef.meta?.hidden) {
-													return null;
-												}
-
-												return (
-													<TableCell
-														key={cell.id}
-														className={cn({
-															"py-1 px-2": [
-																"droppedBy",
-																"soldBy",
-																"craftedBy",
-																"sprite",
-															].includes(cell.column.id),
-														})}
-													>
-														{flexRender(
-															cell.column.columnDef.cell,
-															cell.getContext(),
+										return (
+											<TableHead key={header.id}>
+												{header.isPlaceholder
+													? null
+													: flexRender(
+															header.column.columnDef.header,
+															header.getContext(),
 														)}
-													</TableCell>
-												);
-											})}
-										</TableRow>
-									</Fragment>
-								);
-							})
-						) : (
-							<TableRow>
-								<TableCell
-									colSpan={columns.length}
-									className="h-24 text-center"
-								>
-									No results.
-								</TableCell>
-							</TableRow>
-						)}
-					</TableBody>
-				</Table>
+											</TableHead>
+										);
+									})}
+								</TableRow>
+							))}
+						</TableHeader>
+						<TableBody>
+							{table.getRowModel().rows?.length ? (
+								table.getRowModel().rows.map((row) => {
+									return (
+										<Fragment key={row.id}>
+											<TableRow className="relative group">
+												{row.getVisibleCells().map((cell) => {
+													if (cell.column.columnDef.meta?.hidden) {
+														return null;
+													}
+
+													return (
+														<TableCell
+															key={cell.id}
+															className={cn({
+																"py-1 px-2": [
+																	"droppedBy",
+																	"soldBy",
+																	"craftedBy",
+																	"sprite",
+																].includes(cell.column.id),
+															})}
+														>
+															{flexRender(
+																cell.column.columnDef.cell,
+																cell.getContext(),
+															)}
+														</TableCell>
+													);
+												})}
+											</TableRow>
+										</Fragment>
+									);
+								})
+							) : (
+								<TableRow>
+									<TableCell
+										colSpan={columns.length}
+										className="h-24 text-center"
+									>
+										No results.
+									</TableCell>
+								</TableRow>
+							)}
+						</TableBody>
+					</Table>
+				)}
 				<div className="flex justify-end gap-x-12 flex-wrap">
 					<Select
 						value={table.getState().pagination.pageSize.toString()}

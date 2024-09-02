@@ -5,13 +5,10 @@ import { revalidatePath } from "next/cache";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { Button } from "~/components/ui/button";
-import { getAllBattlePassesQuick } from "~/features/battlepasses/requests";
 import { ItemForm } from "~/features/items/components/ItemForm";
-import { getItemBySlug, updateItem } from "~/features/items/requests";
 import { itemSchema } from "~/features/items/schemas";
-import { getAllMobsQuick } from "~/features/mobs/requests";
-import { getAllNpcsQuick } from "~/features/npcs/requests";
 import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles";
+import { api } from "~/trpc/server";
 import type { ConformResult } from "~/types/actions";
 import { recursivelyNullifyUndefinedValues } from "~/utils/misc";
 import { getListOfImages } from "~/utils/server";
@@ -21,7 +18,7 @@ interface Params {
 }
 
 export async function generateMetadata({ params }: { params: Params }) {
-	const item = await getItemBySlug(params.slug);
+	const item = await api.item.getBySlug(params);
 	if (!item) {
 		return {};
 	}
@@ -33,15 +30,15 @@ export async function generateMetadata({ params }: { params: Params }) {
 export default async function EditItem({ params }: { params: Params }) {
 	await userSatisfiesRoleOrRedirect(Role.MODERATOR, `/items/${params.slug}`);
 
-	const item = await getItemBySlug(params.slug);
+	const item = await api.item.getBySlug(params);
 
 	if (!item) {
 		return notFound();
 	}
 
-	const mobs = await getAllMobsQuick();
-	const npcs = await getAllNpcsQuick();
-	const battlePasses = await getAllBattlePassesQuick();
+	const mobs = await api.mob.getAllQuick();
+	const npcs = await api.npc.getAllQuick();
+	const battlePasses = await api.battlePass.getAllQuick();
 
 	const sprites = getListOfImages("item");
 
@@ -61,7 +58,10 @@ export default async function EditItem({ params }: { params: Params }) {
 
 		try {
 			const converted = recursivelyNullifyUndefinedValues(submission.value);
-			const updated = await updateItem(item.id, converted);
+			const updated = await api.item.update({
+				id: item.id,
+				data: converted,
+			});
 
 			revalidatePath("/mobs", "page");
 			revalidatePath("/items", "page");

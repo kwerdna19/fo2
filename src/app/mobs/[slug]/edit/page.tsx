@@ -8,12 +8,9 @@ import { getListOfImages } from "~/utils/server";
 
 import { parseWithZod } from "@conform-to/zod";
 import { revalidatePath } from "next/cache";
-import { getAllAreasQuick } from "~/features/areas/requests";
-import { getAllFactionsQuick } from "~/features/factions/requests";
-import { getAllItemsQuick } from "~/features/items/requests";
-import { getMobBySlug, updateMob } from "~/features/mobs/requests";
 import { mobSchema } from "~/features/mobs/schemas";
 import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles";
+import { api } from "~/trpc/server";
 import type { ConformResult } from "~/types/actions";
 import { recursivelyNullifyUndefinedValues } from "~/utils/misc";
 
@@ -22,7 +19,7 @@ interface Params {
 }
 
 export async function generateMetadata({ params }: { params: Params }) {
-	const mob = await getMobBySlug(params.slug);
+	const mob = await api.mob.getBySlug(params);
 	if (!mob) {
 		return {};
 	}
@@ -34,15 +31,15 @@ export async function generateMetadata({ params }: { params: Params }) {
 export default async function EditMob({ params }: { params: Params }) {
 	await userSatisfiesRoleOrRedirect(Role.MODERATOR, `/mobs/${params.slug}`);
 
-	const mob = await getMobBySlug(params.slug);
+	const mob = await api.mob.getBySlug(params);
 
 	if (!mob) {
 		return notFound();
 	}
 
-	const areas = await getAllAreasQuick();
-	const items = await getAllItemsQuick();
-	const factions = await getAllFactionsQuick();
+	const areas = await api.area.getAllQuick();
+	const items = await api.item.getAllQuick();
+	const factions = await api.faction.getAllQuick();
 	const sprites = getListOfImages("mob");
 
 	if (!sprites) {
@@ -61,7 +58,10 @@ export default async function EditMob({ params }: { params: Params }) {
 
 		try {
 			const converted = recursivelyNullifyUndefinedValues(submission.value);
-			const updated = await updateMob(mob.id, converted);
+			const updated = await api.mob.update({
+				id: mob.id,
+				data: converted,
+			});
 
 			revalidatePath("/mobs", "page");
 			revalidatePath("/items", "page");

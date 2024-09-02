@@ -12,11 +12,10 @@ import { UnitSprite } from "~/components/UnitSprite";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
-import { addToCollection } from "~/features/collection/requests";
 import { ItemRequiredStats } from "~/features/items/components/ItemRequiredStats";
 import { ItemStats } from "~/features/items/components/ItemStats";
-import { getAllItemsQuick, getItemBySlug } from "~/features/items/requests";
-import { auth } from "~/server/auth";
+import { auth } from "~/server/auth/auth";
+import { api } from "~/trpc/server";
 import {
 	getAverageDPS,
 	getPlayerSpriteUrlPreview,
@@ -29,7 +28,7 @@ interface Params {
 }
 
 export async function generateMetadata({ params }: { params: Params }) {
-	const item = await getItemBySlug(params.slug);
+	const item = await api.item.getBySlug(params);
 	if (!item) {
 		return {};
 	}
@@ -39,14 +38,14 @@ export async function generateMetadata({ params }: { params: Params }) {
 }
 
 export async function generateStaticParams() {
-	const items = await getAllItemsQuick();
+	const items = await api.item.getAllQuick();
 	return items.map((item) => ({
 		slug: item.slug,
 	}));
 }
 
 export default async function Item({ params }: { params: Params }) {
-	const item = await getItemBySlug(params.slug);
+	const item = await api.item.getBySlug(params);
 
 	if (!item) {
 		notFound();
@@ -69,21 +68,21 @@ export default async function Item({ params }: { params: Params }) {
 		</>
 	);
 
-	async function addToCollectionAction() {
-		"use server";
+	// async function addToCollectionAction() {
+	// 	"use server";
 
-		const session = await auth();
-		if (!session || !session.user || !item) {
-			redirect("/login");
-		}
+	// 	const session = await auth();
+	// 	if (!session || !session.user || !item) {
+	// 		redirect("/login");
+	// 	}
 
-		await addToCollection({
-			itemId: item.id,
-			userId: session.user.id,
-		});
+	// 	await addToCollection({
+	// 		itemId: item.id,
+	// 		userId: session.user.id,
+	// 	});
 
-		redirect(`/items/${item.slug}?added`);
-	}
+	// 	redirect(`/items/${item.slug}?added`);
+	// }
 
 	return (
 		<div className="grid lg:grid-cols-4 gap-8">

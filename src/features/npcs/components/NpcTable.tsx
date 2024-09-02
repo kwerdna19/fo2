@@ -7,10 +7,10 @@ import { MobSprite } from "~/components/MobSprite";
 import SortButton from "~/components/SortButton";
 import { DataTable } from "~/components/data-table/data-table";
 import { Badge } from "~/components/ui/badge";
-import type { getAllNpcs } from "~/features/npcs/requests";
+import type { RouterOutputs } from "~/trpc/react";
 import { CraftItemsList, SaleItemsList } from "./SaleItemsList";
 
-type AllNpcsResponse = Awaited<ReturnType<typeof getAllNpcs>>;
+type AllNpcsResponse = RouterOutputs["npc"]["getAllPopulated"];
 export type Datum = AllNpcsResponse["data"][number];
 const columnHelper = createColumnHelper<Datum>();
 

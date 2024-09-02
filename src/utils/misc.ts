@@ -5,6 +5,13 @@ export const getSlugFromName = (name: string) => {
 		.toLowerCase();
 };
 
+export const shallowCompare = (
+	obj1: Record<string | number | symbol, unknown>,
+	obj2: Record<string | number | symbol, unknown>,
+) =>
+	Object.keys(obj1).length === Object.keys(obj2).length &&
+	Object.keys(obj1).every((key) => obj1[key] === obj2[key]);
+
 export function recursivelyNullifyUndefinedValues<
 	T extends Record<string, unknown> | ArrayLike<unknown>,
 >(obj: T): T {

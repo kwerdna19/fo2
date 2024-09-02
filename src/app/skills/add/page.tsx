@@ -3,14 +3,12 @@ import { Role } from "@prisma/client";
 import { ChevronLeft } from "lucide-react";
 import { revalidatePath } from "next/cache";
 import Link from "next/link";
-import { RedirectType, notFound, redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Button } from "~/components/ui/button";
-import { getAllAreasQuick } from "~/features/areas/requests";
-import { getAllItemsQuick } from "~/features/items/requests";
 import { SkillForm } from "~/features/skills/components/SkillForm";
-import { createSkill } from "~/features/skills/requests";
 import { skillSchema } from "~/features/skills/schemas";
 import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles";
+import { api } from "~/trpc/server";
 import type { ConformResult } from "~/types/actions";
 import { getListOfImages } from "~/utils/server";
 
@@ -23,8 +21,8 @@ export function generateMetadata() {
 export default async function AddSkill() {
 	await userSatisfiesRoleOrRedirect(Role.MODERATOR, "/skills");
 
-	const areas = await getAllAreasQuick();
-	const items = await getAllItemsQuick();
+	const areas = await api.area.getAllQuick();
+	const items = await api.item.getAllQuick();
 	const sprites = getListOfImages("skill");
 
 	if (!sprites) {
@@ -44,7 +42,7 @@ export default async function AddSkill() {
 		let redirectUrl: undefined | string;
 
 		try {
-			const created = await createSkill(submission.value);
+			const created = await api.skill.create(submission.value);
 			redirectUrl = `/skills/${created.slug}`;
 		} catch (e) {
 			console.log(e);

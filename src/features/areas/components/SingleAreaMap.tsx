@@ -3,12 +3,12 @@
 import * as L from "leaflet";
 import type { ReactNode } from "react";
 import { MapContainer } from "react-leaflet";
+import type { RouterOutputs } from "~/trpc/react";
 import { cn } from "~/utils/styles";
-import type { getAreaBySlug } from "../requests";
 import { LocationLayers } from "./LocationLayers";
 import { MapBackground } from "./MapBackground";
 
-type Area = NonNullable<Awaited<ReturnType<typeof getAreaBySlug>>>;
+type Area = NonNullable<RouterOutputs["area"]["getBySlug"]>;
 
 export default function SingleAreaMap({
 	area,

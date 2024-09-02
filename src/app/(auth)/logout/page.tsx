@@ -1,4 +1,4 @@
-import { signOut } from "~/server/auth";
+import { signOut } from "~/server/auth/auth";
 
 export const dynamic = "force-dynamic";
 

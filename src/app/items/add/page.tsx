@@ -5,13 +5,10 @@ import { revalidatePath } from "next/cache";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { Button } from "~/components/ui/button";
-import { getAllBattlePassesQuick } from "~/features/battlepasses/requests";
 import { ItemForm } from "~/features/items/components/ItemForm";
-import { createItem } from "~/features/items/requests";
 import { itemSchema } from "~/features/items/schemas";
-import { getAllMobsQuick } from "~/features/mobs/requests";
-import { getAllNpcsQuick } from "~/features/npcs/requests";
 import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles";
+import { api } from "~/trpc/server";
 import type { ConformResult } from "~/types/actions";
 import { getListOfImages } from "~/utils/server";
 
@@ -24,9 +21,9 @@ export function generateMetadata() {
 export default async function AddItem() {
 	await userSatisfiesRoleOrRedirect(Role.MODERATOR, "/items");
 
-	const mobs = await getAllMobsQuick();
-	const npcs = await getAllNpcsQuick();
-	const battlePasses = await getAllBattlePassesQuick();
+	const mobs = await api.mob.getAllQuick();
+	const npcs = await api.npc.getAllQuick();
+	const battlePasses = await api.battlePass.getAllQuick();
 
 	const sprites = getListOfImages("item");
 
@@ -45,7 +42,7 @@ export default async function AddItem() {
 		}
 
 		try {
-			const created = await createItem(submission.value);
+			const created = await api.item.create(submission.value);
 
 			revalidatePath("/mobs", "page");
 			revalidatePath("/items", "page");

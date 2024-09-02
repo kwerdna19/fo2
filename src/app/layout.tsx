@@ -11,13 +11,13 @@ import { GeistSans } from "geist/font/sans";
 
 import "leaflet/dist/leaflet.css";
 import type { Metadata } from "next";
-import { ReactQueryProvider } from "~/components/ReactQueryProvider";
 import { ThemeProvider } from "~/components/ThemeProvider";
 import { Footer } from "~/components/layout/Footer";
 import { Header } from "~/components/layout/header/index";
 import { Toaster } from "~/components/ui/toaster";
 import "~/styles/globals.css";
 import "~/styles/map.css";
+import { TRPCReactProvider } from "~/trpc/react";
 import { cn } from "~/utils/styles";
 
 export const metadata: Metadata = {
@@ -46,7 +46,7 @@ export default function RootLayout({
 			suppressHydrationWarning
 		>
 			<body className="flex min-h-screen flex-col bg-background">
-				<ReactQueryProvider>
+				<TRPCReactProvider>
 					<ThemeProvider>
 						<header className="supports-backdrop-blur:bg-background/60 fixed top-0 z-50 w-screen border-b bg-background/95 backdrop-blur">
 							<Header className="mx-auto w-full max-w-screen-2xl h-16" />
@@ -62,7 +62,7 @@ export default function RootLayout({
 						</footer>
 						<Toaster />
 					</ThemeProvider>
-				</ReactQueryProvider>
+				</TRPCReactProvider>
 				<Analytics />
 			</body>
 		</html>

@@ -3,14 +3,14 @@ import type { Item } from "@prisma/client";
 import { Form } from "~/components/form-ui/Form";
 import FormInput from "~/components/form-ui/FormInput";
 import { useConform } from "~/hooks/useConform";
+import type { RouterOutputs } from "~/trpc/react";
 import type { ConformServerAction } from "~/types/actions";
-import type { getBattlePassBySlug } from "../requests";
 import { battlePassSchema } from "../schemas";
 import { BattlePassTiersMultiField } from "./BattlePassTiersMultiField";
 
 interface Props {
 	items: Pick<Item, "id" | "name" | "spriteUrl">[];
-	defaultValue?: Awaited<ReturnType<typeof getBattlePassBySlug>>;
+	defaultValue?: RouterOutputs["battlePass"]["getBySlug"];
 	action: ConformServerAction;
 }
 

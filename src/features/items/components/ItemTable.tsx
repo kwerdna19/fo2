@@ -8,11 +8,13 @@ import { PriceDisplay } from "~/components/PriceDisplay";
 import SortButton from "~/components/SortButton";
 
 import { EquippableType } from "@prisma/client";
+import { keepPreviousData } from "@tanstack/react-query";
 import type { ColumnDef } from "@tanstack/react-table";
 import { CommandList } from "cmdk";
 import { Check } from "lucide-react";
 import { Controller } from "react-hook-form";
 import { DataTable } from "~/components/data-table/data-table";
+import { dataTableSearchParams } from "~/components/data-table/data-table-utils";
 import { useDataTableQueryParams } from "~/components/data-table/use-data-table-query";
 import RangeField from "~/components/form/RangeField";
 import { Form, SubmitButton, useZodForm } from "~/components/form/zod-form";
@@ -20,9 +22,10 @@ import { Button } from "~/components/ui/button";
 import { Command, CommandItem } from "~/components/ui/command";
 import { Label } from "~/components/ui/label";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import type { getAllItems } from "~/features/items/requests";
 import { DmgRange } from "~/features/mobs/components/DmgRange";
+import { type RouterInputs, type RouterOutputs, api } from "~/trpc/react";
 import { LEVEL_CAP } from "~/utils/fo";
+import { shallowCompare } from "~/utils/misc";
 import { cn } from "~/utils/styles";
 import {
 	itemSearchFilterSchema,
@@ -33,7 +36,8 @@ import { DroppedByList } from "./DroppedByList";
 import { ItemStats } from "./ItemStats";
 import { SoldByList } from "./SoldByList";
 
-type AllItemsResponse = Awaited<ReturnType<typeof getAllItems>>;
+type AllItemsResponse = RouterOutputs["item"]["getAllPopulated"];
+type AllItemsInput = RouterInputs["item"]["getAllPopulated"];
 
 export type Datum = AllItemsResponse["data"][number];
 const columnHelper = createColumnHelper<Datum>();
@@ -258,9 +262,7 @@ export const columns = [
 
 function ItemSearchFilters() {
 	const { resetPage } = useDataTableQueryParams();
-	const [filters, setFilters] = useQueryStates(itemSearchParamParser, {
-		shallow: false,
-	});
+	const [filters, setFilters] = useQueryStates(itemSearchParamParser);
 
 	const form = useZodForm({
 		schema: itemSearchFilterSchema,
@@ -353,11 +355,25 @@ function ItemSearchFilters() {
 	);
 }
 
-export function ItemTable({ data }: { data: AllItemsResponse }) {
+export function ItemTable({
+	initialData,
+	initialParams,
+}: { initialData: AllItemsResponse; initialParams: AllItemsInput }) {
+	const [tableParams] = useQueryStates(dataTableSearchParams);
+	const [filters] = useQueryStates(itemSearchParamParser);
+	const params = { ...filters, ...tableParams };
+
+	const { data } = api.item.getAllPopulated.useQuery(params, {
+		initialData: shallowCompare(params, initialParams)
+			? initialData
+			: undefined,
+		placeholderData: keepPreviousData,
+	});
+
 	return (
 		<DataTable
 			title="Items"
-			data={data}
+			data={data ?? { data: [], totalCount: 0 }}
 			columns={columns}
 			filtersComponent={<ItemSearchFilters />}
 			defaultColumnVisibility={{

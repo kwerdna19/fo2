@@ -7,13 +7,10 @@ import { Button } from "~/components/ui/button";
 import { parseWithZod } from "@conform-to/zod";
 import { revalidatePath } from "next/cache";
 import { BattlePassForm } from "~/features/battlepasses/components/BattlePassForm";
-import {
-	getBattlePassBySlug,
-	updateBattlePass,
-} from "~/features/battlepasses/requests";
+
 import { battlePassSchema } from "~/features/battlepasses/schemas";
-import { getAllItemsQuick } from "~/features/items/requests";
 import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles";
+import { api } from "~/trpc/server";
 import type { ConformResult } from "~/types/actions";
 import { recursivelyNullifyUndefinedValues } from "~/utils/misc";
 
@@ -22,7 +19,7 @@ interface Params {
 }
 
 export async function generateMetadata({ params }: { params: Params }) {
-	const pass = await getBattlePassBySlug(params.slug);
+	const pass = await api.battlePass.getBySlug(params);
 	if (!pass) {
 		return {};
 	}
@@ -37,13 +34,13 @@ export default async function EditBattlePass({ params }: { params: Params }) {
 		`/battlepass/${params.slug}`,
 	);
 
-	const pass = await getBattlePassBySlug(params.slug);
+	const pass = await api.battlePass.getBySlug(params);
 
 	if (!pass) {
 		return notFound();
 	}
 
-	const items = await getAllItemsQuick();
+	const items = await api.item.getAllQuick();
 
 	async function action(result: ConformResult, formData: FormData) {
 		"use server";
@@ -57,7 +54,10 @@ export default async function EditBattlePass({ params }: { params: Params }) {
 
 		try {
 			const converted = recursivelyNullifyUndefinedValues(submission.value);
-			const updated = await updateBattlePass(pass.id, converted);
+			const updated = await api.battlePass.update({
+				id: pass.id,
+				data: converted,
+			});
 
 			revalidatePath("/items", "page");
 			revalidatePath("/battlepass/all", "page");

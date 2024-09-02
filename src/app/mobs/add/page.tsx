@@ -8,12 +8,9 @@ import { getListOfImages } from "~/utils/server";
 
 import { parseWithZod } from "@conform-to/zod";
 import { revalidatePath } from "next/cache";
-import { getAllAreasQuick } from "~/features/areas/requests";
-import { getAllFactionsQuick } from "~/features/factions/requests";
-import { getAllItemsQuick } from "~/features/items/requests";
-import { createMob } from "~/features/mobs/requests";
 import { mobSchema } from "~/features/mobs/schemas";
 import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles";
+import { api } from "~/trpc/server";
 import type { ConformResult } from "~/types/actions";
 
 export function generateMetadata() {
@@ -25,10 +22,10 @@ export function generateMetadata() {
 export default async function AddMob() {
 	await userSatisfiesRoleOrRedirect(Role.MODERATOR, "/mobs");
 
-	const areas = await getAllAreasQuick();
-	const items = await getAllItemsQuick();
+	const areas = await api.area.getAllQuick();
+	const items = await api.item.getAllQuick();
 	const sprites = getListOfImages("mob");
-	const factions = await getAllFactionsQuick();
+	const factions = await api.faction.getAllQuick();
 
 	if (!sprites) {
 		notFound();
@@ -45,7 +42,7 @@ export default async function AddMob() {
 		}
 
 		try {
-			const created = await createMob(submission.value);
+			const created = await api.mob.create(submission.value);
 
 			revalidatePath("/mobs", "page");
 			revalidatePath("/items", "page");

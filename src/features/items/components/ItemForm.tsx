@@ -16,8 +16,8 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import AcquiredByBattlePassesMultiField from "~/features/battlepasses/components/AcquiredByBattlePassesMultiField";
 import { useConform } from "~/hooks/useConform";
+import type { RouterOutputs } from "~/trpc/react";
 import type { ConformServerAction } from "~/types/actions";
-import type { getItemBySlug } from "../requests";
 import { itemSchema } from "../schemas";
 import CraftedByNpcsMultiField from "./CraftedByNpcsMultiField";
 import DroppedByMobsMultiField from "./DroppedByMobsMultiField";
@@ -28,7 +28,7 @@ interface Props {
 	mobs: Pick<Mob, "id" | "name" | "spriteUrl">[];
 	battlePasses: Pick<BattlePass, "id" | "name">[];
 	sprites: string[];
-	defaultValue?: Awaited<ReturnType<typeof getItemBySlug>>;
+	defaultValue?: RouterOutputs["item"]["getBySlug"];
 	action: ConformServerAction;
 }
 

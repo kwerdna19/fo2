@@ -1,33 +1,24 @@
 "use client";
-import { getFieldsetProps, getInputProps } from "@conform-to/react";
-import {
-	type Area,
-	EquippableType,
-	type Item,
-	type Mob,
-	type Npc,
-	SkillType,
-} from "@prisma/client";
+import { getInputProps } from "@conform-to/react";
+import { type Area, type Item, SkillType } from "@prisma/client";
 import SpriteSelect from "~/components/SpriteSelect";
 import { Form } from "~/components/form-ui/Form";
-import FormCheckbox from "~/components/form-ui/FormCheckbox";
 import FormInput from "~/components/form-ui/FormInput";
 import FormSelect from "~/components/form-ui/FormSelect";
 import { Input } from "~/components/ui/input";
-import { FieldLabel, Label } from "~/components/ui/label";
+import { Label } from "~/components/ui/label";
 import { AreaSelect } from "~/features/areas/components/AreaSelect";
-import { ItemField } from "~/features/items/components/ItemField";
 import ItemsMultiField from "~/features/items/components/ItemsMultiField";
 import { useConform } from "~/hooks/useConform";
+import type { RouterOutputs } from "~/trpc/react";
 import type { ConformServerAction } from "~/types/actions";
-import type { getSkillBySlug } from "../requests";
 import { skillSchema } from "../schemas";
 
 interface Props {
 	items: Pick<Item, "id" | "name" | "spriteUrl">[];
 	areas: Pick<Area, "id" | "name">[];
 	sprites: string[];
-	defaultValue?: Awaited<ReturnType<typeof getSkillBySlug>>;
+	defaultValue?: RouterOutputs["skill"]["getBySlug"];
 	action: ConformServerAction;
 }
 

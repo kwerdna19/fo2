@@ -3,9 +3,7 @@ import { useQueryStates } from "nuqs";
 import { dataTableSearchParams } from "./data-table-utils";
 
 export const useDataTableQueryParams = () => {
-	const [params, setParams] = useQueryStates(dataTableSearchParams, {
-		shallow: false,
-	});
+	const [params, setParams] = useQueryStates(dataTableSearchParams);
 
 	const sorting: SortingState = [
 		{

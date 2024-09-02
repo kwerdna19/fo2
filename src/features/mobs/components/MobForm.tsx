@@ -7,8 +7,8 @@ import FormInput from "~/components/form-ui/FormInput";
 import LocationsMultiField from "~/features/areas/components/LocationsMultiField";
 import { FactionSelect } from "~/features/factions/components/FactionSelect";
 import { useConform } from "~/hooks/useConform";
+import type { RouterOutputs } from "~/trpc/react";
 import type { ConformServerAction } from "~/types/actions";
-import type { getMobBySlug } from "../requests";
 import { mobSchema } from "../schemas";
 import DropItemsMultiField from "./DropItemsMultiField";
 
@@ -17,7 +17,7 @@ interface Props {
 	items: Pick<Item, "id" | "name" | "spriteUrl">[];
 	factions: Pick<Faction, "id" | "name">[];
 	sprites: string[];
-	defaultValue?: Awaited<ReturnType<typeof getMobBySlug>>;
+	defaultValue?: RouterOutputs["mob"]["getBySlug"];
 	action: ConformServerAction;
 }
 

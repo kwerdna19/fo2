@@ -6,8 +6,8 @@ import FormInput from "~/components/form-ui/FormInput";
 import FormSelect from "~/components/form-ui/FormSelect";
 import LocationsMultiField from "~/features/areas/components/LocationsMultiField";
 import { useConform } from "~/hooks/useConform";
+import type { RouterOutputs } from "~/trpc/react";
 import type { ConformServerAction } from "~/types/actions";
-import type { getNpcBySlug } from "../requests";
 import { npcSchema, npcTypes } from "../schemas";
 import { NpcCraftsMultiField } from "./NpcCraftsMultiField";
 import { NpcItemsMultiField } from "./NpcItemsMultiField";
@@ -16,7 +16,7 @@ interface Props {
 	areas: Pick<Area, "id" | "name" | "spriteUrl" | "height" | "width">[];
 	items: Pick<Item, "id" | "name" | "spriteUrl">[];
 	sprites: string[];
-	defaultValue?: Awaited<ReturnType<typeof getNpcBySlug>>;
+	defaultValue?: RouterOutputs["npc"]["getBySlug"];
 	action: ConformServerAction;
 }
 

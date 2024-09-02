@@ -11,10 +11,10 @@ import {
 	CollapsibleContent,
 	CollapsibleTrigger,
 } from "~/components/ui/collapsible";
-import type { getAllAreasQuick } from "~/features/areas/requests";
+import type { RouterOutputs } from "~/trpc/react";
 import { NavMenu } from "./NavMenu";
 
-type Areas = NonNullable<Awaited<ReturnType<typeof getAllAreasQuick>>>;
+type Areas = RouterOutputs["area"]["getAllQuick"];
 
 export function Header({
 	areas,

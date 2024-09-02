@@ -1,15 +1,13 @@
 import { notFound, redirect } from "next/navigation";
-import {
-	getCurrentBattlePass,
-	getNextBattlePass,
-} from "~/features/battlepasses/requests";
+import { api } from "~/trpc/server";
 
 export const metadata = {
 	title: "Battlepass",
 };
 
 export default async function BattlePass() {
-	const pass = (await getCurrentBattlePass()) ?? (await getNextBattlePass());
+	const pass =
+		(await api.battlePass.getCurrent()) ?? (await api.battlePass.getNext());
 
 	if (!pass) {
 		notFound();

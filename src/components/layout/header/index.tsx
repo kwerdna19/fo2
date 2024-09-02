@@ -1,7 +1,7 @@
-import { getAllAreasQuick } from "~/features/areas/requests";
+import { api } from "~/trpc/server";
 import { Header as ClientHeader } from "./Header";
 
 export async function Header(props: { className?: string }) {
-	const areas = await getAllAreasQuick();
+	const areas = await api.area.getAllQuick();
 	return <ClientHeader areas={areas} {...props} />;
 }

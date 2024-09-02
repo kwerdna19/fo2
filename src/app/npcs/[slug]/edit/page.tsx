@@ -7,12 +7,10 @@ import { getListOfImages } from "~/utils/server";
 
 import { parseWithZod } from "@conform-to/zod";
 import { revalidatePath } from "next/cache";
-import { getAllAreasQuick } from "~/features/areas/requests";
-import { getAllItemsQuick } from "~/features/items/requests";
 import { NpcForm } from "~/features/npcs/components/NpcForm";
-import { getNpcBySlug, updateNpc } from "~/features/npcs/requests";
 import { npcSchema } from "~/features/npcs/schemas";
 import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles";
+import { api } from "~/trpc/server";
 import type { ConformResult } from "~/types/actions";
 import { recursivelyNullifyUndefinedValues } from "~/utils/misc";
 
@@ -21,7 +19,7 @@ interface Params {
 }
 
 export async function generateMetadata({ params }: { params: Params }) {
-	const npc = await getNpcBySlug(params.slug);
+	const npc = await api.npc.getBySlug(params);
 	if (!npc) {
 		return {};
 	}
@@ -33,14 +31,14 @@ export async function generateMetadata({ params }: { params: Params }) {
 export default async function EditNpc({ params }: { params: Params }) {
 	await userSatisfiesRoleOrRedirect(Role.MODERATOR, `/npcs/${params.slug}`);
 
-	const npc = await getNpcBySlug(params.slug);
+	const npc = await api.npc.getBySlug(params);
 
 	if (!npc) {
 		return notFound();
 	}
 
-	const areas = await getAllAreasQuick();
-	const items = await getAllItemsQuick();
+	const areas = await api.area.getAllQuick();
+	const items = await api.item.getAllQuick();
 	const sprites = getListOfImages("npc");
 
 	if (!sprites) {
@@ -61,7 +59,10 @@ export default async function EditNpc({ params }: { params: Params }) {
 
 		try {
 			const converted = recursivelyNullifyUndefinedValues(submission.value);
-			const updated = await updateNpc(npc.id, converted);
+			const updated = await api.npc.update({
+				id: npc.id,
+				data: converted,
+			});
 			if (updated.slug !== npc.slug) {
 				redirectUrl = updated.slug;
 			}

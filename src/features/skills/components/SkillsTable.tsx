@@ -8,9 +8,9 @@ import SortButton from "~/components/SortButton";
 import { DataTable } from "~/components/data-table/data-table";
 import { ItemRequiredStats } from "~/features/items/components/ItemRequiredStats";
 import { ItemStats } from "~/features/items/components/ItemStats";
-import type { getAllSkills } from "../requests";
+import type { RouterOutputs } from "~/trpc/react";
 
-type AllSkillsResponse = Awaited<ReturnType<typeof getAllSkills>>;
+type AllSkillsResponse = RouterOutputs["skill"]["getAllPopulated"];
 
 export type Datum = AllSkillsResponse["data"][number];
 const columnHelper = createColumnHelper<Datum>();

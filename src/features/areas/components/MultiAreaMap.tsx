@@ -3,10 +3,10 @@
 import * as L from "leaflet";
 import { useState } from "react";
 import { MapContainer } from "react-leaflet";
-import type { getAllAreasPopulated } from "../requests";
+import type { RouterOutputs } from "~/trpc/react";
 import { MapBackground } from "./MapBackground";
 
-type Areas = Awaited<ReturnType<typeof getAllAreasPopulated>>;
+type Areas = RouterOutputs["area"]["getAllPopulated"];
 
 export default function MultiAreaMap({
 	areas: allAreas,

@@ -14,10 +14,10 @@ import {
 	NavigationMenuTrigger,
 	navigationMenuTriggerStyle,
 } from "~/components/ui/navigation-menu";
-import type { getAllAreasQuick } from "~/features/areas/requests";
+import type { RouterOutputs } from "~/trpc/react";
 import { cn } from "~/utils/styles";
 
-type Areas = NonNullable<Awaited<ReturnType<typeof getAllAreasQuick>>>;
+type Areas = RouterOutputs["area"]["getAllQuick"];
 
 export function NavMenu({
 	className,

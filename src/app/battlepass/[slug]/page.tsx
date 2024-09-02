@@ -7,17 +7,14 @@ import { ItemSprite } from "~/components/ItemSprite";
 import { UnitSprite } from "~/components/UnitSprite";
 import { Badge } from "~/components/ui/badge";
 import { Card } from "~/components/ui/card";
-import {
-	getAllBattlePasses,
-	getBattlePassBySlug,
-} from "~/features/battlepasses/requests";
+import { api } from "~/trpc/server";
 
 interface Params {
 	slug: string;
 }
 
 export async function generateMetadata({ params }: { params: Params }) {
-	const pass = await getBattlePassBySlug(params.slug);
+	const pass = await api.battlePass.getBySlug(params);
 	if (!pass) {
 		return {};
 	}
@@ -27,14 +24,14 @@ export async function generateMetadata({ params }: { params: Params }) {
 }
 
 export async function generateStaticParams() {
-	const passes = await getAllBattlePasses();
+	const passes = await api.battlePass.getAllQuick();
 	return passes.map((pass) => ({
 		slug: pass.slug,
 	}));
 }
 
 export default async function BattlePass({ params }: { params: Params }) {
-	const pass = await getBattlePassBySlug(params.slug);
+	const pass = await api.battlePass.getBySlug(params);
 
 	if (!pass) {
 		notFound();

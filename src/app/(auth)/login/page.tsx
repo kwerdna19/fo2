@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import LoginCard from "~/components/layout/LoginCard";
-import { auth } from "~/server/auth";
+import { auth } from "~/server/auth/auth";
 
 export const dynamic = "force-dynamic";
 

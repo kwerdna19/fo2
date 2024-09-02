@@ -8,15 +8,9 @@ import { TbCrown as Crown } from "react-icons/tb";
 import SortButton from "~/components/SortButton";
 import { useDataTableQueryParams } from "~/components/data-table/use-data-table-query";
 import RangeField from "~/components/form/RangeField";
-import { TextField } from "~/components/form/TextField";
-import {
-	Form,
-	ResetButton,
-	SubmitButton,
-	useZodForm,
-} from "~/components/form/zod-form";
+import { Form, SubmitButton, useZodForm } from "~/components/form/zod-form";
 import { Button } from "~/components/ui/button";
-import type { getAllMobs } from "~/features/mobs/requests";
+import type { RouterOutputs } from "~/trpc/react";
 import { LEVEL_CAP } from "~/utils/fo";
 import { MobSprite } from "../../../components/MobSprite";
 import { DataTable } from "../../../components/data-table/data-table";
@@ -26,7 +20,7 @@ import { DropGold } from "./DropGold";
 import { DropsList } from "./DropsList";
 import { MobHealth } from "./MobHealth";
 
-type AllMobsResponse = Awaited<ReturnType<typeof getAllMobs>>;
+type AllMobsResponse = RouterOutputs["mob"]["getAllPopulated"];
 type Datum = AllMobsResponse["data"][number];
 
 const columnHelper = createColumnHelper<Datum>();

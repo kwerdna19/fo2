@@ -5,12 +5,10 @@ import { revalidatePath } from "next/cache";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { Button } from "~/components/ui/button";
-import { getAllAreasQuick } from "~/features/areas/requests";
-import { getAllItemsQuick } from "~/features/items/requests";
 import { SkillForm } from "~/features/skills/components/SkillForm";
-import { getSkillBySlug, updateSkill } from "~/features/skills/requests";
 import { skillSchema } from "~/features/skills/schemas";
 import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles";
+import { api } from "~/trpc/server";
 import type { ConformResult } from "~/types/actions";
 import { recursivelyNullifyUndefinedValues } from "~/utils/misc";
 import { getListOfImages } from "~/utils/server";
@@ -20,7 +18,7 @@ interface Params {
 }
 
 export async function generateMetadata({ params }: { params: Params }) {
-	const skill = await getSkillBySlug(params.slug);
+	const skill = await api.skill.getBySlug(params);
 	if (!skill) {
 		return {};
 	}
@@ -32,14 +30,14 @@ export async function generateMetadata({ params }: { params: Params }) {
 export default async function EditSkill({ params }: { params: Params }) {
 	await userSatisfiesRoleOrRedirect(Role.MODERATOR, `/skills/${params.slug}`);
 
-	const skill = await getSkillBySlug(params.slug);
+	const skill = await api.skill.getBySlug(params);
 
 	if (!skill) {
 		return notFound();
 	}
 
-	const items = await getAllItemsQuick();
-	const areas = await getAllAreasQuick();
+	const items = await api.item.getAllQuick();
+	const areas = await api.area.getAllQuick();
 	const sprites = getListOfImages("skill");
 
 	if (!sprites) {
@@ -58,7 +56,10 @@ export default async function EditSkill({ params }: { params: Params }) {
 
 		try {
 			const converted = recursivelyNullifyUndefinedValues(submission.value);
-			const updated = await updateSkill(skill.id, converted);
+			const updated = await api.skill.update({
+				id: skill.id,
+				data: converted,
+			});
 
 			revalidatePath("/skills", "page");
 			revalidatePath("/items", "page");
