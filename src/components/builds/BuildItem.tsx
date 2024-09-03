@@ -13,7 +13,7 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "~/components/ui/popover";
-import { Slot, slotBackgroundSpriteMap } from "~/utils/fo";
+import { Slot, slotBackgroundSpriteMap } from "~/utils/fo-game";
 import { cn } from "~/utils/styles";
 import { ItemSprite } from "../ItemSprite";
 import { Button } from "../ui/button";

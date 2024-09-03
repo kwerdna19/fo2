@@ -8,7 +8,7 @@ import {
 	roleProtectedProcedure,
 } from "~/server/api/trpc";
 import schema from "~/server/db/json-schema.json";
-import { equipmentSlotConfig } from "~/utils/fo";
+import { equipmentSlotConfig } from "~/utils/fo-game";
 import { getSlugFromName } from "~/utils/misc";
 import { itemSchema } from "./schemas";
 import { itemSearchFilterSchema } from "./search-params";

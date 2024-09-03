@@ -1,7 +1,7 @@
 "use client";
 import { basename } from "path";
 import type { Item } from "@prisma/client";
-import { type Build, Slot, visibleEquipment } from "~/utils/fo";
+import { type Build, Slot, visibleEquipment } from "~/utils/fo-game";
 import { MobSprite } from "../MobSprite";
 
 export function CharacterPreview({

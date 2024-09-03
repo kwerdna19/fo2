@@ -11,7 +11,7 @@ import RangeField from "~/components/form/RangeField";
 import { Form, SubmitButton, useZodForm } from "~/components/form/zod-form";
 import { Button } from "~/components/ui/button";
 import type { RouterOutputs } from "~/trpc/react";
-import { LEVEL_CAP } from "~/utils/fo";
+import { LEVEL_CAP } from "~/utils/fo-game";
 import { MobSprite } from "../../../components/MobSprite";
 import { DataTable } from "../../../components/data-table/data-table";
 import { mobSearchFilterSchema, mobSearchParamParser } from "../search-params";

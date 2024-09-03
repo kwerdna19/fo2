@@ -1,7 +1,7 @@
 "use client";
 import type { Item, Skill } from "@prisma/client";
 import type { ReactNode } from "react";
-import type { BasicStats, DerivedStats } from "~/utils/fo";
+import type { BasicStats, DerivedStats } from "~/utils/fo-game";
 import { cn } from "~/utils/styles";
 
 type Stats = Partial<Pick<Skill, BasicStats | DerivedStats>>;

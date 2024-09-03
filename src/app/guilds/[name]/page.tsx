@@ -7,8 +7,8 @@ import { Badge } from "~/components/ui/badge";
 import { Separator } from "~/components/ui/separator";
 import { TooltipProvider } from "~/components/ui/tooltip";
 import { env } from "~/env";
-import { getPlayerSpriteUrl, guildRankMap } from "~/utils/fo";
 import { GuildService } from "~/utils/fo-api";
+import { getPlayerSpriteUrl, guildRankMap } from "~/utils/fo-game";
 
 interface Params {
 	name: string;

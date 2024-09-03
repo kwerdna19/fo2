@@ -29,7 +29,7 @@ import { roleIsSatisfied } from "../auth/roles";
  * @see https://trpc.io/docs/server/context
  */
 export const createTRPCContext = async (opts: { headers: Headers }) => {
-	const session = await auth();
+	const session = process.env.BUILD ? null : await auth();
 
 	return {
 		db,
@@ -110,7 +110,7 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
  * guarantee that a user querying is authorized, but you can still access user session data if they
  * are logged in.
  */
-export const publicProcedure = t.procedure.use(timingMiddleware);
+export const publicProcedure = t.procedure; ///.use(timingMiddleware);
 
 /**
  * Protected (authenticated) procedure
@@ -121,7 +121,7 @@ export const publicProcedure = t.procedure.use(timingMiddleware);
  * @see https://trpc.io/docs/procedures
  */
 export const protectedProcedure = t.procedure
-	.use(timingMiddleware)
+	// .use(timingMiddleware)
 	.use(({ ctx, next }) => {
 		if (!ctx.session || !ctx.session.user) {
 			throw new TRPCError({ code: "UNAUTHORIZED" });
@@ -135,19 +135,21 @@ export const protectedProcedure = t.procedure
 	});
 
 export const roleProtectedProcedure = (r: Role) =>
-	t.procedure.use(timingMiddleware).use(({ ctx, next }) => {
-		if (!ctx.session || !ctx.session.user) {
-			throw new TRPCError({ code: "UNAUTHORIZED" });
-		}
+	t.procedure
+		// .use(timingMiddleware)
+		.use(({ ctx, next }) => {
+			if (!ctx.session || !ctx.session.user) {
+				throw new TRPCError({ code: "UNAUTHORIZED" });
+			}
 
-		if (!roleIsSatisfied(r, ctx.session.user.role)) {
-			throw new TRPCError({ code: "UNAUTHORIZED" });
-		}
+			if (!roleIsSatisfied(r, ctx.session.user.role)) {
+				throw new TRPCError({ code: "UNAUTHORIZED" });
+			}
 
-		return next({
-			ctx: {
-				// infers the `session` as non-nullable
-				session: { ...ctx.session, user: ctx.session.user },
-			},
+			return next({
+				ctx: {
+					// infers the `session` as non-nullable
+					session: { ...ctx.session, user: ctx.session.user },
+				},
+			});
 		});
-	});

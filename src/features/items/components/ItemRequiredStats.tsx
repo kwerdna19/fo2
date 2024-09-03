@@ -1,7 +1,7 @@
 "use client";
 import type { Item } from "@prisma/client";
 import type { ReactNode } from "react";
-import type { RequiredStats } from "~/utils/fo";
+import type { RequiredStats } from "~/utils/fo-game";
 import { cn } from "~/utils/styles";
 
 export function ItemRequiredStats(props: {

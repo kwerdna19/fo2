@@ -33,22 +33,15 @@ model Mob {
   boss      Boolean    @default(false)
   drops     Loot[]
   locations Location[]
-  /// Attack speed in milliseconds
   atkSpeed  Float?
   dmgMin    Int?
   dmgMax    Int?
 
+  inGameId   Int?
+  spriteName String?
+
   numSpawns    Int?
   spawnTimeSec Int?
-
-  range Int?
-  str   Int?
-  sta   Int?
-  agi   Int?
-  int   Int?
-  armor Int?
-  crit  Float?
-  dodge Float?
 
   factionXp Int?
   factionId String?

@@ -1,7 +1,7 @@
 import { createSearchParamsCache, parseAsInteger } from "nuqs/server";
 import { z } from "zod";
 import { dataTableSearchParams } from "~/components/data-table/data-table-utils";
-import { LEVEL_CAP } from "~/utils/fo";
+import { LEVEL_CAP } from "~/utils/fo-game";
 
 export const skillSearchParamParser = {
 	minLevel: parseAsInteger,

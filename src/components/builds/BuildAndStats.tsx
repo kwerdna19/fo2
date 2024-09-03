@@ -11,7 +11,7 @@ import {
 	getAllStats,
 	getPossibleBuildFromItems,
 	playerSlots,
-} from "~/utils/fo";
+} from "~/utils/fo-game";
 import { cn } from "~/utils/styles";
 import PossibleEquipmentBuild from "./PossibleEquipmentBuild";
 

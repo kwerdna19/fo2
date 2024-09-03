@@ -5,7 +5,7 @@ import {
 	type PossibleBuild,
 	type Slot,
 	playerSlots,
-} from "~/utils/fo";
+} from "~/utils/fo-game";
 import { CharacterPreview } from "./CharacterPreview";
 import { PossibleBuildItem } from "./PossibleBuildItem";
 

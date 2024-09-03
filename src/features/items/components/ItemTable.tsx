@@ -24,7 +24,7 @@ import { Label } from "~/components/ui/label";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { DmgRange } from "~/features/mobs/components/DmgRange";
 import { type RouterInputs, type RouterOutputs, api } from "~/trpc/react";
-import { LEVEL_CAP } from "~/utils/fo";
+import { LEVEL_CAP } from "~/utils/fo-game";
 import { shallowCompare } from "~/utils/misc";
 import { cn } from "~/utils/styles";
 import {

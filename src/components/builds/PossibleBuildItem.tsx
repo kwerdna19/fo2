@@ -2,7 +2,7 @@
 import type { Item } from "@prisma/client";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Link from "next/link";
-import { Slot, slotBackgroundSpriteMap } from "~/utils/fo";
+import { Slot, slotBackgroundSpriteMap } from "~/utils/fo-game";
 import { cn } from "~/utils/styles";
 import { ItemStats } from "../../features/items/components/ItemStats";
 import { ItemSprite } from "../ItemSprite";

@@ -1,52 +1,32 @@
+import { Role } from "@prisma/client";
 import { format } from "date-fns";
 import { X } from "lucide-react";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { FormButton } from "~/components/FormButton";
 import { ItemSprite } from "~/components/ItemSprite";
-import QueryParamToast from "~/components/QueryParamToast";
 import { Card } from "~/components/ui/card";
 import { Progress } from "~/components/ui/progress";
-import {
-	getMyCollection,
-	getNumCollectibleItems,
-	removeFromCollection,
-} from "~/features/collection/requests";
-import { auth } from "~/server/auth/auth";
+import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles";
+import { api } from "~/trpc/server";
 
 export const metadata = {
 	title: "My Collection",
 };
 
 export default async function Collection() {
-	const session = await auth();
-	if (!session?.user) {
-		redirect("/login");
-	}
+	await userSatisfiesRoleOrRedirect(Role.USER, "/login");
 
-	const collection = await getMyCollection();
-
-	const possibleItems = await getNumCollectibleItems();
+	const collection = await api.collection.getMyCollection();
+	const possibleItems = await api.collection.getNumCollectibleItems();
 
 	const p = Math.round(100 * (collection.length / possibleItems));
 
 	async function removeItem(fd: FormData) {
 		"use server";
 
-		const itemId = fd.get("itemId")?.toString();
-
-		const session = await auth();
-		if (!session || !session.user || !itemId) {
-			redirect("/login");
-		}
-
-		const userId = session.user.id;
-
-		const {
-			item: { name },
-		} = await removeFromCollection({ userId, itemId });
-
-		redirect(`/collection?removed=true&placeholder=${name}`);
+		// biome-ignore lint/style/noNonNullAssertion: <explanation>
+		const itemId = fd.get("itemId")!.toString();
+		await api.collection.removeFromCollection({ itemId });
 	}
 
 	return (

@@ -7,7 +7,7 @@ import {
 	type Slot,
 	equipmentSlotConfig,
 	playerSlots,
-} from "~/utils/fo";
+} from "~/utils/fo-game";
 import { BuildItem } from "./BuildItem";
 import { CharacterPreview } from "./CharacterPreview";
 

@@ -21,7 +21,7 @@ import {
 	getPlayerSpriteUrlPreview,
 	isVisible,
 	isWeapon,
-} from "~/utils/fo";
+} from "~/utils/fo-game";
 
 interface Params {
 	slug: string;

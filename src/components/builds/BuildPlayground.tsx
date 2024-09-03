@@ -15,7 +15,7 @@ import {
 	getAllStats,
 	playerSlots,
 	stats,
-} from "~/utils/fo";
+} from "~/utils/fo-game";
 import { cn } from "~/utils/styles";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";

@@ -49,3 +49,5 @@ bin/tmp
 bin/database-backups
 
 *:Zone.Identifier
+
+*-data.json

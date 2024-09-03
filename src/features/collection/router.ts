@@ -5,7 +5,7 @@ import {
 	protectedProcedure,
 	publicProcedure,
 } from "~/server/api/trpc";
-import { cosmeticEquipment, visibleEquipment } from "~/utils/fo";
+import { cosmeticEquipment, visibleEquipment } from "~/utils/fo-game";
 
 export default createTRPCRouter({
 	getMyCollection: protectedProcedure.query(

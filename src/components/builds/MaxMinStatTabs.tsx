@@ -1,6 +1,6 @@
 "use client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import { LEVEL_CAP } from "../../utils/fo";
+import { LEVEL_CAP } from "../../utils/fo-game";
 import BuildAndStats from "./BuildAndStats";
 import type { Data } from "./MaxMinBuildsPage";
 
