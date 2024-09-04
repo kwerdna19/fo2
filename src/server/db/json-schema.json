@@ -674,6 +674,34 @@
             "INT"
           ]
         },
+        "type": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "originalType": "Int"
+        },
+        "subType": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "originalType": "Int"
+        },
+        "typeSpecificValue": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "originalType": "Float"
+        },
+        "spriteName": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "originalType": "String"
+        },
         "twoHand": {
           "type": [
             "boolean",
@@ -694,6 +722,24 @@
           "originalType": "Int"
         },
         "sellPriceUnit": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "originalType": "Unit",
+          "enum": [
+            "GEMS",
+            "COINS"
+          ]
+        },
+        "buyPrice": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "originalType": "Int"
+        },
+        "buyPriceUnit": {
           "type": [
             "string",
             "null"
@@ -728,6 +774,31 @@
           "originalType": "NpcCraft",
           "items": {
             "$ref": "#/definitions/NpcCraft"
+          }
+        },
+        "boxId": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "originalType": "String"
+        },
+        "box": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Item"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "originalType": "Item"
+        },
+        "boxItems": {
+          "type": "array",
+          "originalType": "Item",
+          "items": {
+            "$ref": "#/definitions/Item"
           }
         },
         "usages": {
@@ -899,6 +970,13 @@
           "originalType": "Int"
         },
         "dmgMax": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "originalType": "Int"
+        },
+        "luck": {
           "type": [
             "integer",
             "null"

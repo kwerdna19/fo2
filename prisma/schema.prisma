@@ -80,6 +80,7 @@ model NpcSale {
   item   Item   @relation(fields: [itemId], references: [id])
   itemId String
 
+  // TO REMOVE
   unit  Unit @default(COINS)
   price Int
 
@@ -205,14 +206,30 @@ model Item {
   tier               Int?
   tierStat           Stat?
 
-  twoHand       Boolean?
-  consumable    Boolean    @default(false)
+  type              Int?
+  subType           Int?
+  typeSpecificValue Float?
+  spriteName        String?
+
+  // To remove?
+  twoHand    Boolean?
+  // To remove?
+  consumable Boolean  @default(false)
+
   sellPrice     Int?
   sellPriceUnit Unit?
-  stackSize     Int        @default(1)
-  droppedBy     Loot[]
-  soldBy        NpcSale[]
-  craftedBy     NpcCraft[]
+
+  buyPrice     Int?
+  buyPriceUnit Unit?
+
+  stackSize Int        @default(1)
+  droppedBy Loot[]
+  soldBy    NpcSale[]
+  craftedBy NpcCraft[]
+
+  boxId    String?
+  box      Item?   @relation("box", fields: [boxId], references: [id])
+  boxItems Item[]  @relation("box")
 
   usages ItemQuantity[]
 
@@ -250,9 +267,12 @@ model Item {
   atkSpeed Float?
   dmgMin   Int?
   dmgMax   Int?
+  luck     Int?
 
+  // To remove?
   artist String?
 
+  // To remove?
   collections CollectionItem[]
 }
 

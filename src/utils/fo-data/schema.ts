@@ -29,16 +29,16 @@ export const ItemDefinitionSchema = z.object({
 	sfn: z.string(), // Sprite filename
 	ty: z.number(), // Type
 	st: z.number(), // Subtype
-	q: z.number(), //
-	lr: z.number(),
-	sr: z.union([StatSchema, BoxItemIdsSchema]),
-	bt: z.number(),
-	sta: z.union([StatSchema, z.never().array()]),
-	ss: z.number(),
-	vbc: z.number(),
-	vbp: z.number(),
-	vsc: z.number(),
-	vsp: z.number(),
+	q: z.number(), // ? - 0 for everything except for Alpha Halo - where it is 32
+	lr: z.number(), // Level Req
+	sr: z.union([StatSchema, BoxItemIdsSchema]), // Stat requirements or consumable box item IDs
+	bt: z.number(), // ? 0 for everything
+	sta: z.union([StatSchema, z.never().array()]), // Bonus stats or empty array (unknown)
+	ss: z.number(), // Stack size
+	vbc: z.number(), // sell price unit (1: GEMS, 0: COINS)
+	vbp: z.number(), // sell to npc price
+	vsc: z.number(), // purchase price unit (1: GEMS, 0: COINS)
+	vsp: z.number(), // purchase from npc price
 	t: TranslationSchema,
 });
 export type ItemDefinition = z.infer<typeof ItemDefinitionSchema>;
@@ -52,9 +52,9 @@ export const MobDefinitionSchema = z.object({
 	mxd: z.number(), // Max Damage
 	as: z.number(), // Attack Speed (ms / atk)
 	ms: z.number(), // Movement Speed
-	fi: z.number(), // ?
-	fx: z.number(), // ?
-	wt: z.number(), // ? 0 for everything except veins (where it is 7)
+	fi: z.number(), // faction id
+	fx: z.number(), // faction xp
+	wt: z.number(), // ???
 	t: TranslationSchema,
 	z: z.number().nullable(), // zone id
 	mic: z.number().nullable(), // min coin drop

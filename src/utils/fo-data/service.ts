@@ -75,7 +75,10 @@ export const mobDefinitionToDatabaseMob = (
 	};
 };
 
-const itemTypeMap = {
+export const itemTypeMap: Record<
+	number,
+	{ type: string; subtypes?: Record<number, string> }
+> = {
 	0: {
 		type: "JUNK",
 	},
@@ -99,20 +102,20 @@ const itemTypeMap = {
 			0: "HEAD",
 			1: "TRINKET",
 			2: "FACE",
-			// 3: "?",
-			// 4: "?",
-			// 5: "?",
+			// 3
+			// 4
+			// 5
 			6: "SHOULDERS",
-			// 7: "?",
+			// 7
 			8: "CHEST",
-			// 9: "?",
+			// 9
 			10: "LEGS",
-			// 11: "?",
+			// 11
 			12: "RING",
-			// 13: "?",
-			// 14: "?",
+			// 13
+			// 14
 			15: "GUILD",
-			// 16: "?",
+			// 16
 			17: "OFFHAND",
 		},
 	},
@@ -122,6 +125,19 @@ const itemTypeMap = {
 		subtypes: {
 			1: "HEALTH",
 			2: "ENERGY",
+			// 3 (Map?)
+			4: "SKILL-LEARN",
+			// 5
+			6: "OUTFIT_BOX",
+			7: "EFFECT",
+			8: "XP_BOOST",
+			9: "FACTION_XP_BOOST",
+			10: "BATTLEPASS_XP",
+			11: "BATTLEPASS",
+			12: "FACTION_XP",
+			13: "BANK_SLOT",
+			14: "TELEPORT",
+			15: "GEMS",
 		},
 	},
 	6: {
@@ -132,7 +148,10 @@ const itemTypeMap = {
 			2: "FACE",
 			3: "LEGS",
 			4: "BACK",
-			5: "COSMETIC_SHOULDERS",
+			// 5
+			6: "SHOULDERS",
+			16: "WEAPON",
+			17: "OFFHAND",
 		},
 	},
 };
