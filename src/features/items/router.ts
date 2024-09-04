@@ -183,7 +183,7 @@ export default createTRPCRouter({
 	getBySlug: publicProcedure
 		.input(z.object({ slug: z.string() }))
 		.query(({ ctx: { db }, input: { slug } }) => {
-			return db.item.findUnique({
+			return db.item.findFirst({
 				where: {
 					slug,
 				},
