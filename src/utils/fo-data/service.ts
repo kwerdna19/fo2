@@ -75,6 +75,7 @@ export const mobDefinitionToDatabaseMob = (
 	};
 };
 
+// if no subtypes - 0 is only valid value for "st"
 export const itemTypeMap: Record<
 	number,
 	{ type: string; subtypes?: Record<number, string> }
@@ -126,7 +127,7 @@ export const itemTypeMap: Record<
 			1: "HEALTH",
 			2: "ENERGY",
 			// 3 (Map?)
-			4: "SKILL-LEARN",
+			4: "SKILL_LEARN",
 			// 5
 			6: "OUTFIT_BOX",
 			7: "EFFECT",

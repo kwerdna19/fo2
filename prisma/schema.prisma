@@ -21,8 +21,8 @@ model Mob {
   id        String     @id @default(cuid())
   createdAt DateTime   @default(now())
   updatedAt DateTime   @default(now()) @updatedAt
-  name      String     @unique()
-  slug      String     @unique()
+  name      String
+  slug      String
   desc      String?
   note      String?
   level     Int
