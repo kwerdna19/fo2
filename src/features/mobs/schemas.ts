@@ -23,4 +23,6 @@ export const mobSchema = z.object({
 	drops: dropsSchema.optional(),
 	factionXp: z.number().int().optional(),
 	factionId: z.string().optional(),
+	inGameId: z.number().int(),
+	spriteName: z.string(),
 });

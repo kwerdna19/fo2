@@ -64,6 +64,11 @@ export const itemSchema = z.object({
 	dmgMin: z.number().int().optional(),
 	dmgMax: z.number().int().optional(),
 
+	inGameId: z.number().int(),
+	spriteName: z.string(),
+	type: z.number().int(),
+	subType: z.number().int(),
+
 	droppedBy: droppedBySchema.optional(),
 	soldBy: soldBySchema.optional(),
 	craftedBy: craftedBySchema.optional(),

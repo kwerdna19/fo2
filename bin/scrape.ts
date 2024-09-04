@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import type { ItemDefinition } from "~/utils/fo-data/schema";
 import {
 	getAllData,
+	itemDefinitionToDatabaseItem,
 	mobDefinitionToDatabaseMob,
 } from "~/utils/fo-data/service";
 import { getSlugFromName } from "~/utils/misc";
@@ -19,7 +20,7 @@ const items = await getAllData("items");
 
 const prisma = new PrismaClient();
 
-console.log("Total items found:", items.length);
+console.log("Total items found in data file:", items.length);
 
 let processed = 0;
 
@@ -42,16 +43,9 @@ for (const gameItem of items) {
 	processed++;
 	toProcess.push(gameItem);
 
-	// const foundItem = await prisma.item.findFirst({
+	// const foundItems = await prisma.item.findMany({
 	// 	where: {
-	// 		OR: [
-	// 			{
-	// 				name: gameItem.t.en.n,
-	// 			},
-	// 			{
-	// 				spriteUrl: `/sprites/item/${gameItem.sfn}-icon.png`,
-	// 			},
-	// 		],
+	// 		inGameId: gameItem.id,
 	// 	},
 	// 	select: {
 	// 		id: true,
@@ -59,25 +53,49 @@ for (const gameItem of items) {
 	// 	},
 	// });
 
-	// if (!foundItem) {
-	// 	console.log("Item not found.", gameItem.t.en.n);
+	// if (foundItems.length !== 1) {
+	// 	console.log(
+	// 		"More or less than 1 item found",
+	// 		gameItem.t.en.n,
+	// 		foundItems.length,
+	// 	);
+	// }
+
+	// if (foundItems.length === 0) {
+	// 	console.log("Not found, creating", gameItem.t.en.n);
+	// 	await prisma.item.create({
+	// 		data: itemDefinitionToDatabaseItem(gameItem),
+	// 	});
+	// }
+
+	// if (foundItems.length === 1) {
+	// 	console.log("1 Item found. Updating", gameItem.t.en.n);
+
+	// 	await prisma.item.update({
+	// 		where: {
+	// 			// biome-ignore lint/style/noNonNullAssertion: <explanation>
+	// 			id: foundItems[0]!.id,
+	// 		},
+	// 		data: itemDefinitionToDatabaseItem(gameItem),
+	// 	});
 	// }
 }
+console.log("Processed data items:", processed);
 
-const grouped = toProcess.reduce(
-	(acc, item) => {
-		const key = item.t.en.n;
-		acc[key] = acc[key] ?? [];
-		acc[key].push(item);
-		return acc;
-	},
-	{} as Record<string, ItemDefinition[]>,
+const dbitems = await prisma.item.findMany();
+console.log("Total items found in database:", dbitems.length);
+
+// for (const dbItem of dbitems) {
+// 	const gameItem = items.find((i) => i.t.en.n === dbItem.name);
+// 	if (!gameItem) {
+// 		console.log("Game Item not found in game data for", dbItem.name);
+// 	}
+// }
+
+const inGameFileNotInDb = items.filter(
+	(i) => !dbitems.some((dbi) => dbi.name === i.t.en.n),
 );
 
-console.log(
-	Object.keys(grouped).filter((k) => grouped[k] && grouped[k].length > 1),
-);
-
-// console.log("Processed:", processed);
+console.log({ inGameFileNotInDb: inGameFileNotInDb.map((i) => i.t.en.n) });
 
 await prisma.$connect();

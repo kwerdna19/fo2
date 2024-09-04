@@ -50,7 +50,11 @@ export const ItemSprite = ({
 					"border shadow-sm border-slate-200 bg-slate-50 dark:bg-slate-800 dark:border-slate-950 rounded-sm",
 				className,
 			)}
-			src={url}
+			src={
+				url.startsWith("/")
+					? url
+					: `https://art.fantasyonline2.com/textures/icons/items/${url}-icon.png`
+			}
 			alt={name ? `${name} sprite` : ""}
 		/>
 	);

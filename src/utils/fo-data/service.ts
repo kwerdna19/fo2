@@ -3,6 +3,7 @@ import { z } from "zod";
 import { getSlugFromName } from "../misc";
 import {
 	type DataType,
+	type ItemDefinition,
 	type MobDefinition,
 	type SchemaDefinitionByType,
 	dataSchemas,
@@ -155,4 +156,31 @@ export const itemTypeMap: Record<
 			17: "OFFHAND",
 		},
 	},
+};
+
+export const itemDefinitionToDatabaseItem = (
+	gameItem: ItemDefinition,
+): Prisma.ItemCreateInput => {
+	return {
+		name: gameItem.t.en.n,
+		desc: gameItem.t.en.d,
+		slug: getSlugFromName(gameItem.t.en.n),
+		spriteUrl: `/sprites/item/${gameItem.sfn}-icon.png`,
+		spriteName: gameItem.sfn,
+		levelReq: gameItem.lr,
+
+		inGameId: gameItem.id,
+
+		type: gameItem.ty,
+		subType: gameItem.st,
+		typeSpecificValue: !Array.isArray(gameItem.sta)
+			? Number(gameItem.sta.v)
+			: null,
+
+		sellPrice: gameItem.vbp,
+		sellPriceUnit: gameItem.vbc === 1 ? "GEMS" : "COINS",
+		buyPrice: gameItem.vsp,
+		buyPriceUnit: gameItem.vsc === 1 ? "GEMS" : "COINS",
+		stackSize: Math.max(1, gameItem.ss),
+	};
 };

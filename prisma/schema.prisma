@@ -37,8 +37,8 @@ model Mob {
   dmgMin    Int?
   dmgMax    Int?
 
-  inGameId   Int?
-  spriteName String?
+  inGameId   Int    @unique
+  spriteName String
 
   numSpawns    Int?
   spawnTimeSec Int?
@@ -206,10 +206,12 @@ model Item {
   tier               Int?
   tierStat           Stat?
 
-  type              Int?
-  subType           Int?
+  inGameId   Int    @unique
+  type       Int
+  subType    Int
+  spriteName String
+
   typeSpecificValue Float?
-  spriteName        String?
 
   // To remove?
   twoHand    Boolean?
@@ -246,10 +248,9 @@ model Item {
   areaId String?
   area   Area?   @relation(name: "teleport-items", fields: [areaId], references: [id])
 
+  // TO REMOVE - separate table needed
   availableStart DateTime?
   availableEnd   DateTime?
-
-  inGameId Int?
 
   // stats - requirements
   reqStr Int?

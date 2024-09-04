@@ -101,17 +101,11 @@
           "originalType": "Int"
         },
         "inGameId": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": "integer",
           "originalType": "Int"
         },
         "spriteName": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": "string",
           "originalType": "String"
         },
         "numSpawns": {
@@ -168,7 +162,9 @@
         "health",
         "goldMin",
         "goldMax",
-        "spriteUrl"
+        "spriteUrl",
+        "inGameId",
+        "spriteName"
       ]
     },
     "Npc": {
@@ -674,19 +670,21 @@
             "INT"
           ]
         },
+        "inGameId": {
+          "type": "integer",
+          "originalType": "Int"
+        },
         "type": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": "integer",
           "originalType": "Int"
         },
         "subType": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": "integer",
           "originalType": "Int"
+        },
+        "spriteName": {
+          "type": "string",
+          "originalType": "String"
         },
         "typeSpecificValue": {
           "type": [
@@ -694,13 +692,6 @@
             "null"
           ],
           "originalType": "Float"
-        },
-        "spriteName": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "originalType": "String"
         },
         "twoHand": {
           "type": [
@@ -878,13 +869,6 @@
           "originalType": "DateTime",
           "format": "date-time"
         },
-        "inGameId": {
-          "type": [
-            "integer",
-            "null"
-          ],
-          "originalType": "Int"
-        },
         "reqStr": {
           "type": [
             "integer",
@@ -1001,7 +985,11 @@
       "required": [
         "name",
         "slug",
-        "spriteUrl"
+        "spriteUrl",
+        "inGameId",
+        "type",
+        "subType",
+        "spriteName"
       ]
     },
     "Location": {

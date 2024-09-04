@@ -65,7 +65,7 @@ export const columns = [
 				href={`/items/${row.original.slug}`}
 			>
 				<ItemSprite
-					url={row.original.spriteUrl}
+					url={row.original.spriteName ?? row.original.spriteUrl}
 					name={row.original.name}
 					size="sm"
 					bg
