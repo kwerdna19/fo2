@@ -59,6 +59,8 @@ export async function getAllData<T extends DataType>(type: T) {
 export const mobDefinitionToDatabaseMob = (
 	gameMob: MobDefinition,
 ): Prisma.MobCreateInput => {
+	// do drops
+
 	return {
 		name: gameMob.t.en.n,
 		desc: gameMob.t.en.d,
@@ -70,9 +72,16 @@ export const mobDefinitionToDatabaseMob = (
 		goldMin: gameMob.mic ?? 0,
 		goldMax: gameMob.mac ?? 0,
 		atkSpeed: gameMob.as,
+		moveSpeed: gameMob.ms,
 		dmgMin: gameMob.mnd,
 		dmgMax: gameMob.mxd,
 		inGameId: gameMob.id,
+		factionXp: gameMob.fx,
+		faction: {
+			connect: {
+				inGameId: gameMob.fi,
+			},
+		},
 	};
 };
 

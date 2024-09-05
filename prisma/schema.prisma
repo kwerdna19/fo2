@@ -36,6 +36,7 @@ model Mob {
   atkSpeed  Float?
   dmgMin    Int?
   dmgMax    Int?
+  moveSpeed Int?
 
   inGameId   Int    @unique
   spriteName String
@@ -390,7 +391,7 @@ model Faction {
   name      String   @unique()
   slug      String   @unique()
   note      String?
-  inGameId  Int
+  inGameId  Int      @unique
 
   mobs Mob[]
 }
