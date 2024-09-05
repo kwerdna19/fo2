@@ -198,7 +198,7 @@ export default async function Item({ params }: { params: Params }) {
 										>
 											<Link prefetch={false} href={`/mob/${mob.slug}`}>
 												<MobSprite
-													url={mob.spriteUrl}
+													url={mob.spriteName}
 													name={mob.name}
 													size="sm"
 												/>

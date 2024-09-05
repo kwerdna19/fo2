@@ -123,7 +123,11 @@ export const MobSprite = ({
 					height: imgHeight,
 					width: imgWidth,
 				}}
-				src={url}
+				src={
+					url.startsWith("/")
+						? url
+						: `https://art.fantasyonline2.com/textures/enemies/${url}.png`
+				}
 				alt={name ? `${name} sprite` : ""}
 			/>
 		</div>

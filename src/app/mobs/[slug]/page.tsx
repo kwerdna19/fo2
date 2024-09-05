@@ -38,7 +38,7 @@ export default async function Mob({ params }: { params: Params }) {
 				</AdminButton> */}
 			</div>
 			<div>
-				<MobSprite size="xl" url={mob.spriteUrl} name={mob.name} />
+				<MobSprite size="xl" url={mob.spriteName} name={mob.name} />
 			</div>
 		</div>
 	);

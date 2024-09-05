@@ -23,7 +23,7 @@ export function DroppedByList({ mobs }: { mobs: Datum["droppedBy"] }) {
 									href={`/mobs/${d.mob.slug}`}
 								>
 									<MobSprite
-										url={d.mob.spriteUrl}
+										url={d.mob.spriteName}
 										name={d.mob.name}
 										size="sm"
 										className="-mt-[12px]"

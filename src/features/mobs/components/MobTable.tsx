@@ -36,7 +36,7 @@ const columns: ColumnDef<Datum, any>[] = [
 				className="flex justify-center items-center h-[64px] max-h-full overflow-hidden group-hover:overflow-visible"
 			>
 				<MobSprite
-					url={row.original.spriteUrl}
+					url={row.original.spriteName}
 					name={row.original.name}
 					size="sm"
 					className="-mt-[12px]"
