@@ -52,7 +52,7 @@ export default async function Collection() {
 							key={item.id}
 							className="flex w-full p-5 gap-x-5 items-center text-lg"
 						>
-							<ItemSprite bg size="sm" name={item.name} url={item.spriteUrl} />
+							<ItemSprite bg size="sm" name={item.name} url={item.spriteName} />
 							<div className="flex-1">
 								<Link href={`/items/${item.slug}`} prefetch={false}>
 									{item.name}

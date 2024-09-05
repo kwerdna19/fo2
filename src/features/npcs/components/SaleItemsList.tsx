@@ -38,7 +38,7 @@ export function SaleItemsList({
 								<Link prefetch={false} href={`/items/${d.item.slug}`}>
 									<ItemSprite
 										bg
-										url={d.item.spriteUrl}
+										url={d.item.spriteName}
 										name={d.item.name}
 										size={size}
 									/>
@@ -86,7 +86,7 @@ export function CraftItemsList({
 								<Link prefetch={false} href={`/items/${d.item.slug}`}>
 									<ItemSprite
 										bg
-										url={d.item.spriteUrl}
+										url={d.item.spriteName}
 										name={d.item.name}
 										size={size}
 									/>

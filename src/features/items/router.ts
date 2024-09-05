@@ -153,6 +153,7 @@ export default createTRPCRouter({
 				id: true,
 				name: true,
 				spriteUrl: true,
+				spriteName: true,
 				slug: true,
 			},
 		});

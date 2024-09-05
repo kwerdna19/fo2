@@ -90,7 +90,7 @@ export default async function Item({ params }: { params: Params }) {
 
 			<div className="flex flex-col gap-6">
 				<div className="self-center">
-					<ItemSprite bg size="2xl" url={item.spriteUrl} name={item.name} />
+					<ItemSprite bg size="2xl" url={item.spriteName} name={item.name} />
 					<p className="text-muted-foreground pt-2 text-center">{item.name}</p>
 				</div>
 				<div>

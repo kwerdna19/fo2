@@ -12,7 +12,7 @@ import { cn } from "~/utils/styles";
 import { ItemSprite } from "../../../components/ItemSprite";
 
 type Drop = Loot & {
-	item: Pick<Item, "name" | "spriteUrl" | "slug" | "sellPrice">;
+	item: Pick<Item, "name" | "spriteUrl" | "spriteName" | "slug" | "sellPrice">;
 };
 
 export function DropsList({
@@ -57,7 +57,7 @@ export function DropsList({
 								<Link prefetch={false} href={`/items/${d.item.slug}`}>
 									<ItemSprite
 										bg
-										url={d.item.spriteUrl}
+										url={d.item.spriteName}
 										name={d.item.name}
 										size={size}
 									/>
