@@ -161,6 +161,12 @@ export const itemTypeMap: Record<
 export const itemDefinitionToDatabaseItem = (
 	gameItem: ItemDefinition,
 ): Prisma.ItemCreateInput => {
+	const stats = Array.isArray(gameItem.sta) ? null : gameItem.sta;
+
+	const reqStats = Array.isArray(gameItem.sr) ? null : gameItem.sr;
+
+	const boxIds = Array.isArray(gameItem.sr) ? gameItem.sr : null;
+
 	return {
 		name: gameItem.t.en.n,
 		desc: gameItem.t.en.d,
@@ -173,14 +179,35 @@ export const itemDefinitionToDatabaseItem = (
 
 		type: gameItem.ty,
 		subType: gameItem.st,
-		typeSpecificValue: !Array.isArray(gameItem.sta)
-			? Number(gameItem.sta.v)
-			: null,
 
 		sellPrice: gameItem.vbp,
 		sellPriceUnit: gameItem.vbc === 1 ? "GEMS" : "COINS",
 		buyPrice: gameItem.vsp,
 		buyPriceUnit: gameItem.vsc === 1 ? "GEMS" : "COINS",
 		stackSize: Math.max(1, gameItem.ss),
+
+		agi: stats?.agi,
+		str: stats?.str,
+		sta: stats?.sta,
+		int: stats?.int,
+		armor: stats?.arm,
+		typeSpecificValue: typeof stats?.v === "number" ? stats.v : null,
+		luck: stats?.lck,
+		dmgMin: stats?.mnd,
+		dmgMax: stats?.mxd,
+		range: stats?.atkr,
+		atkSpeed: stats?.atks,
+
+		reqStr: reqStats?.str,
+		reqSta: reqStats?.sta,
+		reqAgi: reqStats?.agi,
+		reqInt: reqStats?.int,
+
+		boxItems: {
+			connect:
+				boxIds?.map((inGameId) => ({
+					inGameId,
+				})) ?? [],
+		},
 	};
 };

@@ -17,7 +17,7 @@ export const StatSchema = z.object({
 	lck: z.number().nullish(),
 	mnd: z.number().nullish(),
 	mxd: z.number().nullish(),
-	atkp: z.number().nullish(),
+	atkp: z.number().nullish(), // not DB Item
 	atkr: z.number().nullish(),
 	atks: z.number().nullish(),
 });

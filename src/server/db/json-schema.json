@@ -1500,10 +1500,7 @@
           "originalType": "String"
         },
         "inGameId": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": "integer",
           "originalType": "Int"
         },
         "mobs": {
@@ -1516,7 +1513,8 @@
       },
       "required": [
         "name",
-        "slug"
+        "slug",
+        "inGameId"
       ]
     },
     "Account": {

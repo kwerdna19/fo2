@@ -390,7 +390,7 @@ model Faction {
   name      String   @unique()
   slug      String   @unique()
   note      String?
-  inGameId  Int?
+  inGameId  Int
 
   mobs Mob[]
 }

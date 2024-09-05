@@ -43,15 +43,15 @@ for (const gameItem of items) {
 	processed++;
 	toProcess.push(gameItem);
 
-	// const foundItems = await prisma.item.findMany({
-	// 	where: {
-	// 		inGameId: gameItem.id,
-	// 	},
-	// 	select: {
-	// 		id: true,
-	// 		name: true,
-	// 	},
-	// });
+	const foundItem = await prisma.item.findUnique({
+		where: {
+			inGameId: gameItem.id,
+		},
+		select: {
+			id: true,
+			name: true,
+		},
+	});
 
 	// if (foundItems.length !== 1) {
 	// 	console.log(
@@ -68,17 +68,16 @@ for (const gameItem of items) {
 	// 	});
 	// }
 
-	// if (foundItems.length === 1) {
-	// 	console.log("1 Item found. Updating", gameItem.t.en.n);
+	if (foundItem) {
+		console.log("1 Item found. Updating", gameItem.t.en.n);
 
-	// 	await prisma.item.update({
-	// 		where: {
-	// 			// biome-ignore lint/style/noNonNullAssertion: <explanation>
-	// 			id: foundItems[0]!.id,
-	// 		},
-	// 		data: itemDefinitionToDatabaseItem(gameItem),
-	// 	});
-	// }
+		await prisma.item.update({
+			where: {
+				id: foundItem.id,
+			},
+			data: itemDefinitionToDatabaseItem(gameItem),
+		});
+	}
 }
 console.log("Processed data items:", processed);
 
