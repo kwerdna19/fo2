@@ -34,9 +34,9 @@ model Mob {
   drops     Loot[]
   locations Location[]
   atkSpeed  Float?
-  dmgMin    Int?
-  dmgMax    Int?
-  moveSpeed Int?
+  dmgMin    Int
+  dmgMax    Int
+  moveSpeed Int
 
   inGameId   Int    @unique
   spriteName String
@@ -44,9 +44,9 @@ model Mob {
   numSpawns    Int?
   spawnTimeSec Int?
 
-  factionXp Int?
-  factionId String?
-  faction   Faction? @relation(fields: [factionId], references: [id])
+  factionXp Int
+  factionId String
+  faction   Faction @relation(fields: [factionId], references: [id])
 
   artist String?
 }

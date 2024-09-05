@@ -1,5 +1,6 @@
 import type { Prisma } from "@prisma/client";
 import { z } from "zod";
+import mob from "~/features/mobs/router";
 import { getSlugFromName } from "../misc";
 import {
 	type DataType,
@@ -59,8 +60,6 @@ export async function getAllData<T extends DataType>(type: T) {
 export const mobDefinitionToDatabaseMob = (
 	gameMob: MobDefinition,
 ): Prisma.MobCreateInput => {
-	// do drops
-
 	return {
 		name: gameMob.t.en.n,
 		desc: gameMob.t.en.d,

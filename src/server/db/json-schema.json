@@ -87,24 +87,15 @@
           "originalType": "Float"
         },
         "dmgMin": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": "integer",
           "originalType": "Int"
         },
         "dmgMax": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": "integer",
           "originalType": "Int"
         },
         "moveSpeed": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": "integer",
           "originalType": "Int"
         },
         "inGameId": {
@@ -130,29 +121,15 @@
           "originalType": "Int"
         },
         "factionXp": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": "integer",
           "originalType": "Int"
         },
         "factionId": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": "string",
           "originalType": "String"
         },
         "faction": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Faction"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "originalType": "Faction"
+          "$ref": "#/definitions/Faction"
         },
         "artist": {
           "type": [
@@ -170,8 +147,13 @@
         "goldMin",
         "goldMax",
         "spriteUrl",
+        "dmgMin",
+        "dmgMax",
+        "moveSpeed",
         "inGameId",
-        "spriteName"
+        "spriteName",
+        "factionXp",
+        "factionId"
       ]
     },
     "Npc": {

@@ -1,5 +1,7 @@
 import { writeFileSync } from "fs";
 import { PrismaClient } from "@prisma/client";
+import { usePathname } from "next/navigation";
+import item from "~/features/items/router";
 import {
 	getAllData,
 	mobDefinitionToDatabaseMob,
@@ -33,9 +35,9 @@ for (const gameMob of mobs) {
 	}
 	processed++;
 
-	const foundMob = await prisma.mob.findFirst({
+	const foundMob = await prisma.mob.findUnique({
 		where: {
-			name: gameMob.t.en.n,
+			inGameId: gameMob.id,
 		},
 		select: {
 			id: true,
@@ -43,18 +45,86 @@ for (const gameMob of mobs) {
 		},
 	});
 
-	if (!foundMob) {
+	let mobId = foundMob?.id;
+
+	if (!mobId) {
 		console.log("mob not found. creating ", gameMob.t.en.n);
 
-		await prisma.mob.create({
+		const created = await prisma.mob.create({
 			data: mobDefinitionToDatabaseMob(gameMob),
 		});
+
+		mobId = created.id;
 	} else {
 		await prisma.mob.update({
 			where: {
-				id: foundMob.id,
+				id: mobId,
 			},
 			data: mobDefinitionToDatabaseMob(gameMob),
+		});
+	}
+
+	const dropTuples = gameMob.d ?? [];
+
+	if (dropTuples.length % 2 !== 0) {
+		throw new Error("Invalid drop tuple length");
+	}
+
+	const drops = [] as { itemInGameId: number; dropRate: number }[];
+	for (let i = 0; i < dropTuples.length; i += 2) {
+		const itemInGameId = dropTuples[i];
+		const dropRate = dropTuples[i + 1];
+		if (typeof itemInGameId !== "number" || typeof dropRate !== "number") {
+			throw new Error("Invalid drop tuple");
+		}
+		drops.push({
+			itemInGameId,
+			dropRate,
+		});
+	}
+	if (drops.length > 0) {
+		console.log(`Upserting ${drops.length} drops for ${gameMob.t.en.n}`);
+		const items = await prisma.item.findMany({
+			where: {
+				inGameId: {
+					in: drops.map((d) => d.itemInGameId),
+				},
+			},
+			select: {
+				id: true,
+				name: true,
+				inGameId: true,
+			},
+		});
+
+		await prisma.mob.update({
+			where: {
+				id: mobId,
+			},
+			data: {
+				drops: {
+					upsert: items.map((item) => {
+						const dropRate = drops.find(
+							(d) => d.itemInGameId === item.inGameId,
+						)?.dropRate;
+
+						if (typeof dropRate !== "number") {
+							throw new Error("Drop rate not found");
+						}
+
+						return {
+							create: {
+								dropRate,
+								itemId: item.id,
+							},
+							update: { dropRate },
+							where: {
+								mobId_itemId: { mobId, itemId: item.id },
+							},
+						};
+					}),
+				},
+			},
 		});
 	}
 }
