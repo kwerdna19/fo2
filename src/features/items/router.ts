@@ -14,7 +14,7 @@ import { itemSchema } from "./schemas";
 import { itemSearchFilterSchema } from "./search-params";
 
 const requiredFields = schema.definitions.Item.required;
-const searchFields = ["name", "desc", "slug"];
+const searchFields = ["name", "desc", "slug", "spriteName"];
 
 export default createTRPCRouter({
 	getAllPopulated: publicProcedure

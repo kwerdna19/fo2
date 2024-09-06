@@ -307,8 +307,6 @@ function ItemSearchFilters() {
 
 	const selectedType = form.watch("type");
 
-	console.log({ filters });
-
 	const subTypeOptions =
 		typeof selectedType === "number" && itemTypeMap[selectedType]?.subTypes
 			? Object.entries(itemTypeMap[selectedType].subTypes)
@@ -339,8 +337,6 @@ function ItemSearchFilters() {
 					control={form.control}
 					name="type"
 					render={({ field }) => {
-						console.log("type field render value", field.value);
-
 						return (
 							<FormItem>
 								<FormLabel>Item Type</FormLabel>

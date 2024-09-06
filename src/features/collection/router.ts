@@ -70,9 +70,9 @@ export default createTRPCRouter({
 	getNumCollectibleItems: publicProcedure.query(async ({ ctx: { db } }) => {
 		return db.item.count({
 			where: {
-				equip: {
-					in: [...visibleEquipment, ...cosmeticEquipment],
-				},
+				OR: [2, 3, 6].map((type) => ({
+					type: type,
+				})),
 			},
 		});
 	}),

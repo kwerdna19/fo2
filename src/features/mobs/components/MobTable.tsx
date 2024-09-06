@@ -12,7 +12,6 @@ import { useDataTableQueryParams } from "~/components/data-table/use-data-table-
 import RangeField from "~/components/form/RangeField";
 import { Form, SubmitButton, useZodForm } from "~/components/form/zod-form";
 import { Button } from "~/components/ui/button";
-import { itemSearchParamParser } from "~/features/items/search-params";
 import { type RouterInputs, type RouterOutputs, api } from "~/trpc/react";
 import { LEVEL_CAP } from "~/utils/fo-game";
 import { shallowCompare } from "~/utils/misc";
@@ -219,8 +218,14 @@ export function MobTable({
 	initialParams,
 }: { initialData: AllMobsResponse; initialParams: AllMobsInput }) {
 	const [tableParams] = useQueryStates(dataTableSearchParams);
-	const [filters] = useQueryStates(itemSearchParamParser);
+	const [filters] = useQueryStates(mobSearchParamParser);
 	const params = { ...filters, ...tableParams };
+
+	console.log({
+		params,
+		initialParams,
+		eq: shallowCompare(params, initialParams),
+	});
 
 	const { data } = api.mob.getAllPopulated.useQuery(params, {
 		initialData: shallowCompare(params, initialParams)

@@ -1,6 +1,5 @@
 import type { Prisma } from "@prisma/client";
 import { z } from "zod";
-import mob from "~/features/mobs/router";
 import { getSlugFromName } from "../misc";
 import {
 	type DataType,
@@ -98,22 +97,25 @@ export const itemTypeMap: Record<
 	2: {
 		type: "WEAPON",
 		subTypes: {
-			1: "MELEE", // 1H
+			1: "SWORD", // 1H
 			2: "BOW", // 2H
 			3: "WAND", // 1H
 			4: "AXE", // 2H
 			5: "HAMMER", // 2H
 			6: "STAFF", // 2H
+			7: "PICKAXE",
+			8: "LOCKPICK",
+			9: "2H SWORD",
 		},
 	},
 	3: {
 		type: "EQUIPMENT",
 		subTypes: {
 			0: "HEAD",
-			1: "TRINKET",
+			1: "TRINKET", // LEFT TRINKET
 			2: "FACE",
-			// 3
-			// 4
+			// 3 // RIGHT TRINKET
+			4: "BACK",
 			// 5
 			6: "SHOULDERS",
 			// 7
@@ -121,31 +123,30 @@ export const itemTypeMap: Record<
 			// 9
 			10: "LEGS",
 			// 11
-			12: "RING",
+			12: "RING", // LEFT RING
 			// 13
-			// 14
+			// 14 - RIGHT RING
 			15: "GUILD",
-			// 16
+			// 16 - MAIN HAND
 			17: "OFFHAND",
 		},
 	},
-	// 4 - consumable
 	4: {
 		type: "CONSUMABLE",
 		subTypes: {
 			1: "HEALTH",
 			2: "ENERGY",
-			// 3 (Map?)
-			4: "SKILL",
-			// 5
+			3: "MAP",
+			4: "SKILL_BOOK",
+			5: "SKILL",
 			6: "OUTFIT_BOX",
-			7: "EFFECT",
+			7: "FIREWORK",
 			8: "XP_BOOST",
 			9: "FACTION_XP_BOOST",
 			10: "BATTLEPASS_XP_BOOST",
 			11: "BATTLEPASS",
 			12: "FACTION_XP",
-			13: "BANK_SLOT",
+			13: "BANK_TAB",
 			14: "TELEPORT",
 			15: "GEMS",
 		},
@@ -161,8 +162,9 @@ export const itemTypeMap: Record<
 			2: "FACE",
 			3: "LEGS",
 			4: "BACK",
-			// 5
+			// 5 - mapped main hand
 			6: "SHOULDERS",
+			// 7 - mapped offhand
 			16: "WEAPON",
 			17: "OFFHAND",
 		},
