@@ -51,7 +51,7 @@ export const ItemSprite = ({
 				className,
 			)}
 			src={
-				url.startsWith("/")
+				url.startsWith("/") || url.startsWith("http")
 					? url
 					: `https://art.fantasyonline2.com/textures/icons/items/${url}-icon.png`
 			}

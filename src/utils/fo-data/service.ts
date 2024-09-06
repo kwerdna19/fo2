@@ -63,7 +63,6 @@ export const mobDefinitionToDatabaseMob = (
 		name: gameMob.t.en.n,
 		desc: gameMob.t.en.d,
 		slug: getSlugFromName(gameMob.t.en.n),
-		spriteUrl: `/sprites/mob/${gameMob.sfn}.png`,
 		spriteName: gameMob.sfn,
 		level: gameMob.l,
 		health: gameMob.h,

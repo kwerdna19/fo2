@@ -124,7 +124,6 @@ export default createTRPCRouter({
 			select: {
 				id: true,
 				name: true,
-				spriteUrl: true,
 				spriteName: true,
 			},
 		});

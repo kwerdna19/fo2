@@ -34,7 +34,7 @@ type DroppedBy = z.infer<typeof droppedBySchema>;
 
 type Props = {
 	className?: string;
-	mobs: Pick<Mob, "id" | "name" | "spriteUrl">[];
+	mobs: Pick<Mob, "id" | "name" | "spriteName">[];
 	field: FieldMetadata<DroppedBy | undefined>;
 	label: string;
 };
@@ -63,7 +63,7 @@ function MobField({
 						{!!selectedItem && (
 							<MobSprite
 								name={selectedItem.name}
-								url={selectedItem.spriteUrl}
+								url={selectedItem.spriteName}
 								size="xs"
 							/>
 						)}
@@ -100,7 +100,7 @@ function MobField({
 								<div className="flex items-center gap-x-4">
 									<MobSprite
 										name={mob.name}
-										url={mob.spriteUrl}
+										url={mob.spriteName}
 										size="xs"
 										className="-mt-3 -mb-1"
 									/>

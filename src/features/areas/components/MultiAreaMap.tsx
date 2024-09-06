@@ -17,17 +17,17 @@ export default function MultiAreaMap({
 	const areas = allAreas.filter((a) => a.region === region);
 
 	const maxX = areas.reduce((acc, area) => {
-		if (area.originXGlobal + area.width > acc) {
+		if (area.globalX + area.width > acc) {
 			// biome-ignore lint/style/noParameterAssign: array reduce
-			acc = area.originXGlobal + area.width;
+			acc = area.globalX + area.width;
 		}
 		return acc;
 	}, 0);
 
 	const maxY = areas.reduce((acc, area) => {
-		if (area.originYGlobal + area.height > acc) {
+		if (area.globalY + area.height > acc) {
 			// biome-ignore lint/style/noParameterAssign: array reduce
-			acc = area.originYGlobal + area.height;
+			acc = area.globalY + area.height;
 		}
 		return acc;
 	}, 0);
@@ -63,8 +63,8 @@ export default function MultiAreaMap({
 					url={area.spriteUrl}
 					height={area.height}
 					width={area.width}
-					x={area.originXGlobal}
-					y={area.originYGlobal}
+					x={area.globalX}
+					y={area.globalY}
 				/>
 			))}
 		</MapContainer>

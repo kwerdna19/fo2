@@ -32,7 +32,7 @@ export function LocationLayers({
 								position={[mob.y, mob.x]}
 								alt={mob.name}
 								icon={L.divIcon({
-									html: `<div id="${id}-${mob.id}-${i}" style="background-image: url(${mob.spriteUrl})"></div>`,
+									html: `<div id="${id}-${mob.id}-${i}" style="background-image: url(${`https://art.fantasyonline2.com/textures/enemies/${mob.spriteName}.png`})"></div>`,
 									className: "pixelated map-sprite-icon",
 									iconSize: [spriteWidth * 2, spriteHeight * 2],
 									iconAnchor: [spriteWidth, spriteHeight * 2],

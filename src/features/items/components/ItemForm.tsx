@@ -25,7 +25,7 @@ import SoldByNpcsMultiField from "./SoldByNpcsMultiField";
 
 interface Props {
 	npcs: Pick<Npc, "id" | "name" | "spriteUrl">[];
-	mobs: Pick<Mob, "id" | "name" | "spriteUrl">[];
+	mobs: Pick<Mob, "id" | "name" | "spriteName">[];
 	battlePasses: Pick<BattlePass, "id" | "name">[];
 	sprites: string[];
 	defaultValue?: RouterOutputs["item"]["getBySlug"];

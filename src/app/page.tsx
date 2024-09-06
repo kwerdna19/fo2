@@ -11,7 +11,7 @@ export default function App() {
 				image={
 					<MobSprite
 						size="sm"
-						url="/sprites/mob/soft_shelled_crab.png"
+						url="https://art.fantasyonline2.com/textures/enemies/enemy-crab.png"
 						name="crab"
 						className="-mt-6 -ml-2"
 					/>
@@ -21,7 +21,10 @@ export default function App() {
 				href="/items"
 				label="Items"
 				image={
-					<ItemSprite size="sm" url="/sprites/item/backpack-large-icon.png" />
+					<ItemSprite
+						size="sm"
+						url="https://art.fantasyonline2.com/textures/icons/items/backpack-large-icon.png"
+					/>
 				}
 			/>
 			<NavCard

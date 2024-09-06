@@ -29,7 +29,6 @@ model Mob {
   health    Int
   goldMin   Int
   goldMax   Int
-  spriteUrl String
   boss      Boolean    @default(false)
   drops     Loot[]
   locations Location[]
@@ -292,22 +291,27 @@ model Location {
 }
 
 model Area {
-  id            String     @id @default(cuid())
-  createdAt     DateTime   @default(now())
-  spriteUrl     String
-  updatedAt     DateTime   @default(now()) @updatedAt
-  name          String     @unique()
-  slug          String     @unique()
-  note          String?
-  height        Int
-  width         Int
-  locations     Location[]
-  region        Int
-  originXGlobal Int
-  originYGlobal Int
-  portals       Location[] @relation(name: "portals")
+  id        String     @id @default(cuid())
+  createdAt DateTime   @default(now())
+  spriteUrl String
+  updatedAt DateTime   @default(now()) @updatedAt
+  name      String     @unique()
+  slug      String     @unique()
+  note      String?
+  height    Int
+  width     Int
+  locations Location[]
+  region    Int
+  globalX   Int
+  globalY   Int
+  globalZ   Int
 
-  inGameId Int?
+  spawnX Int
+  spawnY Int
+
+  portals Location[] @relation(name: "portals")
+
+  inGameId Int
 
   items  Item[]  @relation(name: "teleport-items")
   skills Skill[] @relation(name: "teleport-skills")

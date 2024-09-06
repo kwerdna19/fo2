@@ -56,10 +56,6 @@
           "type": "integer",
           "originalType": "Int"
         },
-        "spriteUrl": {
-          "type": "string",
-          "originalType": "String"
-        },
         "boss": {
           "type": "boolean",
           "originalType": "Boolean",
@@ -146,7 +142,6 @@
         "health",
         "goldMin",
         "goldMax",
-        "spriteUrl",
         "dmgMin",
         "dmgMax",
         "moveSpeed",
@@ -1094,11 +1089,23 @@
           "type": "integer",
           "originalType": "Int"
         },
-        "originXGlobal": {
+        "globalX": {
           "type": "integer",
           "originalType": "Int"
         },
-        "originYGlobal": {
+        "globalY": {
+          "type": "integer",
+          "originalType": "Int"
+        },
+        "globalZ": {
+          "type": "integer",
+          "originalType": "Int"
+        },
+        "spawnX": {
+          "type": "integer",
+          "originalType": "Int"
+        },
+        "spawnY": {
           "type": "integer",
           "originalType": "Int"
         },
@@ -1110,10 +1117,7 @@
           }
         },
         "inGameId": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": "integer",
           "originalType": "Int"
         },
         "items": {
@@ -1145,8 +1149,12 @@
         "height",
         "width",
         "region",
-        "originXGlobal",
-        "originYGlobal"
+        "globalX",
+        "globalY",
+        "globalZ",
+        "spawnX",
+        "spawnY",
+        "inGameId"
       ]
     },
     "Skill": {
