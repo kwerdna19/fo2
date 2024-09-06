@@ -105,7 +105,7 @@ export const itemTypeMap: Record<
 			6: "STAFF", // 2H
 			7: "PICKAXE",
 			8: "LOCKPICK",
-			9: "2H SWORD",
+			9: "2H SWORD", // 2H
 		},
 	},
 	3: {

@@ -333,12 +333,44 @@ export const getAllStats = (
 
 const playerSpriteBaseUrl = "https://art.fantasyonline2.com/api/character/ss";
 
-const defaultSpriteAttributes = ["body-0", "eyes-standard-blue", "nude-head"];
+const defaultSpriteAttributes = [
+	"body-1",
+	"eyes-standard-blue",
+	"hair-close-black",
+];
+
+const getItemSpriteLayer = (item: Pick<Item, "type" | "subType">) => {
+	// all weapons and outfit weapons
+	if (item.type === 2 || (item.type === 6 && item.subType === 16)) {
+		return "!0";
+	}
+
+	// Armor or outfit off hand
+	if (
+		(item.type === 3 && item.subType === 17) ||
+		(item.type === 6 && item.subType === 17)
+	) {
+		return "!1";
+	}
+
+	// Armor or outfit back
+	if (
+		(item.type === 3 && item.subType === 4) ||
+		(item.type === 6 && item.subType === 4)
+	) {
+		return "!2";
+	}
+
+	return "";
+};
 
 export const getPlayerSpriteUrlPreview = (
-	items?: Pick<Item, "spriteName">[],
+	items?: Pick<Item, "spriteName" | "type" | "subType">[],
 ) => {
-	const itemSlugs = items?.map((item) => item.spriteName) ?? [];
+	const itemSlugs =
+		items?.map((item) => {
+			return `${item.spriteName}${getItemSpriteLayer(item)}`;
+		}) ?? [];
 
 	const attrs = defaultSpriteAttributes.concat(itemSlugs);
 	const f = attrs.join("_");
@@ -378,7 +410,8 @@ export const isItemTwoHanded = (item: Pick<Item, "type" | "subType">) => {
 		(item.subType === 2 ||
 			item.subType === 4 ||
 			item.subType === 5 ||
-			item.subType === 6)
+			item.subType === 6 ||
+			item.subType === 9)
 	);
 };
 

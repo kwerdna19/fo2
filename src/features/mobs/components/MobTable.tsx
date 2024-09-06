@@ -221,12 +221,6 @@ export function MobTable({
 	const [filters] = useQueryStates(mobSearchParamParser);
 	const params = { ...filters, ...tableParams };
 
-	console.log({
-		params,
-		initialParams,
-		eq: shallowCompare(params, initialParams),
-	});
-
 	const { data } = api.mob.getAllPopulated.useQuery(params, {
 		initialData: shallowCompare(params, initialParams)
 			? initialData
