@@ -1,5 +1,6 @@
 import { basename } from "path";
 import { EquippableType, type Item } from "@prisma/client";
+import { itemTypeMap } from "./fo-data/service";
 
 // not exported form prisma, bc unused in schemas, so moved here
 export enum Slot {
@@ -144,6 +145,8 @@ export const getPossibleBuildFromItems = (items: Item[]): PossibleBuild => {
 		return acc;
 	}, {} as PossibleBuild);
 };
+
+export const MAX_LEVEL = 120;
 
 export const LEVEL_CAP = 45;
 export const STAT_POINTS_PER_LEVEL = 2;
@@ -333,15 +336,9 @@ const playerSpriteBaseUrl = "https://art.fantasyonline2.com/api/character/ss";
 const defaultSpriteAttributes = ["body-0", "eyes-standard-blue", "nude-head"];
 
 export const getPlayerSpriteUrlPreview = (
-	items?: Pick<Item, "spriteUrl">[],
+	items?: Pick<Item, "spriteName">[],
 ) => {
-	const itemSlugs =
-		items?.map((item) =>
-			basename(item.spriteUrl)
-				.replace(/\.png$/, "")
-				.replace(/\-icon$/, "")
-				.replace(/\s/g, ""),
-		) ?? [];
+	const itemSlugs = items?.map((item) => item.spriteName) ?? [];
 
 	const attrs = defaultSpriteAttributes.concat(itemSlugs);
 	const f = attrs.join("_");
@@ -363,10 +360,28 @@ export const guildRankMap = {
 
 export type GuildRank = (typeof guildRankMap)[keyof typeof guildRankMap];
 
-export const isVisible = (item: Pick<Item, "equip">) => {
+export const isVisible = (item: Pick<Item, "type" | "subType">) => {
+	if (item.type === 6 || item.type === 2) {
+		return true;
+	}
+
+	if (item.type === 3) {
+		return [0, 2, 6, 8, 10, 17].includes(item.subType);
+	}
+
+	return false;
+};
+
+export const isItemTwoHanded = (item: Pick<Item, "type" | "subType">) => {
 	return (
-		item.equip !== null &&
-		((visibleEquipment as EquippableType[]).includes(item.equip) ||
-			(cosmeticEquipment as EquippableType[]).includes(item.equip))
+		item.type === 2 &&
+		(item.subType === 2 ||
+			item.subType === 4 ||
+			item.subType === 5 ||
+			item.subType === 6)
 	);
+};
+
+export const isItemConsumable = (item: Pick<Item, "type">) => {
+	return item.type === 4;
 };

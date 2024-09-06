@@ -74,11 +74,12 @@ export default createTRPCRouter({
 						include: {
 							item: {
 								select: {
+									id: true,
 									slug: true,
-									spriteUrl: true,
 									spriteName: true,
 									name: true,
 									sellPrice: true,
+									sellPriceUnit: true,
 								},
 							},
 						},

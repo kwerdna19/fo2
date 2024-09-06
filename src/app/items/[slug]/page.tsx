@@ -19,6 +19,8 @@ import { api } from "~/trpc/server";
 import {
 	getAverageDPS,
 	getPlayerSpriteUrlPreview,
+	isItemConsumable,
+	isItemTwoHanded,
 	isVisible,
 	isWeapon,
 } from "~/utils/fo-game";
@@ -37,12 +39,12 @@ export async function generateMetadata({ params }: { params: Params }) {
 	};
 }
 
-export async function generateStaticParams() {
-	const items = await api.item.getAllQuick();
-	return items.map((item) => ({
-		slug: item.slug,
-	}));
-}
+// export async function generateStaticParams() {
+// 	const items = await api.item.getAllQuick();
+// 	return items.map((item) => ({
+// 		slug: item.slug,
+// 	}));
+// }
 
 export default async function Item({ params }: { params: Params }) {
 	const item = await api.item.getBySlug(params);
@@ -98,7 +100,7 @@ export default async function Item({ params }: { params: Params }) {
 					<div className="flex items-center gap-4 flex-wrap capitalize">
 						{item.equip?.replace(/_/g, " ")?.toLowerCase() ?? "-"}
 						{item.equip === EquippableType.MAIN_HAND ? (
-							<Badge>{item.twoHand ? "2" : "1"}-H</Badge>
+							<Badge>{isItemTwoHanded(item) ? "2" : "1"}-H</Badge>
 						) : null}
 					</div>
 				</div>
@@ -173,7 +175,7 @@ export default async function Item({ params }: { params: Params }) {
 					<Label>Stack size</Label>
 					<div className="flex items-center gap-2">{item.stackSize}</div>
 				</div>
-				{item.consumable ? (
+				{isItemConsumable(item) ? (
 					<div>
 						<Badge>Consumable</Badge>
 					</div>

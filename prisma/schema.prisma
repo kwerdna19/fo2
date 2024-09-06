@@ -198,7 +198,6 @@ model Item {
   slug      String
   desc      String?
   note      String?
-  spriteUrl String
   equip     EquippableType?
   levelReq  Int?
 
@@ -214,16 +213,11 @@ model Item {
 
   typeSpecificValue Float?
 
-  // To remove?
-  twoHand    Boolean?
-  // To remove?
-  consumable Boolean  @default(false)
+  sellPrice     Int
+  sellPriceUnit Unit
 
-  sellPrice     Int?
-  sellPriceUnit Unit?
-
-  buyPrice     Int?
-  buyPriceUnit Unit?
+  buyPrice     Int
+  buyPriceUnit Unit
 
   stackSize Int        @default(1)
   droppedBy Loot[]

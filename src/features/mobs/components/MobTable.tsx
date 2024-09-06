@@ -1,26 +1,33 @@
 "use client";
 
+import { keepPreviousData } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
 import type { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { useQueryStates } from "nuqs";
 import { TbCrown as Crown } from "react-icons/tb";
 import SortButton from "~/components/SortButton";
+import { dataTableSearchParams } from "~/components/data-table/data-table-utils";
 import { useDataTableQueryParams } from "~/components/data-table/use-data-table-query";
 import RangeField from "~/components/form/RangeField";
 import { Form, SubmitButton, useZodForm } from "~/components/form/zod-form";
 import { Button } from "~/components/ui/button";
-import type { RouterOutputs } from "~/trpc/react";
+import { itemSearchParamParser } from "~/features/items/search-params";
+import { type RouterInputs, type RouterOutputs, api } from "~/trpc/react";
 import { LEVEL_CAP } from "~/utils/fo-game";
+import { shallowCompare } from "~/utils/misc";
 import { MobSprite } from "../../../components/MobSprite";
 import { DataTable } from "../../../components/data-table/data-table";
+import { ItemList } from "../../items/components/ItemList";
 import { mobSearchFilterSchema, mobSearchParamParser } from "../search-params";
 import { DmgRange } from "./DmgRange";
 import { DropGold } from "./DropGold";
-import { DropsList } from "./DropsList";
+import FactionDisplay from "./FactionDisplay";
 import { MobHealth } from "./MobHealth";
 
 type AllMobsResponse = RouterOutputs["mob"]["getAllPopulated"];
+type AllMobsInput = RouterInputs["mob"]["getAllPopulated"];
+
 type Datum = AllMobsResponse["data"][number];
 
 const columnHelper = createColumnHelper<Datum>();
@@ -86,10 +93,16 @@ const columns: ColumnDef<Datum, any>[] = [
 		id: "loot",
 		header: "Loot",
 		cell: ({ row }) => (
-			<DropsList
-				infoInToolTip
+			<ItemList
 				size="sm"
-				drops={row.original.drops}
+				data={row.original.drops}
+				getAttributes={(d) => ({
+					"Drop Rate": `${d.dropRate}%`,
+					"Sell Price": {
+						unit: d.item.sellPriceUnit,
+						value: d.item.sellPrice,
+					},
+				})}
 				className="flex-nowrap"
 			/>
 		),
@@ -97,7 +110,7 @@ const columns: ColumnDef<Datum, any>[] = [
 	columnHelper.display({
 		id: "faction",
 		header: "Faction",
-		cell: ({ row }) => <div>{row.original.faction?.name}</div>,
+		cell: ({ row }) => <FactionDisplay data={row.original} />,
 	}),
 	columnHelper.display({
 		id: "locations",
@@ -201,11 +214,25 @@ function MobSearchFilters() {
 	);
 }
 
-export function MobTable({ data }: { data: AllMobsResponse }) {
+export function MobTable({
+	initialData,
+	initialParams,
+}: { initialData: AllMobsResponse; initialParams: AllMobsInput }) {
+	const [tableParams] = useQueryStates(dataTableSearchParams);
+	const [filters] = useQueryStates(itemSearchParamParser);
+	const params = { ...filters, ...tableParams };
+
+	const { data } = api.mob.getAllPopulated.useQuery(params, {
+		initialData: shallowCompare(params, initialParams)
+			? initialData
+			: undefined,
+		placeholderData: keepPreviousData,
+	});
+
 	return (
 		<DataTable
 			title="Mobs"
-			data={data}
+			data={data ?? { data: [], totalCount: 0 }}
 			columns={columns}
 			filtersComponent={<MobSearchFilters />}
 			defaultColumnVisibility={{

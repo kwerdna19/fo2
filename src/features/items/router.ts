@@ -28,7 +28,8 @@ export default createTRPCRouter({
 				query,
 				maxLevel,
 				minLevel,
-				equipTypes,
+				type,
+				subType,
 			} = input;
 
 			const isSortFieldRequired = requiredFields.includes(sort);
@@ -47,11 +48,10 @@ export default createTRPCRouter({
 				});
 			}
 
-			if (equipTypes) {
+			if (typeof type === "number") {
 				conditions.push({
-					equip: {
-						in: equipTypes as EquippableType[],
-					},
+					type: type,
+					subType: subType ?? undefined,
 				});
 			}
 
@@ -116,6 +116,34 @@ export default createTRPCRouter({
 							},
 						},
 					},
+					boxItems: {
+						select: {
+							id: true,
+							name: true,
+							spriteName: true,
+							slug: true,
+						},
+					},
+					box: {
+						select: {
+							id: true,
+							name: true,
+							spriteName: true,
+							slug: true,
+						},
+					},
+					usages: {
+						select: {
+							item: {
+								select: {
+									id: true,
+									name: true,
+									spriteName: true,
+									slug: true,
+								},
+							},
+						},
+					},
 				},
 				where,
 				take: per_page,
@@ -152,7 +180,6 @@ export default createTRPCRouter({
 			select: {
 				id: true,
 				name: true,
-				spriteUrl: true,
 				spriteName: true,
 				slug: true,
 			},

@@ -7,12 +7,9 @@ import { ItemSprite } from "~/components/ItemSprite";
 import { PriceDisplay } from "~/components/PriceDisplay";
 import SortButton from "~/components/SortButton";
 
-import { EquippableType } from "@prisma/client";
 import { keepPreviousData } from "@tanstack/react-query";
 import type { ColumnDef } from "@tanstack/react-table";
-import { CommandList } from "cmdk";
 import { Check } from "lucide-react";
-import { Controller } from "react-hook-form";
 import { DataTable } from "~/components/data-table/data-table";
 import { dataTableSearchParams } from "~/components/data-table/data-table-utils";
 import { useDataTableQueryParams } from "~/components/data-table/use-data-table-query";
@@ -20,11 +17,33 @@ import RangeField from "~/components/form/RangeField";
 import { Form, SubmitButton, useZodForm } from "~/components/form/zod-form";
 import { Button } from "~/components/ui/button";
 import { Command, CommandItem } from "~/components/ui/command";
+import {
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "~/components/ui/form";
 import { Label } from "~/components/ui/label";
 import { ScrollArea } from "~/components/ui/scroll-area";
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectLabel,
+	SelectTrigger,
+	SelectValue,
+} from "~/components/ui/select";
 import { DmgRange } from "~/features/mobs/components/DmgRange";
 import { type RouterInputs, type RouterOutputs, api } from "~/trpc/react";
-import { LEVEL_CAP } from "~/utils/fo-game";
+import { itemTypeMap } from "~/utils/fo-data/service";
+import {
+	LEVEL_CAP,
+	MAX_LEVEL,
+	isItemConsumable,
+	isItemTwoHanded,
+} from "~/utils/fo-game";
 import { shallowCompare } from "~/utils/misc";
 import { cn } from "~/utils/styles";
 import {
@@ -33,7 +52,10 @@ import {
 } from "../search-params";
 import { CraftedByList } from "./CraftedByList";
 import { DroppedByList } from "./DroppedByList";
+import { ItemList } from "./ItemList";
 import { ItemStats } from "./ItemStats";
+import ItemSubType from "./ItemSubType";
+import ItemType from "./ItemType";
 import { SoldByList } from "./SoldByList";
 
 type AllItemsResponse = RouterOutputs["item"]["getAllPopulated"];
@@ -42,17 +64,17 @@ type AllItemsInput = RouterInputs["item"]["getAllPopulated"];
 export type Datum = AllItemsResponse["data"][number];
 const columnHelper = createColumnHelper<Datum>();
 
-const getNameFromEquip = (equip: EquippableType) => {
-	return equip
-		.replace(/_/g, " ")
-		.replace("COSMETIC", "OUTFIT")
-		.toLocaleLowerCase();
-};
+// const getNameFromEquip = (equip: EquippableType) => {
+// 	return equip
+// 		.replace(/_/g, " ")
+// 		.replace("COSMETIC", "OUTFIT")
+// 		.toLocaleLowerCase();
+// };
 
-const equipTypeOptions = Object.values(EquippableType).map((type) => ({
-	value: type,
-	name: getNameFromEquip(type),
-}));
+// const equipTypeOptions = Object.values(EquippableType).map((type) => ({
+// 	value: type,
+// 	name: getNameFromEquip(type),
+// }));
 
 export const columns = [
 	columnHelper.display({
@@ -65,7 +87,7 @@ export const columns = [
 				href={`/items/${row.original.slug}`}
 			>
 				<ItemSprite
-					url={row.original.spriteName ?? row.original.spriteUrl}
+					url={row.original.spriteName}
 					name={row.original.name}
 					size="sm"
 					bg
@@ -84,28 +106,24 @@ export const columns = [
 			sortFieldReplacement: "slug",
 		},
 	}),
-	columnHelper.accessor("desc", {
-		header: "Desc",
-	}),
+	columnHelper.accessor("desc", {}),
 	columnHelper.accessor("slug", {
 		header: SortButton,
 		meta: {
 			hidden: true,
 		},
 	}),
-	columnHelper.accessor("equip", {
-		header: SortButton,
-		meta: {
-			heading: "Equip Type",
-		},
+	columnHelper.accessor("type", {
 		cell: (info) => {
-			const equip = info.getValue();
-
-			if (!equip) {
-				return null;
-			}
-
-			return <div className="capitalize">{getNameFromEquip(equip)}</div>;
+			return <ItemType type={info.getValue()} />;
+		},
+	}),
+	columnHelper.accessor("subType", {
+		header: "Subtype",
+		cell: (info) => {
+			return (
+				<ItemSubType type={info.row.original.type} subType={info.getValue()} />
+			);
 		},
 	}),
 	columnHelper.accessor("levelReq", {
@@ -194,10 +212,6 @@ export const columns = [
 		meta: {
 			heading: "Atk Speed",
 		},
-		cell: (info) => {
-			const sp = info.getValue();
-			return sp && sp * 1000;
-		},
 	}),
 	columnHelper.accessor("sellPrice", {
 		header: "Sell Price",
@@ -218,6 +232,24 @@ export const columns = [
 		header: "Crafted By",
 		cell: ({ row }) => <CraftedByList npcs={row.original.craftedBy} />,
 	}),
+	columnHelper.display({
+		id: "boxContents",
+		header: "Box Contents",
+		cell: ({ row }) => (
+			<ItemList
+				data={row.original.boxItems}
+				className="flex-nowrap"
+				size="sm"
+			/>
+		),
+	}),
+	// columnHelper.display({
+	// 	id: "usages",
+	// 	header: "Crafts Into",
+	// 	cell: ({ row }) => (
+	// 		<ItemList data={row.original.usages} className="flex-nowrap" size="sm" />
+	// 	),
+	// }),
 	columnHelper.accessor("globalLoot", {
 		header: "Global Drop",
 		cell: (info) =>
@@ -227,8 +259,9 @@ export const columns = [
 				</div>
 			) : null,
 	}),
-	columnHelper.accessor("twoHand", {
-		header: "Two Handed",
+	columnHelper.accessor(isItemTwoHanded, {
+		id: "twoHand",
+		header: "2H",
 		cell: (info) =>
 			info.getValue() ? (
 				<div className="flex items-center justify-center">
@@ -236,8 +269,9 @@ export const columns = [
 				</div>
 			) : null,
 	}),
-	columnHelper.accessor("consumable", {
-		header: "Consumable",
+	columnHelper.accessor(isItemConsumable, {
+		id: "consumable",
+		header: "Consume",
 		cell: (info) =>
 			info.getValue() ? (
 				<div className="flex items-center justify-center">
@@ -269,6 +303,19 @@ function ItemSearchFilters() {
 		values: filters,
 	});
 
+	// change single select into 2 separate selects
+
+	const selectedType = form.watch("type");
+
+	console.log({ filters });
+
+	const subTypeOptions =
+		typeof selectedType === "number" && itemTypeMap[selectedType]?.subTypes
+			? Object.entries(itemTypeMap[selectedType].subTypes)
+			: null;
+
+	const subTypePlaceholder = !subTypeOptions ? "Select subtype" : "No subtypes";
+
 	return (
 		<Form
 			handleSubmit={(values) => {
@@ -284,10 +331,85 @@ function ItemSearchFilters() {
 				control={form.control}
 				nameMax="maxLevel"
 				nameMin="minLevel"
-				maxValue={LEVEL_CAP}
+				maxValue={MAX_LEVEL}
 			/>
 
-			<Controller
+			<div className="space-y-3">
+				<FormField
+					control={form.control}
+					name="type"
+					render={({ field }) => {
+						console.log("type field render value", field.value);
+
+						return (
+							<FormItem>
+								<FormLabel>Item Type</FormLabel>
+								<FormControl>
+									<Select
+										onValueChange={(e) => {
+											field.onChange(Number(e));
+											form.setValue("subType", null);
+										}}
+										value={field.value?.toString() ?? ""}
+										// key={typeof selectedType === "number" ? "1" : "0"}
+									>
+										<SelectTrigger
+											className={
+												typeof selectedType === "number" ? "capitalize" : ""
+											}
+										>
+											<SelectValue placeholder="Filter by type" />
+										</SelectTrigger>
+										<SelectContent className="capitalize">
+											{Object.entries(itemTypeMap).map(([id, type]) => {
+												return (
+													<SelectItem key={id} value={id}>
+														{type.type.toLocaleLowerCase()}
+													</SelectItem>
+												);
+											})}
+										</SelectContent>
+									</Select>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						);
+					}}
+				/>
+
+				<FormField
+					control={form.control}
+					name="subType"
+					render={({ field }) => (
+						<FormItem>
+							{/* <FormLabel>Subtype</FormLabel> */}
+							<FormControl>
+								<Select
+									onValueChange={(e) => field.onChange(Number(e))}
+									value={field.value?.toString()}
+									disabled={!subTypeOptions}
+								>
+									<SelectTrigger className={subTypeOptions ? "capitalize" : ""}>
+										<SelectValue placeholder={subTypePlaceholder} />
+									</SelectTrigger>
+									<SelectContent className="capitalize">
+										{subTypeOptions?.map(([id, type]) => {
+											return (
+												<SelectItem key={id} value={id}>
+													{type.replace(/_/g, " ").toLocaleLowerCase()}
+												</SelectItem>
+											);
+										})}
+									</SelectContent>
+								</Select>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+			</div>
+
+			{/* <Controller
 				control={form.control}
 				name="equipTypes"
 				render={({ field }) => (
@@ -326,7 +448,7 @@ function ItemSearchFilters() {
 						</ScrollArea>
 					</div>
 				)}
-			/>
+			/> */}
 
 			<div className="p-3 border border-dashed">More filters to be added</div>
 
@@ -395,6 +517,7 @@ export function ItemTable({
 				globalLoot: false,
 				stackSize: false,
 				artist: false,
+				boxContents: false,
 			}}
 		/>
 	);

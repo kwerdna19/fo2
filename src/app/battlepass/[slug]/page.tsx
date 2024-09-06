@@ -23,12 +23,12 @@ export async function generateMetadata({ params }: { params: Params }) {
 	};
 }
 
-export async function generateStaticParams() {
-	const passes = await api.battlePass.getAllQuick();
-	return passes.map((pass) => ({
-		slug: pass.slug,
-	}));
-}
+// export async function generateStaticParams() {
+// 	const passes = await api.battlePass.getAllQuick();
+// 	return passes.map((pass) => ({
+// 		slug: pass.slug,
+// 	}));
+// }
 
 export default async function BattlePass({ params }: { params: Params }) {
 	const pass = await api.battlePass.getBySlug(params);
@@ -74,7 +74,7 @@ export default async function BattlePass({ params }: { params: Params }) {
 								<ItemSprite
 									size="sm"
 									name={tier.item.name}
-									url={tier.item.spriteUrl}
+									url={tier.item.spriteName}
 								/>
 								<Link href={`/items/${tier.item.slug}`} prefetch={false}>
 									{tier.item.name}

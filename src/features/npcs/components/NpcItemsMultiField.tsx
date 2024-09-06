@@ -20,7 +20,7 @@ type SaleItems = z.infer<typeof saleItemsSchema>;
 
 type Props = {
 	className?: string;
-	items: Pick<Item, "id" | "name" | "spriteUrl">[];
+	items: Pick<Item, "id" | "name" | "spriteName">[];
 	field: FieldMetadata<SaleItems | undefined>;
 	label: string;
 };

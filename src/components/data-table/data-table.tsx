@@ -127,7 +127,7 @@ export function DataTable<T, Data extends { totalCount: number; data: T[] }>({
 					<LoadingView />
 				) : (
 					<Table>
-						<TableHeader className="bg-muted/50 text-sm">
+						<TableHeader className="bg-muted/50 text-sm capitalize">
 							{table.getHeaderGroups().map((headerGroup) => (
 								<TableRow className="hover:bg-transparent" key={headerGroup.id}>
 									{headerGroup.headers.map((header) => {

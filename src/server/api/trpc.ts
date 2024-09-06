@@ -29,7 +29,7 @@ import { roleIsSatisfied } from "../auth/roles";
  * @see https://trpc.io/docs/server/context
  */
 export const createTRPCContext = async (opts: { headers: Headers }) => {
-	const session = process.env.BUILD ? null : await auth();
+	const session = await auth();
 
 	return {
 		db,

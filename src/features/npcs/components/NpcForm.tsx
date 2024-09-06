@@ -14,7 +14,7 @@ import { NpcItemsMultiField } from "./NpcItemsMultiField";
 
 interface Props {
 	areas: Pick<Area, "id" | "name" | "spriteUrl" | "height" | "width">[];
-	items: Pick<Item, "id" | "name" | "spriteUrl">[];
+	items: Pick<Item, "id" | "name" | "spriteName">[];
 	sprites: string[];
 	defaultValue?: RouterOutputs["npc"]["getBySlug"];
 	action: ConformServerAction;

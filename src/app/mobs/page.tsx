@@ -12,8 +12,7 @@ export const revalidate = 86400;
 export default async function Mobs({
 	searchParams,
 }: { searchParams: SearchParams }) {
-	const result = await api.mob.getAllPopulated(
-		mobSearchParamCache.parse(searchParams),
-	);
-	return <MobTable data={result} />;
+	const input = mobSearchParamCache.parse(searchParams);
+	const result = await api.mob.getAllPopulated(input);
+	return <MobTable initialParams={input} initialData={result} />;
 }

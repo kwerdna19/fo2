@@ -588,10 +588,6 @@
           ],
           "originalType": "String"
         },
-        "spriteUrl": {
-          "type": "string",
-          "originalType": "String"
-        },
         "equip": {
           "type": [
             "string",
@@ -682,30 +678,12 @@
           ],
           "originalType": "Float"
         },
-        "twoHand": {
-          "type": [
-            "boolean",
-            "null"
-          ],
-          "originalType": "Boolean"
-        },
-        "consumable": {
-          "type": "boolean",
-          "originalType": "Boolean",
-          "default": false
-        },
         "sellPrice": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": "integer",
           "originalType": "Int"
         },
         "sellPriceUnit": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": "string",
           "originalType": "Unit",
           "enum": [
             "GEMS",
@@ -713,17 +691,11 @@
           ]
         },
         "buyPrice": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": "integer",
           "originalType": "Int"
         },
         "buyPriceUnit": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": "string",
           "originalType": "Unit",
           "enum": [
             "GEMS",
@@ -974,11 +946,14 @@
       "required": [
         "name",
         "slug",
-        "spriteUrl",
         "inGameId",
         "type",
         "subType",
-        "spriteName"
+        "spriteName",
+        "sellPrice",
+        "sellPriceUnit",
+        "buyPrice",
+        "buyPriceUnit"
       ]
     },
     "Location": {

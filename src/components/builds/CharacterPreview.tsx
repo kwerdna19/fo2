@@ -12,12 +12,7 @@ export function CharacterPreview({
 		.map((e) => build[Slot[e]])
 		.filter(Boolean) as Item[];
 
-	const itemSlugs = items.map((item) =>
-		basename(item.spriteUrl)
-			.replace(/\.png$/, "")
-			.replace(/\-icon$/, "")
-			.replace(/\s/g, ""),
-	);
+	const itemSlugs = items.map((item) => item.spriteName);
 
 	const url = `https://art.fantasyonline2.com/api/character/ss?f=body-0_eyes-standard-blue_nude-head${
 		itemSlugs.length ? `_${itemSlugs.join("_")}` : ""

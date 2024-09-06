@@ -29,7 +29,7 @@ export function ItemField({
 	field,
 	className,
 }: {
-	items: Pick<Item, "id" | "name" | "spriteUrl">[];
+	items: Pick<Item, "id" | "name" | "spriteName">[];
 	field: FieldMetadata<string>;
 	className?: string;
 }) {
@@ -78,7 +78,7 @@ export function ItemField({
 								<div className="flex items-center gap-x-4">
 									<ItemSprite
 										name={item.name}
-										url={item.spriteUrl}
+										url={item.spriteName}
 										size="sm"
 										bg
 									/>

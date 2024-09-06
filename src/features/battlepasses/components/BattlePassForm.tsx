@@ -9,7 +9,7 @@ import { battlePassSchema } from "../schemas";
 import { BattlePassTiersMultiField } from "./BattlePassTiersMultiField";
 
 interface Props {
-	items: Pick<Item, "id" | "name" | "spriteUrl">[];
+	items: Pick<Item, "id" | "name" | "spriteName">[];
 	defaultValue?: RouterOutputs["battlePass"]["getBySlug"];
 	action: ConformServerAction;
 }

@@ -60,7 +60,7 @@ export function BuildItem({
 					>
 						<ItemSprite
 							bg
-							url={item ? item.spriteUrl : slotBackgroundSpriteMap[slot]}
+							url={item ? item.spriteName : slotBackgroundSpriteMap[slot]}
 							name={item ? item.name : Slot[slot]}
 							size="md"
 						/>
@@ -89,7 +89,7 @@ export function BuildItem({
 								>
 									<ItemSprite
 										name={itemOption.name}
-										url={itemOption.spriteUrl}
+										url={itemOption.spriteName}
 										size="xs"
 										bg
 									/>

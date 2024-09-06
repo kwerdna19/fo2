@@ -12,7 +12,7 @@ import { cn } from "~/utils/styles";
 import { ItemSprite } from "../../../components/ItemSprite";
 
 type Drop = Loot & {
-	item: Pick<Item, "name" | "spriteUrl" | "spriteName" | "slug" | "sellPrice">;
+	item: Pick<Item, "name" | "spriteName" | "slug" | "sellPrice">;
 };
 
 export function DropsList({

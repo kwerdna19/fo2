@@ -13,7 +13,7 @@ import { createQueryClient } from "./query-client";
  * handling a tRPC call from a React Server Component.
  */
 const createContext = cache(() => {
-	const heads = new Headers(process.env.BUILD ? undefined : headers());
+	const heads = new Headers(headers());
 	heads.set("x-trpc-source", "rsc");
 
 	return createTRPCContext({

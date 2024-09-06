@@ -21,12 +21,12 @@ export async function generateMetadata({ params }: { params: Params }) {
 	};
 }
 
-export async function generateStaticParams() {
-	const areas = await api.area.getAllQuick();
-	return areas.map((area) => ({
-		slug: area.slug,
-	}));
-}
+// export async function generateStaticParams() {
+// 	const areas = await api.area.getAllQuick();
+// 	return areas.map((area) => ({
+// 		slug: area.slug,
+// 	}));
+// }
 
 export default async function Area({ params }: { params: Params }) {
 	const area = await api.area.getBySlug(params);

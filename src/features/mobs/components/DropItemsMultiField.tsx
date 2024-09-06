@@ -19,7 +19,7 @@ type Drops = z.infer<typeof dropsSchema>;
 
 export type Props = {
 	className?: string;
-	items: Pick<Item, "id" | "name" | "spriteUrl">[];
+	items: Pick<Item, "id" | "name" | "spriteName">[];
 	field: FieldMetadata<Drops | undefined>;
 	label: string;
 };

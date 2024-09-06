@@ -124,7 +124,7 @@ export const MobSprite = ({
 					width: imgWidth,
 				}}
 				src={
-					url.startsWith("/")
+					url.startsWith("/") || url.startsWith("http")
 						? url
 						: `https://art.fantasyonline2.com/textures/enemies/${url}.png`
 				}

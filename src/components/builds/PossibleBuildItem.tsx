@@ -31,7 +31,7 @@ export function PossibleBuildItem({
 		<Link prefetch={false} href={`/items/${item.slug}`}>
 			<ItemSprite
 				className="border-2 shadow-sm border-slate-200 bg-slate-50 rounded-sm"
-				url={item.spriteUrl}
+				url={item.spriteName}
 				name={item.name}
 				size="md"
 			/>

@@ -39,8 +39,12 @@ export const itemSchema = z.object({
 	levelReq: z.number().int().optional(),
 	twoHand: z.boolean().optional(),
 	consumable: z.boolean().optional(),
-	sellPrice: z.number().int().optional(),
-	sellPriceUnit: z.nativeEnum(Unit).optional(),
+	sellPrice: z.number().int(),
+	sellPriceUnit: z.nativeEnum(Unit),
+
+	buyPrice: z.number().int(),
+	buyPriceUnit: z.nativeEnum(Unit),
+
 	stackSize: z.number().int(),
 
 	globalLoot: z.boolean().optional(),

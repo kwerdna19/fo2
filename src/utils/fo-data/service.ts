@@ -87,7 +87,7 @@ export const mobDefinitionToDatabaseMob = (
 // if no subtypes - 0 is only valid value for "st"
 export const itemTypeMap: Record<
 	number,
-	{ type: string; subtypes?: Record<number, string> }
+	{ type: string; subTypes?: Record<number, string> }
 > = {
 	0: {
 		type: "JUNK",
@@ -97,7 +97,7 @@ export const itemTypeMap: Record<
 	},
 	2: {
 		type: "WEAPON",
-		subtypes: {
+		subTypes: {
 			1: "MELEE", // 1H
 			2: "BOW", // 2H
 			3: "WAND", // 1H
@@ -108,7 +108,7 @@ export const itemTypeMap: Record<
 	},
 	3: {
 		type: "EQUIPMENT",
-		subtypes: {
+		subTypes: {
 			0: "HEAD",
 			1: "TRINKET",
 			2: "FACE",
@@ -132,17 +132,17 @@ export const itemTypeMap: Record<
 	// 4 - consumable
 	4: {
 		type: "CONSUMABLE",
-		subtypes: {
+		subTypes: {
 			1: "HEALTH",
 			2: "ENERGY",
 			// 3 (Map?)
-			4: "SKILL_LEARN",
+			4: "SKILL",
 			// 5
 			6: "OUTFIT_BOX",
 			7: "EFFECT",
 			8: "XP_BOOST",
 			9: "FACTION_XP_BOOST",
-			10: "BATTLEPASS_XP",
+			10: "BATTLEPASS_XP_BOOST",
 			11: "BATTLEPASS",
 			12: "FACTION_XP",
 			13: "BANK_SLOT",
@@ -150,9 +150,12 @@ export const itemTypeMap: Record<
 			15: "GEMS",
 		},
 	},
+	5: {
+		type: "CRAFTING",
+	},
 	6: {
 		type: "OUTFIT",
-		subtypes: {
+		subTypes: {
 			0: "HEAD",
 			1: "CHEST",
 			2: "FACE",
@@ -175,11 +178,28 @@ export const itemDefinitionToDatabaseItem = (
 
 	const boxIds = Array.isArray(gameItem.sr) ? gameItem.sr : null;
 
+	const typeMap = itemTypeMap[gameItem.ty];
+	if (!typeMap) {
+		throw new Error(`Item type not found ${itemTypeMap}`);
+	}
+	if (typeMap.subTypes) {
+		if (!typeMap.subTypes[gameItem.st]) {
+			throw new Error(
+				`Item type has subtypes in map but st not found: ${gameItem.st}`,
+			);
+		}
+	} else {
+		if (gameItem.st !== 0) {
+			throw new Error(
+				`Item type has no subtypes in map but found st: ${gameItem.st}`,
+			);
+		}
+	}
+
 	return {
 		name: gameItem.t.en.n,
 		desc: gameItem.t.en.d,
 		slug: getSlugFromName(gameItem.t.en.n),
-		spriteUrl: `/sprites/item/${gameItem.sfn}-icon.png`,
 		spriteName: gameItem.sfn,
 		levelReq: gameItem.lr,
 

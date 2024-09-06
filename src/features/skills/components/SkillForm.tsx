@@ -15,7 +15,7 @@ import type { ConformServerAction } from "~/types/actions";
 import { skillSchema } from "../schemas";
 
 interface Props {
-	items: Pick<Item, "id" | "name" | "spriteUrl">[];
+	items: Pick<Item, "id" | "name" | "spriteName">[];
 	areas: Pick<Area, "id" | "name">[];
 	sprites: string[];
 	defaultValue?: RouterOutputs["skill"]["getBySlug"];

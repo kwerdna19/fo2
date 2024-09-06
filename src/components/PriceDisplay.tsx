@@ -36,7 +36,7 @@ export function PriceDisplay({
 	unit?: Unit;
 	notation?: "standard" | "compact";
 }) {
-	if (count === null) {
+	if (!count) {
 		return null;
 	}
 

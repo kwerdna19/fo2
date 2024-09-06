@@ -19,7 +19,6 @@ export default createTRPCRouter({
 							select: {
 								slug: true,
 								name: true,
-								spriteUrl: true,
 								spriteName: true,
 							},
 						},
@@ -51,8 +50,6 @@ export default createTRPCRouter({
 							select: {
 								slug: true,
 								name: true,
-								spriteUrl: true,
-								spriteName: true,
 							},
 						},
 					},
@@ -77,7 +74,6 @@ export default createTRPCRouter({
 							select: {
 								slug: true,
 								name: true,
-								spriteUrl: true,
 								spriteName: true,
 							},
 						},
@@ -106,7 +102,6 @@ export default createTRPCRouter({
 								select: {
 									slug: true,
 									name: true,
-									spriteUrl: true,
 									spriteName: true,
 								},
 							},

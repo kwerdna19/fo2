@@ -14,7 +14,7 @@ import DropItemsMultiField from "./DropItemsMultiField";
 
 interface Props {
 	areas: Pick<Area, "id" | "name" | "spriteUrl" | "height" | "width">[];
-	items: Pick<Item, "id" | "name" | "spriteUrl">[];
+	items: Pick<Item, "id" | "name" | "spriteName">[];
 	factions: Pick<Faction, "id" | "name">[];
 	sprites: string[];
 	defaultValue?: RouterOutputs["mob"]["getBySlug"];
