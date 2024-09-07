@@ -16,7 +16,6 @@ interface Props {
 	areas: Pick<Area, "id" | "name" | "spriteUrl" | "height" | "width">[];
 	items: Pick<Item, "id" | "name" | "spriteName">[];
 	factions: Pick<Faction, "id" | "name">[];
-	sprites: string[];
 	defaultValue?: RouterOutputs["mob"]["getBySlug"];
 	action: ConformServerAction;
 }
@@ -25,7 +24,6 @@ export function MobForm({
 	areas,
 	items,
 	factions,
-	sprites,
 	action: serverAction,
 	defaultValue,
 }: Props) {
@@ -44,7 +42,7 @@ export function MobForm({
 		<Form form={form} action={action} submit={buttonText}>
 			<FormInput label="Name" field={fields.name} />
 			<FormInput label="Level" field={fields.level} type="number" />
-			<SpriteSelect field={fields.spriteUrl} label="Sprite" options={sprites} />
+			{/* <SpriteSelect field={fields.spriteUrl} label="Sprite" options={sprites} /> */}
 			<div className="grid grid-cols-2 gap-3">
 				<FormInput label="Dmg Min" field={fields.dmgMin} type="number" />
 				<FormInput label="Dmg Max" field={fields.dmgMax} type="number" />

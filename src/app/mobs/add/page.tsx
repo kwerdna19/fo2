@@ -24,12 +24,7 @@ export default async function AddMob() {
 
 	const areas = await api.area.getAllQuick();
 	const items = await api.item.getAllQuick();
-	const sprites = getListOfImages("mob");
 	const factions = await api.faction.getAllQuick();
-
-	if (!sprites) {
-		notFound();
-	}
 
 	async function action(result: ConformResult, formData: FormData) {
 		"use server";
@@ -68,7 +63,6 @@ export default async function AddMob() {
 				action={action}
 				areas={areas}
 				items={items}
-				sprites={sprites}
 				factions={factions}
 			/>
 		</div>

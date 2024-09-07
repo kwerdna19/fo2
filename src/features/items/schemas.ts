@@ -31,7 +31,6 @@ export const itemSchema = z.object({
 	desc: z.string().optional(),
 	note: z.string().optional(),
 	artist: z.string().optional(),
-	spriteUrl: z.string(),
 	equip: z
 		.string()
 		.refine((arg) => !!EquippableType[arg as EquippableType])
@@ -69,7 +68,7 @@ export const itemSchema = z.object({
 	dmgMax: z.number().int().optional(),
 
 	inGameId: z.number().int(),
-	spriteName: z.string(),
+	// spriteName: z.string(),
 	type: z.number().int(),
 	subType: z.number().int(),
 

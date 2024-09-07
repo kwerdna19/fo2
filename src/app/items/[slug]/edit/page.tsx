@@ -40,12 +40,6 @@ export default async function EditItem({ params }: { params: Params }) {
 	const npcs = await api.npc.getAllQuick();
 	const battlePasses = await api.battlePass.getAllQuick();
 
-	const sprites = getListOfImages("item");
-
-	if (!sprites) {
-		notFound();
-	}
-
 	async function action(result: ConformResult, formData: FormData) {
 		"use server";
 		const submission = parseWithZod(formData, {
@@ -106,7 +100,6 @@ export default async function EditItem({ params }: { params: Params }) {
 			</Button>
 			<ItemForm
 				action={action}
-				sprites={sprites}
 				defaultValue={item}
 				mobs={mobs}
 				npcs={npcs}

@@ -40,11 +40,6 @@ export default async function EditMob({ params }: { params: Params }) {
 	const areas = await api.area.getAllQuick();
 	const items = await api.item.getAllQuick();
 	const factions = await api.faction.getAllQuick();
-	const sprites = getListOfImages("mob");
-
-	if (!sprites) {
-		notFound();
-	}
 
 	async function action(result: ConformResult, formData: FormData) {
 		"use server";
@@ -92,7 +87,6 @@ export default async function EditMob({ params }: { params: Params }) {
 				areas={areas}
 				items={items}
 				factions={factions}
-				sprites={sprites}
 				defaultValue={mob}
 			/>
 		</div>

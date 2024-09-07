@@ -191,6 +191,7 @@ export default createTRPCRouter({
 							data: drops,
 						},
 					},
+					spriteName: "temp",
 					...rest,
 				},
 			});

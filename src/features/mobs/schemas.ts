@@ -10,7 +10,6 @@ export const dropsSchema = z
 
 export const mobSchema = z.object({
 	name: z.string(),
-	spriteUrl: z.string(),
 	level: z.number().int(),
 	health: z.number().int(),
 	goldMin: z.number(),
@@ -25,5 +24,5 @@ export const mobSchema = z.object({
 	factionId: z.string(),
 	inGameId: z.number().int(),
 	moveSpeed: z.number().int(),
-	spriteName: z.string(),
+	// spriteName: z.string(),
 });

@@ -6,7 +6,6 @@ import {
 	type Mob,
 	type Npc,
 } from "@prisma/client";
-import SpriteSelect from "~/components/SpriteSelect";
 import UnitSelect from "~/components/UnitSelect";
 import { Form } from "~/components/form-ui/Form";
 import FormCheckbox from "~/components/form-ui/FormCheckbox";
@@ -27,13 +26,11 @@ interface Props {
 	npcs: Pick<Npc, "id" | "name" | "spriteUrl">[];
 	mobs: Pick<Mob, "id" | "name" | "spriteName">[];
 	battlePasses: Pick<BattlePass, "id" | "name">[];
-	sprites: string[];
 	defaultValue?: RouterOutputs["item"]["getBySlug"];
 	action: ConformServerAction;
 }
 
 export function ItemForm({
-	sprites,
 	mobs,
 	npcs,
 	action: serverAction,
@@ -60,13 +57,6 @@ export function ItemForm({
 				field={fields.equip}
 			/>
 			<FormInput label="Level Req" field={fields.levelReq} type="number" />
-
-			<SpriteSelect
-				field={fields.spriteUrl}
-				label="Sprite"
-				options={sprites}
-				icon
-			/>
 
 			<FormInput
 				label="Desc"
