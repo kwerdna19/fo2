@@ -18,24 +18,25 @@ datasource db {
 }
 
 model Mob {
-  id        String     @id @default(cuid())
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @default(now()) @updatedAt
-  name      String
-  slug      String
-  desc      String?
-  note      String?
-  level     Int
-  health    Int
-  goldMin   Int
-  goldMax   Int
-  boss      Boolean    @default(false)
-  drops     Loot[]
-  locations Location[]
-  atkSpeed  Float?
-  dmgMin    Int
-  dmgMax    Int
-  moveSpeed Int
+  id                  String     @id @default(cuid())
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @default(now()) @updatedAt
+  definitionUpdatedAt DateTime   @default(now())
+  name                String
+  slug                String
+  desc                String?
+  note                String?
+  level               Int
+  health              Int
+  goldMin             Int
+  goldMax             Int
+  boss                Boolean    @default(false)
+  drops               Loot[]
+  locations           Location[]
+  atkSpeed            Float?
+  dmgMin              Int
+  dmgMax              Int
+  moveSpeed           Int
 
   inGameId   Int    @unique
   spriteName String
@@ -190,15 +191,18 @@ enum Stat {
 }
 
 model Item {
-  id        String          @id @default(cuid())
-  createdAt DateTime        @default(now())
-  updatedAt DateTime        @default(now()) @updatedAt
-  name      String
-  slug      String
-  desc      String?
-  note      String?
-  equip     EquippableType?
-  levelReq  Int?
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  definitionUpdatedAt DateTime @default(now())
+
+  name     String
+  slug     String
+  desc     String?
+  note     String?
+  equip    EquippableType?
+  levelReq Int?
 
   globalLoot         Boolean?
   globalLootDropRate Float?
@@ -291,20 +295,21 @@ model Location {
 }
 
 model Area {
-  id        String     @id @default(cuid())
-  createdAt DateTime   @default(now())
-  spriteUrl String
-  updatedAt DateTime   @default(now()) @updatedAt
-  name      String     @unique()
-  slug      String     @unique()
-  note      String?
-  height    Int
-  width     Int
-  locations Location[]
-  region    Int
-  globalX   Int
-  globalY   Int
-  globalZ   Int
+  id                  String     @id @default(cuid())
+  createdAt           DateTime   @default(now())
+  spriteUrl           String
+  updatedAt           DateTime   @default(now()) @updatedAt
+  definitionUpdatedAt DateTime   @default(now())
+  name                String     @unique()
+  slug                String     @unique()
+  note                String?
+  height              Int
+  width               Int
+  locations           Location[]
+  region              Int
+  globalX             Int
+  globalY             Int
+  globalZ             Int
 
   spawnX Int
   spawnY Int

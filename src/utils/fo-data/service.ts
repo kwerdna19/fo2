@@ -1,5 +1,8 @@
-import type { Prisma } from "@prisma/client";
+import { type Item, type Mob, type Prisma, Unit } from "@prisma/client";
 import { z } from "zod";
+import faction from "~/features/factions/router";
+import type { ItemDatum } from "~/features/items/components/ItemTable";
+import type { MobDatum } from "~/features/mobs/components/MobTable";
 import { getSlugFromName } from "../misc";
 import {
 	type DataType,
@@ -11,9 +14,11 @@ import {
 
 const baseUrl = "https://data.fantasyonline2.com/api";
 
+export const getDataUrl = (type: DataType, idOrIds: number | number[]) =>
+	`${baseUrl}/${type}?ids=${Array.isArray(idOrIds) ? idOrIds.join(",") : idOrIds}`;
+
 export async function getDataByIds<T extends DataType>(type: T, ids: number[]) {
-	const url = `${baseUrl}/${type}?ids=${ids.join(",")}`;
-	const response = await fetch(url);
+	const response = await fetch(getDataUrl(type, ids));
 	const json = await response.json();
 
 	const schema = dataSchemas[type];
@@ -22,8 +27,7 @@ export async function getDataByIds<T extends DataType>(type: T, ids: number[]) {
 }
 
 export async function getDataById<T extends DataType>(type: T, id: number) {
-	const url = `${baseUrl}/${type}?ids=${id}`;
-	const response = await fetch(url);
+	const response = await fetch(getDataUrl(type, id));
 	const json = await response.json();
 
 	const schema = dataSchemas[type];
@@ -56,9 +60,7 @@ export async function getAllData<T extends DataType>(type: T) {
 	return result;
 }
 
-export const mobDefinitionToDatabaseMob = (
-	gameMob: MobDefinition,
-): Prisma.MobCreateInput => {
+export const mobDefinitionToDatabaseMob = (gameMob: MobDefinition) => {
 	return {
 		name: gameMob.t.en.n,
 		desc: gameMob.t.en.d,
@@ -74,13 +76,29 @@ export const mobDefinitionToDatabaseMob = (
 		dmgMax: gameMob.mxd,
 		inGameId: gameMob.id,
 		factionXp: gameMob.fx,
-		faction: {
-			connect: {
-				inGameId: gameMob.fi,
-			},
-		},
+
+		factionId: gameMob.fi,
 	};
 };
+
+// DB fields provided by the data api
+export const mobDefinitionFields = [
+	"name",
+	"desc",
+	"spriteName",
+	"level",
+	"health",
+	"goldMin",
+	"goldMax",
+	"atkSpeed",
+	"dmgMin",
+	"dmgMax",
+	"inGameId",
+	"moveSpeed",
+	"factionXp",
+	"drops",
+	"faction",
+] satisfies Array<keyof MobDatum>;
 
 // if no subtypes - 0 is only valid value for "st"
 export const itemTypeMap: Record<
@@ -170,14 +188,45 @@ export const itemTypeMap: Record<
 	},
 };
 
-export const itemDefinitionToDatabaseItem = (
-	gameItem: ItemDefinition,
-): Prisma.ItemCreateInput => {
+// datum fields provided by the data api
+export const itemDefinitionFields = [
+	"name",
+	"desc",
+	"spriteName",
+	"levelReq",
+	"inGameId",
+	"type",
+	"subType",
+	"sellPrice",
+	"sellPriceUnit",
+	"buyPrice",
+	"buyPriceUnit",
+	"stackSize",
+	"agi",
+	"str",
+	"sta",
+	"int",
+	"armor",
+	"typeSpecificValue",
+	"luck",
+	"dmgMin",
+	"dmgMax",
+	"range",
+	"atkSpeed",
+	"reqStr",
+	"reqSta",
+	"reqAgi",
+	"reqInt",
+	"boxItems",
+	"droppedBy", // not from item definition but from another definition (in this case mobDefs)
+] satisfies Array<keyof ItemDatum>;
+
+export const itemDefinitionToDatabaseItem = (gameItem: ItemDefinition) => {
 	const stats = Array.isArray(gameItem.sta) ? null : gameItem.sta;
 
 	const reqStats = Array.isArray(gameItem.sr) ? null : gameItem.sr;
 
-	const boxIds = Array.isArray(gameItem.sr) ? gameItem.sr : null;
+	const boxIds = Array.isArray(gameItem.sr) ? gameItem.sr : undefined;
 
 	const typeMap = itemTypeMap[gameItem.ty];
 	if (!typeMap) {
@@ -210,9 +259,9 @@ export const itemDefinitionToDatabaseItem = (
 		subType: gameItem.st,
 
 		sellPrice: gameItem.vbp,
-		sellPriceUnit: gameItem.vbc === 1 ? "GEMS" : "COINS",
+		sellPriceUnit: gameItem.vbc === 1 ? Unit.GEMS : Unit.COINS,
 		buyPrice: gameItem.vsp,
-		buyPriceUnit: gameItem.vsc === 1 ? "GEMS" : "COINS",
+		buyPriceUnit: gameItem.vsc === 1 ? Unit.GEMS : Unit.COINS,
 		stackSize: Math.max(1, gameItem.ss),
 
 		agi: stats?.agi,
@@ -232,11 +281,6 @@ export const itemDefinitionToDatabaseItem = (
 		reqAgi: reqStats?.agi,
 		reqInt: reqStats?.int,
 
-		boxItems: {
-			connect:
-				boxIds?.map((inGameId) => ({
-					inGameId,
-				})) ?? [],
-		},
+		boxIds,
 	};
 };

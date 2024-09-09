@@ -7,7 +7,7 @@ export const rolePriorities = [Role.USER, Role.MODERATOR, Role.ADMIN];
 export const getRolePriority = (r: Role | undefined) =>
 	!!r && rolePriorities.indexOf(r);
 
-export const roleIsSatisfied = (role: Role | undefined, minRole: Role) => {
+export const roleIsSatisfied = (minRole: Role, role: Role | undefined) => {
 	if (!role) {
 		return false;
 	}
@@ -16,7 +16,7 @@ export const roleIsSatisfied = (role: Role | undefined, minRole: Role) => {
 
 export const userSatisfiesRole = async (minRole: Role) => {
 	const session = await auth();
-	return roleIsSatisfied(session?.user?.role, minRole);
+	return roleIsSatisfied(minRole, session?.user?.role);
 };
 
 export const userSatisfiesRoleOrRedirect = async (

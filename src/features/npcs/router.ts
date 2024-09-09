@@ -99,18 +99,36 @@ export default createTRPCRouter({
 			};
 		}),
 
-	getAllQuick: publicProcedure.query(async ({ ctx: { db } }) => {
-		return db.npc.findMany({
-			orderBy: {
-				name: "asc",
-			},
-			select: {
-				id: true,
-				name: true,
-				spriteUrl: true,
-			},
-		});
-	}),
+	getAllQuick: publicProcedure
+		.input(z.string().optional())
+		.query(async ({ ctx: { db }, input }) => {
+			return db.npc.findMany({
+				where: input
+					? {
+							OR: [
+								{
+									name: {
+										contains: input,
+									},
+								},
+								{
+									slug: {
+										contains: input,
+									},
+								},
+							],
+						}
+					: {},
+				orderBy: {
+					name: "asc",
+				},
+				select: {
+					id: true,
+					name: true,
+					// spriteUrl: true,
+				},
+			});
+		}),
 
 	getById: publicProcedure
 		.input(z.object({ id: z.string() }))

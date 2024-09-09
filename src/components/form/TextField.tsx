@@ -18,7 +18,6 @@ type Props<FormShape extends FieldValues> = {
 	name: FieldPathByValue<FormShape, string | number | Date | null | undefined>;
 	type?: InputProps["type"];
 	numLines?: number;
-	autoFocus?: boolean;
 	maxLength?: number;
 	placeholder?: string;
 	setNullOnEmpty?: boolean;
@@ -31,17 +30,10 @@ export function TextField<FormShape extends FieldValues>({
 	name,
 	type = "text",
 	numLines,
-	autoFocus,
 	maxLength,
 	placeholder,
 	setNullOnEmpty,
 }: Props<FormShape>) {
-	useEffect(() => {
-		if (autoFocus) {
-			document.querySelector<HTMLInputElement>(`[name="${name}"]`)?.focus();
-		}
-	}, [autoFocus, name]);
-
 	return (
 		<FormField
 			control={control}
@@ -59,7 +51,11 @@ export function TextField<FormShape extends FieldValues>({
 										field.onChange(null);
 										return;
 									}
-									field.onChange(e);
+									if (type === "number") {
+										field.onChange(Number(e.target.value));
+									} else {
+										field.onChange(e);
+									}
 								}}
 								value={field.value ?? ""}
 								placeholder={placeholder}
@@ -73,7 +69,11 @@ export function TextField<FormShape extends FieldValues>({
 										field.onChange(null);
 										return;
 									}
-									field.onChange(e);
+									if (type === "number") {
+										field.onChange(Number(e.target.value));
+									} else {
+										field.onChange(e);
+									}
 								}}
 								value={field.value ?? ""}
 								placeholder={placeholder}

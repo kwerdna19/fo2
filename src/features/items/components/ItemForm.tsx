@@ -1,88 +1,70 @@
 "use client";
-import { getInputProps } from "@conform-to/react";
-import {
-	type BattlePass,
-	EquippableType,
-	type Mob,
-	type Npc,
-} from "@prisma/client";
-import UnitSelect from "~/components/UnitSelect";
-import { Form } from "~/components/form-ui/Form";
-import FormCheckbox from "~/components/form-ui/FormCheckbox";
-import FormInput from "~/components/form-ui/FormInput";
-import FormSelect from "~/components/form-ui/FormSelect";
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
-import AcquiredByBattlePassesMultiField from "~/features/battlepasses/components/AcquiredByBattlePassesMultiField";
-import { useConform } from "~/hooks/useConform";
-import type { RouterOutputs } from "~/trpc/react";
-import type { ConformServerAction } from "~/types/actions";
+import type { z } from "zod";
+import { CheckboxField } from "~/components/form/CheckboxField";
+import { TextField } from "~/components/form/TextField";
+import { Form, SubmitButton, useZodForm } from "~/components/form/zod-form";
+import { api } from "~/trpc/react";
 import { itemSchema } from "../schemas";
-import CraftedByNpcsMultiField from "./CraftedByNpcsMultiField";
-import DroppedByMobsMultiField from "./DroppedByMobsMultiField";
-import SoldByNpcsMultiField from "./SoldByNpcsMultiField";
+import { CraftedByField } from "./CraftedByField";
+import { SoldByField } from "./SoldByField";
 
 interface Props {
-	npcs: Pick<Npc, "id" | "name" | "spriteUrl">[];
-	mobs: Pick<Mob, "id" | "name" | "spriteName">[];
-	battlePasses: Pick<BattlePass, "id" | "name">[];
-	defaultValue?: RouterOutputs["item"]["getBySlug"];
-	action: ConformServerAction;
+	id?: string;
+	defaultValue?: z.infer<typeof itemSchema>;
 }
 
-export function ItemForm({
-	mobs,
-	npcs,
-	action: serverAction,
-	battlePasses,
-	defaultValue,
-}: Props) {
-	const [form, fields, action, lastResult] = useConform(serverAction, {
+export function ItemForm({ id, defaultValue }: Props) {
+	const updateMutation = api.item.update.useMutation();
+	// const createMutation = api.item.create.useMutation();
+
+	const form = useZodForm({
 		schema: itemSchema,
-		defaultValue,
+		defaultValues: defaultValue,
 	});
 
-	if (lastResult?.status === "error") {
-		console.log("DEBUG", lastResult);
-	}
-
-	const buttonText = defaultValue ? "Update" : "Create";
-
 	return (
-		<Form form={form} action={action} submit={buttonText}>
-			<FormInput label="Name" field={fields.name} />
-			<FormSelect
-				label="Equipment Type"
-				options={Object.keys(EquippableType)}
-				field={fields.equip}
-			/>
-			<FormInput label="Level Req" field={fields.levelReq} type="number" />
+		<Form
+			handleSubmit={(values) => {
+				if (id) {
+					return updateMutation.mutateAsync({ id, data: values });
+				}
+				// return createMutation.mutateAsync(values);
+			}}
+			persist
+			form={form}
+			className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-4 gap-6"
+		>
+			<TextField label="Note" control={form.control} name="note" />
 
-			<FormInput
-				label="Desc"
-				field={fields.desc}
-				placeholder="In game description"
-			/>
-
-			<FormInput
+			<TextField
 				label="Artist"
-				field={fields.artist}
+				control={form.control}
+				name="artist"
 				placeholder="E.g. Perseus, Lighterthief"
 			/>
+			<CheckboxField
+				label="Global Loot"
+				control={form.control}
+				name="globalLoot"
+			/>
 
-			<FormInput label="Note" field={fields.note} />
+			<TextField
+				label="Global Loot Drop Rate"
+				type="number"
+				control={form.control}
+				name="globalLootDropRate"
+			/>
 
-			<div className="grid grid-cols-3 gap-5">
-				<FormCheckbox label="2-Handed" field={fields.twoHand} />
-				<FormCheckbox label="Consumable" field={fields.consumable} />
-				<FormCheckbox label="Global Loot" field={fields.globalLoot} />
+			<div className="col-span-2">
+				<CraftedByField />
 			</div>
-			<div className="grid grid-cols-3 gap-5">
-				<FormInput label="Sell Price" field={fields.sellPrice} type="number" />
-				<UnitSelect label="Sell Price Unit" field={fields.sellPriceUnit} />
-				<FormInput label="Stack Size" field={fields.stackSize} type="number" />
+
+			<div className="col-span-2">
+				<SoldByField />
 			</div>
-			<div className="grid grid-cols-2 gap-5">
+
+			{/* TO BE REWORKED? */}
+			{/* <div className="grid grid-cols-2 gap-5">
 				<FormInput
 					label="Availability Start Date"
 					field={fields.availableStart}
@@ -93,70 +75,9 @@ export function ItemForm({
 					field={fields.availableEnd}
 					type="date"
 				/>
-			</div>
-			<div className="space-y-1">
-				<Label>Required Stats</Label>
-				<div className="grid grid-cols-4 gap-3">
-					<Input
-						placeholder="Req Str"
-						{...getInputProps(fields.reqStr, { type: "number" })}
-					/>
-					<Input
-						placeholder="Req Sta"
-						{...getInputProps(fields.reqSta, { type: "number" })}
-					/>
-					<Input
-						placeholder="Req Agi"
-						{...getInputProps(fields.reqAgi, { type: "number" })}
-					/>
-					<Input
-						placeholder="Req Int"
-						{...getInputProps(fields.reqInt, { type: "number" })}
-					/>
-				</div>
-			</div>
+			</div> */}
 
-			<div className="space-y-1">
-				<Label>Bonus Stats</Label>
-				<div className="grid grid-cols-5 gap-3">
-					<Input
-						placeholder="Str"
-						{...getInputProps(fields.str, { type: "number" })}
-					/>
-					<Input
-						placeholder="Sta"
-						{...getInputProps(fields.sta, { type: "number" })}
-					/>
-					<Input
-						placeholder="Agi"
-						{...getInputProps(fields.agi, { type: "number" })}
-					/>
-					<Input
-						placeholder="Int"
-						{...getInputProps(fields.int, { type: "number" })}
-					/>
-					<Input
-						placeholder="Armor"
-						{...getInputProps(fields.armor, { type: "number" })}
-					/>
-				</div>
-			</div>
-
-			<div className="grid grid-cols-3 gap-4">
-				<FormInput label="Atk Speed" field={fields.atkSpeed} type="number" />
-				<FormInput label="Dmg Min" field={fields.dmgMin} type="number" />
-				<FormInput label="Dmg Max" field={fields.dmgMax} type="number" />
-			</div>
-
-			<div className="col-span-2">
-				<DroppedByMobsMultiField
-					label="Dropped By"
-					field={fields.droppedBy}
-					mobs={mobs}
-				/>
-			</div>
-
-			<div className="col-span-2">
+			{/* <div className="col-span-2">
 				<SoldByNpcsMultiField
 					label="Sold By"
 					field={fields.soldBy}
@@ -164,13 +85,7 @@ export function ItemForm({
 				/>
 			</div>
 
-			<div className="col-span-2">
-				<CraftedByNpcsMultiField
-					label="Crafted By"
-					field={fields.craftedBy}
-					npcs={npcs}
-				/>
-			</div>
+
 
 			<div className="col-span-2">
 				<AcquiredByBattlePassesMultiField
@@ -178,6 +93,10 @@ export function ItemForm({
 					battlePasses={battlePasses}
 					field={fields.battlePassTiers}
 				/>
+			</div> */}
+
+			<div className="flex justify-end col-span-full">
+				<SubmitButton>{defaultValue ? "Update" : "Create"}</SubmitButton>
 			</div>
 		</Form>
 	);

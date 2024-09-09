@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { type Prisma, Role } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 import { baseDataTableQuerySchema } from "~/components/data-table/data-table-utils";
 import {
 	createTRPCRouter,
@@ -8,6 +9,10 @@ import {
 	roleProtectedProcedure,
 } from "~/server/api/trpc";
 import schema from "~/server/db/json-schema.json";
+import {
+	getDataById,
+	mobDefinitionToDatabaseMob,
+} from "~/utils/fo-data/service";
 import { getSlugFromName } from "~/utils/misc";
 import { mobSchema } from "./schemas";
 import { mobSearchFilterSchema } from "./search-params";
@@ -161,38 +166,72 @@ export default createTRPCRouter({
 				include: {
 					drops: {
 						include: {
-							item: true,
+							item: {
+								select: {
+									id: true,
+									slug: true,
+									spriteName: true,
+									name: true,
+									sellPrice: true,
+									sellPriceUnit: true,
+								},
+							},
 						},
 						orderBy: {
-							dropRate: "desc",
+							item: {
+								sellPrice: "asc",
+							},
 						},
 					},
-					locations: true,
+					faction: true,
+					locations: {
+						include: {
+							area: {
+								select: {
+									id: true,
+									slug: true,
+									name: true,
+								},
+							},
+						},
+					},
 				},
 			});
 		}),
 
 	create: roleProtectedProcedure(Role.MODERATOR)
-		.input(mobSchema)
-		.mutation(({ ctx: { db }, input }) => {
-			const { name, drops, locations, ...rest } = input;
+		.input(z.object({ data: mobSchema, inGameId: z.number() }))
+		.mutation(async ({ ctx: { db }, input }) => {
+			const { data, inGameId } = input;
+
+			const { locations, ...rest } = data;
+
+			const definitionData = await getDataById("mobs", inGameId);
+
+			if (!definitionData) {
+				throw new TRPCError({
+					code: "NOT_FOUND",
+					message: `Mob definition not found for id: ${inGameId}`,
+				});
+			}
+
+			const { factionId, ...converted } =
+				mobDefinitionToDatabaseMob(definitionData);
 
 			return db.mob.create({
 				data: {
-					name,
-					slug: getSlugFromName(name),
 					locations: locations && {
 						createMany: {
 							data: locations,
 						},
 					},
-					drops: drops && {
-						createMany: {
-							data: drops,
+					faction: {
+						connect: {
+							inGameId: factionId,
 						},
 					},
-					spriteName: "temp",
 					...rest,
+					...converted,
 				},
 			});
 		}),
@@ -201,7 +240,7 @@ export default createTRPCRouter({
 		.input(z.object({ id: z.string(), data: mobSchema }))
 		.mutation(async ({ ctx: { db }, input }) => {
 			const { id, data } = input;
-			const { drops, locations, ...fields } = data;
+			const { locations, ...fields } = data;
 
 			let updated = await db.mob.update({
 				where: {
@@ -209,25 +248,6 @@ export default createTRPCRouter({
 				},
 				data: {
 					...fields,
-					slug: getSlugFromName(fields.name),
-					updatedAt: new Date(),
-					drops: drops && {
-						upsert: drops.map(({ itemId, dropRate }) => ({
-							create: {
-								dropRate,
-								itemId,
-							},
-							update: {
-								dropRate,
-							},
-							where: {
-								mobId_itemId: {
-									itemId,
-									mobId: id,
-								},
-							},
-						})),
-					},
 					locations: locations && {
 						upsert: locations.map((l) => ({
 							create: l,
@@ -244,18 +264,8 @@ export default createTRPCRouter({
 					},
 				},
 				include: {
-					drops: true,
 					locations: true,
 				},
-			});
-
-			const itemsToRemove = updated.drops.filter((updatedItem) => {
-				return !drops?.find((inputItem) => {
-					return (
-						inputItem.itemId === updatedItem.itemId &&
-						inputItem.dropRate === updatedItem.dropRate
-					);
-				});
 			});
 
 			const locationsToRemove = updated.locations.filter((updatedLocation) => {
@@ -268,20 +278,12 @@ export default createTRPCRouter({
 				});
 			});
 
-			if (itemsToRemove.length || locationsToRemove.length) {
+			if (locationsToRemove.length) {
 				updated = await db.mob.update({
 					where: {
 						id,
 					},
 					data: {
-						drops: {
-							delete: itemsToRemove.map((item) => ({
-								mobId_itemId: {
-									mobId: id,
-									itemId: item.itemId,
-								},
-							})),
-						},
 						locations: {
 							delete: locationsToRemove.map((l) => ({
 								id: l.id,
@@ -289,13 +291,45 @@ export default createTRPCRouter({
 						},
 					},
 					include: {
-						drops: true,
 						locations: true,
 					},
 				});
 			}
 
 			return updated;
+		}),
+
+	syncDefinition: roleProtectedProcedure(Role.MODERATOR)
+		.input(z.object({ inGameId: z.number() }))
+		.mutation(async ({ ctx: { db }, input }) => {
+			const { inGameId } = input;
+
+			const definitionData = await getDataById("mobs", inGameId);
+
+			if (!definitionData) {
+				throw new TRPCError({
+					code: "NOT_FOUND",
+					message: `Item definition not found for id: ${inGameId}`,
+				});
+			}
+
+			const { factionId, ...converted } =
+				mobDefinitionToDatabaseMob(definitionData);
+
+			return db.mob.update({
+				data: {
+					definitionUpdatedAt: new Date(),
+					...converted,
+					faction: {
+						connect: {
+							inGameId: factionId,
+						},
+					},
+				},
+				where: {
+					inGameId,
+				},
+			});
 		}),
 
 	delete: roleProtectedProcedure(Role.ADMIN)

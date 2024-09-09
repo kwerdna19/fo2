@@ -11,7 +11,10 @@ export const droppedBySchema = z
 
 export const soldBySchema = z
 	.object({
-		npcId: z.string(),
+		npc: z.object({
+			id: z.string(),
+			name: z.string(),
+		}),
 		unit: z.nativeEnum(Unit).optional(),
 		price: z.number().int(),
 	})
@@ -19,60 +22,26 @@ export const soldBySchema = z
 
 export const craftedBySchema = z
 	.object({
-		npcId: z.string(),
+		npc: z.object({
+			id: z.string(),
+			name: z.string(),
+		}),
 		durationMinutes: z.number(),
-		unit: z.nativeEnum(Unit).optional(),
+		unit: z.nativeEnum(Unit),
 		price: z.number().int(),
 	})
 	.array();
 
 export const itemSchema = z.object({
-	name: z.string(),
-	desc: z.string().optional(),
-	note: z.string().optional(),
-	artist: z.string().optional(),
-	equip: z
-		.string()
-		.refine((arg) => !!EquippableType[arg as EquippableType])
-		.optional(),
-	levelReq: z.number().int().optional(),
-	twoHand: z.boolean().optional(),
-	consumable: z.boolean().optional(),
-	sellPrice: z.number().int(),
-	sellPriceUnit: z.nativeEnum(Unit),
+	note: z.string().nullish(),
+	artist: z.string().nullish(),
 
-	buyPrice: z.number().int(),
-	buyPriceUnit: z.nativeEnum(Unit),
+	globalLoot: z.boolean().nullish(),
+	globalLootDropRate: z.number().nullish(),
 
-	stackSize: z.number().int(),
+	// availableStart: z.date().optional(),
+	// availableEnd: z.date().optional(),
 
-	globalLoot: z.boolean().optional(),
-
-	availableStart: z.date().optional(),
-	availableEnd: z.date().optional(),
-
-	reqStr: z.number().int().optional(),
-	reqSta: z.number().int().optional(),
-	reqAgi: z.number().int().optional(),
-	reqInt: z.number().int().optional(),
-	range: z.number().int().optional(),
-
-	str: z.number().int().optional(),
-	sta: z.number().int().optional(),
-	agi: z.number().int().optional(),
-	int: z.number().int().optional(),
-	armor: z.number().int().optional(),
-
-	atkSpeed: z.number().optional(),
-	dmgMin: z.number().int().optional(),
-	dmgMax: z.number().int().optional(),
-
-	inGameId: z.number().int(),
-	// spriteName: z.string(),
-	type: z.number().int(),
-	subType: z.number().int(),
-
-	droppedBy: droppedBySchema.optional(),
 	soldBy: soldBySchema.optional(),
 	craftedBy: craftedBySchema.optional(),
 	battlePassTiers: itemBattlePassTiersSchema.optional(),

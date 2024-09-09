@@ -9,12 +9,12 @@ import {
 	TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { cn } from "~/utils/styles";
-import type { Datum } from "./ItemTable";
+import type { ItemDatum } from "./ItemTable";
 
 export function SoldByList({
 	npcs,
 	className,
-}: { npcs: Datum["soldBy"]; className?: string }) {
+}: { npcs: ItemDatum["soldBy"]; className?: string }) {
 	return (
 		<div className={cn("flex flex-wrap items-center", className)}>
 			{npcs.map((d) => (

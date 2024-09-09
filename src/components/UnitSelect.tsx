@@ -1,9 +1,5 @@
 "use client";
-import {
-	type FieldMetadata,
-	getSelectProps,
-	useInputControl,
-} from "@conform-to/react";
+
 import { Unit } from "@prisma/client";
 import { FieldLabel } from "~/components/ui/label";
 import {
@@ -16,61 +12,60 @@ import {
 import { cn } from "~/utils/styles";
 import { UnitSprite } from "./UnitSprite";
 
-const options = Object.values(Unit);
+import type { Control, FieldPathByValue, FieldValues } from "react-hook-form";
+import {
+	FormControl,
+	FormDescription,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "~/components/ui/form";
 
-type Props = { className?: string; field: FieldMetadata<Unit>; label?: string };
+const options = Object.values(Unit).reverse();
 
-export default function UnitSelect({ className, field, label }: Props) {
-	const errMessage = field.errors?.at(0);
+type Props<FormShape extends FieldValues> = {
+	className?: string;
+	label?: string;
+	desc?: string;
+	control: Control<FormShape>;
+	name: FieldPathByValue<FormShape, Unit | null | undefined>;
+};
 
-	const control = useInputControl(field);
-	const { defaultValue, key, ...selectProps } = getSelectProps(field, {
-		value: false,
-	});
-
+export default function UnitSelect<FormShape extends FieldValues>({
+	control,
+	name,
+	desc,
+	label,
+}: Props<FormShape>) {
 	return (
-		<div className={cn("space-y-1", className)}>
-			{label ? <FieldLabel field={field}>{label}</FieldLabel> : null}
-			<Select
-				key={key}
-				required={field.required}
-				value={control.value}
-				onValueChange={control.change}
-				defaultValue={defaultValue?.toString()}
-				{...selectProps}
-			>
-				<SelectTrigger
-					id={field.id}
-					className="flex items-center"
-					onKeyDown={(e) =>
-						!field.required && (e.key === "Backspace" || e.key === "Delete")
-							? control.change("")
-							: null
-					}
-				>
-					<SelectValue placeholder="Unit" />
-				</SelectTrigger>
-				<SelectContent>
-					{options.map((o) => (
-						<SelectItem key={o} value={o}>
-							<div className="flex gap-x-4">
-								<div className="mt-0.5">
-									<UnitSprite type={o} size="sm" />
-								</div>
-								<div>{o}</div>
-							</div>
-						</SelectItem>
-					))}
-				</SelectContent>
-			</Select>
-			{/* {placeholder && !errMessage ? <p id={`${id}-desc`} className="text-sm font-medium text-muted-foreground">
-        {placeholder}
-      </p> : null} */}
-			{errMessage ? (
-				<p id={field.errorId} className="text-sm font-medium text-destructive">
-					{errMessage}
-				</p>
-			) : null}
-		</div>
+		<FormField
+			control={control}
+			name={name}
+			render={({ field }) => (
+				<FormItem>
+					{label ? <FormLabel>{label}</FormLabel> : null}
+					<FormControl>
+						<Select value={field.value} onValueChange={field.onChange}>
+							<SelectTrigger
+								className="flex items-center justify-center"
+								noIcon
+							>
+								<SelectValue placeholder="Unit" />
+							</SelectTrigger>
+							<SelectContent className="min-w-[5rem]">
+								{options.map((o) => (
+									<SelectItem key={o} value={o}>
+										<UnitSprite type={o} size="sm" />
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
+					</FormControl>
+					{desc ? <FormDescription>{desc}</FormDescription> : null}
+					<FormMessage />
+				</FormItem>
+			)}
+		/>
 	);
 }

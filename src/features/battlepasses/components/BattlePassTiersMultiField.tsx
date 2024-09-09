@@ -72,10 +72,10 @@ export function BattlePassTiersMultiField({
 										placeholder="Amount"
 										{...amountProps}
 									/>
-									<UnitSelect
+									{/* <UnitSelect
 										className="basis-36 flex-shrink-0"
 										field={fieldset.unit}
-									/>
+									/> */}
 								</div>
 							</div>
 							<div className="flex gap-x-3 px-3">

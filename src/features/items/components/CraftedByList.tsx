@@ -9,9 +9,9 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "~/components/ui/tooltip";
-import type { Datum } from "./ItemTable";
+import type { ItemDatum } from "./ItemTable";
 
-export function CraftedByList({ npcs }: { npcs: Datum["craftedBy"] }) {
+export function CraftedByList({ npcs }: { npcs: ItemDatum["craftedBy"] }) {
 	return (
 		<div className="flex items-center h-[64px]">
 			{npcs.map((d) => (

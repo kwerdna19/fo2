@@ -18,6 +18,11 @@
           "originalType": "DateTime",
           "format": "date-time"
         },
+        "definitionUpdatedAt": {
+          "type": "string",
+          "originalType": "DateTime",
+          "format": "date-time"
+        },
         "name": {
           "type": "string",
           "originalType": "String"
@@ -561,6 +566,11 @@
           "originalType": "DateTime",
           "format": "date-time"
         },
+        "definitionUpdatedAt": {
+          "type": "string",
+          "originalType": "DateTime",
+          "format": "date-time"
+        },
         "name": {
           "type": "string",
           "originalType": "String"
@@ -1051,6 +1061,11 @@
           "originalType": "String"
         },
         "updatedAt": {
+          "type": "string",
+          "originalType": "DateTime",
+          "format": "date-time"
+        },
+        "definitionUpdatedAt": {
           "type": "string",
           "originalType": "DateTime",
           "format": "date-time"

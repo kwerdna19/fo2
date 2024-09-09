@@ -27,14 +27,14 @@ import { MobHealth } from "./MobHealth";
 type AllMobsResponse = RouterOutputs["mob"]["getAllPopulated"];
 type AllMobsInput = RouterInputs["mob"]["getAllPopulated"];
 
-type Datum = AllMobsResponse["data"][number];
+export type MobDatum = AllMobsResponse["data"][number];
 
-const columnHelper = createColumnHelper<Datum>();
+const columnHelper = createColumnHelper<MobDatum>();
 
 // biome-ignore lint/suspicious/noExplicitAny: make TS happy
-const columns: ColumnDef<Datum, any>[] = [
-	columnHelper.display({
-		id: "sprite",
+export const mobTableColumns: ColumnDef<MobDatum, any>[] = [
+	columnHelper.accessor("spriteName", {
+		header: "Sprite",
 		cell: ({ row }) => (
 			<Link
 				prefetch={false}
@@ -63,6 +63,7 @@ const columns: ColumnDef<Datum, any>[] = [
 			sortFieldReplacement: "slug",
 		},
 	}),
+	columnHelper.accessor("desc", {}),
 	columnHelper.accessor("level", {
 		header: SortButton,
 	}),
@@ -88,9 +89,8 @@ const columns: ColumnDef<Datum, any>[] = [
 		cell: (info) => <MobHealth health={info.getValue()} />,
 		header: SortButton,
 	}),
-	columnHelper.display({
-		id: "loot",
-		header: "Loot",
+	columnHelper.accessor("drops", {
+		header: "Drops",
 		cell: ({ row }) => (
 			<ItemList
 				size="sm"
@@ -106,10 +106,13 @@ const columns: ColumnDef<Datum, any>[] = [
 			/>
 		),
 	}),
-	columnHelper.display({
-		id: "faction",
+	columnHelper.accessor("faction", {
 		header: "Faction",
 		cell: ({ row }) => <FactionDisplay data={row.original} />,
+	}),
+	columnHelper.accessor((m) => (m.factionXp > 0 ? m.factionXp : null), {
+		id: "factionXp",
+		header: "Faction XP",
 	}),
 	columnHelper.display({
 		id: "locations",
@@ -135,6 +138,12 @@ const columns: ColumnDef<Datum, any>[] = [
 		header: SortButton,
 		meta: {
 			heading: "Atk Speed",
+		},
+	}),
+	columnHelper.accessor("moveSpeed", {
+		header: SortButton,
+		meta: {
+			heading: "Move Speed",
 		},
 	}),
 	columnHelper.accessor("numSpawns", {
@@ -232,7 +241,7 @@ export function MobTable({
 		<DataTable
 			title="Mobs"
 			data={data ?? { data: [], totalCount: 0 }}
-			columns={columns}
+			columns={mobTableColumns}
 			filtersComponent={<MobSearchFilters />}
 			defaultColumnVisibility={{
 				damage: false,
@@ -241,6 +250,8 @@ export function MobTable({
 				spawnTimeSec: false,
 				artist: false,
 				locations: false,
+				desc: false,
+				moveSpeed: false,
 			}}
 		/>
 	);

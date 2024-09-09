@@ -7,9 +7,9 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "~/components/ui/tooltip";
-import type { Datum } from "./ItemTable";
+import type { ItemDatum } from "./ItemTable";
 
-export function DroppedByList({ mobs }: { mobs: Datum["droppedBy"] }) {
+export function DroppedByList({ mobs }: { mobs: ItemDatum["droppedBy"] }) {
 	return (
 		<div className="flex items-center h-[64px]">
 			{mobs.map((d) => (

@@ -1,6 +1,8 @@
 import { z } from "zod";
 
+import { get } from "http";
 import { type EquippableType, type Prisma, Role } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 import { baseDataTableQuerySchema } from "~/components/data-table/data-table-utils";
 import {
 	createTRPCRouter,
@@ -8,6 +10,10 @@ import {
 	roleProtectedProcedure,
 } from "~/server/api/trpc";
 import schema from "~/server/db/json-schema.json";
+import {
+	getDataById,
+	itemDefinitionToDatabaseItem,
+} from "~/utils/fo-data/service";
 import { equipmentSlotConfig } from "~/utils/fo-game";
 import { getSlugFromName } from "~/utils/misc";
 import { itemSchema } from "./schemas";
@@ -216,6 +222,34 @@ export default createTRPCRouter({
 					slug,
 				},
 				include: {
+					boxItems: {
+						select: {
+							id: true,
+							name: true,
+							spriteName: true,
+							slug: true,
+						},
+					},
+					box: {
+						select: {
+							id: true,
+							name: true,
+							spriteName: true,
+							slug: true,
+						},
+					},
+					usages: {
+						select: {
+							item: {
+								select: {
+									id: true,
+									name: true,
+									spriteName: true,
+									slug: true,
+								},
+							},
+						},
+					},
 					droppedBy: {
 						include: {
 							mob: true,
@@ -242,36 +276,40 @@ export default createTRPCRouter({
 		}),
 
 	create: roleProtectedProcedure(Role.MODERATOR)
-		.input(itemSchema)
-		.mutation(({ ctx: { db }, input }) => {
-			const {
-				name,
-				droppedBy,
-				equip,
-				soldBy,
-				craftedBy,
-				battlePassTiers,
-				...rest
-			} = input;
+		.input(z.object({ data: itemSchema, inGameId: z.number() }))
+		.mutation(async ({ ctx: { db }, input }) => {
+			const { data, inGameId } = input;
+
+			const { soldBy, craftedBy, battlePassTiers, ...rest } = data;
+
+			const definitionData = await getDataById("items", inGameId);
+
+			if (!definitionData) {
+				throw new TRPCError({
+					code: "NOT_FOUND",
+					message: `Item definition not found for id: ${inGameId}`,
+				});
+			}
+
+			const { boxIds, ...converted } =
+				itemDefinitionToDatabaseItem(definitionData);
 
 			return db.item.create({
 				data: {
-					name,
-					equip: equip as EquippableType,
-					slug: getSlugFromName(name),
-					droppedBy: droppedBy && {
-						createMany: {
-							data: droppedBy,
-						},
-					},
 					soldBy: soldBy && {
 						createMany: {
-							data: soldBy,
+							data: soldBy.map(({ npc, ...s }) => ({
+								npcId: npc.id,
+								...s,
+							})),
 						},
 					},
 					craftedBy: craftedBy && {
 						createMany: {
-							data: craftedBy,
+							data: craftedBy.map(({ npc, ...s }) => ({
+								npcId: npc.id,
+								...s,
+							})),
 						},
 					},
 					battlePassTiers: battlePassTiers && {
@@ -279,6 +317,10 @@ export default createTRPCRouter({
 							data: battlePassTiers,
 						},
 					},
+					boxItems: boxIds && {
+						connect: boxIds.map((b) => ({ inGameId: b })),
+					},
+					...converted,
 					...rest,
 				},
 			});
@@ -288,57 +330,33 @@ export default createTRPCRouter({
 		.input(z.object({ id: z.string(), data: itemSchema }))
 		.mutation(async ({ ctx: { db }, input }) => {
 			const { id, data } = input;
-			const {
-				name,
-				droppedBy,
-				equip,
-				soldBy,
-				craftedBy,
-				battlePassTiers,
-				...rest
-			} = data;
+			const { soldBy, craftedBy, battlePassTiers, ...rest } = data;
 
 			let updated = await db.item.update({
 				where: {
 					id,
 				},
 				data: {
-					name,
-					equip: equip as EquippableType,
-					slug: getSlugFromName(name),
-					updatedAt: new Date(),
 					...rest,
-					droppedBy: droppedBy && {
-						upsert: droppedBy.map((d) => ({
-							create: d,
-							update: d,
-							where: {
-								mobId_itemId: {
-									mobId: d.mobId,
-									itemId: id,
-								},
-							},
-						})),
-					},
 					soldBy: soldBy && {
-						upsert: soldBy.map((d) => ({
-							create: d,
-							update: d,
+						upsert: soldBy.map(({ npc, ...d }) => ({
+							create: { ...d, npcId: npc.id },
+							update: { ...d, npcId: npc.id },
 							where: {
 								npcId_itemId: {
-									npcId: d.npcId,
+									npcId: npc.id,
 									itemId: id,
 								},
 							},
 						})),
 					},
 					craftedBy: craftedBy && {
-						upsert: craftedBy.map((d) => ({
-							create: d,
-							update: d,
+						upsert: craftedBy.map(({ npc, ...d }) => ({
+							create: { ...d, npcId: npc.id },
+							update: { ...d, npcId: npc.id },
 							where: {
 								npcId_itemId: {
-									npcId: d.npcId,
+									npcId: npc.id,
 									itemId: id,
 								},
 							},
@@ -363,19 +381,10 @@ export default createTRPCRouter({
 				},
 			});
 
-			const dropsToRemove = updated.droppedBy.filter((updatedDrop) => {
-				return !droppedBy?.find((inputDrop) => {
-					return (
-						inputDrop.mobId === updatedDrop.mobId &&
-						inputDrop.dropRate === updatedDrop.dropRate
-					);
-				});
-			});
-
 			const salesToRemove = updated.soldBy.filter((updatedSale) => {
 				return !soldBy?.find((inputSale) => {
 					return (
-						inputSale.npcId === updatedSale.npcId &&
+						inputSale.npc.id === updatedSale.npcId &&
 						inputSale.price === updatedSale.price &&
 						inputSale.unit === updatedSale.unit
 					);
@@ -385,7 +394,7 @@ export default createTRPCRouter({
 			const craftsToRemove = updated.craftedBy.filter((updatedCraft) => {
 				return !craftedBy?.find((inputCraft) => {
 					return (
-						inputCraft.npcId === updatedCraft.npcId &&
+						inputCraft.npc.id === updatedCraft.npcId &&
 						inputCraft.price === updatedCraft.price &&
 						inputCraft.unit === updatedCraft.unit &&
 						inputCraft.durationMinutes === updatedCraft.durationMinutes
@@ -403,7 +412,6 @@ export default createTRPCRouter({
 			});
 
 			if (
-				dropsToRemove.length ||
 				salesToRemove.length ||
 				craftsToRemove.length ||
 				tiersToRemove.length
@@ -413,14 +421,6 @@ export default createTRPCRouter({
 						id,
 					},
 					data: {
-						droppedBy: {
-							delete: dropsToRemove.map((item) => ({
-								mobId_itemId: {
-									mobId: item.mobId,
-									itemId: id,
-								},
-							})),
-						},
 						soldBy: {
 							delete: salesToRemove.map((s) => ({
 								npcId_itemId: {
@@ -457,6 +457,37 @@ export default createTRPCRouter({
 			}
 
 			return updated;
+		}),
+
+	syncDefinition: roleProtectedProcedure(Role.MODERATOR)
+		.input(z.object({ inGameId: z.number() }))
+		.mutation(async ({ ctx: { db }, input }) => {
+			const { inGameId } = input;
+
+			const definitionData = await getDataById("items", inGameId);
+
+			if (!definitionData) {
+				throw new TRPCError({
+					code: "NOT_FOUND",
+					message: `Item definition not found for id: ${inGameId}`,
+				});
+			}
+
+			const { boxIds, ...converted } =
+				itemDefinitionToDatabaseItem(definitionData);
+
+			return db.item.update({
+				data: {
+					definitionUpdatedAt: new Date(),
+					boxItems: boxIds && {
+						set: boxIds.map((b) => ({ inGameId: b })),
+					},
+					...converted,
+				},
+				where: {
+					inGameId,
+				},
+			});
 		}),
 
 	delete: roleProtectedProcedure(Role.ADMIN)

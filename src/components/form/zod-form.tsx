@@ -77,16 +77,19 @@ export function Form<TInput extends FieldValues>(
 				id={form.id}
 				onSubmit={(event) => {
 					event.stopPropagation();
-					form.handleSubmit(async (values) => {
-						try {
-							await handleSubmit(values);
-						} catch (cause) {
-							form.setError("root", {
-								message: (cause as Error)?.message ?? "Unknown error",
-								type: "server",
-							});
-						}
-					})(event);
+					form.handleSubmit(
+						async (values) => {
+							try {
+								await handleSubmit(values);
+							} catch (cause) {
+								form.setError("root", {
+									message: (cause as Error)?.message ?? "Unknown error",
+									type: "server",
+								});
+							}
+						},
+						(...params) => console.info("INVALID FORM", ...params),
+					)(event);
 				}}
 			/>
 		</FormProvider>

@@ -70,22 +70,6 @@ export default async function Item({ params }: { params: Params }) {
 		</>
 	);
 
-	// async function addToCollectionAction() {
-	// 	"use server";
-
-	// 	const session = await auth();
-	// 	if (!session || !session.user || !item) {
-	// 		redirect("/login");
-	// 	}
-
-	// 	await addToCollection({
-	// 		itemId: item.id,
-	// 		userId: session.user.id,
-	// 	});
-
-	// 	redirect(`/items/${item.slug}?added`);
-	// }
-
 	return (
 		<div className="grid lg:grid-cols-4 gap-8">
 			<div className="lg:hidden space-y-2">{header}</div>

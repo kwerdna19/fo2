@@ -168,6 +168,7 @@ export function DataTable<T, Data extends { totalCount: number; data: T[] }>({
 																	"droppedBy",
 																	"soldBy",
 																	"craftedBy",
+																	"spriteName",
 																	"sprite",
 																].includes(cell.column.id),
 															})}

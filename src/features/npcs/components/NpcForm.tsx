@@ -9,8 +9,6 @@ import { useConform } from "~/hooks/useConform";
 import type { RouterOutputs } from "~/trpc/react";
 import type { ConformServerAction } from "~/types/actions";
 import { npcSchema, npcTypes } from "../schemas";
-import { NpcCraftsMultiField } from "./NpcCraftsMultiField";
-import { NpcItemsMultiField } from "./NpcItemsMultiField";
 
 interface Props {
 	areas: Pick<Area, "id" | "name" | "spriteUrl" | "height" | "width">[];
@@ -38,32 +36,34 @@ export function NpcForm({
 
 	const buttonText = defaultValue ? "Update" : "Create";
 
-	return (
-		<Form form={form} action={action} submit={buttonText}>
-			<FormInput label="Name" field={fields.name} />
-			<FormSelect field={fields.type} label="Type" options={npcTypes} />
-			<SpriteSelect field={fields.spriteUrl} label="Sprite" options={sprites} />
+	// return (
+	// 	<Form form={form} action={action} submit={buttonText}>
+	// 		<FormInput label="Name" field={fields.name} />
+	// 		<FormSelect field={fields.type} label="Type" options={npcTypes} />
+	// 		<SpriteSelect field={fields.spriteUrl} label="Sprite" options={sprites} />
 
-			<div className="col-span-2">
-				<LocationsMultiField
-					label="Locations"
-					areas={areas}
-					field={fields.locations}
-					formId={form.id}
-				/>
-			</div>
+	// 		<div className="col-span-2">
+	// 			<LocationsMultiField
+	// 				label="Locations"
+	// 				areas={areas}
+	// 				field={fields.locations}
+	// 				formId={form.id}
+	// 			/>
+	// 		</div>
 
-			<div className="col-span-2">
-				<NpcItemsMultiField label="Sells" items={items} field={fields.items} />
-			</div>
+	// 		<div className="col-span-2">
+	// 			<NpcItemsMultiField label="Sells" items={items} field={fields.items} />
+	// 		</div>
 
-			<div className="col-span-2">
-				<NpcCraftsMultiField
-					label="Crafts"
-					items={items}
-					field={fields.crafts}
-				/>
-			</div>
-		</Form>
-	);
+	// 		<div className="col-span-2">
+	// 			<NpcCraftsMultiField
+	// 				label="Crafts"
+	// 				items={items}
+	// 				field={fields.crafts}
+	// 			/>
+	// 		</div>
+	// 	</Form>
+	// );
+
+	return null;
 }

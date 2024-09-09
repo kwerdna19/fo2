@@ -61,25 +61,12 @@ import { SoldByList } from "./SoldByList";
 type AllItemsResponse = RouterOutputs["item"]["getAllPopulated"];
 type AllItemsInput = RouterInputs["item"]["getAllPopulated"];
 
-export type Datum = AllItemsResponse["data"][number];
-const columnHelper = createColumnHelper<Datum>();
+export type ItemDatum = AllItemsResponse["data"][number];
+const columnHelper = createColumnHelper<ItemDatum>();
 
-// const getNameFromEquip = (equip: EquippableType) => {
-// 	return equip
-// 		.replace(/_/g, " ")
-// 		.replace("COSMETIC", "OUTFIT")
-// 		.toLocaleLowerCase();
-// };
-
-// const equipTypeOptions = Object.values(EquippableType).map((type) => ({
-// 	value: type,
-// 	name: getNameFromEquip(type),
-// }));
-
-export const columns = [
-	columnHelper.display({
-		id: "sprite",
-		header: () => null,
+export const itemTableColumns = [
+	columnHelper.accessor("spriteName", {
+		header: "Sprite",
 		cell: ({ row }) => (
 			<Link
 				className="flex justify-center items-center h-[64px]"
@@ -153,7 +140,7 @@ export const columns = [
 	columnHelper.accessor("agi", {
 		header: SortButton,
 		meta: {
-			heading: "Req AGI",
+			heading: "AGI",
 		},
 	}),
 
@@ -194,6 +181,12 @@ export const columns = [
 	// 	header: "Req",
 	// 	cell: ({ row }) => <ItemRequiredStats stats={row.original} />,
 	// }),
+	columnHelper.accessor("typeSpecificValue", {
+		header: "Value",
+	}),
+	columnHelper.accessor("luck", {
+		header: SortButton,
+	}),
 	columnHelper.display({
 		id: "damage",
 		header: SortButton,
@@ -213,34 +206,45 @@ export const columns = [
 			heading: "Atk Speed",
 		},
 	}),
+	columnHelper.accessor("range", {
+		header: SortButton,
+	}),
 	columnHelper.accessor("sellPrice", {
 		header: "Sell Price",
-		cell: (info) => <PriceDisplay size="xs" count={info.getValue()} />,
-	}),
-	columnHelper.display({
-		id: "droppedBy",
-		header: "Dropped By",
-		cell: ({ row }) => <DroppedByList mobs={row.original.droppedBy} />,
-	}),
-	columnHelper.display({
-		id: "soldBy",
-		header: "Sold By",
-		cell: ({ row }) => <SoldByList npcs={row.original.soldBy} />,
-	}),
-	columnHelper.display({
-		id: "craftedBy",
-		header: "Crafted By",
-		cell: ({ row }) => <CraftedByList npcs={row.original.craftedBy} />,
-	}),
-	columnHelper.display({
-		id: "boxContents",
-		header: "Box Contents",
-		cell: ({ row }) => (
-			<ItemList
-				data={row.original.boxItems}
-				className="flex-nowrap"
-				size="sm"
+		cell: (info) => (
+			<PriceDisplay
+				size="xs"
+				count={info.getValue()}
+				unit={info.row.original.sellPriceUnit}
 			/>
+		),
+	}),
+	columnHelper.accessor("buyPrice", {
+		header: "Buy Price",
+		cell: (info) => (
+			<PriceDisplay
+				size="xs"
+				count={info.getValue()}
+				unit={info.row.original.buyPriceUnit}
+			/>
+		),
+	}),
+	columnHelper.accessor("droppedBy", {
+		header: "Dropped By",
+		cell: (info) => <DroppedByList mobs={info.getValue()} />,
+	}),
+	columnHelper.accessor("soldBy", {
+		header: "Sold By",
+		cell: (info) => <SoldByList npcs={info.getValue()} />,
+	}),
+	columnHelper.accessor("craftedBy", {
+		header: "Crafted By",
+		cell: (info) => <CraftedByList npcs={info.getValue()} />,
+	}),
+	columnHelper.accessor("boxItems", {
+		header: "Box Contents",
+		cell: (info) => (
+			<ItemList data={info.getValue()} className="flex-nowrap" size="sm" />
 		),
 	}),
 	// columnHelper.display({
@@ -292,7 +296,7 @@ export const columns = [
 	// @TODO battle passes column
 	// @TODO skills column
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-] as ColumnDef<Datum, any>[];
+] as ColumnDef<ItemDatum, any>[];
 
 function ItemSearchFilters() {
 	const { resetPage } = useDataTableQueryParams();
@@ -492,7 +496,7 @@ export function ItemTable({
 		<DataTable
 			title="Items"
 			data={data ?? { data: [], totalCount: 0 }}
-			columns={columns}
+			columns={itemTableColumns}
 			filtersComponent={<ItemSearchFilters />}
 			defaultColumnVisibility={{
 				agi: false,

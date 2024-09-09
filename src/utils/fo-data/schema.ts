@@ -55,7 +55,7 @@ export const MobDefinitionSchema = z.object({
 	fi: z.number(), // faction id
 	fx: z.number(), // faction xp
 	wt: z.number(), // ???
-	t: TranslationSchema,
+	t: TranslationSchema, // name, desc
 	z: z.number().nullable(), // zone id
 	mic: z.number().nullable(), // min coin drop
 	mac: z.number().nullable(), // max coin drop

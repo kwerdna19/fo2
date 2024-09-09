@@ -45,23 +45,23 @@ for (const gameMob of mobs) {
 		},
 	});
 
-	let mobId = foundMob?.id;
+	const mobId = foundMob?.id;
 
 	if (!mobId) {
 		console.log("mob not found. creating ", gameMob.t.en.n);
 
-		const created = await prisma.mob.create({
-			data: mobDefinitionToDatabaseMob(gameMob),
-		});
+		// const created = await prisma.mob.create({
+		// 	data: mobDefinitionToDatabaseMob(gameMob),
+		// });
 
-		mobId = created.id;
+		// mobId = created.id;
 	} else {
-		await prisma.mob.update({
-			where: {
-				id: mobId,
-			},
-			data: mobDefinitionToDatabaseMob(gameMob),
-		});
+		// await prisma.mob.update({
+		// 	where: {
+		// 		id: mobId,
+		// 	},
+		// 	data: mobDefinitionToDatabaseMob(gameMob),
+		// });
 	}
 
 	const dropTuples = gameMob.d ?? [];
@@ -103,26 +103,24 @@ for (const gameMob of mobs) {
 			},
 			data: {
 				drops: {
-					upsert: items.map((item) => {
-						const dropRate = drops.find(
-							(d) => d.itemInGameId === item.inGameId,
-						)?.dropRate;
-
-						if (typeof dropRate !== "number") {
-							throw new Error("Drop rate not found");
-						}
-
-						return {
-							create: {
-								dropRate,
-								itemId: item.id,
-							},
-							update: { dropRate },
-							where: {
-								mobId_itemId: { mobId, itemId: item.id },
-							},
-						};
-					}),
+					// upsert: items.map((item) => {
+					// 	const dropRate = drops.find(
+					// 		(d) => d.itemInGameId === item.inGameId,
+					// 	)?.dropRate;
+					// 	if (typeof dropRate !== "number") {
+					// 		throw new Error("Drop rate not found");
+					// 	}
+					// 	return {
+					// 		create: {
+					// 			dropRate,
+					// 			itemId: item.id,
+					// 		},
+					// 		update: { dropRate },
+					// 		where: {
+					// 			mobId_itemId: { mobId, itemId: item.id },
+					// 		},
+					// 	};
+					// }),
 				},
 			},
 		});
