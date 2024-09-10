@@ -171,9 +171,14 @@ export default createTRPCRouter({
 				slug: "asc",
 			},
 			where: {
-				equip: {
-					in: Object.keys(equipmentSlotConfig) as EquippableType[],
-				},
+				OR: [
+					{
+						type: 2,
+					},
+					{
+						type: 3,
+					},
+				],
 			},
 		});
 	}),
@@ -191,28 +196,6 @@ export default createTRPCRouter({
 			},
 		});
 	}),
-
-	getById: publicProcedure
-		.input(z.object({ id: z.string() }))
-		.query(({ ctx: { db }, input: { id } }) => {
-			return db.item.findUniqueOrThrow({
-				where: {
-					id,
-				},
-				include: {
-					droppedBy: {
-						include: {
-							mob: true,
-						},
-						orderBy: {
-							mob: {
-								level: "asc",
-							},
-						},
-					},
-				},
-			});
-		}),
 
 	getBySlug: publicProcedure
 		.input(z.object({ slug: z.string() }))

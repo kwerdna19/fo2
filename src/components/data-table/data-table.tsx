@@ -106,7 +106,7 @@ export function DataTable<T, Data extends { totalCount: number; data: T[] }>({
 			<div className="flex max-w-full flex-1 flex-col gap-4 overflow-hidden px-1 pb-1">
 				<DataTableSearchBar search={search} setSearch={setSearch} />
 				<div className="flex items-center gap-x-6 gap-y-2 justify-between flex-wrap">
-					<div className="flex items-center gap-x-8">
+					<div className="flex items-center gap-x-6">
 						{hasFilters ? (
 							<DataTableFiltersToggle
 								setSideBarOpen={setSidebar}

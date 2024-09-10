@@ -98,19 +98,6 @@ export default createTRPCRouter({
 		});
 	}),
 
-	getById: publicProcedure
-		.input(z.object({ id: z.string() }))
-		.query(({ ctx: { db }, input: { id } }) => {
-			return db.skill.findUniqueOrThrow({
-				where: {
-					id,
-				},
-				include: {
-					items: true,
-				},
-			});
-		}),
-
 	getBySlug: publicProcedure
 		.input(z.object({ slug: z.string() }))
 		.query(({ ctx: { db }, input: { slug } }) => {

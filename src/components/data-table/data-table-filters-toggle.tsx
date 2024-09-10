@@ -4,14 +4,15 @@ import {
 	PanelLeftClose,
 	PanelLeftOpen,
 } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
+import { Button } from "~/components/ui/button";
+import { Kbd } from "~/components/ui/kbd";
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
 } from "~/components/ui/tooltip";
-import { Button } from "../ui/button";
 
 type Props = {
 	sideBarOpen: boolean;
@@ -28,6 +29,17 @@ export function DataTableFiltersToggle({
 }: Props) {
 	const hideLabel = "Hide Filters";
 	const showLabel = "Show Filters";
+
+	useEffect(() => {
+		const down = (e: KeyboardEvent) => {
+			if (e.key === "b" && (e.metaKey || e.ctrlKey)) {
+				e.preventDefault();
+				setSideBarOpen((prev) => !prev);
+			}
+		};
+		document.addEventListener("keydown", down);
+		return () => document.removeEventListener("keydown", down);
+	}, [setSideBarOpen]);
 
 	return (
 		<>
@@ -52,14 +64,12 @@ export function DataTableFiltersToggle({
 							)}
 						</Button>
 					</TooltipTrigger>
-					<TooltipContent>
-						<p>
-							Toggle controls with{" "}
-							{/* <Kbd className="ml-1 text-muted-foreground group-hover:text-accent-foreground">
-							<span className="mr-0.5">⌘</span>
+					<TooltipContent className="p-2">
+						<span className="leading-none">Toggle controls with</span>
+						<Kbd className="text-muted-foreground group-hover:text-accent-foreground ml-1.5">
+							<span className="mr-1">⌘</span>
 							<span>B</span>
-						</Kbd> */}
-						</p>
+						</Kbd>
 					</TooltipContent>
 				</Tooltip>
 			</TooltipProvider>

@@ -73,10 +73,10 @@ export function ItemList<K extends PartialItem | { item: PartialItem }>({
 										/>
 									</Link>
 								</TooltipTrigger>
-								<TooltipContent className="min-w-32 space-y-1" side="bottom">
+								<TooltipContent className="min-w-36 space-y-1" side="bottom">
 									<p className="text-sm font-semibold">{item.name}</p>
 									{properties && properties.length > 0 ? (
-										<div className="max-w-32">{properties}</div>
+										<div className="max-w-36 text-xs">{properties}</div>
 									) : null}
 								</TooltipContent>
 							</Tooltip>
