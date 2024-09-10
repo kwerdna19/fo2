@@ -3,16 +3,19 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import type { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
+import { DurationDisplay } from "~/components/DurationDisplay";
 import { MobSprite } from "~/components/MobSprite";
 import SortButton from "~/components/SortButton";
 import { DataTable } from "~/components/data-table/data-table";
+import { useDataTableQueryOptions } from "~/components/data-table/use-data-table-query";
 import { Badge } from "~/components/ui/badge";
-import type { RouterOutputs } from "~/trpc/react";
-import { CraftItemsList, SaleItemsList } from "./SaleItemsList";
+import { ItemList } from "~/features/items/components/ItemList";
+import { type RouterOutputs, api } from "~/trpc/react";
+import type { TableProps } from "~/types/table";
+import { npcSearchParamParser } from "../search-params";
 
-type AllNpcsResponse = RouterOutputs["npc"]["getAllPopulated"];
-export type Datum = AllNpcsResponse["data"][number];
-const columnHelper = createColumnHelper<Datum>();
+type NpcDatum = RouterOutputs["npc"]["getAllPopulated"]["data"][number];
+const columnHelper = createColumnHelper<NpcDatum>();
 
 export const columns = [
 	columnHelper.display({
@@ -65,16 +68,49 @@ export const columns = [
 	columnHelper.display({
 		id: "sells",
 		header: "Sells",
-		cell: ({ row }) => <SaleItemsList items={row.original.items} />,
+		cell: ({ row }) => (
+			<ItemList
+				data={row.original.items}
+				getAttributes={(item) => ({
+					"Buy Price": {
+						value: item.item.buyPrice,
+						unit: item.item.buyPriceUnit,
+					},
+				})}
+			/>
+		),
 	}),
 	columnHelper.display({
 		id: "crafts",
 		header: "Crafts",
-		cell: ({ row }) => <CraftItemsList items={row.original.crafts} />,
+		cell: ({ row }) => (
+			<ItemList
+				data={row.original.crafts}
+				getAttributes={(craft) => ({
+					Cost: {
+						value: craft.price,
+						unit: craft.unit,
+					},
+					Duration: <DurationDisplay mins={craft.durationMinutes} />,
+				})}
+			/>
+		),
 	}),
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-] as ColumnDef<Datum, any>[];
+] as ColumnDef<NpcDatum, any>[];
 
-export function NpcTable({ data }: { data: AllNpcsResponse }) {
-	return <DataTable title="Npcs" data={data} columns={columns} />;
+export function NpcTable(props: TableProps<"npc", "getAllPopulated">) {
+	const { params, options } = useDataTableQueryOptions(
+		npcSearchParamParser,
+		props,
+	);
+	const { data } = api.npc.getAllPopulated.useQuery(params, options);
+
+	return (
+		<DataTable
+			title="Npcs"
+			data={data ?? { data: [], totalCount: 0 }}
+			columns={columns}
+		/>
+	);
 }

@@ -7,7 +7,7 @@ import { Badge } from "~/components/ui/badge";
 import { Separator } from "~/components/ui/separator";
 import { TooltipProvider } from "~/components/ui/tooltip";
 import { env } from "~/env";
-import { GuildService } from "~/utils/fo-api";
+import { foApi } from "~/utils/fo-api";
 import { getPlayerSpriteUrl, guildRankMap } from "~/utils/fo-game";
 
 interface Params {
@@ -25,8 +25,11 @@ const xApiKey = env.FO_API_KEY;
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
-	const guilds = await GuildService.getGuildLeaderboard({ xApiKey });
-	const params = guilds.map((g) => ({
+	const result = await foApi.GET("/api/public/guild/leaderboard");
+	if (result.error) {
+		return [];
+	}
+	const params = result.data.map((g) => ({
 		name: g.Name,
 	}));
 	return params;
@@ -34,22 +37,32 @@ export async function generateStaticParams() {
 
 export default async function Guild({ params }: { params: Params }) {
 	const name = decodeURI(params.name);
-	const info = await GuildService.getGuildDetails({
-		xApiKey,
-		requestBody: { name },
-	}).catch(() => null);
+	const result = await foApi.POST("/api/public/guild", {
+		body: { name },
+	});
 
-	if (!info) {
+	if (result.error) {
 		notFound();
 	}
 
+	const info = result.data;
+
 	const [members, leaderBoard] = await Promise.all([
-		GuildService.getGuildMembers({
-			xApiKey,
-			requestBody: { name },
-		}),
-		GuildService.getGuildLeaderboard({
-			xApiKey,
+		foApi
+			.POST("/api/public/guild/members", {
+				body: { name },
+			})
+			.then((r) => {
+				if (r.error) {
+					throw new Error("Error fetching guild members");
+				}
+				return r.data;
+			}),
+		foApi.GET("/api/public/guild/leaderboard").then((r) => {
+			if (r.error) {
+				throw new Error("Error fetching guild leaderboard");
+			}
+			return r.data;
 		}),
 	]);
 

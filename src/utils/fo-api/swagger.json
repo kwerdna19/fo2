@@ -1,0 +1,477 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"title": "Fantasy Online 2 API",
+		"version": "0.0.1"
+	},
+	"paths": {
+		"/api/public/guild/leaderboard": {
+			"get": {
+				"summary": "Retrieves the top 10 guilds based on level.",
+				"description": "Returns a list of the top 10 guilds, sorted by level in descending order. Each guild's name and level are included in the response. Note: This endpoint requires a valid API key included in the 'x-api-key' header.\n",
+				"operationId": "getGuildLeaderboard",
+				"tags": ["Guild"],
+				"security": [
+					{
+						"ApiKeyAuth": []
+					}
+				],
+				"parameters": [
+					{
+						"name": "x-api-key",
+						"in": "header",
+						"description": "API Key for authentication.",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successfully retrieved the top 10 guilds.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"Name": {
+												"type": "string",
+												"description": "The name of the guild."
+											},
+											"Level": {
+												"type": "integer",
+												"description": "The level of the guild."
+											}
+										}
+									},
+									"example": [
+										{
+											"Name": "Legends of Aragon",
+											"Level": 50
+										},
+										{
+											"Name": "Dragon Slayers",
+											"Level": 49
+										}
+									]
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error. This could be due to database connectivity issues or unexpected server errors."
+					}
+				}
+			}
+		},
+		"/api/public/guild/members": {
+			"post": {
+				"summary": "Retrieves members of the specified guild.",
+				"description": "Fetches details of guild members such as name, sprite, level, guild name, and rank, sorted by rank and donations. Note: This endpoint requires a valid API key included in the 'x-api-key' header.\n",
+				"operationId": "getGuildMembers",
+				"tags": ["Guild"],
+				"security": [
+					{
+						"ApiKeyAuth": []
+					}
+				],
+				"parameters": [
+					{
+						"name": "x-api-key",
+						"in": "header",
+						"description": "API Key for authentication.",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"requestBody": {
+					"description": "Name of the guild for which to retrieve members. The guild name must be between 4 and 18 characters and can only contain alphanumeric characters and spaces.\n",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"name": {
+										"type": "string",
+										"description": "The name of the guild to retrieve members for, adhering to validation rules.\n",
+										"example": "Monkey Time"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successfully retrieved the guild members.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"Name": {
+												"type": "string",
+												"description": "The name of the guild member."
+											},
+											"Sprite": {
+												"type": "string",
+												"description": "The sprite image reference of the guild member."
+											},
+											"Level": {
+												"type": "integer",
+												"description": "The level of the guild member."
+											},
+											"GuildName": {
+												"type": "string",
+												"description": "The name of the guild."
+											},
+											"GuildRank": {
+												"type": "string",
+												"description": "The rank of the guild member within the guild."
+											}
+										}
+									},
+									"example": [
+										{
+											"Name": "Sir Galahad",
+											"Sprite": "sprite1.png",
+											"Level": 30,
+											"GuildName": "Knights of Valor",
+											"GuildRank": "Commander"
+										}
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid JSON in request body or the guild name does not meet validation criteria (missing, empty, not between 4 and 18 characters, or contains invalid characters)."
+					},
+					"500": {
+						"description": "Internal server error. This could be due to database connectivity issues or unexpected server errors."
+					}
+				}
+			}
+		},
+		"/api/public/guild": {
+			"post": {
+				"summary": "Retrieves details of the specified guild.",
+				"description": "Fetches details of a specific guild including its name, number of members, total donations, level, and approval status. Note: This endpoint requires a valid API key included in the 'x-api-key' header.\n",
+				"operationId": "getGuildDetails",
+				"tags": ["Guild"],
+				"security": [
+					{
+						"ApiKeyAuth": []
+					}
+				],
+				"parameters": [
+					{
+						"name": "x-api-key",
+						"in": "header",
+						"description": "API Key for authentication.",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"requestBody": {
+					"description": "Name of the guild for which to retrieve details. The guild name must be between 4 and 18 characters and can only contain alphanumeric characters and spaces.\n",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"name": {
+										"type": "string",
+										"description": "The name of the guild to retrieve details for, adhering to validation rules.",
+										"example": "Monkey Time"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successfully retrieved the guild details.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"Name": {
+											"type": "string",
+											"description": "The name of the guild."
+										},
+										"NumMembers": {
+											"type": "integer",
+											"description": "The number of members in the guild."
+										},
+										"TotalDonations": {
+											"type": "integer",
+											"description": "The total donations made to the guild."
+										},
+										"Level": {
+											"type": "integer",
+											"description": "The level of the guild."
+										},
+										"Approved": {
+											"type": "string",
+											"format": "date-time",
+											"description": "The date and time the guild was approved."
+										}
+									},
+									"example": {
+										"Name": "Knights of Valor",
+										"NumMembers": 150,
+										"TotalDonations": 100000,
+										"Level": 5,
+										"Approved": "2023-01-15T00:00:00Z"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid JSON in request body or the guild name does not meet validation criteria (missing, empty, not between 4 and 18 characters, or contains invalid characters)."
+					},
+					"500": {
+						"description": "Internal server error. This could be due to database connectivity issues or unexpected server errors."
+					}
+				}
+			}
+		},
+		"/api/public/market/search": {
+			"post": {
+				"summary": "Retrieves market listings based on search criteria.",
+				"description": "Fetches market listings filtered by an optional search term applicable to item names across multiple languages, supporting pagination and sorting. Returns up to 10 listings per page, sorted by 'Listed' in descending order by default.",
+				"tags": ["Market"],
+				"operationId": "searchMarketListings",
+				"security": [
+					{
+						"ApiKeyAuth": []
+					}
+				],
+				"parameters": [
+					{
+						"name": "x-api-key",
+						"in": "header",
+						"required": true,
+						"description": "API key required for endpoint access.",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"search_term": {
+										"type": "string",
+										"description": "Optional filter by item name. Case-insensitive.",
+										"example": "crab"
+									},
+									"sort_by": {
+										"type": "string",
+										"enum": ["Price", "TimeLeft", "Listed"],
+										"description": "Criteria for sorting the results. Defaults to 'Listed'.",
+										"example": "Listed"
+									},
+									"sort_direction": {
+										"type": "string",
+										"enum": ["ASC", "DESC"],
+										"description": "Direction for sorting. Defaults to 'DESC'.",
+										"example": "DESC"
+									},
+									"page": {
+										"type": "integer",
+										"description": "Page number for pagination, starts from 1.",
+										"example": 1
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successfully retrieved market listings and associated item definitions.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"listings": {
+											"type": "array",
+											"description": "Array of market listing objects.",
+											"items": {
+												"type": "object",
+												"properties": {
+													"Id": {
+														"type": "integer",
+														"description": "Unique identifier for the market listing."
+													},
+													"ItemDefinitionId": {
+														"type": "integer",
+														"description": "Identifier for the item definition associated with the listing."
+													},
+													"ItemInstanceData": {
+														"type": "object",
+														"description": "Data specific to the item instance in the listing."
+													},
+													"Price": {
+														"type": "integer",
+														"description": "Price of the listed item."
+													},
+													"Duration": {
+														"type": "integer",
+														"description": "Duration of the listing in days."
+													},
+													"Listed": {
+														"type": "integer",
+														"description": "Timestamp when the item was listed, in milliseconds since the Unix epoch."
+													},
+													"LastSoldPrice": {
+														"type": "integer",
+														"description": "Most recent sale price for the item from the archive."
+													}
+												}
+											}
+										},
+										"itemDefinitions": {
+											"type": "array",
+											"description": "Array of item definition objects.",
+											"items": {
+												"type": "object",
+												"properties": {
+													"id": {
+														"type": "integer",
+														"description": "Unique identifier for the item definition."
+													},
+													"sfn": {
+														"type": "string",
+														"description": "Filename for the sprite associated with the item."
+													},
+													"ty": {
+														"type": "integer",
+														"description": "Type identifier for the item."
+													},
+													"st": {
+														"type": "integer",
+														"description": "Subtype identifier for the item."
+													},
+													"q": {
+														"type": "integer",
+														"description": "Quality of the item."
+													},
+													"lr": {
+														"type": "integer",
+														"description": "Level requirement for the item."
+													},
+													"sr": {
+														"type": "string",
+														"description": "Stat requirements for the item."
+													},
+													"bt": {
+														"type": "string",
+														"description": "Binding type of the item."
+													},
+													"sta": {
+														"type": "string",
+														"description": "Stats associated with the item."
+													},
+													"ss": {
+														"type": "integer",
+														"description": "Stack size of the item."
+													},
+													"vbc": {
+														"type": "string",
+														"description": "Vendor buy currency for the item."
+													},
+													"vbp": {
+														"type": "integer",
+														"description": "Vendor buy price for the item."
+													},
+													"vsc": {
+														"type": "string",
+														"description": "Vendor sell currency for the item."
+													},
+													"vsp": {
+														"type": "integer",
+														"description": "Vendor sell price for the item."
+													},
+													"t": {
+														"type": "object",
+														"description": "Translations for the item name and description.",
+														"additionalProperties": {
+															"type": "object",
+															"properties": {
+																"n": {
+																	"type": "string",
+																	"description": "Item name in a specific language."
+																},
+																"d": {
+																	"type": "string",
+																	"description": "Item description in a specific language."
+																}
+															}
+														}
+													}
+												}
+											}
+										},
+										"pagination": {
+											"type": "object",
+											"description": "Pagination information.",
+											"properties": {
+												"totalItems": {
+													"type": "integer",
+													"description": "Total number of items available across all pages."
+												},
+												"totalPages": {
+													"type": "integer",
+													"description": "Total number of pages available."
+												},
+												"currentPage": {
+													"type": "integer",
+													"description": "Current page number being viewed."
+												},
+												"itemsPerPage": {
+													"type": "integer",
+													"description": "Number of items per page, fixed at 10."
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid request parameters."
+					},
+					"500": {
+						"description": "Internal server error."
+					}
+				}
+			}
+		}
+	},
+	"securityDefinitions": {
+		"ApiKeyAuth": {
+			"type": "apiKey",
+			"in": "header",
+			"name": "x-api-key"
+		}
+	},
+	"components": {},
+	"tags": []
+}

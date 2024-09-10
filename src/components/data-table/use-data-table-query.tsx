@@ -1,5 +1,7 @@
+import { keepPreviousData } from "@tanstack/react-query";
 import type { PaginationState, SortingState } from "@tanstack/react-table";
-import { useQueryStates } from "nuqs";
+import { type UseQueryStatesKeysMap, useQueryStates } from "nuqs";
+import { shallowCompare } from "~/utils/misc";
 import { dataTableSearchParams } from "./data-table-utils";
 
 export const useDataTableQueryParams = () => {
@@ -64,3 +66,24 @@ export const useDataTableQueryParams = () => {
 		resetPage,
 	};
 };
+
+export function useDataTableQueryOptions<
+	T extends UseQueryStatesKeysMap,
+	P extends Record<string | number | symbol, unknown>,
+	D,
+>(t: T, props: { initialParams: P; initialData: D }) {
+	const [tableParams] = useQueryStates(dataTableSearchParams);
+
+	const [filters] = useQueryStates(t);
+	const params = { ...filters, ...tableParams };
+
+	return {
+		params,
+		options: {
+			initialData: shallowCompare(params, props.initialParams)
+				? props.initialData
+				: undefined,
+			placeholderData: keepPreviousData,
+		},
+	};
+}

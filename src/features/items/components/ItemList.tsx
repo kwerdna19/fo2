@@ -1,6 +1,7 @@
 "use client";
 import type { Item, Unit } from "@prisma/client";
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { PriceDisplay } from "~/components/PriceDisplay";
 import {
 	Tooltip,
@@ -17,7 +18,7 @@ type Props<K extends PartialItem | { item: PartialItem }> = {
 	data: Array<K>;
 	getAttributes?: (
 		d: K,
-	) => Record<string, string | number | null | { value: number; unit: Unit }>;
+	) => Record<string, ReactNode | { value: number; unit: Unit }>;
 	className?: string;
 	infoInToolTip?: boolean;
 	size?: "md" | "sm";
@@ -27,7 +28,7 @@ export function ItemList<K extends PartialItem | { item: PartialItem }>({
 	data,
 	getAttributes,
 	className,
-	size = "md",
+	size = "sm",
 }: Props<K>) {
 	return (
 		<div
@@ -46,7 +47,7 @@ export function ItemList<K extends PartialItem | { item: PartialItem }>({
 						<div key={key} className="flex justify-between">
 							<p>{key}</p>
 							<div>
-								{value && typeof value === "object" ? (
+								{value && typeof value === "object" && "value" in value ? (
 									<PriceDisplay
 										size="xs"
 										count={value.value}

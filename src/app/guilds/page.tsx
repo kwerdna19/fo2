@@ -3,26 +3,32 @@ import { User } from "lucide-react";
 import Link from "next/link";
 import { PriceDisplay } from "~/components/PriceDisplay";
 import { Card } from "~/components/ui/card";
-import { env } from "~/env";
-import { GuildService } from "~/utils/fo-api";
+import { foApi } from "~/utils/fo-api";
 
 export const metadata = {
 	title: "Guilds",
 };
 
-const xApiKey = env.FO_API_KEY;
-
 export const revalidate = 3600;
 
 export default async function Guilds() {
-	const topGuilds = await GuildService.getGuildLeaderboard({ xApiKey });
+	const result = await foApi.GET("/api/public/guild/leaderboard");
+	if (result.error) {
+		throw new Error("Error fetching guild leaderboard");
+	}
 
 	const guildDetails = await Promise.all(
-		topGuilds.map((g) =>
-			GuildService.getGuildDetails({
-				xApiKey,
-				requestBody: { name: g.Name },
-			}),
+		result.data.map((g) =>
+			foApi
+				.POST("/api/public/guild", {
+					body: { name: g.Name },
+				})
+				.then((r) => {
+					if (r.error) {
+						throw new Error("Error fetching guild details");
+					}
+					return r.data;
+				}),
 		),
 	);
 
@@ -32,7 +38,7 @@ export default async function Guilds() {
 				<h2 className="text-3xl">Guilds</h2>
 			</div>
 			<div className="space-y-3 max-w-screen-sm w-full pb-8">
-				{topGuilds.map((g, i) => {
+				{result.data.map((g, i) => {
 					const details = guildDetails[i];
 
 					return (

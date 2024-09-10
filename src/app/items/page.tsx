@@ -7,8 +7,6 @@ export const metadata = {
 	title: "Items",
 };
 
-export const revalidate = 86400;
-
 export default async function Items({
 	searchParams,
 }: { searchParams: SearchParams }) {

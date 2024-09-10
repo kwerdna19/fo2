@@ -6,7 +6,8 @@ import { Command, CommandInput, CommandList } from "~/components/ui/command";
 export function DataTableSearchBar({
 	search,
 	setSearch,
-}: { search: string; setSearch: (q: string) => void }) {
+	disabled,
+}: { search: string; setSearch: (q: string) => void; disabled?: boolean }) {
 	const [val, setValue] = useState(search);
 
 	return (
@@ -17,6 +18,7 @@ export function DataTableSearchBar({
 					placeholder="Search by keyword..."
 					value={val}
 					onValueChange={setValue}
+					disabled={disabled}
 					onKeyDown={(e) => {
 						if (e.key === "Enter") {
 							e.preventDefault();

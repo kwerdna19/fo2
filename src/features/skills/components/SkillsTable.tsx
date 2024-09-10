@@ -6,16 +6,17 @@ import Link from "next/link";
 import { ItemSprite } from "~/components/ItemSprite";
 import SortButton from "~/components/SortButton";
 import { DataTable } from "~/components/data-table/data-table";
+import { useDataTableQueryOptions } from "~/components/data-table/use-data-table-query";
 import { ItemRequiredStats } from "~/features/items/components/ItemRequiredStats";
 import { ItemStats } from "~/features/items/components/ItemStats";
-import type { RouterOutputs } from "~/trpc/react";
+import { type RouterOutputs, api } from "~/trpc/react";
+import type { TableProps } from "~/types/table";
+import { skillSearchParamParser } from "../search-params";
 
-type AllSkillsResponse = RouterOutputs["skill"]["getAllPopulated"];
+type SkillDatum = RouterOutputs["skill"]["getAllPopulated"]["data"][number];
+const columnHelper = createColumnHelper<SkillDatum>();
 
-export type Datum = AllSkillsResponse["data"][number];
-const columnHelper = createColumnHelper<Datum>();
-
-export const columns = [
+export const skillColumns = [
 	columnHelper.display({
 		id: "sprite",
 		cell: ({ row }) => (
@@ -63,16 +64,20 @@ export const columns = [
 		cell: ({ row }) => <ItemRequiredStats stats={row.original} />,
 	}),
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-] as ColumnDef<Datum, any>[];
+] as ColumnDef<SkillDatum, any>[];
 
-export function SkillTable({ data }: { data: AllSkillsResponse }) {
+export function SkillTable(props: TableProps<"skill", "getAllPopulated">) {
+	const { params, options } = useDataTableQueryOptions(
+		skillSearchParamParser,
+		props,
+	);
+	const { data } = api.skill.getAllPopulated.useQuery(params, options);
+
 	return (
 		<DataTable
 			title="Skills"
-			data={data}
-			columns={columns}
-			// filtersComponent={<MobSearchFilters />}
-			// defaultColumnVisibility={{}}
+			data={data ?? { data: [], totalCount: 0 }}
+			columns={skillColumns}
 		/>
 	);
 }

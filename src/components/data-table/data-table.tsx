@@ -40,7 +40,7 @@ import { DataTableViewOptions } from "./data-table-view-options";
 import { useDataTableQueryParams } from "./use-data-table-query";
 
 function LoadingView() {
-	return <Skeleton />;
+	return <Skeleton className="w-full h-96" />;
 }
 
 export function DataTable<T, Data extends { totalCount: number; data: T[] }>({
@@ -68,11 +68,12 @@ export function DataTable<T, Data extends { totalCount: number; data: T[] }>({
 	const { pagination, setPagination, sorting, setSorting, search, setSearch } =
 		useDataTableQueryParams();
 
-	const [columnVisibility, setColumnVisibility] = useLocalStorage(
-		`${title}-col-vis`,
-		defaultColumnVisibility ?? {},
-		{ initializeWithValue: false },
-	);
+	// TODO revisit
+	// const [columnVisibility, setColumnVisibility] = useLocalStorage(
+	// 	`${title}-col-vis`,
+	// 	defaultColumnVisibility ?? {},
+	// 	{ initializeWithValue: false },
+	// );
 
 	const table = useReactTable({
 		data: rows,
@@ -84,11 +85,14 @@ export function DataTable<T, Data extends { totalCount: number; data: T[] }>({
 		manualPagination: true,
 		manualSorting: true,
 		manualFiltering: true,
-		onColumnVisibilityChange: setColumnVisibility,
+		// onColumnVisibilityChange: setColumnVisibility,
 		state: {
 			pagination,
 			sorting,
-			columnVisibility,
+			// columnVisibility,
+		},
+		initialState: {
+			columnVisibility: defaultColumnVisibility ?? {},
 		},
 	});
 
@@ -104,7 +108,11 @@ export function DataTable<T, Data extends { totalCount: number; data: T[] }>({
 				{filtersComponent}
 			</DataTableSideBar>
 			<div className="flex max-w-full flex-1 flex-col gap-4 overflow-hidden px-1 pb-1">
-				<DataTableSearchBar search={search} setSearch={setSearch} />
+				<DataTableSearchBar
+					search={search}
+					setSearch={setSearch}
+					disabled={loading}
+				/>
 				<div className="flex items-center gap-x-6 gap-y-2 justify-between flex-wrap">
 					<div className="flex items-center gap-x-6">
 						{hasFilters ? (
@@ -113,12 +121,15 @@ export function DataTable<T, Data extends { totalCount: number; data: T[] }>({
 								sideBarOpen={sidebar}
 								setDrawerOpen={setDrawer}
 								drawerOpen={drawer}
+								disabled={loading}
 							/>
 						) : null}
-						<div className="text-sm text-muted-foreground px-2">
-							Showing {table.getRowModel().rows.length.toLocaleString()} of{" "}
-							{totalCount.toLocaleString()} {title.toLocaleLowerCase()}
-						</div>
+						{!loading ? (
+							<div className="text-sm text-muted-foreground px-2">
+								Showing {table.getRowModel().rows.length.toLocaleString()} of{" "}
+								{totalCount.toLocaleString()} {title.toLocaleLowerCase()}
+							</div>
+						) : null}
 					</div>
 
 					<DataTableViewOptions table={table} />

@@ -1,8 +1,7 @@
 import { defineConfig } from "@hey-api/openapi-ts";
 
 export default defineConfig({
+	client: "@hey-api/client-fetch",
 	input: "https://fantasyonline2.com/swagger.json",
-	base: "https://fantasyonline2.com",
 	output: "src/utils/fo-api/client",
-	client: "fetch",
 });

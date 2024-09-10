@@ -13,7 +13,7 @@ import { npcSchema } from "./schemas";
 import { npcSearchFilterSchema } from "./search-params";
 
 const requiredFields = schema.definitions.Npc.required;
-const searchFields = ["name", "desc", "slug"];
+const searchFields = ["name", "slug"];
 
 export default createTRPCRouter({
 	getAllPopulated: publicProcedure

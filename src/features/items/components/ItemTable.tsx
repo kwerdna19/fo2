@@ -7,16 +7,16 @@ import { ItemSprite } from "~/components/ItemSprite";
 import { PriceDisplay } from "~/components/PriceDisplay";
 import SortButton from "~/components/SortButton";
 
-import { keepPreviousData } from "@tanstack/react-query";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Check } from "lucide-react";
 import { DataTable } from "~/components/data-table/data-table";
-import { dataTableSearchParams } from "~/components/data-table/data-table-utils";
-import { useDataTableQueryParams } from "~/components/data-table/use-data-table-query";
+import {
+	useDataTableQueryOptions,
+	useDataTableQueryParams,
+} from "~/components/data-table/use-data-table-query";
 import RangeField from "~/components/form/RangeField";
 import { Form, SubmitButton, useZodForm } from "~/components/form/zod-form";
 import { Button } from "~/components/ui/button";
-import { Command, CommandItem } from "~/components/ui/command";
 import {
 	FormControl,
 	FormField,
@@ -24,28 +24,18 @@ import {
 	FormLabel,
 	FormMessage,
 } from "~/components/ui/form";
-import { Label } from "~/components/ui/label";
-import { ScrollArea } from "~/components/ui/scroll-area";
 import {
 	Select,
 	SelectContent,
-	SelectGroup,
 	SelectItem,
-	SelectLabel,
 	SelectTrigger,
 	SelectValue,
 } from "~/components/ui/select";
 import { DmgRange } from "~/features/mobs/components/DmgRange";
-import { type RouterInputs, type RouterOutputs, api } from "~/trpc/react";
+import { type RouterOutputs, api } from "~/trpc/react";
+import type { TableProps } from "~/types/table";
 import { itemTypeMap } from "~/utils/fo-data/service";
-import {
-	LEVEL_CAP,
-	MAX_LEVEL,
-	isItemConsumable,
-	isItemTwoHanded,
-} from "~/utils/fo-game";
-import { shallowCompare } from "~/utils/misc";
-import { cn } from "~/utils/styles";
+import { MAX_LEVEL, isItemConsumable, isItemTwoHanded } from "~/utils/fo-game";
 import {
 	itemSearchFilterSchema,
 	itemSearchParamParser,
@@ -58,10 +48,8 @@ import ItemSubType from "./ItemSubType";
 import ItemType from "./ItemType";
 import { SoldByList } from "./SoldByList";
 
-type AllItemsResponse = RouterOutputs["item"]["getAllPopulated"];
-type AllItemsInput = RouterInputs["item"]["getAllPopulated"];
-
-export type ItemDatum = AllItemsResponse["data"][number];
+export type ItemDatum =
+	RouterOutputs["item"]["getAllPopulated"]["data"][number];
 const columnHelper = createColumnHelper<ItemDatum>();
 
 export const itemTableColumns = [
@@ -477,20 +465,12 @@ function ItemSearchFilters() {
 	);
 }
 
-export function ItemTable({
-	initialData,
-	initialParams,
-}: { initialData: AllItemsResponse; initialParams: AllItemsInput }) {
-	const [tableParams] = useQueryStates(dataTableSearchParams);
-	const [filters] = useQueryStates(itemSearchParamParser);
-	const params = { ...filters, ...tableParams };
-
-	const { data } = api.item.getAllPopulated.useQuery(params, {
-		initialData: shallowCompare(params, initialParams)
-			? initialData
-			: undefined,
-		placeholderData: keepPreviousData,
-	});
+export function ItemTable(props: TableProps<"item", "getAllPopulated">) {
+	const { params, options } = useDataTableQueryOptions(
+		itemSearchParamParser,
+		props,
+	);
+	const { data } = api.item.getAllPopulated.useQuery(params, options);
 
 	return (
 		<DataTable

@@ -7,13 +7,10 @@ export const metadata = {
 	title: "Skills",
 };
 
-export const revalidate = 86400;
-
 export default async function Skills({
 	searchParams,
 }: { searchParams: SearchParams }) {
-	const skills = await api.skill.getAllPopulated(
-		skillSearchParamCache.parse(searchParams),
-	);
-	return <SkillTable data={skills} />;
+	const params = skillSearchParamCache.parse(searchParams);
+	const data = await api.skill.getAllPopulated(params);
+	return <SkillTable initialData={data} initialParams={params} />;
 }

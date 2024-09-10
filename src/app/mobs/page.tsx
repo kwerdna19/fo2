@@ -7,8 +7,6 @@ export const metadata = {
 	title: "Mobs",
 };
 
-export const revalidate = 86400;
-
 export default async function Mobs({
 	searchParams,
 }: { searchParams: SearchParams }) {

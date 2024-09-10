@@ -3,9 +3,9 @@ import * as L from "leaflet";
 import Link from "next/link";
 import { LayerGroup, LayersControl, Marker, Popup } from "react-leaflet";
 import { spriteHeight, spriteWidth } from "~/components/MobSprite";
+import { ItemList } from "~/features/items/components/ItemList";
 import { DropsList } from "~/features/mobs/components/DropsList";
 import { MobHealth } from "~/features/mobs/components/MobHealth";
-import { SaleItemsList } from "~/features/npcs/components/SaleItemsList";
 import type { RouterOutputs } from "~/trpc/react";
 
 type Locations = NonNullable<RouterOutputs["area"]["getBySlug"]>["locations"];
@@ -106,7 +106,15 @@ export function LocationLayers({
 											</Link>
 										</div>
 										{npc.items && npc.items.length > 0 ? (
-											<SaleItemsList items={npc.items} size="sm" />
+											<ItemList
+												data={npc.items}
+												getAttributes={(item) => ({
+													"Buy Price": {
+														value: item.item.buyPrice,
+														unit: item.item.buyPriceUnit,
+													},
+												})}
+											/>
 										) : null}
 										{npc.type === "Shop" &&
 										npc.items &&

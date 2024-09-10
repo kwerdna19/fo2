@@ -19,6 +19,7 @@ type Props = {
 	setSideBarOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
 	drawerOpen: boolean;
 	setDrawerOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
+	disabled: boolean;
 };
 
 export function DataTableFiltersToggle({
@@ -26,6 +27,7 @@ export function DataTableFiltersToggle({
 	setSideBarOpen,
 	drawerOpen,
 	setDrawerOpen,
+	disabled,
 }: Props) {
 	const hideLabel = "Hide Filters";
 	const showLabel = "Show Filters";
@@ -52,6 +54,7 @@ export function DataTableFiltersToggle({
 							type="button"
 							onClick={() => setSideBarOpen((prev) => !prev)}
 							className="hidden lg:inline-flex"
+							disabled={disabled}
 						>
 							{sideBarOpen ? (
 								<>
@@ -80,6 +83,7 @@ export function DataTableFiltersToggle({
 				type="button"
 				onClick={() => setDrawerOpen((prev) => !prev)}
 				className="lg:hidden"
+				disabled={disabled}
 			>
 				{drawerOpen ? (
 					<>

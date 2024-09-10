@@ -1,33 +1,31 @@
 "use client";
 
-import { keepPreviousData } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
 import type { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { useQueryStates } from "nuqs";
 import { TbCrown as Crown } from "react-icons/tb";
+import { MobSprite } from "~/components/MobSprite";
 import SortButton from "~/components/SortButton";
-import { dataTableSearchParams } from "~/components/data-table/data-table-utils";
-import { useDataTableQueryParams } from "~/components/data-table/use-data-table-query";
+import { DataTable } from "~/components/data-table/data-table";
+import {
+	useDataTableQueryOptions,
+	useDataTableQueryParams,
+} from "~/components/data-table/use-data-table-query";
 import RangeField from "~/components/form/RangeField";
 import { Form, SubmitButton, useZodForm } from "~/components/form/zod-form";
 import { Button } from "~/components/ui/button";
-import { type RouterInputs, type RouterOutputs, api } from "~/trpc/react";
+import { ItemList } from "~/features/items/components/ItemList";
+import { type RouterOutputs, api } from "~/trpc/react";
+import type { TableProps } from "~/types/table";
 import { LEVEL_CAP } from "~/utils/fo-game";
-import { shallowCompare } from "~/utils/misc";
-import { MobSprite } from "../../../components/MobSprite";
-import { DataTable } from "../../../components/data-table/data-table";
-import { ItemList } from "../../items/components/ItemList";
 import { mobSearchFilterSchema, mobSearchParamParser } from "../search-params";
 import { DmgRange } from "./DmgRange";
 import { DropGold } from "./DropGold";
 import FactionDisplay from "./FactionDisplay";
 import { MobHealth } from "./MobHealth";
 
-type AllMobsResponse = RouterOutputs["mob"]["getAllPopulated"];
-type AllMobsInput = RouterInputs["mob"]["getAllPopulated"];
-
-export type MobDatum = AllMobsResponse["data"][number];
+export type MobDatum = RouterOutputs["mob"]["getAllPopulated"]["data"][number];
 
 const columnHelper = createColumnHelper<MobDatum>();
 
@@ -222,20 +220,12 @@ function MobSearchFilters() {
 	);
 }
 
-export function MobTable({
-	initialData,
-	initialParams,
-}: { initialData: AllMobsResponse; initialParams: AllMobsInput }) {
-	const [tableParams] = useQueryStates(dataTableSearchParams);
-	const [filters] = useQueryStates(mobSearchParamParser);
-	const params = { ...filters, ...tableParams };
-
-	const { data } = api.mob.getAllPopulated.useQuery(params, {
-		initialData: shallowCompare(params, initialParams)
-			? initialData
-			: undefined,
-		placeholderData: keepPreviousData,
-	});
+export function MobTable(props: TableProps<"mob", "getAllPopulated">) {
+	const { params, options } = useDataTableQueryOptions(
+		mobSearchParamParser,
+		props,
+	);
+	const { data } = api.mob.getAllPopulated.useQuery(params, options);
 
 	return (
 		<DataTable
