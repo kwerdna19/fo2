@@ -5,7 +5,7 @@ import { headers } from "next/headers";
 import { cache } from "react";
 
 import { type AppRouter, createCaller } from "~/server/api/root";
-import { createTRPCContext } from "~/server/api/trpc";
+import { createAnonTRPCContext, createTRPCContext } from "~/server/api/trpc";
 import { createQueryClient } from "./query-client";
 
 /**
@@ -21,10 +21,23 @@ const createContext = cache(() => {
 	});
 });
 
+const createAnonContext = cache(() => {
+	return createAnonTRPCContext({
+		headers: new Headers(),
+	});
+});
+
 const getQueryClient = cache(createQueryClient);
 const caller = createCaller(createContext);
 
+const anonCaller = createCaller(createAnonContext);
+
 export const { trpc: api, HydrateClient } = createHydrationHelpers<AppRouter>(
 	caller,
+	getQueryClient,
+);
+
+export const { trpc: anonApi } = createHydrationHelpers<AppRouter>(
+	anonCaller,
 	getQueryClient,
 );

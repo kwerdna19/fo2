@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import { api } from "~/trpc/server";
+import { anonApi } from "~/trpc/server";
 
 const MultiAreaMap = dynamic(
 	() => import("~/features/areas/components/MultiAreaMap"),
@@ -11,7 +11,7 @@ export const metadata = {
 };
 
 export default async function Areas() {
-	const areas = await api.area.getAllPopulated();
+	const areas = await anonApi.area.getAllPopulated();
 
 	return (
 		<div className="w-full flex flex-col items-center gap-y-6">

@@ -28,6 +28,7 @@ export function PriceDisplay({
 	className,
 	size = "sm",
 	unit = "COINS",
+	showZero = false,
 	...ops
 }: {
 	count: number | null | string | [number, number];
@@ -35,8 +36,11 @@ export function PriceDisplay({
 	size?: "sm" | "xs";
 	unit?: Unit;
 	notation?: "standard" | "compact";
+	showZero?: boolean;
 }) {
-	if (!count) {
+	const show = !!count || (count === 0 && showZero);
+
+	if (!show) {
 		return null;
 	}
 

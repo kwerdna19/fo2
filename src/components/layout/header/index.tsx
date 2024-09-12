@@ -1,7 +1,7 @@
-import { api } from "~/trpc/server";
+import { anonApi } from "~/trpc/server";
 import { Header as ClientHeader } from "./Header";
 
 export async function Header(props: { className?: string }) {
-	const areas = await api.area.getAllQuick();
+	const areas = await anonApi.area.getAllQuick();
 	return <ClientHeader areas={areas} {...props} />;
 }

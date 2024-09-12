@@ -8,6 +8,6 @@ export const foApi = createClient<paths>({
 		"x-api-key": env.FO_API_KEY,
 	},
 	next: {
-		revalidate: 3600,
+		revalidate: 300, // 5 mins
 	},
 });

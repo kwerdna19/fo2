@@ -6,7 +6,6 @@ import { PriceDisplay } from "~/components/PriceDisplay";
 import { Badge } from "~/components/ui/badge";
 import { Separator } from "~/components/ui/separator";
 import { TooltipProvider } from "~/components/ui/tooltip";
-import { env } from "~/env";
 import { foApi } from "~/utils/fo-api";
 import { getPlayerSpriteUrl, guildRankMap } from "~/utils/fo-game";
 
@@ -20,9 +19,7 @@ export async function generateMetadata({ params }: { params: Params }) {
 	};
 }
 
-const xApiKey = env.FO_API_KEY;
-
-export const revalidate = 3600;
+export const revalidate = 1800;
 
 export async function generateStaticParams() {
 	const result = await foApi.GET("/api/public/guild/leaderboard");

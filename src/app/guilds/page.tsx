@@ -9,7 +9,7 @@ export const metadata = {
 	title: "Guilds",
 };
 
-export const revalidate = 3600;
+export const revalidate = 1800;
 
 export default async function Guilds() {
 	const result = await foApi.GET("/api/public/guild/leaderboard");
@@ -53,7 +53,10 @@ export default async function Guilds() {
 								<div className="flex-1">
 									<div className="text-xl">{g.Name}</div>
 									<div className="flex gap-5">
-										<PriceDisplay count={details?.TotalDonations ?? "?"} />
+										<PriceDisplay
+											showZero
+											count={details?.TotalDonations ?? "?"}
+										/>
 										<div className="text-muted-foreground">Lv. {g.Level}</div>
 									</div>
 								</div>
