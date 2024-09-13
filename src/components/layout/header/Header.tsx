@@ -1,9 +1,9 @@
 "use client";
 
+import type { User } from "@prisma/client";
 import { MenuIcon, XIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { ModeToggle } from "~/components/ModeToggle";
 import { UnitSprite } from "~/components/UnitSprite";
 import { Button } from "~/components/ui/button";
 import {
@@ -12,6 +12,7 @@ import {
 	CollapsibleTrigger,
 } from "~/components/ui/collapsible";
 import type { RouterOutputs } from "~/trpc/react";
+import { AuthMenu } from "../AuthMenu";
 import { NavMenu } from "./NavMenu";
 
 type Areas = RouterOutputs["area"]["getAllQuick"];
@@ -19,12 +20,13 @@ type Areas = RouterOutputs["area"]["getAllQuick"];
 export function Header({
 	areas,
 	className,
-}: { areas: Areas; className?: string }) {
+	user,
+}: { areas: Areas; className?: string; user: User | undefined }) {
 	const [open, setOpen] = useState(false);
 
 	return (
 		<Collapsible className={className} open={open} onOpenChange={setOpen}>
-			<div className="grid grid-cols-[auto_1fr_auto_auto] items-center gap-x-5 px-4 py-3 h-full">
+			<div className="min-h-16 grid lg:grid-cols-[auto_1fr_auto] grid-cols-[auto_1fr_auto_auto] items-center gap-x-5 px-4 py-3 h-full">
 				<Link
 					prefetch={false}
 					href="/"
@@ -38,7 +40,7 @@ export function Header({
 				</div>
 
 				<div className="hidden items-center lg:flex">
-					<ModeToggle />
+					<AuthMenu user={user} />
 				</div>
 
 				<div className="col-span-3 flex justify-end lg:col-span-1 lg:hidden">
@@ -54,7 +56,13 @@ export function Header({
 				</div>
 			</div>
 			<CollapsibleContent className="col-span-full lg:hidden">
-				<NavMenu areas={areas} className="w-full block p-4 max-w-none" mobile />
+				<NavMenu
+					areas={areas}
+					className="w-full flex-col p-4 max-w-none shadow-md items-stretch"
+					mobile
+				>
+					<AuthMenu className="my-6 self-center" user={user} />
+				</NavMenu>
 			</CollapsibleContent>
 		</Collapsible>
 	);

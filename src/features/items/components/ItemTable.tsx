@@ -31,6 +31,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "~/components/ui/select";
+import { AddToCollectionButton } from "~/features/collection/components/AddToCollectionButton";
 import { DmgRange } from "~/features/mobs/components/DmgRange";
 import { type RouterOutputs, api } from "~/trpc/react";
 import type { TableProps } from "~/types/table";
@@ -280,6 +281,14 @@ export const itemTableColumns = [
 	columnHelper.accessor("artist", {
 		header: SortButton,
 	}),
+	// columnHelper.display({
+	// 	id: "addToCollection",
+	// 	cell: (info) => (
+	// 		<div className="text-center">
+	// 			<AddToCollectionButton id={info.row.original.id} />
+	// 		</div>
+	// 	),
+	// }),
 	// @TODO crafts INTO column
 	// @TODO battle passes column
 	// @TODO skills column
@@ -483,6 +492,9 @@ export function ItemTable(props: TableProps<"item", "getAllPopulated">) {
 				int: false,
 				sta: false,
 				str: false,
+				luck: false,
+				range: false,
+				typeSpecificValue: false,
 				reqStr: false,
 				reqInt: false,
 				reqSta: false,
@@ -497,7 +509,8 @@ export function ItemTable(props: TableProps<"item", "getAllPopulated">) {
 				globalLoot: false,
 				stackSize: false,
 				artist: false,
-				boxContents: false,
+				boxItems: false,
+				addToCollection: false,
 			}}
 		/>
 	);

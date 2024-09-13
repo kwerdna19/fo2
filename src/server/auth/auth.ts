@@ -3,7 +3,7 @@ import NextAuth, { type DefaultSession } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import Discord from "next-auth/providers/discord";
 
-import type { Role, User } from "@prisma/client";
+import type { User } from "@prisma/client";
 import { db } from "~/server/db/db";
 
 export const {
@@ -33,9 +33,6 @@ export const {
  */
 declare module "next-auth" {
 	interface Session extends DefaultSession {
-		user: {
-			id: string;
-			role: Role;
-		} & DefaultSession["user"];
+		user: DefaultSession["user"] & User;
 	}
 }

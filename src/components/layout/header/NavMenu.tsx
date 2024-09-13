@@ -4,7 +4,6 @@ import Link from "next/link";
 import * as React from "react";
 
 import { usePathname } from "next/navigation";
-import { ModeToggle } from "~/components/ModeToggle";
 import {
 	NavigationMenu,
 	NavigationMenuContent,
@@ -23,13 +22,19 @@ export function NavMenu({
 	className,
 	areas,
 	mobile,
-}: { className?: string; areas: Areas; mobile?: boolean }) {
+	children,
+}: {
+	className?: string;
+	areas: Areas;
+	mobile?: boolean;
+	children?: React.ReactNode;
+}) {
 	const path = usePathname();
 
 	const pathMatches = (str: string) => path === str;
 	const pathStartsWith = (str: string) => path.startsWith(str);
 
-	const itemClassName = cn(mobile && "w-full");
+	const itemClassName = cn(mobile && "w-full border max-w-96");
 
 	const linkClassName = cn(navigationMenuTriggerStyle(), mobile && "w-full");
 
@@ -135,13 +140,8 @@ export function NavMenu({
 					</Link>
 				</NavigationMenuLink>
 			</NavigationMenuItem> */}
-
-				{mobile && (
-					<div className="w-full flex justify-end">
-						<ModeToggle />
-					</div>
-				)}
 			</NavigationMenuList>
+			{children}
 		</NavigationMenu>
 	);
 }

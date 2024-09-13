@@ -5,7 +5,6 @@ import { MobSprite } from "~/components/MobSprite";
 import { PriceDisplay } from "~/components/PriceDisplay";
 import { Badge } from "~/components/ui/badge";
 import { Separator } from "~/components/ui/separator";
-import { TooltipProvider } from "~/components/ui/tooltip";
 import { foApi } from "~/utils/fo-api";
 import { getPlayerSpriteUrl, guildRankMap } from "~/utils/fo-game";
 
@@ -100,9 +99,12 @@ export default async function Guild({ params }: { params: Params }) {
 
 	const rank = leaderBoard.findIndex((l) => l.Name === info.Name) + 1;
 
+	const estDate = info.Approved ? format(new Date(info.Approved), "PP") : null;
+	const today = format(new Date(), "PP");
+
 	return (
-		<TooltipProvider>
-			<div className="w-full space-y-8">
+		<div className="w-full space-y-8">
+			<div className="space-y-2">
 				<div className="flex gap-4 text-3xl">
 					<h2>
 						{info.Name}
@@ -115,56 +117,49 @@ export default async function Guild({ params }: { params: Params }) {
 						</Badge>
 					) : null}
 				</div>
-				<div className="flex gap-4 items-center h-4">
-					<PriceDisplay
-						count={info.TotalDonations ?? "?"}
-						notation="standard"
-					/>
-					<Separator orientation="vertical" />
-					<div className="flex gap-2 items-center">
-						<div>Lv</div> <div>{info.Level ?? "?"}</div>
-					</div>
-					<Separator orientation="vertical" />
-
-					<div className="flex gap-2 items-center">
-						<User className="h-4 w-4" /> {info.NumMembers ?? "?"}
-					</div>
+				<div className="text-sm text-muted-foreground">
+					Est. {estDate ?? "?"}
+					{estDate === today ? <span> 🎂</span> : null}
 				</div>
-				{/* <Tooltip>
-					<TooltipTrigger className="text-3xl hover:text-foreground cursor-default">
-						
-					</TooltipTrigger>
-					<TooltipContent side="bottom">
-						<p>Hail Delta!</p>
-					</TooltipContent>
-				</Tooltip> */}
-				<div className="space-y-10 max-w-screen-md w-full pb-8">
-					{groups.map(({ rankId, rank, members }) => {
-						return (
-							<div key={rankId}>
-								<div className="font-bold">{rank}</div>
-								<div className="flex flex-wrap gap-x-5 gap-y-3">
-									{members.map((m) => (
-										<div key={m.Name} className="flex flex-col items-center">
-											<MobSprite
-												size="md"
-												className="-mb-6 -mt-4"
-												url={getPlayerSpriteUrl(m.Sprite as string)}
-												name={m.Name as string}
-											/>
-											<div>{m.Name}</div>
-										</div>
-									))}
-								</div>
-							</div>
-						);
-					})}
-				</div>
-
-				<p className="text-sm text-muted-foreground px-2">
-					Last Updated: {format(new Date(), "Pp")}
-				</p>
 			</div>
-		</TooltipProvider>
+			<div className="flex gap-4 items-center h-4">
+				<PriceDisplay count={info.TotalDonations ?? "?"} notation="standard" />
+				<Separator orientation="vertical" />
+				<div className="flex gap-2 items-center">
+					<div>Lv</div> <div>{info.Level ?? "?"}</div>
+				</div>
+				<Separator orientation="vertical" />
+
+				<div className="flex gap-2 items-center">
+					<User className="h-4 w-4" /> {info.NumMembers ?? "?"}
+				</div>
+			</div>
+			<div className="space-y-10 max-w-screen-md w-full pb-8">
+				{groups.map(({ rankId, rank, members }) => {
+					return (
+						<div key={rankId}>
+							<div className="font-bold">{rank}</div>
+							<div className="flex flex-wrap gap-x-5 gap-y-3">
+								{members.map((m) => (
+									<div key={m.Name} className="flex flex-col items-center">
+										<MobSprite
+											size="md"
+											className="-mb-6 -mt-4"
+											url={getPlayerSpriteUrl(m.Sprite as string)}
+											name={m.Name as string}
+										/>
+										<div>{m.Name}</div>
+									</div>
+								))}
+							</div>
+						</div>
+					);
+				})}
+			</div>
+
+			<p className="text-sm text-muted-foreground px-2">
+				Last Updated: {format(new Date(), "Pp")}
+			</p>
+		</div>
 	);
 }

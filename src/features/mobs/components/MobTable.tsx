@@ -110,7 +110,10 @@ export const mobTableColumns: ColumnDef<MobDatum, any>[] = [
 	}),
 	columnHelper.accessor((m) => (m.factionXp > 0 ? m.factionXp : null), {
 		id: "factionXp",
-		header: "Faction XP",
+		header: SortButton,
+		meta: {
+			heading: "FXP",
+		},
 	}),
 	columnHelper.display({
 		id: "locations",

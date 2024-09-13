@@ -6,6 +6,7 @@ import { TRPCError } from "@trpc/server";
 import { baseDataTableQuerySchema } from "~/components/data-table/data-table-utils";
 import {
 	createTRPCRouter,
+	protectedProcedure,
 	publicProcedure,
 	roleProtectedProcedure,
 } from "~/server/api/trpc";
@@ -199,7 +200,7 @@ export default createTRPCRouter({
 
 	getBySlug: publicProcedure
 		.input(z.object({ slug: z.string() }))
-		.query(({ ctx: { db }, input: { slug } }) => {
+		.query(({ ctx: { db, session }, input: { slug } }) => {
 			return db.item.findFirst({
 				where: {
 					slug,
@@ -254,6 +255,13 @@ export default createTRPCRouter({
 							durationMinutes: "asc",
 						},
 					},
+					collections: session
+						? {
+								where: {
+									userId: session.user.id,
+								},
+							}
+						: undefined,
 				},
 			});
 		}),

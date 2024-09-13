@@ -228,7 +228,7 @@ export function DataTable<T, Data extends { totalCount: number; data: T[] }>({
 						<div>Page</div>
 						<span className="font-bold">
 							{table.getState().pagination.pageIndex + 1} of{" "}
-							{table.getPageCount().toLocaleString()}
+							{totalCount > 0 ? table.getPageCount().toLocaleString() : 1}
 						</span>
 					</span>
 					<div className="flex items-center gap-x-4">

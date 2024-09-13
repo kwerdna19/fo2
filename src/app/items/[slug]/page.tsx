@@ -1,17 +1,13 @@
 import { EquippableType } from "@prisma/client";
-import { Pencil } from "lucide-react";
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
-import { AdminButton } from "~/components/AdminButton";
+import { notFound } from "next/navigation";
 import { DurationDisplay } from "~/components/DurationDisplay";
-import { FormButton } from "~/components/FormButton";
 import { ItemSprite } from "~/components/ItemSprite";
 import { MobSprite } from "~/components/MobSprite";
-import QueryParamToast from "~/components/QueryParamToast";
 import { UnitSprite } from "~/components/UnitSprite";
 import { Badge } from "~/components/ui/badge";
-import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
+import { CollectionButtons } from "~/features/collection/components/CollectionButtons";
 import { ItemRequiredStats } from "~/features/items/components/ItemRequiredStats";
 import { ItemStats } from "~/features/items/components/ItemStats";
 import { auth } from "~/server/auth/auth";
@@ -39,19 +35,16 @@ export async function generateMetadata({ params }: { params: Params }) {
 	};
 }
 
-// export async function generateStaticParams() {
-// 	const items = await api.item.getAllQuick();
-// 	return items.map((item) => ({
-// 		slug: item.slug,
-// 	}));
-// }
-
 export default async function Item({ params }: { params: Params }) {
 	const item = await api.item.getBySlug(params);
+
+	const session = await auth();
 
 	if (!item) {
 		notFound();
 	}
+
+	const owned = Boolean(item.collections.at(0));
 
 	const header = (
 		<>
@@ -164,9 +157,9 @@ export default async function Item({ params }: { params: Params }) {
 						<Badge>Consumable</Badge>
 					</div>
 				) : null}
-				{/* <form action={addToCollectionAction}>
-					<FormButton variant="outline">Add to Collection</FormButton>
-				</form> */}
+				{session ? (
+					<CollectionButtons id={item.id} initialOwned={owned} />
+				) : null}
 			</div>
 
 			<div className="lg:col-span-3 py-2">
