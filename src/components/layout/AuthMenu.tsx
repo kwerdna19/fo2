@@ -46,7 +46,7 @@ export function AuthMenu({
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end" className="min-w-48">
 				<DropdownMenuItem asChild>
-					<Link href="/mycollection" prefetch={false}>
+					<Link href="/collection" prefetch={false}>
 						<ListChecks className="size-4 mr-2" /> My Collection
 					</Link>
 				</DropdownMenuItem>
