@@ -116,7 +116,7 @@ export function SearchCombobox<V extends ValueShape, Q extends SearchQuery<V>>({
 					role="combobox"
 					className="w-full justify-between h-9"
 				>
-					{display}
+					<div className="truncate">{display}</div>
 					<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 				</Button>
 			</PopoverTrigger>

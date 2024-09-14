@@ -29,6 +29,15 @@ export const craftedBySchema = z
 		durationMinutes: z.number(),
 		unit: z.nativeEnum(Unit),
 		price: z.number().int(),
+		ingredients: z
+			.object({
+				item: z.object({
+					id: z.string(),
+					name: z.string(),
+				}),
+				quantity: z.number().int().default(1),
+			})
+			.array(),
 	})
 	.array();
 

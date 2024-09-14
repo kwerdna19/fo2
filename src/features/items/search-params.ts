@@ -1,4 +1,8 @@
-import { createSearchParamsCache, parseAsInteger } from "nuqs/server";
+import {
+	createSearchParamsCache,
+	parseAsBoolean,
+	parseAsInteger,
+} from "nuqs/server";
 import { z } from "zod";
 import { dataTableSearchParams } from "~/components/data-table/data-table-utils";
 import { MAX_LEVEL } from "~/utils/fo-game";
@@ -8,6 +12,7 @@ export const itemSearchParamParser = {
 	maxLevel: parseAsInteger,
 	type: parseAsInteger,
 	subType: parseAsInteger,
+	collectible: parseAsBoolean,
 };
 
 export const itemSearchParamCache = createSearchParamsCache({
@@ -20,4 +25,5 @@ export const itemSearchFilterSchema = z.object({
 	maxLevel: z.number().int().min(0).max(MAX_LEVEL).nullish(),
 	type: z.number().int().nullish(),
 	subType: z.number().int().nullish(),
+	collectible: z.boolean().nullish(),
 });

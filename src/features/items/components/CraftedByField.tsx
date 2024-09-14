@@ -1,6 +1,6 @@
 "use client";
 
-import { Trash2 } from "lucide-react";
+import { Trash2, X } from "lucide-react";
 import { useFieldArray, useForm, useFormContext } from "react-hook-form";
 import type { z } from "zod";
 import UnitSelect from "~/components/UnitSelect";
@@ -10,6 +10,7 @@ import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
 import { api } from "~/trpc/react";
 import type { itemSchema } from "../schemas";
+import { CraftIngredientsField } from "./CraftIngredientsField";
 
 type FormValues = z.infer<typeof itemSchema>;
 
@@ -24,56 +25,57 @@ export function CraftedByField() {
 
 	return (
 		<div className="space-y-1">
-			<Label>Crafted By</Label>
+			<Label>Craft Recipes</Label>
 			<div className="space-y-5">
 				<div className="space-y-3">
 					{fields.map((field, index) => {
 						return (
 							<div
 								key={field.key}
-								className="grid grid-cols-7 xl:grid-cols-12 gap-3"
+								className="border px-3 py-6 rounded-md relative flex flex-col gap-y-6"
 							>
-								<div className="col-span-4">
+								<div>
 									<SearchField
 										type="Npc"
+										label="Npc"
 										control={control}
 										name={`craftedBy.${index}.npc`}
 										query={api.npc.getAllQuick}
 									/>
 								</div>
-
-								<div className="col-span-3">
+								<div className="grid grid-cols-2 gap-x-2">
+									<div className="flex gap-x-2 flex-1">
+										<TextField
+											label="Price"
+											control={control}
+											name={`craftedBy.${index}.price`}
+											type="number"
+										/>
+										<div className="pt-[22px] flex-shrink-0">
+											<UnitSelect
+												control={control}
+												name={`craftedBy.${index}.unit`}
+											/>
+										</div>
+									</div>
 									<TextField
-										placeholder="Duration (mins)"
+										label="Duration (mins)"
 										control={control}
 										name={`craftedBy.${index}.durationMinutes`}
 										type="number"
 									/>
 								</div>
 
-								<div className="col-span-3">
-									<TextField
-										placeholder="Price"
-										control={control}
-										name={`craftedBy.${index}.price`}
-										type="number"
-									/>
-								</div>
-
-								<div className="col-span-1">
-									<UnitSelect
-										control={control}
-										name={`craftedBy.${index}.unit`}
-									/>
-								</div>
+								<CraftIngredientsField index={index} />
 
 								<Button
 									size="icon"
-									variant="destructive"
+									variant="ghost"
 									onClick={() => remove(index)}
 									type="button"
+									className="absolute right-1 top-1"
 								>
-									<Trash2 className="h-5 w-5" />
+									<X className="size-4" />
 								</Button>
 							</div>
 						);
@@ -88,7 +90,7 @@ export function CraftedByField() {
 						>[number])
 					}
 				>
-					Add
+					Add Craft
 				</Button>
 			</div>
 		</div>

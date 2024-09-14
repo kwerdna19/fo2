@@ -308,13 +308,6 @@
           "type": "string",
           "originalType": "String"
         },
-        "ingredients": {
-          "type": "array",
-          "originalType": "ItemQuantity",
-          "items": {
-            "$ref": "#/definitions/ItemQuantity"
-          }
-        },
         "price": {
           "type": "integer",
           "originalType": "Int"
@@ -331,6 +324,13 @@
         "durationMinutes": {
           "type": "integer",
           "originalType": "Int"
+        },
+        "ingredients": {
+          "type": "array",
+          "originalType": "ItemQuantity",
+          "items": {
+            "$ref": "#/definitions/ItemQuantity"
+          }
         }
       },
       "required": [
@@ -359,7 +359,7 @@
           "originalType": "Int",
           "default": 1
         },
-        "craftsInto": {
+        "usedInCrafts": {
           "type": "array",
           "originalType": "NpcCraft",
           "items": {
@@ -368,7 +368,6 @@
         }
       },
       "required": [
-        "id",
         "itemId"
       ]
     },

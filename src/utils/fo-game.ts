@@ -418,3 +418,9 @@ export const isItemTwoHanded = (item: Pick<Item, "type" | "subType">) => {
 export const isItemConsumable = (item: Pick<Item, "type">) => {
 	return item.type === 4;
 };
+
+export const COLLECTIBLE_ITEM_TYPES = [2, 3, 6];
+
+export const isItemCollectible = (item: Pick<Item, "type">) => {
+	return COLLECTIBLE_ITEM_TYPES.includes(item.type);
+};

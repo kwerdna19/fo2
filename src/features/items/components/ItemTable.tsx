@@ -14,6 +14,7 @@ import {
 	useDataTableQueryOptions,
 	useDataTableQueryParams,
 } from "~/components/data-table/use-data-table-query";
+import { CheckboxField } from "~/components/form/CheckboxField";
 import RangeField from "~/components/form/RangeField";
 import { Form, SubmitButton, useZodForm } from "~/components/form/zod-form";
 import { Button } from "~/components/ui/button";
@@ -236,13 +237,6 @@ export const itemTableColumns = [
 			<ItemList data={info.getValue()} className="flex-nowrap" size="sm" />
 		),
 	}),
-	// columnHelper.display({
-	// 	id: "usages",
-	// 	header: "Crafts Into",
-	// 	cell: ({ row }) => (
-	// 		<ItemList data={row.original.usages} className="flex-nowrap" size="sm" />
-	// 	),
-	// }),
 	columnHelper.accessor("globalLoot", {
 		header: "Global Drop",
 		cell: (info) =>
@@ -281,6 +275,13 @@ export const itemTableColumns = [
 	columnHelper.accessor("artist", {
 		header: SortButton,
 	}),
+	// columnHelper.display({
+	// 	id: "usages",
+	// 	header: "Crafts Into",
+	// 	cell: ({ row }) => (
+	// 		<ItemList data={row.original.usages} className="flex-nowrap" size="sm" />
+	// 	),
+	// }),
 	// columnHelper.display({
 	// 	id: "addToCollection",
 	// 	cell: (info) => (
@@ -404,48 +405,13 @@ function ItemSearchFilters() {
 						</FormItem>
 					)}
 				/>
-			</div>
 
-			{/* <Controller
-				control={form.control}
-				name="equipTypes"
-				render={({ field }) => (
-					<div className="space-y-3">
-						<Label>Equip Slot</Label>
-						<ScrollArea className="h-40 rounded-lg border shadow-sm">
-							<Command>
-								<CommandList>
-									{equipTypeOptions.map(({ name, value }) => (
-										<CommandItem
-											key={value}
-											value={value}
-											className="capitalize"
-											onSelect={(c) => {
-												const oldVal = field.value;
-												if (oldVal?.includes(c as EquippableType)) {
-													field.onChange(oldVal.filter((o) => o !== c));
-												} else {
-													field.onChange([...(oldVal ?? []), c]);
-												}
-											}}
-										>
-											<Check
-												className={cn(
-													"mr-2 h-4 w-4",
-													field.value?.includes(value)
-														? "opacity-100"
-														: "opacity-0",
-												)}
-											/>
-											{name}
-										</CommandItem>
-									))}
-								</CommandList>
-							</Command>
-						</ScrollArea>
-					</div>
-				)}
-			/> */}
+				<CheckboxField
+					control={form.control}
+					name="collectible"
+					label="Collectible"
+				/>
+			</div>
 
 			<div className="p-3 border border-dashed">More filters to be added</div>
 

@@ -13,7 +13,7 @@ import { cn } from "~/utils/styles";
 
 export type Props = {
 	className?: string;
-	items: Pick<Item, "id" | "name" | "spriteName">[];
+	items: Pick<Item, "id" | "name">[];
 	field: FieldMetadata<{ id: string }[] | undefined>;
 	label: string;
 };

@@ -8,6 +8,7 @@ import {
 	publicProcedure,
 } from "~/server/api/trpc";
 import schema from "~/server/db/json-schema.json";
+import { COLLECTIBLE_ITEM_TYPES } from "~/utils/fo-game";
 import { collectionSearchFilterSchema } from "./search-params";
 
 const itemRequiredFields = schema.definitions.Item.required;
@@ -160,7 +161,7 @@ export default createTRPCRouter({
 	getNumCollectibleItems: publicProcedure.query(async ({ ctx: { db } }) => {
 		return db.item.count({
 			where: {
-				OR: [2, 3, 6].map((type) => ({
+				OR: COLLECTIBLE_ITEM_TYPES.map((type) => ({
 					type: type,
 				})),
 			},

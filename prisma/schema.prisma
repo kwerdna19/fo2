@@ -91,28 +91,30 @@ model NpcSale {
 model NpcCraft {
   id Int @id @default(autoincrement())
 
-  npc    Npc    @relation(fields: [npcId], references: [id], onDelete: Cascade)
-  npcId  String
+  npc   Npc    @relation(fields: [npcId], references: [id], onDelete: Cascade)
+  npcId String
+
+  // output item
   item   Item   @relation(fields: [itemId], references: [id])
   itemId String
-
-  ingredients ItemQuantity[]
 
   price           Int
   unit            Unit @default(COINS)
   durationMinutes Int
 
+  ingredients ItemQuantity[]
+
   @@unique([npcId, itemId])
 }
 
 model ItemQuantity {
-  id Int @id
+  id Int @id @default(autoincrement())
 
   item     Item   @relation(fields: [itemId], references: [id])
   itemId   String
   quantity Int    @default(1)
 
-  craftsInto NpcCraft[]
+  usedInCrafts NpcCraft[]
 
   @@unique([itemId, quantity])
 }

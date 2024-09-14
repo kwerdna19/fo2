@@ -12,7 +12,7 @@ import { npcSchema, npcTypes } from "../schemas";
 
 interface Props {
 	areas: Pick<Area, "id" | "name" | "spriteUrl" | "height" | "width">[];
-	items: Pick<Item, "id" | "name" | "spriteName">[];
+	items: Pick<Item, "id" | "name">[];
 	sprites: string[];
 	defaultValue?: RouterOutputs["npc"]["getBySlug"];
 	action: ConformServerAction;

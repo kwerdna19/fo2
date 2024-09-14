@@ -5,6 +5,7 @@ import { MobSprite } from "~/components/MobSprite";
 import { PriceDisplay } from "~/components/PriceDisplay";
 import { Badge } from "~/components/ui/badge";
 import { Separator } from "~/components/ui/separator";
+import { groupGuildMembers } from "~/features/guilds/utils";
 import { foApi } from "~/utils/fo-api";
 import { getPlayerSpriteUrl, guildRankMap } from "~/utils/fo-game";
 
@@ -62,40 +63,7 @@ export default async function Guild({ params }: { params: Params }) {
 		}),
 	]);
 
-	const byRank = members.reduce(
-		(acc, val) => {
-			if (val.GuildRank) {
-				acc[val.GuildRank] = [...(acc[val.GuildRank] ?? []), val];
-			}
-			return acc;
-		},
-		{} as Record<
-			string,
-			Array<
-				Partial<{
-					Name: string;
-					Level: number;
-					Sprite: string;
-				}>
-			>
-		>,
-	);
-
-	const groups = Object.keys(guildRankMap)
-		.map((r) => {
-			return {
-				rankId: Number(r),
-				rank: (guildRankMap as Record<string, string>)[r],
-				members: (byRank[r] ?? []).sort(
-					(a, b) =>
-						a.Name?.toLowerCase().localeCompare(
-							b.Name?.toLowerCase() as string,
-						) ?? 0,
-				),
-			};
-		})
-		.sort((a, b) => b.rankId - a.rankId)
-		.filter((g) => g.members.length > 0);
+	const groups = groupGuildMembers(members).filter((g) => g.members.length > 0);
 
 	const rank = leaderBoard.findIndex((l) => l.Name === info.Name) + 1;
 

@@ -15,13 +15,77 @@ import {
 	getDataById,
 	itemDefinitionToDatabaseItem,
 } from "~/utils/fo-data/service";
-import { equipmentSlotConfig } from "~/utils/fo-game";
+import { COLLECTIBLE_ITEM_TYPES, equipmentSlotConfig } from "~/utils/fo-game";
 import { getSlugFromName } from "~/utils/misc";
 import { itemSchema } from "./schemas";
 import { itemSearchFilterSchema } from "./search-params";
 
 const requiredFields = schema.definitions.Item.required;
 const searchFields = ["name", "desc", "slug", "spriteName"];
+
+const itemInclude = {
+	boxItems: {
+		select: {
+			id: true,
+			name: true,
+			spriteName: true,
+			slug: true,
+		},
+	},
+	box: {
+		select: {
+			id: true,
+			name: true,
+			spriteName: true,
+			slug: true,
+		},
+	},
+	usages: {
+		select: {
+			item: {
+				select: {
+					id: true,
+					name: true,
+					spriteName: true,
+					slug: true,
+				},
+			},
+		},
+	},
+	droppedBy: {
+		include: {
+			mob: true,
+		},
+		orderBy: {
+			dropRate: "desc",
+		},
+	},
+	soldBy: {
+		include: {
+			npc: true,
+		},
+	},
+	craftedBy: {
+		include: {
+			npc: true,
+			ingredients: {
+				include: {
+					item: {
+						select: {
+							id: true,
+							name: true,
+							spriteName: true,
+							slug: true,
+						},
+					},
+				},
+			},
+		},
+		orderBy: {
+			durationMinutes: "asc",
+		},
+	},
+} satisfies Prisma.ItemInclude;
 
 export default createTRPCRouter({
 	getAllPopulated: publicProcedure
@@ -37,6 +101,7 @@ export default createTRPCRouter({
 				minLevel,
 				type,
 				subType,
+				collectible,
 			} = input;
 
 			const isSortFieldRequired = requiredFields.includes(sort);
@@ -78,6 +143,14 @@ export default createTRPCRouter({
 				});
 			}
 
+			if (collectible) {
+				conditions.push({
+					OR: COLLECTIBLE_ITEM_TYPES.map((type) => ({
+						type: type,
+					})),
+				});
+			}
+
 			const where =
 				conditions.length === 1
 					? conditions[0]
@@ -93,65 +166,7 @@ export default createTRPCRouter({
 						? sort_dir
 						: { sort: sort_dir, nulls: "last" },
 				},
-				include: {
-					droppedBy: {
-						include: {
-							mob: true,
-						},
-						orderBy: {
-							mob: {
-								level: "asc",
-							},
-						},
-					},
-					soldBy: {
-						include: {
-							npc: true,
-						},
-						orderBy: {
-							price: "asc",
-						},
-					},
-					craftedBy: {
-						include: {
-							npc: {
-								select: {
-									name: true,
-									spriteUrl: true,
-									slug: true,
-								},
-							},
-						},
-					},
-					boxItems: {
-						select: {
-							id: true,
-							name: true,
-							spriteName: true,
-							slug: true,
-						},
-					},
-					box: {
-						select: {
-							id: true,
-							name: true,
-							spriteName: true,
-							slug: true,
-						},
-					},
-					usages: {
-						select: {
-							item: {
-								select: {
-									id: true,
-									name: true,
-									spriteName: true,
-									slug: true,
-								},
-							},
-						},
-					},
-				},
+				include: itemInclude,
 				where,
 				take: per_page,
 				skip: pageIndex * per_page,
@@ -164,6 +179,26 @@ export default createTRPCRouter({
 				totalCount,
 				totalPages: Math.ceil(totalCount / per_page),
 			};
+		}),
+
+	getBySlug: publicProcedure
+		.input(z.object({ slug: z.string() }))
+		.query(({ ctx: { db, session }, input: { slug } }) => {
+			return db.item.findFirst({
+				where: {
+					slug,
+				},
+				include: {
+					...itemInclude,
+					collections: session
+						? {
+								where: {
+									userId: session.user.id,
+								},
+							}
+						: undefined,
+				},
+			});
 		}),
 
 	getAllEquipment: publicProcedure.query(async ({ ctx: { db } }) => {
@@ -184,85 +219,28 @@ export default createTRPCRouter({
 		});
 	}),
 
-	getAllQuick: publicProcedure.query(async ({ ctx: { db } }) => {
-		return db.item.findMany({
-			orderBy: {
-				slug: "asc",
-			},
-			select: {
-				id: true,
-				name: true,
-				spriteName: true,
-				slug: true,
-			},
-		});
-	}),
-
-	getBySlug: publicProcedure
-		.input(z.object({ slug: z.string() }))
-		.query(({ ctx: { db, session }, input: { slug } }) => {
-			return db.item.findFirst({
-				where: {
-					slug,
+	getAllQuick: publicProcedure
+		.input(z.string().optional())
+		.query(async ({ ctx: { db }, input }) => {
+			return db.item.findMany({
+				orderBy: {
+					slug: "asc",
 				},
-				include: {
-					boxItems: {
-						select: {
-							id: true,
-							name: true,
-							spriteName: true,
-							slug: true,
-						},
-					},
-					box: {
-						select: {
-							id: true,
-							name: true,
-							spriteName: true,
-							slug: true,
-						},
-					},
-					usages: {
-						select: {
-							item: {
-								select: {
-									id: true,
-									name: true,
-									spriteName: true,
-									slug: true,
-								},
-							},
-						},
-					},
-					droppedBy: {
-						include: {
-							mob: true,
-						},
-						orderBy: {
-							dropRate: "desc",
-						},
-					},
-					soldBy: {
-						include: {
-							npc: true,
-						},
-					},
-					craftedBy: {
-						include: {
-							npc: true,
-						},
-						orderBy: {
-							durationMinutes: "asc",
-						},
-					},
-					collections: session
-						? {
-								where: {
-									userId: session.user.id,
-								},
-							}
-						: undefined,
+				select: {
+					id: true,
+					name: true,
+					// spriteName: true,
+					// slug: true,
 				},
+				where: input
+					? {
+							OR: searchFields.map((f) => ({
+								[f]: {
+									contains: input,
+								},
+							})),
+						}
+					: {},
 			});
 		}),
 
@@ -297,7 +275,7 @@ export default createTRPCRouter({
 					},
 					craftedBy: craftedBy && {
 						createMany: {
-							data: craftedBy.map(({ npc, ...s }) => ({
+							data: craftedBy.map(({ npc, ingredients, ...s }) => ({
 								npcId: npc.id,
 								...s,
 							})),
@@ -342,8 +320,25 @@ export default createTRPCRouter({
 						})),
 					},
 					craftedBy: craftedBy && {
-						upsert: craftedBy.map(({ npc, ...d }) => ({
-							create: { ...d, npcId: npc.id },
+						upsert: craftedBy.map(({ npc, ingredients, ...d }) => ({
+							create: {
+								...d,
+								npcId: npc.id,
+								ingredients: {
+									connectOrCreate: ingredients.map((ingredient) => ({
+										create: {
+											itemId: ingredient.item.id,
+											quantity: ingredient.quantity,
+										},
+										where: {
+											itemId_quantity: {
+												itemId: ingredient.item.id,
+												quantity: ingredient.quantity,
+											},
+										},
+									})),
+								},
+							},
 							update: { ...d, npcId: npc.id },
 							where: {
 								npcId_itemId: {
@@ -382,6 +377,7 @@ export default createTRPCRouter({
 				});
 			});
 
+			// TODO handle removal of craftedBy ingredients
 			const craftsToRemove = updated.craftedBy.filter((updatedCraft) => {
 				return !craftedBy?.find((inputCraft) => {
 					return (

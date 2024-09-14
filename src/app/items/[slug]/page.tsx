@@ -15,6 +15,7 @@ import { api } from "~/trpc/server";
 import {
 	getAverageDPS,
 	getPlayerSpriteUrlPreview,
+	isItemCollectible,
 	isItemConsumable,
 	isItemTwoHanded,
 	isVisible,
@@ -157,7 +158,7 @@ export default async function Item({ params }: { params: Params }) {
 						<Badge>Consumable</Badge>
 					</div>
 				) : null}
-				{session ? (
+				{session && isItemCollectible(item) ? (
 					<CollectionButtons id={item.id} initialOwned={owned} />
 				) : null}
 			</div>

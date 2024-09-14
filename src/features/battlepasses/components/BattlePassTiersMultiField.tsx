@@ -20,7 +20,7 @@ type Tiers = z.infer<typeof battlePassSchema>["tiers"];
 
 type Props = {
 	className?: string;
-	items: Pick<Item, "id" | "name" | "spriteName">[];
+	items: Pick<Item, "id" | "name">[];
 	field: FieldMetadata<Tiers>;
 	label: string;
 };
