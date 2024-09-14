@@ -440,6 +440,10 @@ model User {
   sessions      Session[]
   role          Role      @default(USER)
 
+  username String @unique @default(cuid())
+
+  art        Art[]
+  artVotes   ArtVote[]
   collection CollectionItem[]
 }
 
@@ -475,4 +479,41 @@ model CollectionItem {
 model ScrapeInfo {
   type        String   @id
   lastScraped DateTime @default(now())
+}
+
+enum ArtType {
+  NPC
+  MOB
+  ITEM
+  SKILL
+}
+
+model Art {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  type ArtType
+
+  spriteSheetUrl String
+  iconUrl        String?
+
+  name String
+  desc String?
+
+  creatorId String
+  creator   User   @relation(fields: [creatorId], references: [id])
+
+  votes ArtVote[]
+}
+
+model ArtVote {
+  artId Int
+  art   Art @relation(fields: [artId], references: [id])
+
+  voterId String
+  voter   User   @relation(fields: [voterId], references: [id])
+
+  upvote Boolean @default(true) // true = 1, false = 0
+
+  @@unique([artId, voterId])
 }

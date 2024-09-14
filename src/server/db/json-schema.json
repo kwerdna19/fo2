@@ -1676,6 +1676,24 @@
             "ADMIN"
           ]
         },
+        "username": {
+          "type": "string",
+          "originalType": "String"
+        },
+        "art": {
+          "type": "array",
+          "originalType": "Art",
+          "items": {
+            "$ref": "#/definitions/Art"
+          }
+        },
+        "artVotes": {
+          "type": "array",
+          "originalType": "ArtVote",
+          "items": {
+            "$ref": "#/definitions/ArtVote"
+          }
+        },
         "collection": {
           "type": "array",
           "originalType": "CollectionItem",
@@ -1758,6 +1776,100 @@
       "required": [
         "type"
       ]
+    },
+    "Art": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "originalType": "Int"
+        },
+        "createdAt": {
+          "type": "string",
+          "originalType": "DateTime",
+          "format": "date-time"
+        },
+        "type": {
+          "type": "string",
+          "originalType": "ArtType",
+          "enum": [
+            "NPC",
+            "MOB",
+            "ITEM",
+            "SKILL"
+          ]
+        },
+        "spriteSheetUrl": {
+          "type": "string",
+          "originalType": "String"
+        },
+        "iconUrl": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "originalType": "String"
+        },
+        "name": {
+          "type": "string",
+          "originalType": "String"
+        },
+        "desc": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "originalType": "String"
+        },
+        "creatorId": {
+          "type": "string",
+          "originalType": "String"
+        },
+        "creator": {
+          "$ref": "#/definitions/User"
+        },
+        "votes": {
+          "type": "array",
+          "originalType": "ArtVote",
+          "items": {
+            "$ref": "#/definitions/ArtVote"
+          }
+        }
+      },
+      "required": [
+        "type",
+        "spriteSheetUrl",
+        "name",
+        "creatorId"
+      ]
+    },
+    "ArtVote": {
+      "type": "object",
+      "properties": {
+        "artId": {
+          "type": "integer",
+          "originalType": "Int"
+        },
+        "art": {
+          "$ref": "#/definitions/Art"
+        },
+        "voterId": {
+          "type": "string",
+          "originalType": "String"
+        },
+        "voter": {
+          "$ref": "#/definitions/User"
+        },
+        "upvote": {
+          "type": "boolean",
+          "originalType": "Boolean",
+          "default": true
+        }
+      },
+      "required": [
+        "artId",
+        "voterId"
+      ]
     }
   },
   "type": "object",
@@ -1818,6 +1930,12 @@
     },
     "scrapeInfo": {
       "$ref": "#/definitions/ScrapeInfo"
+    },
+    "art": {
+      "$ref": "#/definitions/Art"
+    },
+    "artVote": {
+      "$ref": "#/definitions/ArtVote"
     }
   }
 }
