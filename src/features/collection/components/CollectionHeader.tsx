@@ -10,9 +10,9 @@ export function CollectionHeader({
 	const { data: ownedMap } = api.collection.ownedMap.useQuery();
 
 	const owned = ownedMap
-		? Object.values(ownedMap).reduce((acc, quantity) => {
-				return acc + (quantity ? 1 : 0);
-			}, 0)
+		? Object.values(ownedMap).reduce((acc, v) => {
+				return acc + v;
+			}, 0 as number)
 		: initialCount;
 
 	const value = 100 * ((owned ?? initialCount) / total);
