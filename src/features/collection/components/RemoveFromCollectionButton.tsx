@@ -11,11 +11,16 @@ export function RemoveFromCollectionButton({ id }: { id: string }) {
 		api.collection.removeFromCollection.useMutation({
 			// Always refetch after error or success:
 			onSuccess: (input) => {
-				utils.collection.isOwned.invalidate(input);
+				utils.collection.ownedMap.setData(undefined, (prev) => {
+					if (!prev) {
+						return prev;
+					}
+					return {
+						...prev,
+						[id]: 0,
+					};
+				});
 				utils.collection.getMyCollection.invalidate();
-				utils.collection.getMyCollectionCount.setData(undefined, (prev) =>
-					typeof prev === "number" ? prev - 1 : prev,
-				);
 			},
 		});
 

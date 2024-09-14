@@ -8,23 +8,31 @@ export function CollectionButtons({
 	id,
 	initialOwned,
 }: { id: string; initialOwned: boolean }) {
-	const { data: owned } = api.collection.isOwned.useQuery(
-		{ itemId: id },
-		{ initialData: initialOwned },
-	);
+	const { data: ownedMap } = api.collection.ownedMap.useQuery();
+
+	const owned = !ownedMap ? initialOwned : Boolean(ownedMap[id]);
 
 	const utils = api.useUtils();
 
 	const { mutate: add } = api.collection.addToCollection.useMutation({
 		onMutate: async (input) => {
-			await utils.collection.isOwned.cancel(input);
+			await utils.collection.ownedMap.cancel();
+
+			const prevData = utils.collection.ownedMap.getData();
 
 			// Snapshot the previous value
-			const previousOwned =
-				utils.collection.isOwned.getData(input) ?? initialOwned;
+			const previousOwned = prevData ? Boolean(prevData?.[id]) : initialOwned;
 
 			// Optimistically update to the new value
-			utils.collection.isOwned.setData(input, true);
+			utils.collection.ownedMap.setData(undefined, (prev) => {
+				if (!prev) {
+					return prev;
+				}
+				return {
+					...prev,
+					[id]: 1,
+				};
+			});
 
 			// Return a context with the previous and new todo
 			return { previousOwned, input };
@@ -32,31 +40,45 @@ export function CollectionButtons({
 		// If the mutation fails, use the context we returned above
 		onError: (err, input, context) => {
 			if (context) {
-				utils.collection.isOwned.setData(context.input, context.previousOwned);
+				utils.collection.ownedMap.setData(undefined, (prev) => {
+					if (!prev) {
+						return prev;
+					}
+					return {
+						...prev,
+						[id]: context.previousOwned ? 1 : 0,
+					};
+				});
 			}
 			// show toast
 		},
 		// Always refetch after error or success:
 		onSettled: (input) => {
-			utils.collection.isOwned.invalidate(input);
+			utils.collection.ownedMap.invalidate();
 		},
 		onSuccess: () => {
 			utils.collection.getMyCollection.invalidate();
-			utils.collection.getMyCollectionCount.setData(undefined, (prev) =>
-				typeof prev === "number" ? prev + 1 : prev,
-			);
 		},
 	});
 	const { mutate: remove } = api.collection.removeFromCollection.useMutation({
 		onMutate: async (input) => {
-			await utils.collection.isOwned.cancel(input);
+			await utils.collection.ownedMap.cancel();
+
+			const prevData = utils.collection.ownedMap.getData();
 
 			// Snapshot the previous value
-			const previousOwned =
-				utils.collection.isOwned.getData(input) ?? initialOwned;
+			const previousOwned = prevData ? Boolean(prevData?.[id]) : initialOwned;
 
 			// Optimistically update to the new value
-			utils.collection.isOwned.setData(input, false);
+			utils.collection.ownedMap.setData(undefined, (prev) => {
+				if (!prev) {
+					return prev;
+				}
+				return {
+					...prev,
+					[id]: 0,
+				};
+			});
 
 			// Return a context with the previous and new todo
 			return { previousOwned, input };
@@ -64,19 +86,24 @@ export function CollectionButtons({
 		// If the mutation fails, use the context we returned above
 		onError: (err, input, context) => {
 			if (context) {
-				utils.collection.isOwned.setData(context.input, context.previousOwned);
+				utils.collection.ownedMap.setData(undefined, (prev) => {
+					if (!prev) {
+						return prev;
+					}
+					return {
+						...prev,
+						[id]: context.previousOwned ? 1 : 0,
+					};
+				});
 			}
 			// show toast
 		},
 		// Always refetch after error or success:
 		onSettled: (input) => {
-			utils.collection.isOwned.invalidate(input);
+			utils.collection.ownedMap.invalidate();
 		},
 		onSuccess: () => {
 			utils.collection.getMyCollection.invalidate();
-			utils.collection.getMyCollectionCount.setData(undefined, (prev) =>
-				typeof prev === "number" ? prev - 1 : prev,
-			);
 		},
 	});
 

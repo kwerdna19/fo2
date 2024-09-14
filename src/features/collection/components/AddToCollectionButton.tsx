@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, Plus } from "lucide-react";
+import { Check, Loader2, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import {
@@ -16,15 +16,24 @@ export function AddToCollectionButton({ id }: { id: string }) {
 
 	const router = useRouter();
 
+	const { data: ownedMap } = api.collection.ownedMap.useQuery();
+
+	const owned = Boolean(ownedMap?.[id]);
+
 	const { mutate: add, isPending } = api.collection.addToCollection.useMutation(
 		{
 			// Always refetch after error or success:
-			onSuccess: (input) => {
-				utils.collection.isOwned.invalidate(input);
+			onSuccess: async () => {
+				utils.collection.ownedMap.setData(undefined, (prev) => {
+					if (!prev) {
+						return prev;
+					}
+					return {
+						...prev,
+						[id]: 1,
+					};
+				});
 				utils.collection.getMyCollection.invalidate();
-				utils.collection.getMyCollectionCount.setData(undefined, (prev) =>
-					typeof prev === "number" ? prev - 1 : prev,
-				);
 			},
 			onError: (err) => {
 				if (err.data?.code === "UNAUTHORIZED") {
@@ -37,20 +46,24 @@ export function AddToCollectionButton({ id }: { id: string }) {
 	return (
 		<TooltipProvider>
 			<Tooltip>
-				<TooltipTrigger>
+				<TooltipTrigger asChild>
 					<Button
 						variant="outline"
 						size="icon"
 						onClick={() => add({ itemId: id })}
 						className="self-center"
-						disabled={isPending}
+						disabled={isPending || owned}
 					>
 						{isPending ? (
 							<Loader2 className="size-4 animate-spin" />
+						) : owned ? (
+							<Check className="size-4" />
 						) : (
 							<Plus className="size-4" />
 						)}
-						<span className="sr-only">Add to collection</span>
+						<span className="sr-only">
+							{owned ? "Already in" : "Add to"} collection
+						</span>
 					</Button>
 				</TooltipTrigger>
 				<TooltipContent>

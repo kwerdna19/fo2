@@ -135,28 +135,26 @@ export default createTRPCRouter({
 			});
 		}),
 
-	isOwned: protectedProcedure
-		.input(z.object({ itemId: z.string() }))
-		.query(async ({ ctx: { db, session }, input: { itemId } }) => {
-			const item = await db.collectionItem.findFirst({
-				where: {
-					userId: session.user.id,
-					itemId,
-				},
-			});
+	ownedMap: protectedProcedure.query(async ({ ctx: { db, session } }) => {
+		const items = await db.collectionItem.findMany({
+			select: {
+				itemId: true,
+			},
+			where: {
+				userId: session.user.id,
+			},
+		});
 
-			return item !== null;
-		}),
+		const map = items.reduce(
+			(acc, item) => {
+				acc[item.itemId] = 1;
+				return acc;
+			},
+			{} as Record<string, 1 | 0>,
+		);
 
-	getMyCollectionCount: protectedProcedure.query(
-		async ({ ctx: { db, session } }) => {
-			return db.collectionItem.count({
-				where: {
-					userId: session.user.id,
-				},
-			});
-		},
-	),
+		return map;
+	}),
 
 	getNumCollectibleItems: publicProcedure.query(async ({ ctx: { db } }) => {
 		return db.item.count({

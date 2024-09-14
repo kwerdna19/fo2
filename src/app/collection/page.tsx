@@ -7,7 +7,7 @@ import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles";
 import { api } from "~/trpc/server";
 
 export const metadata = {
-	title: "Items",
+	title: "My Collection",
 };
 
 export default async function MyCollection({
@@ -18,10 +18,14 @@ export default async function MyCollection({
 	const params = collectionSearchParamCache.parse(searchParams);
 	const data = await api.collection.getMyCollection(params);
 
-	const [totalCollectible, totalOwned] = await Promise.all([
+	const [totalCollectible, ownedMap] = await Promise.all([
 		api.collection.getNumCollectibleItems(),
-		api.collection.getMyCollectionCount(),
+		api.collection.ownedMap(),
 	]);
+
+	const totalOwned = Object.values(ownedMap).reduce((acc, p) => {
+		return acc + p;
+	}, 0 as number);
 
 	return (
 		<div>
