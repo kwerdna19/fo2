@@ -1,4 +1,5 @@
 import area from "~/features/areas/router";
+import art from "~/features/art/router";
 import battlePass from "~/features/battlepasses/router";
 import collection from "~/features/collection/router";
 import faction from "~/features/factions/router";
@@ -25,6 +26,7 @@ export const appRouter = createTRPCRouter({
 	skill,
 	collection,
 	guild,
+	art,
 });
 
 // export type definition of API

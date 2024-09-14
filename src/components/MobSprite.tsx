@@ -34,17 +34,6 @@ export const spriteHeight = spriteSheetHeight / spriteRows;
 
 const defaultSprite = [2, 1] as const;
 
-// export const getSpriteCoordinates = (r: number, c: number, mult = 1) => {
-//   const imgWidth = mult*spriteSheetWidth
-//   const imgHeight = mult*spriteSheetHeight
-
-//   const y = (r/spriteRows)*imgHeight
-//   const x = (c/spriteCols)*imgWidth
-
-//   return { x, y }
-
-// }
-
 export interface MobSpriteProps extends Variant {
 	url: string;
 	name?: string;
