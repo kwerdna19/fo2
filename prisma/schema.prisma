@@ -308,7 +308,7 @@ model Area {
   height              Int
   width               Int
   locations           Location[]
-  region              Int
+  region              Int // TO REMOVE
   globalX             Int
   globalY             Int
   globalZ             Int
@@ -470,4 +470,9 @@ model CollectionItem {
   item   Item   @relation(fields: [itemId], references: [id])
 
   @@unique([userId, itemId])
+}
+
+model ScrapeInfo {
+  type        String   @id
+  lastScraped DateTime @default(now())
 }

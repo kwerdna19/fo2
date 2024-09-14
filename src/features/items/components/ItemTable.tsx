@@ -37,7 +37,12 @@ import { DmgRange } from "~/features/mobs/components/DmgRange";
 import { type RouterOutputs, api } from "~/trpc/react";
 import type { TableProps } from "~/types/table";
 import { itemTypeMap } from "~/utils/fo-data/service";
-import { MAX_LEVEL, isItemConsumable, isItemTwoHanded } from "~/utils/fo-game";
+import {
+	MAX_LEVEL,
+	isItemCollectible,
+	isItemConsumable,
+	isItemTwoHanded,
+} from "~/utils/fo-game";
 import {
 	itemSearchFilterSchema,
 	itemSearchParamParser,
@@ -282,14 +287,19 @@ export const itemTableColumns = [
 	// 		<ItemList data={row.original.usages} className="flex-nowrap" size="sm" />
 	// 	),
 	// }),
-	// columnHelper.display({
-	// 	id: "addToCollection",
-	// 	cell: (info) => (
-	// 		<div className="text-center">
-	// 			<AddToCollectionButton id={info.row.original.id} />
-	// 		</div>
-	// 	),
-	// }),
+	columnHelper.display({
+		id: "addToCollection",
+		header: () => null,
+		meta: {
+			heading: "Add to Collection",
+		},
+		cell: (info) =>
+			isItemCollectible(info.row.original) ? (
+				<div className="text-center">
+					<AddToCollectionButton id={info.row.original.id} />
+				</div>
+			) : null,
+	}),
 	// @TODO crafts INTO column
 	// @TODO battle passes column
 	// @TODO skills column
@@ -405,13 +415,13 @@ function ItemSearchFilters() {
 						</FormItem>
 					)}
 				/>
-
-				<CheckboxField
-					control={form.control}
-					name="collectible"
-					label="Collectible"
-				/>
 			</div>
+
+			<CheckboxField
+				control={form.control}
+				name="collectible"
+				label="Collectible"
+			/>
 
 			<div className="p-3 border border-dashed">More filters to be added</div>
 

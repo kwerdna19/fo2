@@ -1,5 +1,5 @@
 import { execFileSync } from "child_process";
-import { join } from "path";
+import { join, resolve } from "path";
 import { writeFile } from "fs/promises";
 import { z } from "zod";
 
@@ -48,11 +48,12 @@ export interface Tileset {
 	tilecount: number;
 	tileheight: number;
 	tilewidth: number;
+	source?: string;
 }
 
 const tmpDir = "./bin/tmp";
 
-const baseURL = "https://dev.fantasyonline2.com";
+const baseURL = "https://game.fantasyonline2.com";
 
 const main = async () => {
 	const tmxPath = process.env.TMX_PATH;
@@ -73,13 +74,32 @@ const main = async () => {
 		throw new Error("Invalid map response");
 	}
 
-	const imageFileName = `${name}-mastersheet.png`;
-	if (map.tilesets[0]) {
-		map.tilesets[0].image = `./${imageFileName}`;
-	}
+	const mapDataFilePath = resolve(tmpDir, `${name}.json`);
 
-	const mapDataFilePath = join(tmpDir, `${name}.json`);
+	const mapTileSetDataFilePath = resolve(tmpDir, `${name}-tileset.json`);
+
 	const outputPath = `./public/maps/${name}.png`;
+	const imageFileName = `${name}-mastersheet.png`;
+
+	let hadTileset = false;
+	try {
+		const response2 = await fetch(`${baseURL}/tiled/tilesets/${name}.json`);
+		if (!response2.ok) {
+			throw new Error("tileset json request error");
+		}
+		const tileset = await response2.json();
+		tileset.image = `./${imageFileName}`;
+		hadTileset = true;
+		await writeFile(mapTileSetDataFilePath, JSON.stringify(tileset, null, 2));
+	} catch (e) {}
+
+	if (map.tilesets[0]) {
+		if (hadTileset) {
+			map.tilesets[0].source = `./${name}-tileset.json`;
+		} else {
+			map.tilesets[0].image = `./${imageFileName}`;
+		}
+	}
 
 	await writeFile(mapDataFilePath, JSON.stringify(map, null, 2));
 	const imageResponse = await fetch(`${baseURL}/tiled/maps/${imageFileName}`);
@@ -88,7 +108,8 @@ const main = async () => {
 
 	await writeFile(join(tmpDir, imageFileName), Buffer.from(image));
 
-	execFileSync(tmxPath, [mapDataFilePath, outputPath]);
+	console.log([mapDataFilePath, outputPath]);
+	execFileSync(tmxPath, [resolve("./", mapDataFilePath), outputPath]);
 
 	console.log(`Done. Generated ${name}.png`);
 };

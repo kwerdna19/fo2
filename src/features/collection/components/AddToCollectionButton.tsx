@@ -1,6 +1,7 @@
 "use client";
 
 import { Loader2, Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import {
 	Tooltip,
@@ -13,6 +14,8 @@ import { api } from "~/trpc/react";
 export function AddToCollectionButton({ id }: { id: string }) {
 	const utils = api.useUtils();
 
+	const router = useRouter();
+
 	const { mutate: add, isPending } = api.collection.addToCollection.useMutation(
 		{
 			// Always refetch after error or success:
@@ -22,6 +25,11 @@ export function AddToCollectionButton({ id }: { id: string }) {
 				utils.collection.getMyCollectionCount.setData(undefined, (prev) =>
 					typeof prev === "number" ? prev - 1 : prev,
 				);
+			},
+			onError: (err) => {
+				if (err.data?.code === "UNAUTHORIZED") {
+					router.push("/login");
+				}
 			},
 		},
 	);

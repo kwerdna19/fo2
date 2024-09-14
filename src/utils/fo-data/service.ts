@@ -9,6 +9,7 @@ import {
 	type ItemDefinition,
 	type MobDefinition,
 	type SchemaDefinitionByType,
+	type ZoneDefinition,
 	dataSchemas,
 } from "./schema";
 
@@ -36,15 +37,15 @@ export async function getDataById<T extends DataType>(type: T, id: number) {
 	return result.find((entry) => entry.id === id) ?? null;
 }
 
-const pageSize = 200;
+const pageSize = 100;
 
-export async function getAllData<T extends DataType>(type: T) {
+export async function getAllData<T extends DataType>(type: T, startId = 0) {
 	const result = [] as SchemaDefinitionByType<T>[];
 	let page = 1;
 	while (true) {
 		const ids = Array.from(
 			{ length: pageSize },
-			(_, i) => i + 1 + (page - 1) * pageSize,
+			(_, i) => i + startId + 1 + (page - 1) * pageSize,
 		);
 
 		const newData = await getDataByIds(type, ids);
@@ -282,5 +283,21 @@ export const itemDefinitionToDatabaseItem = (gameItem: ItemDefinition) => {
 		reqInt: reqStats?.int,
 
 		boxIds,
+	};
+};
+
+export const zoneDefinitionToDatabaseArea = (zone: ZoneDefinition) => {
+	return {
+		name: zone.t.en.n,
+		desc: zone.t.en.d,
+		slug: getSlugFromName(zone.t.en.n),
+		inGameId: zone.id,
+		height: zone.hip,
+		width: zone.wip,
+		globalX: zone.blx,
+		globalY: zone.bly,
+		globalZ: zone.blz,
+		spawnX: zone.sx,
+		spawnY: zone.sy,
 	};
 };

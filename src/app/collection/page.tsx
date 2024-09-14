@@ -13,7 +13,7 @@ export const metadata = {
 export default async function MyCollection({
 	searchParams,
 }: { searchParams: SearchParams }) {
-	await userSatisfiesRoleOrRedirect(Role.USER, "/");
+	await userSatisfiesRoleOrRedirect(Role.USER, "/login");
 
 	const params = collectionSearchParamCache.parse(searchParams);
 	const data = await api.collection.getMyCollection(params);
