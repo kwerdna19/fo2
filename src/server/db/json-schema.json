@@ -1741,6 +1741,23 @@
         "userId",
         "itemId"
       ]
+    },
+    "ScrapeInfo": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "originalType": "String"
+        },
+        "lastScraped": {
+          "type": "string",
+          "originalType": "DateTime",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "type"
+      ]
     }
   },
   "type": "object",
@@ -1798,6 +1815,9 @@
     },
     "collectionItem": {
       "$ref": "#/definitions/CollectionItem"
+    },
+    "scrapeInfo": {
+      "$ref": "#/definitions/ScrapeInfo"
     }
   }
 }
