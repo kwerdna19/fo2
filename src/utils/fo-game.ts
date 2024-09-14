@@ -421,6 +421,10 @@ export const isItemConsumable = (item: Pick<Item, "type">) => {
 
 export const COLLECTIBLE_ITEM_TYPES = [2, 3, 6];
 
-export const isItemCollectible = (item: Pick<Item, "type">) => {
-	return COLLECTIBLE_ITEM_TYPES.includes(item.type);
+export const isItemCollectible = (item: Pick<Item, "type" | "name">) => {
+	return (
+		COLLECTIBLE_ITEM_TYPES.includes(item.type) &&
+		!item.name.startsWith("[SSC]") &&
+		item.name !== "XIII"
+	);
 };

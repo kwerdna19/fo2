@@ -159,9 +159,25 @@ export default createTRPCRouter({
 	getNumCollectibleItems: publicProcedure.query(async ({ ctx: { db } }) => {
 		return db.item.count({
 			where: {
-				OR: COLLECTIBLE_ITEM_TYPES.map((type) => ({
-					type: type,
-				})),
+				AND: [
+					{
+						name: {
+							not: "XIII",
+						},
+					},
+					{
+						name: {
+							not: {
+								startsWith: "[SSC]",
+							},
+						},
+					},
+					{
+						OR: COLLECTIBLE_ITEM_TYPES.map((type) => ({
+							type: type,
+						})),
+					},
+				],
 			},
 		});
 	}),
