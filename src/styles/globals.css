@@ -99,6 +99,64 @@
     image-rendering: -moz-crisp-edges;
     image-rendering: crisp-edges;
   }
+
+  .sprite {
+
+    background-repeat: no-repeat;
+    background-size: 300% 400%;
+    background-position-x: 50%;
+    background-position-y: 66.666%;
+  
+  }
+
+  .sprite-animated {
+    animation: spriteMoveOnX 1s step-end infinite, spriteMoveOnY 12s step-end infinite;
+  }
+  
+  @keyframes spriteMoveOnX {
+    0% {
+      background-position-x: 50%;
+    }
+  
+    25% {
+      background-position-x: 100%;
+    }
+  
+    50% {
+      background-position-x: 50%;
+    }
+  
+    75% {
+      background-position-x: 0%;
+    }
+  
+    100% {
+      background-position-x: 50%;
+    }
+  }
+  
+  @keyframes spriteMoveOnY {
+    0% {
+      background-position-y: 66.666%;
+    }
+  
+    25% {
+      background-position-y: 33.333%;
+    }
+  
+    50% {
+      background-position-y: 0%;
+    }
+  
+    75% {
+      background-position-y: 100%;
+    }
+  
+    100% {
+      background-position-y: 66.666%;
+    }
+  }
+
 }
 
 

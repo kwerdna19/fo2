@@ -1,26 +1,15 @@
 import type { Unit } from "@prisma/client";
+import {
+	type SpriteSize,
+	getSpriteSize,
+	getSpriteSrc,
+} from "~/utils/fo-sprite";
 import { cn } from "~/utils/styles";
 
-const variants = {
-	size: {
-		xs: 1,
-		sm: 2,
-		md: 3,
-		lg: 4,
-		xl: 5,
-	},
-};
-
-interface Variant {
-	size?: keyof (typeof variants)["size"];
-}
-
-const spriteWidth = 9;
-const spriteHeight = 8;
-
-export interface ItemSpriteProps extends Variant {
+export interface ItemSpriteProps {
 	type: Unit;
 	className?: string;
+	size?: SpriteSize;
 }
 
 export const UnitSprite = ({
@@ -28,16 +17,12 @@ export const UnitSprite = ({
 	className,
 	size = "xs",
 }: ItemSpriteProps) => {
-	const mult = variants.size[size];
-	const height = spriteHeight * mult;
-	const width = spriteWidth * mult;
-
 	return (
 		<img
-			style={{ height, width }}
+			style={getSpriteSize("UNIT", size)}
 			className={cn("pixelated", className)}
-			src={`/sprites/unit/${type.toLowerCase()}.png`}
-			alt=""
+			src={getSpriteSrc("UNIT", type.toLowerCase())}
+			alt={type}
 		/>
 	);
 };

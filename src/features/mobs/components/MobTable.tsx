@@ -5,8 +5,8 @@ import type { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { useQueryStates } from "nuqs";
 import { TbCrown as Crown } from "react-icons/tb";
-import { MobSprite } from "~/components/MobSprite";
 import SortButton from "~/components/SortButton";
+import { Sprite } from "~/components/Sprite";
 import { DataTable } from "~/components/data-table/data-table";
 import {
 	useDataTableQueryOptions,
@@ -39,9 +39,9 @@ export const mobTableColumns: ColumnDef<MobDatum, any>[] = [
 				href={`/mobs/${row.original.slug}`}
 				className="flex justify-center items-center h-[64px] max-h-full overflow-hidden group-hover:overflow-visible"
 			>
-				<MobSprite
+				<Sprite
+					type="MOB"
 					url={row.original.spriteName}
-					name={row.original.name}
 					size="sm"
 					className="-mt-[12px]"
 				/>

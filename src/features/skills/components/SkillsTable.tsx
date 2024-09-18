@@ -25,12 +25,7 @@ export const skillColumns = [
 				prefetch={false}
 				href={`/skills/${row.original.slug}`}
 			>
-				<ItemSprite
-					url={row.original.spriteUrl}
-					name={row.original.name}
-					size="sm"
-					bg
-				/>
+				<ItemSprite url={row.original.spriteUrl} size="sm" bg />
 			</Link>
 		),
 	}),

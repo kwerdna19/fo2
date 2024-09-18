@@ -513,7 +513,8 @@ model ArtVote {
   voterId String
   voter   User   @relation(fields: [voterId], references: [id])
 
-  upvote Boolean @default(true) // true = 1, false = 0
+  upvote Boolean @default(true) // true = 1, false = -1
+  vote   Int     @default(1) // upvote = 1, downvote = -1
 
   @@unique([artId, voterId])
 }

@@ -4,8 +4,8 @@ import { createColumnHelper } from "@tanstack/react-table";
 import type { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { DurationDisplay } from "~/components/DurationDisplay";
-import { MobSprite } from "~/components/MobSprite";
 import SortButton from "~/components/SortButton";
+import { Sprite } from "~/components/Sprite";
 import { DataTable } from "~/components/data-table/data-table";
 import { useDataTableQueryOptions } from "~/components/data-table/use-data-table-query";
 import { Badge } from "~/components/ui/badge";
@@ -26,9 +26,9 @@ export const columns = [
 				href={`/npcs/${row.original.slug}`}
 				className="flex justify-center items-center h-[64px] max-h-full overflow-hidden group-hover:overflow-visible"
 			>
-				<MobSprite
+				<Sprite
+					type="NPC"
 					url={row.original.spriteUrl}
-					name={row.original.name}
 					size="sm"
 					className="-mt-[36px]"
 				/>

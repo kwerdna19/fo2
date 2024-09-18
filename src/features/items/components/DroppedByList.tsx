@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { MobSprite } from "~/components/MobSprite";
+import { Sprite } from "~/components/Sprite";
 import {
 	Tooltip,
 	TooltipContent,
@@ -22,9 +22,9 @@ export function DroppedByList({ mobs }: { mobs: ItemDatum["droppedBy"] }) {
 									prefetch={false}
 									href={`/mobs/${d.mob.slug}`}
 								>
-									<MobSprite
+									<Sprite
+										type="MOB"
 										url={d.mob.spriteName}
-										name={d.mob.name}
 										size="sm"
 										className="-mt-[12px]"
 									/>

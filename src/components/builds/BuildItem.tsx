@@ -13,7 +13,7 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "~/components/ui/popover";
-import { Slot, slotBackgroundSpriteMap } from "~/utils/fo-game";
+import { type Slot, slotBackgroundSpriteMap } from "~/utils/fo-game";
 import { cn } from "~/utils/styles";
 import { ItemSprite } from "../ItemSprite";
 import { Button } from "../ui/button";
@@ -61,7 +61,6 @@ export function BuildItem({
 						<ItemSprite
 							bg
 							url={item ? item.spriteName : slotBackgroundSpriteMap[slot]}
-							name={item ? item.name : Slot[slot]}
 							size="md"
 						/>
 					</Button>
@@ -87,12 +86,7 @@ export function BuildItem({
 										item?.id === itemOption.id && "font-bold",
 									)}
 								>
-									<ItemSprite
-										name={itemOption.name}
-										url={itemOption.spriteName}
-										size="xs"
-										bg
-									/>
+									<ItemSprite url={itemOption.spriteName} size="xs" bg />
 									{itemOption.name}
 								</CommandItem>
 							))}

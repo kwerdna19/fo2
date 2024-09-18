@@ -2,13 +2,15 @@
 import * as L from "leaflet";
 import Link from "next/link";
 import { LayerGroup, LayersControl, Marker, Popup } from "react-leaflet";
-import { spriteHeight, spriteWidth } from "~/components/MobSprite";
 import { ItemList } from "~/features/items/components/ItemList";
 import { DropsList } from "~/features/mobs/components/DropsList";
 import { MobHealth } from "~/features/mobs/components/MobHealth";
 import type { RouterOutputs } from "~/trpc/react";
+import { getSpriteFrameSize } from "~/utils/fo-sprite";
 
 type Locations = NonNullable<RouterOutputs["area"]["getBySlug"]>["locations"];
+
+const mobSprite = getSpriteFrameSize("MOB");
 
 export function LocationLayers({
 	id,
@@ -34,9 +36,9 @@ export function LocationLayers({
 								icon={L.divIcon({
 									html: `<div id="${id}-${mob.id}-${i}" style="background-image: url(${`https://art.fantasyonline2.com/textures/enemies/${mob.spriteName}.png`})"></div>`,
 									className: "pixelated map-sprite-icon",
-									iconSize: [spriteWidth * 2, spriteHeight * 2],
-									iconAnchor: [spriteWidth, spriteHeight * 2],
-									popupAnchor: [0, -spriteHeight],
+									iconSize: [mobSprite.width * 2, mobSprite.height * 2],
+									iconAnchor: [mobSprite.width, mobSprite.height * 2],
+									popupAnchor: [0, -mobSprite.height],
 								})}
 							>
 								<Popup
@@ -82,9 +84,9 @@ export function LocationLayers({
 								icon={L.divIcon({
 									html: `<div id="${id}-${npc.id}-${i}" style="background-image: url(${npc.spriteUrl})"></div>`,
 									className: "pixelated map-sprite-icon",
-									iconSize: [spriteWidth * 2, spriteHeight * 2],
-									iconAnchor: [spriteWidth, spriteHeight * 2],
-									popupAnchor: [0, -spriteHeight],
+									iconSize: [mobSprite.width * 2, mobSprite.height * 2],
+									iconAnchor: [mobSprite.width, mobSprite.height * 2],
+									popupAnchor: [0, -mobSprite.height],
 								})}
 							>
 								<Popup

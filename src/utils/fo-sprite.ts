@@ -1,27 +1,125 @@
 type SpriteConfig = {
 	width: number;
 	height: number;
+	baseUrl: string;
+	cols?: number;
+	rows?: number;
 };
 
-export const defaultSprite = { row: 2, col: 1 }; // 0 indexed
-
-export const spriteSheetSize = { rows: 4, cols: 3 };
-
-export const spriteConfig: Record<string, SpriteConfig> = {
+const spriteSheetConfig = {
 	PLAYER: {
 		width: 102,
 		height: 200,
+		baseUrl: "https://art.fantasyonline2.com/api/character/ss?f=",
+		cols: 3,
+		rows: 4,
 	},
 	MOB: {
 		width: 96,
 		height: 192,
+		baseUrl: "https://art.fantasyonline2.com/textures/enemies/",
+		cols: 3,
+		rows: 4,
 	},
 	NPC: {
 		width: 96,
 		height: 192,
+		baseUrl: "https://art.fantasyonline2.com/textures/npcs/",
+		cols: 3,
+		rows: 4,
 	},
-	ICON: {
+	ITEM: {
 		width: 22,
 		height: 22,
+		baseUrl: "https://art.fantasyonline2.com/textures/icons/items/",
 	},
+	SKILL: {
+		width: 22,
+		height: 22,
+		baseUrl: "https://art.fantasyonline2.com/textures/skills/",
+	},
+	MENU_BUTTON: {
+		width: 25,
+		height: 25,
+		baseUrl: "https://art.fantasyonline2.com/textures/gui/",
+	},
+	UNIT: {
+		width: 9,
+		height: 8,
+		baseUrl: "/sprites/unit/",
+	},
+} satisfies Record<string, SpriteConfig>;
+
+export type SpriteType = keyof typeof spriteSheetConfig;
+
+export const spriteSizeMap = {
+	xs: 1,
+	sm: 2,
+	md: 4,
+	lg: 6,
+	xl: 9,
+	"2xl": 12,
+};
+
+export type SpriteSize = keyof typeof spriteSizeMap;
+
+export const getSpriteSrc = (
+	spriteType: SpriteType,
+	urlOrSpriteName: string,
+) => {
+	const { baseUrl } = spriteSheetConfig[spriteType];
+
+	return urlOrSpriteName.startsWith("/") || urlOrSpriteName.startsWith("http")
+		? urlOrSpriteName
+		: `${baseUrl}${urlOrSpriteName}${spriteType === "ITEM" ? "-icon" : ""}${spriteType !== "PLAYER" ? ".png" : ""}`;
+};
+
+export const getSpriteSize = (spriteType: SpriteType, size: SpriteSize) => {
+	const { width, height, ...rest } = spriteSheetConfig[spriteType];
+
+	const c = "cols" in rest ? rest.cols : 1;
+	const r = "rows" in rest ? rest.rows : 1;
+
+	return {
+		width: (width * spriteSizeMap[size]) / c,
+		height: (height * spriteSizeMap[size]) / r,
+	};
+};
+
+export const getSpriteStyle = (
+	spriteType: SpriteType,
+	size: SpriteSize,
+	urlOrSpriteName: string,
+) => {
+	const src = getSpriteSrc(spriteType, urlOrSpriteName);
+
+	return {
+		backgroundImage: `url("${src}")`,
+		...getSpriteSize(spriteType, size),
+	};
+};
+
+export const getSpriteFrameSize = (spriteType: SpriteType) => {
+	const { width, height, ...rest } = spriteSheetConfig[spriteType];
+
+	const c = "cols" in rest ? rest.cols : 1;
+	const r = "rows" in rest ? rest.rows : 1;
+
+	return {
+		width: width / c,
+		height: height / r,
+	};
+};
+
+export const getSpriteTypeFromImageSize = (input: {
+	width: number;
+	height: number;
+}) => {
+	for (const [key, value] of Object.entries(spriteSheetConfig)) {
+		if (value.width === input.width && value.height === input.height) {
+			return key as SpriteType;
+		}
+	}
+
+	return null;
 };

@@ -32,7 +32,7 @@ export function Header({
 					href="/"
 					className="flex gap-x-4 items-center px-3"
 				>
-					<UnitSprite type="GEMS" size="lg" />
+					<UnitSprite type="GEMS" size="md" />
 					<h1>FO2 DB</h1>
 				</Link>
 				<div className="hidden flex-1 lg:block">

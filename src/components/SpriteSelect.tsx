@@ -1,6 +1,6 @@
 "use client";
 import { type FieldMetadata, getInputProps } from "@conform-to/react";
-import { MobSprite } from "~/components/MobSprite";
+import { Sprite } from "~/components/Sprite";
 import {
 	Select,
 	SelectContent,
@@ -44,9 +44,9 @@ export default function SpriteSelect({
 							<div className="flex items-center gap-x-12">
 								<div className={cn(!icon && "-mt-12 mb-1")}>
 									{icon ? (
-										<ItemSprite size="md" url={o} name="" />
+										<ItemSprite size="md" url={o} />
 									) : (
-										<MobSprite size="md" url={o} name="" />
+										<Sprite type="MOB" size="md" url={o} />
 									)}
 								</div>
 								<div>{o.split("/").at(-1) ?? "?"}</div>

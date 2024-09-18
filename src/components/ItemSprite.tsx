@@ -1,29 +1,13 @@
+import {
+	type SpriteSize,
+	getSpriteSize,
+	getSpriteSrc,
+} from "~/utils/fo-sprite";
 import { cn } from "~/utils/styles";
 
-const variants = {
-	size: {
-		xs: 1,
-		sm: 2,
-		md: 3,
-		lg: 4,
-		xl: 6,
-		"2xl": 8,
-	},
-};
-
-interface Variant {
-	size?: keyof (typeof variants)["size"];
-}
-
-const menuSpriteWidth = 25;
-const menuSpriteHeight = 25;
-
-const spriteWidth = 22;
-const spriteHeight = 22;
-
-export interface ItemSpriteProps extends Variant {
+export interface ItemSpriteProps {
 	url: string;
-	name?: string;
+	size?: SpriteSize;
 	className?: string;
 	bg?: boolean;
 	menuSprite?: boolean;
@@ -31,31 +15,24 @@ export interface ItemSpriteProps extends Variant {
 
 export const ItemSprite = ({
 	url,
-	name,
 	className,
 	size = "xs",
 	bg,
 	menuSprite,
 }: ItemSpriteProps) => {
-	const mult = variants.size[size];
-	const height = (menuSprite ? menuSpriteHeight : spriteHeight) * mult;
-	const width = (menuSprite ? menuSpriteWidth : spriteWidth) * mult;
+	const type = menuSprite ? "MENU_BUTTON" : "ITEM";
 
 	return (
 		<img
-			style={{ height, width, minWidth: width, minHeight: height }}
+			style={getSpriteSize(type, size)}
 			className={cn(
-				"box-content pixelated aspect-square",
+				"box-content pixelated",
 				bg &&
 					"border shadow-sm border-slate-200 bg-slate-50 dark:bg-slate-800 dark:border-slate-950 rounded-sm",
 				className,
 			)}
-			src={
-				url.startsWith("/") || url.startsWith("http")
-					? url
-					: `https://art.fantasyonline2.com/textures/icons/items/${url}-icon.png`
-			}
-			alt={name ? `${name} sprite` : ""}
+			src={getSpriteSrc(type, url)}
+			alt=""
 		/>
 	);
 };

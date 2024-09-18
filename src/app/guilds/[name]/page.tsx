@@ -1,8 +1,8 @@
 import { format } from "date-fns";
 import { User } from "lucide-react";
 import { notFound } from "next/navigation";
-import { MobSprite } from "~/components/MobSprite";
 import { PriceDisplay } from "~/components/PriceDisplay";
+import { Sprite } from "~/components/Sprite";
 import { Badge } from "~/components/ui/badge";
 import { Separator } from "~/components/ui/separator";
 import { groupGuildMembers } from "~/features/guilds/utils";
@@ -110,11 +110,11 @@ export default async function Guild({ params }: { params: Params }) {
 							<div className="flex flex-wrap gap-x-5 gap-y-3">
 								{members.map((m) => (
 									<div key={m.Name} className="flex flex-col items-center">
-										<MobSprite
+										<Sprite
+											type="PLAYER"
 											size="md"
 											className="-mb-6 -mt-4"
-											url={getPlayerSpriteUrl(m.Sprite as string)}
-											name={m.Name as string}
+											url={m.Sprite as string}
 										/>
 										<div>{m.Name}</div>
 									</div>

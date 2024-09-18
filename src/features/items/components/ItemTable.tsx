@@ -68,12 +68,7 @@ export const itemTableColumns = [
 				prefetch={false}
 				href={`/items/${row.original.slug}`}
 			>
-				<ItemSprite
-					url={row.original.spriteName}
-					name={row.original.name}
-					size="sm"
-					bg
-				/>
+				<ItemSprite url={row.original.spriteName} size="sm" bg />
 			</Link>
 		),
 	}),

@@ -7,7 +7,7 @@ export const metadata = {
 	title: "Art",
 };
 
-export default async function Skills({
+export default async function Page({
 	searchParams,
 }: { searchParams: SearchParams }) {
 	const params = artSearchParamCache.parse(searchParams);

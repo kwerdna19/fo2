@@ -378,6 +378,21 @@ export const getPlayerSpriteUrlPreview = (
 	return getPlayerSpriteUrl(f);
 };
 
+type PartialItem = Pick<Item, "spriteName" | "type" | "subType">;
+
+export const getItemSpriteQuery = (
+	itemOrItems: PartialItem | PartialItem[],
+) => {
+	const items = Array.isArray(itemOrItems) ? itemOrItems : [itemOrItems];
+
+	const itemSlugs = items.map((item) => {
+		return `${item.spriteName}${getItemSpriteLayer(item)}`;
+	});
+
+	const attrs = defaultSpriteAttributes.concat(itemSlugs);
+	return attrs.join("_");
+};
+
 export const getPlayerSpriteUrl = (spriteQuery: string) => {
 	return `${playerSpriteBaseUrl}?f=${spriteQuery}`;
 };

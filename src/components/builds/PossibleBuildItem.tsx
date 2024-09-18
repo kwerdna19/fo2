@@ -32,17 +32,12 @@ export function PossibleBuildItem({
 			<ItemSprite
 				className="border-2 shadow-sm border-slate-200 bg-slate-50 rounded-sm"
 				url={item.spriteName}
-				name={item.name}
 				size="md"
 			/>
 		</Link>
 	) : (
 		<div className="border-2 shadow-sm border-slate-300 bg-slate-200 flex items-center justify-center rounded-sm w-[70px] h-[70px]">
-			<ItemSprite
-				url={slotBackgroundSpriteMap[slot]}
-				name={Slot[slot]}
-				size="sm"
-			/>
+			<ItemSprite url={slotBackgroundSpriteMap[slot]} size="sm" />
 		</div>
 	);
 

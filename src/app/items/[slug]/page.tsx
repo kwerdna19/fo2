@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DurationDisplay } from "~/components/DurationDisplay";
 import { ItemSprite } from "~/components/ItemSprite";
-import { MobSprite } from "~/components/MobSprite";
+import { Sprite } from "~/components/Sprite";
 import { UnitSprite } from "~/components/UnitSprite";
 import { Badge } from "~/components/ui/badge";
 import { Label } from "~/components/ui/label";
@@ -14,6 +14,7 @@ import { auth } from "~/server/auth/auth";
 import { api } from "~/trpc/server";
 import {
 	getAverageDPS,
+	getItemSpriteQuery,
 	getPlayerSpriteUrlPreview,
 	isItemCollectible,
 	isItemConsumable,
@@ -70,7 +71,7 @@ export default async function Item({ params }: { params: Params }) {
 
 			<div className="flex flex-col gap-6">
 				<div className="self-center">
-					<ItemSprite bg size="2xl" url={item.spriteName} name={item.name} />
+					<ItemSprite bg size="2xl" url={item.spriteName} />
 					<p className="text-muted-foreground pt-2 text-center">{item.name}</p>
 				</div>
 				<div>
@@ -177,11 +178,7 @@ export default async function Item({ params }: { params: Params }) {
 											key={`${itemId}_${mobId}`}
 										>
 											<Link prefetch={false} href={`/mob/${mob.slug}`}>
-												<MobSprite
-													url={mob.spriteName}
-													name={mob.name}
-													size="sm"
-												/>
+												<Sprite type="MOB" url={mob.spriteName} size="sm" />
 											</Link>
 											<Link prefetch={false} href={`/mob/${mob.slug}`}>
 												{mob.name}
@@ -205,11 +202,7 @@ export default async function Item({ params }: { params: Params }) {
 											key={`${itemId}_${npcId}`}
 										>
 											<Link prefetch={false} href={`/npc/${npc.slug}`}>
-												<MobSprite
-													url={npc.spriteUrl}
-													name={npc.name}
-													size="sm"
-												/>
+												<Sprite type="NPC" url={npc.spriteUrl} size="sm" />
 											</Link>
 											<Link prefetch={false} href={`/npc/${npc.slug}`}>
 												{npc.name}
@@ -237,11 +230,7 @@ export default async function Item({ params }: { params: Params }) {
 												key={`${itemId}_${npcId}`}
 											>
 												<Link prefetch={false} href={`/npc/${npc.slug}`}>
-													<MobSprite
-														url={npc.spriteUrl}
-														name={npc.name}
-														size="sm"
-													/>
+													<Sprite type="NPC" url={npc.spriteUrl} size="sm" />
 												</Link>
 												<Link prefetch={false} href={`/npc/${npc.slug}`}>
 													{npc.name}
@@ -266,10 +255,11 @@ export default async function Item({ params }: { params: Params }) {
 
 				{isVisible(item) ? (
 					<div>
-						<MobSprite
+						<Sprite
+							type="PLAYER"
 							animated
-							size="2xl"
-							url={getPlayerSpriteUrlPreview([item])}
+							size="xl"
+							url={getItemSpriteQuery(item)}
 						/>
 					</div>
 				) : null}

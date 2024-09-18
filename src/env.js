@@ -23,7 +23,7 @@ export const env = createEnv({
 		),
 		AUTH_DISCORD_ID: z.string(),
 		AUTH_DISCORD_SECRET: z.string(),
-		NODE_ENV: z.enum(["development", "test", "production"]),
+		NODE_ENV: z.enum(["development", "test", "production"]).optional(),
 		FO_API_KEY: z.string(),
 	},
 

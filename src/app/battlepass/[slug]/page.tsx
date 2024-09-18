@@ -63,7 +63,7 @@ export default async function BattlePass({ params }: { params: Params }) {
 					const currency =
 						tier.unit !== null ? (
 							<div key={key} className="flex gap-x-4 items-center text-lg">
-								<UnitSprite size="lg" type={tier.unit} />
+								<UnitSprite size="md" type={tier.unit} />
 								{tier.amount ?? "???"}
 							</div>
 						) : null;
@@ -71,11 +71,7 @@ export default async function BattlePass({ params }: { params: Params }) {
 					const item =
 						tier.item !== null ? (
 							<div key={key} className="flex gap-x-4 items-center text-lg">
-								<ItemSprite
-									size="sm"
-									name={tier.item.name}
-									url={tier.item.spriteName}
-								/>
+								<ItemSprite size="sm" url={tier.item.spriteName} />
 								<Link href={`/items/${tier.item.slug}`} prefetch={false}>
 									{tier.item.name}
 								</Link>

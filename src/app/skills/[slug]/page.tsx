@@ -40,7 +40,7 @@ export default async function Item({ params }: { params: Params }) {
 				</AdminButton> */}
 			</div>
 			<div>
-				<ItemSprite size="xl" url={skill.spriteUrl} name={skill.name} />
+				<ItemSprite size="xl" url={skill.spriteUrl} />
 			</div>
 		</div>
 	);

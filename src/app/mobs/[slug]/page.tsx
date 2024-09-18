@@ -1,7 +1,7 @@
 import { Pencil } from "lucide-react";
 import { notFound } from "next/navigation";
 import { AdminButton } from "~/components/AdminButton";
-import { MobSprite } from "~/components/MobSprite";
+import { Sprite } from "~/components/Sprite";
 import { api } from "~/trpc/server";
 
 interface Params {
@@ -38,7 +38,7 @@ export default async function Mob({ params }: { params: Params }) {
 				</AdminButton> */}
 			</div>
 			<div>
-				<MobSprite size="xl" url={mob.spriteName} name={mob.name} />
+				<Sprite type="MOB" size="lg" url={mob.spriteName} animated />
 			</div>
 		</div>
 	);

@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
-import { MobSprite } from "~/components/MobSprite";
 import { PriceDisplay } from "~/components/PriceDisplay";
+import { Sprite } from "~/components/Sprite";
 import {
 	Tooltip,
 	TooltipContent,
@@ -27,9 +27,9 @@ export function SoldByList({
 									prefetch={false}
 									href={`/npcs/${d.npc.slug}`}
 								>
-									<MobSprite
+									<Sprite
+										type="NPC"
 										url={d.npc.spriteUrl}
-										name={d.npc.name}
 										size="sm"
 										className="-mt-[36px]"
 									/>

@@ -1,6 +1,6 @@
 import { ItemSprite } from "~/components/ItemSprite";
-import { MobSprite } from "~/components/MobSprite";
 import NavCard from "~/components/NavCard";
+import { Sprite } from "~/components/Sprite";
 
 export default function App() {
 	return (
@@ -9,10 +9,10 @@ export default function App() {
 				href="/mobs"
 				label="Mobs"
 				image={
-					<MobSprite
+					<Sprite
+						type="MOB"
 						size="sm"
-						url="https://art.fantasyonline2.com/textures/enemies/enemy-crab.png"
-						name="crab"
+						url="enemy-crab"
 						className="-mt-6 -ml-2"
 					/>
 				}
@@ -31,7 +31,8 @@ export default function App() {
 				href="/npcs"
 				label="Npcs"
 				image={
-					<MobSprite
+					<Sprite
+						type="NPC"
 						size="sm"
 						url="/sprites/npc/npc-storage-001q87.png"
 						className="-mt-12 -ml-2"

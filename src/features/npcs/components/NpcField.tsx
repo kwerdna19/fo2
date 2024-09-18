@@ -3,7 +3,7 @@ import { type FieldMetadata, useInputControl } from "@conform-to/react";
 import type { Npc } from "@prisma/client";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useState } from "react";
-import { MobSprite } from "~/components/MobSprite";
+import { Sprite } from "~/components/Sprite";
 import { ControlledHiddenField } from "~/components/form-ui/ControlledHiddenField";
 import { Button } from "~/components/ui/button";
 import {
@@ -47,11 +47,7 @@ export function NpcField({
 				>
 					<div className="flex items-center gap-x-3">
 						{!!selectedItem && (
-							<MobSprite
-								name={selectedItem.name}
-								url={selectedItem.spriteUrl}
-								size="xs"
-							/>
+							<Sprite type="MOB" url={selectedItem.spriteUrl} size="xs" />
 						)}
 						{selectedItem?.name ?? "Select npc..."}
 					</div>
@@ -84,8 +80,8 @@ export function NpcField({
 									)}
 								/>
 								<div className="flex items-center gap-x-4">
-									<MobSprite
-										name={npc.name}
+									<Sprite
+										type="NPC"
 										url={npc.spriteUrl}
 										size="xs"
 										className="-mt-3 -mb-1"

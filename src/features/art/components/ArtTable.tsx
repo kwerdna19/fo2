@@ -23,7 +23,6 @@ const artColumns = [
 	// 		>
 	// 			<ItemSprite
 	// 				url={row.original.spriteUrl}
-	// 				name={row.original.name}
 	// 				size="sm"
 	// 				bg
 	// 			/>

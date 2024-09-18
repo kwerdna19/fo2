@@ -1,6 +1,6 @@
 import { Pencil } from "lucide-react";
 import { notFound } from "next/navigation";
-import { MobSprite } from "~/components/MobSprite";
+import { Sprite } from "~/components/Sprite";
 import { api } from "~/trpc/server";
 
 interface Params {
@@ -37,7 +37,7 @@ export default async function Npc({ params }: { params: Params }) {
 				</AdminButton> */}
 			</div>
 			<div>
-				<MobSprite size="xl" url={npc.spriteUrl} name={npc.name} />
+				<Sprite type="NPC" size="xl" url={npc.spriteUrl} />
 			</div>
 		</div>
 	);

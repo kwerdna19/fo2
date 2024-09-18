@@ -34,7 +34,7 @@ export function ItemList<K extends PartialItem | { item: PartialItem }>({
 		<div
 			className={cn(
 				"flex flex-wrap items-center",
-				size === "md" ? "gap-4" : "gap-3",
+				size === "md" ? "gap-4" : "gap-2",
 				className,
 			)}
 		>
@@ -61,28 +61,25 @@ export function ItemList<K extends PartialItem | { item: PartialItem }>({
 					));
 
 				return (
-					<div key={item.id}>
-						<TooltipProvider>
-							<Tooltip delayDuration={0}>
-								<TooltipTrigger className="block">
-									<Link prefetch={false} href={`/items/${item.slug}`}>
-										<ItemSprite
-											bg
-											url={item.spriteName}
-											name={item.name}
-											size={size}
-										/>
-									</Link>
-								</TooltipTrigger>
-								<TooltipContent className="min-w-36 space-y-1" side="bottom">
-									<p className="text-sm font-semibold">{item.name}</p>
-									{properties && properties.length > 0 ? (
-										<div className="max-w-36 text-xs">{properties}</div>
-									) : null}
-								</TooltipContent>
-							</Tooltip>
-						</TooltipProvider>
-					</div>
+					<TooltipProvider key={item.id}>
+						<Tooltip delayDuration={0}>
+							<TooltipTrigger asChild>
+								<Link
+									className="min-w-max"
+									prefetch={false}
+									href={`/items/${item.slug}`}
+								>
+									<ItemSprite bg url={item.spriteName} size={size} />
+								</Link>
+							</TooltipTrigger>
+							<TooltipContent className="min-w-36 space-y-1" side="bottom">
+								<p className="text-sm font-semibold">{item.name}</p>
+								{properties && properties.length > 0 ? (
+									<div className="max-w-36 text-xs">{properties}</div>
+								) : null}
+							</TooltipContent>
+						</Tooltip>
+					</TooltipProvider>
 				);
 			})}
 		</div>
