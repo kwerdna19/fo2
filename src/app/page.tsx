@@ -34,7 +34,7 @@ export default function App() {
 					<Sprite
 						type="NPC"
 						size="sm"
-						url="/sprites/npc/npc-storage-001q87.png"
+						url="npc-storage-001"
 						className="-mt-12 -ml-2"
 					/>
 				}
