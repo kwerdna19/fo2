@@ -216,7 +216,7 @@ export default createTRPCRouter({
 		.input(z.object({ id: z.string(), data: npcSchema }))
 		.mutation(async ({ ctx: { db }, input }) => {
 			const { data, id } = input;
-			const { items, locations, crafts, area, ...fields } = data;
+			const { items, locations, crafts, area: teleportArea, ...fields } = data;
 
 			const updated = await db.npc.update({
 				where: {
@@ -288,6 +288,7 @@ export default createTRPCRouter({
 							},
 						})),
 					},
+					areaId: teleportArea?.id ?? null,
 				},
 			});
 

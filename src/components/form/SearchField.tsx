@@ -36,7 +36,7 @@ export function SearchField<
 }: {
 	type: string;
 	control: Control<FormShape>;
-	name: FieldPathByValue<FormShape, V | undefined>;
+	name: FieldPathByValue<FormShape, V | undefined | null>;
 	label?: string;
 	desc?: string;
 	query: Q;
