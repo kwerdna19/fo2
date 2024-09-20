@@ -25,7 +25,7 @@ export function NpcField({
 	field,
 	className,
 }: {
-	npcs: Pick<Npc, "id" | "name" | "spriteUrl">[];
+	npcs: Pick<Npc, "id" | "name" | "spriteName">[];
 	field: FieldMetadata<string>;
 	className?: string;
 }) {
@@ -47,7 +47,7 @@ export function NpcField({
 				>
 					<div className="flex items-center gap-x-3">
 						{!!selectedItem && (
-							<Sprite type="MOB" url={selectedItem.spriteUrl} size="xs" />
+							<Sprite type="NPC" url={selectedItem.spriteName} size="xs" />
 						)}
 						{selectedItem?.name ?? "Select npc..."}
 					</div>
@@ -82,7 +82,7 @@ export function NpcField({
 								<div className="flex items-center gap-x-4">
 									<Sprite
 										type="NPC"
-										url={npc.spriteUrl}
+										url={npc.spriteName}
 										size="xs"
 										className="-mt-3 -mb-1"
 									/>

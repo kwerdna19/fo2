@@ -198,9 +198,13 @@ export default createTRPCRouter({
 
 			return db.mob.create({
 				data: {
-					locations: locations && {
+					locations: {
 						createMany: {
-							data: locations,
+							data: locations.map(({ area, coordinates }) => ({
+								areaId: area.id,
+								x: coordinates.x,
+								y: coordinates.y,
+							})),
 						},
 					},
 					faction: {
@@ -220,59 +224,24 @@ export default createTRPCRouter({
 			const { id, data } = input;
 			const { locations, ...fields } = data;
 
-			let updated = await db.mob.update({
+			const updated = await db.mob.update({
 				where: {
 					id,
 				},
 				data: {
 					...fields,
-					locations: locations && {
-						upsert: locations.map((l) => ({
-							create: l,
-							update: l,
-							where: {
-								areaId_x_y_mobId: {
-									areaId: l.areaId,
-									x: l.x,
-									y: l.y,
-									mobId: id,
-								},
-							},
-						})),
-					},
-				},
-				include: {
-					locations: true,
-				},
-			});
-
-			const locationsToRemove = updated.locations.filter((updatedLocation) => {
-				return !locations?.find((inputLocation) => {
-					return (
-						updatedLocation.areaId === inputLocation.areaId &&
-						updatedLocation.x === inputLocation.x &&
-						updatedLocation.y === inputLocation.y
-					);
-				});
-			});
-
-			if (locationsToRemove.length) {
-				updated = await db.mob.update({
-					where: {
-						id,
-					},
-					data: {
-						locations: {
-							delete: locationsToRemove.map((l) => ({
-								id: l.id,
+					locations: {
+						deleteMany: {},
+						createMany: {
+							data: locations.map(({ area, coordinates }) => ({
+								areaId: area.id,
+								x: coordinates.x,
+								y: coordinates.y,
 							})),
 						},
 					},
-					include: {
-						locations: true,
-					},
-				});
-			}
+				},
+			});
 
 			return updated;
 		}),

@@ -32,6 +32,7 @@ type Props<V extends ValueShape> = {
 	setValue: (v: V | undefined) => void;
 	query: SearchQuery<V>;
 	type: string;
+	prefetch?: boolean;
 };
 
 function SearchResults<V extends ValueShape>({
@@ -39,13 +40,17 @@ function SearchResults<V extends ValueShape>({
 	type,
 	value,
 	setValue,
+	prefetch,
 }: Props<V>) {
 	const search = useCommandState((state) => state.search);
 	const [debounced] = useDebounce(search, 500);
 
-	const { data, isLoading, isError } = query.useQuery(debounced, {
-		enabled: debounced.length > 1,
-	});
+	const { data, isLoading, isError } = query.useQuery(
+		prefetch ? undefined : debounced,
+		{
+			enabled: Boolean(debounced.length > 2 || prefetch),
+		},
+	);
 
 	const isEmpty = !isError && !isLoading && data?.length === 0;
 
@@ -88,6 +93,7 @@ export type SearchComboboxProps<
 > = {
 	type: string;
 	query: Q;
+	prefetch?: boolean;
 } & GenericSearchComboboxProps<V>;
 
 export function SearchCombobox<V extends ValueShape, Q extends SearchQuery<V>>({
@@ -95,6 +101,7 @@ export function SearchCombobox<V extends ValueShape, Q extends SearchQuery<V>>({
 	type,
 	onValueChange,
 	query,
+	prefetch,
 }: SearchComboboxProps<V, Q>) {
 	const [open, setOpen] = useState(false);
 
@@ -125,7 +132,7 @@ export function SearchCombobox<V extends ValueShape, Q extends SearchQuery<V>>({
 				side="bottom"
 				className="p-0 w-[--radix-popover-trigger-width] border-0"
 			>
-				<Command shouldFilter={false} className="h-auto border">
+				<Command shouldFilter={!!prefetch} className="h-auto border">
 					<CommandInput
 						placeholder={`Search for ${type}`}
 						rootClassName="border-0"
@@ -135,6 +142,7 @@ export function SearchCombobox<V extends ValueShape, Q extends SearchQuery<V>>({
 						query={query}
 						value={value}
 						setValue={onSelect}
+						prefetch={prefetch}
 					/>
 				</Command>
 			</PopoverContent>

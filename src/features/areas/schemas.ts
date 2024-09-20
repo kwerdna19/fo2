@@ -17,8 +17,13 @@ export const coordinatesSchema = z.object({
 
 export const locationsSchema = z
 	.object({
-		x: z.number().int(),
-		y: z.number().int(),
-		areaId: z.string(),
+		coordinates: z.object({
+			x: z.number().int(),
+			y: z.number().int(),
+		}),
+		area: z.object({
+			id: z.string(),
+			name: z.string(),
+		}),
 	})
 	.array();

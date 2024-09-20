@@ -1,5 +1,6 @@
 import { Pencil } from "lucide-react";
 import { notFound } from "next/navigation";
+import { AdminButton } from "~/components/AdminButton";
 import { Sprite } from "~/components/Sprite";
 import { api } from "~/trpc/server";
 
@@ -28,16 +29,16 @@ export default async function Npc({ params }: { params: Params }) {
 		<div>
 			<div className="flex gap-x-4">
 				<h2 className="text-3xl">{npc.name}</h2>
-				{/* <AdminButton
+				<AdminButton
 					size="icon"
 					variant="outline"
 					href={`/npcs/${params.slug}/edit`}
 				>
 					<Pencil className="w-4 h-4" />
-				</AdminButton> */}
+				</AdminButton>
 			</div>
 			<div>
-				<Sprite type="NPC" size="xl" url={npc.spriteUrl} />
+				<Sprite type="NPC" size="xl" url={npc.spriteName} />
 			</div>
 		</div>
 	);

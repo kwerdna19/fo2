@@ -6,7 +6,7 @@ import { ItemList } from "~/features/items/components/ItemList";
 import { DropsList } from "~/features/mobs/components/DropsList";
 import { MobHealth } from "~/features/mobs/components/MobHealth";
 import type { RouterOutputs } from "~/trpc/react";
-import { getSpriteFrameSize } from "~/utils/fo-sprite";
+import { getSpriteFrameSize, getSpriteSrc } from "~/utils/fo-sprite";
 
 type Locations = NonNullable<RouterOutputs["area"]["getBySlug"]>["locations"];
 
@@ -82,7 +82,7 @@ export function LocationLayers({
 								position={[npc.y, npc.x]}
 								alt={npc.name}
 								icon={L.divIcon({
-									html: `<div id="${id}-${npc.id}-${i}" style="background-image: url(${npc.spriteUrl})"></div>`,
+									html: `<div id="${id}-${npc.id}-${i}" style="background-image: url(${getSpriteSrc("NPC", npc.spriteName as string)})"></div>`,
 									className: "pixelated map-sprite-icon",
 									iconSize: [mobSprite.width * 2, mobSprite.height * 2],
 									iconAnchor: [mobSprite.width, mobSprite.height * 2],

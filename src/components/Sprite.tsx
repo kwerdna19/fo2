@@ -22,7 +22,9 @@ export const Sprite = ({
 
 	return (
 		<div
-			className={cn(className, "pixelated sprite", { "sprite-animated": a })}
+			className={cn(className, "pixelated sprite", {
+				"sprite-animated": a,
+			})}
 			style={getSpriteStyle(type, size, url)}
 		/>
 	);

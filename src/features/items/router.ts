@@ -1,12 +1,10 @@
 import { z } from "zod";
 
-import { get } from "http";
-import { type EquippableType, type Prisma, Role } from "@prisma/client";
+import { type Prisma, Role } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { baseDataTableQuerySchema } from "~/components/data-table/data-table-utils";
 import {
 	createTRPCRouter,
-	protectedProcedure,
 	publicProcedure,
 	roleProtectedProcedure,
 } from "~/server/api/trpc";
@@ -15,8 +13,7 @@ import {
 	getDataById,
 	itemDefinitionToDatabaseItem,
 } from "~/utils/fo-data/service";
-import { COLLECTIBLE_ITEM_TYPES, equipmentSlotConfig } from "~/utils/fo-game";
-import { getSlugFromName } from "~/utils/misc";
+import { COLLECTIBLE_ITEM_TYPES } from "~/utils/fo-game";
 import { itemSchema } from "./schemas";
 import { itemSearchFilterSchema } from "./search-params";
 
@@ -83,6 +80,17 @@ const itemInclude = {
 		},
 		orderBy: {
 			durationMinutes: "asc",
+		},
+	},
+	battlePassTiers: {
+		select: {
+			battlePassId: true,
+			tier: true,
+			// battlePass: {
+			// 	select: {
+			// 		name: true,
+			// 	}
+			// }
 		},
 	},
 } satisfies Prisma.ItemInclude;
@@ -249,7 +257,7 @@ export default createTRPCRouter({
 		.mutation(async ({ ctx: { db }, input }) => {
 			const { data, inGameId } = input;
 
-			const { soldBy, craftedBy, battlePassTiers, ...rest } = data;
+			const { soldBy, craftedBy, ...rest } = data;
 
 			const definitionData = await getDataById("items", inGameId);
 
@@ -265,7 +273,7 @@ export default createTRPCRouter({
 
 			return db.item.create({
 				data: {
-					soldBy: soldBy && {
+					soldBy: {
 						createMany: {
 							data: soldBy.map(({ npc, ...s }) => ({
 								npcId: npc.id,
@@ -273,18 +281,17 @@ export default createTRPCRouter({
 							})),
 						},
 					},
-					craftedBy: craftedBy && {
-						createMany: {
-							data: craftedBy.map(({ npc, ingredients, ...s }) => ({
-								npcId: npc.id,
-								...s,
-							})),
-						},
-					},
-					battlePassTiers: battlePassTiers && {
-						createMany: {
-							data: battlePassTiers,
-						},
+					craftedBy: {
+						create: craftedBy.map(({ npc, ingredients, ...s }) => ({
+							npcId: npc.id,
+							...s,
+							ingredients: {
+								create: ingredients.map((ingredient) => ({
+									itemId: ingredient.item.id,
+									quantity: ingredient.quantity,
+								})),
+							},
+						})),
 					},
 					boxItems: boxIds && {
 						connect: boxIds.map((b) => ({ inGameId: b })),
@@ -299,27 +306,24 @@ export default createTRPCRouter({
 		.input(z.object({ id: z.string(), data: itemSchema }))
 		.mutation(async ({ ctx: { db }, input }) => {
 			const { id, data } = input;
-			const { soldBy, craftedBy, battlePassTiers, ...rest } = data;
+			const { soldBy, craftedBy, ...rest } = data;
 
-			let updated = await db.item.update({
+			const updated = await db.item.update({
 				where: {
 					id,
 				},
 				data: {
 					...rest,
-					soldBy: soldBy && {
-						upsert: soldBy.map(({ npc, ...d }) => ({
-							create: { ...d, npcId: npc.id },
-							update: { ...d, npcId: npc.id },
-							where: {
-								npcId_itemId: {
-									npcId: npc.id,
-									itemId: id,
-								},
-							},
-						})),
+					soldBy: {
+						deleteMany: {},
+						createMany: {
+							data: soldBy.map(({ npc, ...s }) => ({
+								npcId: npc.id,
+								...s,
+							})),
+						},
 					},
-					craftedBy: craftedBy && {
+					craftedBy: {
 						upsert: craftedBy.map(({ npc, ingredients, ...d }) => ({
 							create: {
 								...d,
@@ -339,109 +343,31 @@ export default createTRPCRouter({
 									})),
 								},
 							},
-							update: { ...d, npcId: npc.id },
-							where: {
-								npcId_itemId: {
-									npcId: npc.id,
-									itemId: id,
+							update: {
+								...d,
+								ingredients: {
+									deleteMany: {},
+									connectOrCreate: ingredients.map((ingredient) => ({
+										create: {
+											itemId: ingredient.item.id,
+											quantity: ingredient.quantity,
+										},
+										where: {
+											itemId_quantity: {
+												itemId: ingredient.item.id,
+												quantity: ingredient.quantity,
+											},
+										},
+									})),
 								},
 							},
-						})),
-					},
-					battlePassTiers: battlePassTiers && {
-						upsert: battlePassTiers.map((p) => ({
-							create: p,
-							update: p,
 							where: {
-								battlePassId_tier: p,
-								itemId: id,
+								npcId_itemId: { npcId: npc.id, itemId: id },
 							},
 						})),
 					},
 				},
-				include: {
-					droppedBy: true,
-					soldBy: true,
-					craftedBy: true,
-					battlePassTiers: true,
-				},
 			});
-
-			const salesToRemove = updated.soldBy.filter((updatedSale) => {
-				return !soldBy?.find((inputSale) => {
-					return (
-						inputSale.npc.id === updatedSale.npcId &&
-						inputSale.price === updatedSale.price &&
-						inputSale.unit === updatedSale.unit
-					);
-				});
-			});
-
-			// TODO handle removal of craftedBy ingredients
-			const craftsToRemove = updated.craftedBy.filter((updatedCraft) => {
-				return !craftedBy?.find((inputCraft) => {
-					return (
-						inputCraft.npc.id === updatedCraft.npcId &&
-						inputCraft.price === updatedCraft.price &&
-						inputCraft.unit === updatedCraft.unit &&
-						inputCraft.durationMinutes === updatedCraft.durationMinutes
-					);
-				});
-			});
-
-			const tiersToRemove = updated.battlePassTiers.filter((updatedTier) => {
-				return !battlePassTiers?.find((inputTier) => {
-					return (
-						inputTier.battlePassId === updatedTier.battlePassId &&
-						inputTier.tier === updatedTier.tier
-					);
-				});
-			});
-
-			if (
-				salesToRemove.length ||
-				craftsToRemove.length ||
-				tiersToRemove.length
-			) {
-				updated = await db.item.update({
-					where: {
-						id,
-					},
-					data: {
-						soldBy: {
-							delete: salesToRemove.map((s) => ({
-								npcId_itemId: {
-									npcId: s.npcId,
-									itemId: id,
-								},
-							})),
-						},
-						craftedBy: {
-							delete: craftsToRemove.map((s) => ({
-								npcId_itemId: {
-									npcId: s.npcId,
-									itemId: id,
-								},
-							})),
-						},
-						battlePassTiers: {
-							delete: tiersToRemove.map((t) => ({
-								battlePassId_tier: {
-									battlePassId: t.battlePassId,
-									tier: t.tier,
-								},
-								itemId: id,
-							})),
-						},
-					},
-					include: {
-						droppedBy: true,
-						soldBy: true,
-						craftedBy: true,
-						battlePassTiers: true,
-					},
-				});
-			}
 
 			return updated;
 		}),

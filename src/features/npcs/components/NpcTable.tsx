@@ -28,7 +28,7 @@ export const columns = [
 			>
 				<Sprite
 					type="NPC"
-					url={row.original.spriteUrl}
+					url={row.original.spriteName}
 					size="sm"
 					className="-mt-[36px]"
 				/>

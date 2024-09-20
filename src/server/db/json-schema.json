@@ -192,7 +192,7 @@
           "type": "string",
           "originalType": "String"
         },
-        "spriteUrl": {
+        "spriteName": {
           "type": "string",
           "originalType": "String"
         },
@@ -247,7 +247,7 @@
         "name",
         "slug",
         "type",
-        "spriteUrl"
+        "spriteName"
       ]
     },
     "NpcSale": {
@@ -1864,6 +1864,11 @@
           "type": "boolean",
           "originalType": "Boolean",
           "default": true
+        },
+        "vote": {
+          "type": "integer",
+          "originalType": "Int",
+          "default": 1
         }
       },
       "required": [

@@ -75,7 +75,7 @@ export function CraftedByField() {
 									type="button"
 									className="absolute right-1 top-1"
 								>
-									<X className="size-4" />
+									<Trash2 className="size-4" />
 								</Button>
 							</div>
 						);
@@ -85,9 +85,10 @@ export function CraftedByField() {
 				<Button
 					type="button"
 					onClick={() =>
-						append({ unit: "COINS" } as NonNullable<
-							FormValues["craftedBy"]
-						>[number])
+						append({
+							unit: "COINS",
+							ingredients: [{ quantity: 1 }],
+						} as NonNullable<FormValues["craftedBy"]>[number])
 					}
 				>
 					Add Craft

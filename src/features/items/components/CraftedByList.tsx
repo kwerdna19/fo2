@@ -26,7 +26,7 @@ export function CraftedByList({ npcs }: { npcs: ItemDatum["craftedBy"] }) {
 								>
 									<Sprite
 										type="NPC"
-										url={d.npc.spriteUrl}
+										url={d.npc.spriteName}
 										size="sm"
 										className="-mt-[36px]"
 									/>

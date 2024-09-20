@@ -1,6 +1,6 @@
 "use client";
 
-import { X } from "lucide-react";
+import { ChevronDown, FlaskConical, Trash2, X } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import type { z } from "zod";
 import UnitSelect from "~/components/UnitSelect";
@@ -24,7 +24,9 @@ export function CraftIngredientsField({ index }: { index: number }) {
 
 	return (
 		<div className="space-y-1">
-			<Label className="border-b block pb-2 mb-3">Ingredients</Label>
+			<Label className="flex pb-3 gap-x-2">
+				Ingredients <FlaskConical className="size-4" />
+			</Label>
 			<div className="space-y-5">
 				<div className="space-y-3">
 					{fields.map((field, i) => {
@@ -53,7 +55,7 @@ export function CraftIngredientsField({ index }: { index: number }) {
 										type="button"
 										className="mt-[22px]"
 									>
-										<X className="size-4" />
+										<Trash2 className="size-4" />
 									</Button>
 								</div>
 							</div>
@@ -63,6 +65,7 @@ export function CraftIngredientsField({ index }: { index: number }) {
 
 				<Button
 					type="button"
+					size="sm"
 					onClick={() =>
 						append({ quantity: 1 } as NonNullable<
 							FormValues["craftedBy"]

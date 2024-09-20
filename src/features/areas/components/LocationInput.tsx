@@ -37,13 +37,7 @@ const LocationInput = ({
 				iconSize: [24, 24],
 				iconAnchor: [24 / 2, 24 - 1],
 			})}
-		>
-			{/* <Popup>
-    <div className="p-4">
-      ({x},{y})
-    </div>
-  </Popup> */}
-		</Marker>
+		/>
 	);
 };
 

@@ -38,8 +38,8 @@ export const npcTypes = [
 export const npcSchema = z.object({
 	name: z.string(),
 	type: z.string().refine((s) => npcTypes.includes(s)),
-	spriteUrl: z.string(),
-	locations: locationsSchema.optional(),
-	items: saleItemsSchema.optional(),
-	crafts: craftItemsSchema.optional(),
+	spriteName: z.string(),
+	locations: locationsSchema,
+	items: saleItemsSchema,
+	crafts: craftItemsSchema,
 });

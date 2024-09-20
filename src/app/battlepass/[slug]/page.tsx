@@ -23,13 +23,6 @@ export async function generateMetadata({ params }: { params: Params }) {
 	};
 }
 
-// export async function generateStaticParams() {
-// 	const passes = await api.battlePass.getAllQuick();
-// 	return passes.map((pass) => ({
-// 		slug: pass.slug,
-// 	}));
-// }
-
 export default async function BattlePass({ params }: { params: Params }) {
 	const pass = await api.battlePass.getBySlug(params);
 

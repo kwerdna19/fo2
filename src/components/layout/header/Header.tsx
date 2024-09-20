@@ -1,6 +1,6 @@
 "use client";
 
-import type { User } from "@prisma/client";
+import type { Area, User } from "@prisma/client";
 import { MenuIcon, XIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -11,11 +11,10 @@ import {
 	CollapsibleContent,
 	CollapsibleTrigger,
 } from "~/components/ui/collapsible";
-import type { RouterOutputs } from "~/trpc/react";
 import { AuthMenu } from "../AuthMenu";
 import { NavMenu } from "./NavMenu";
 
-type Areas = RouterOutputs["area"]["getAllQuick"];
+type Areas = Pick<Area, "id" | "name" | "slug">[];
 
 export function Header({
 	areas,

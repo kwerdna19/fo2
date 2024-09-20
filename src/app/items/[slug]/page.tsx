@@ -1,6 +1,8 @@
 import { EquippableType } from "@prisma/client";
+import { Pencil } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { AdminButton } from "~/components/AdminButton";
 import { DurationDisplay } from "~/components/DurationDisplay";
 import { ItemSprite } from "~/components/ItemSprite";
 import { Sprite } from "~/components/Sprite";
@@ -48,17 +50,17 @@ export default async function Item({ params }: { params: Params }) {
 
 	const owned = Boolean(item.collections.at(0));
 
-	const header = (
+	const header = () => (
 		<>
 			<div className="flex gap-x-4">
 				<h1 className="text-3xl">{item.name}</h1>
-				{/* <AdminButton
+				<AdminButton
 					size="icon"
 					variant="outline"
 					href={`/items/${params.slug}/edit`}
 				>
 					<Pencil className="w-4 h-4" />
-				</AdminButton> */}
+				</AdminButton>
 			</div>
 			{item.desc ? <p className="italic">{item.desc}</p> : <p>-</p>}
 			{item.note ? <p className="py-2">{item.note}</p> : null}
@@ -67,7 +69,7 @@ export default async function Item({ params }: { params: Params }) {
 
 	return (
 		<div className="grid lg:grid-cols-4 gap-8">
-			<div className="lg:hidden space-y-2">{header}</div>
+			<div className="lg:hidden space-y-2">{header()}</div>
 
 			<div className="flex flex-col gap-6">
 				<div className="self-center">
@@ -165,7 +167,7 @@ export default async function Item({ params }: { params: Params }) {
 			</div>
 
 			<div className="lg:col-span-3 py-2">
-				<div className="hidden lg:block space-y-2">{header}</div>
+				<div className="hidden lg:block space-y-2">{header()}</div>
 				<div className="py-12 space-y-6">
 					{item.droppedBy.length > 0 && (
 						<div>
@@ -202,7 +204,7 @@ export default async function Item({ params }: { params: Params }) {
 											key={`${itemId}_${npcId}`}
 										>
 											<Link prefetch={false} href={`/npc/${npc.slug}`}>
-												<Sprite type="NPC" url={npc.spriteUrl} size="sm" />
+												<Sprite type="NPC" url={npc.spriteName} size="sm" />
 											</Link>
 											<Link prefetch={false} href={`/npc/${npc.slug}`}>
 												{npc.name}
@@ -230,7 +232,7 @@ export default async function Item({ params }: { params: Params }) {
 												key={`${itemId}_${npcId}`}
 											>
 												<Link prefetch={false} href={`/npc/${npc.slug}`}>
-													<Sprite type="NPC" url={npc.spriteUrl} size="sm" />
+													<Sprite type="NPC" url={npc.spriteName} size="sm" />
 												</Link>
 												<Link prefetch={false} href={`/npc/${npc.slug}`}>
 													{npc.name}

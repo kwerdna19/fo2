@@ -3,6 +3,7 @@
 import Link from "next/link";
 import * as React from "react";
 
+import type { Area } from "@prisma/client";
 import { usePathname } from "next/navigation";
 import {
 	NavigationMenu,
@@ -13,10 +14,9 @@ import {
 	NavigationMenuTrigger,
 	navigationMenuTriggerStyle,
 } from "~/components/ui/navigation-menu";
-import type { RouterOutputs } from "~/trpc/react";
 import { cn } from "~/utils/styles";
 
-type Areas = RouterOutputs["area"]["getAllQuick"];
+type Areas = Pick<Area, "id" | "name" | "slug">[];
 
 export function NavMenu({
 	className,
@@ -105,7 +105,7 @@ export function NavMenu({
 									href={`/areas/${area.slug}`}
 									title={area.name}
 								>
-									{area.note}
+									{area.name}
 								</ListItem>
 							))}
 						</ul>

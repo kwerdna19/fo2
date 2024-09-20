@@ -29,7 +29,7 @@ export function SoldByList({
 								>
 									<Sprite
 										type="NPC"
-										url={d.npc.spriteUrl}
+										url={d.npc.spriteName}
 										size="sm"
 										className="-mt-[36px]"
 									/>

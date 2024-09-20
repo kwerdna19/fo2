@@ -166,9 +166,12 @@ export default createTRPCRouter({
 				data: {
 					name,
 					slug: getSlugFromName(name),
-					locations: locations && {
+					locations: {
 						createMany: {
-							data: locations,
+							data: locations.map(({ coordinates, area }) => ({
+								...coordinates,
+								areaId: area.id,
+							})),
 						},
 					},
 					items: items && {
@@ -192,7 +195,7 @@ export default createTRPCRouter({
 			const { data, id } = input;
 			const { items, locations, crafts, ...fields } = data;
 
-			let updated = await db.npc.update({
+			const updated = await db.npc.update({
 				where: {
 					id,
 				},
@@ -200,120 +203,31 @@ export default createTRPCRouter({
 					...fields,
 					slug: getSlugFromName(fields.name),
 					updatedAt: new Date(),
-					items: items && {
-						upsert: items.map((d) => ({
-							create: d,
-							update: d,
-							where: {
-								npcId_itemId: {
-									itemId: d.itemId,
-									npcId: id,
-								},
-							},
-						})),
+					items: {
+						createMany: {
+							data: items,
+						},
+						deleteMany: {},
 					},
-					locations: locations && {
-						upsert: locations.map((l) => ({
-							create: l,
-							update: l,
-							where: {
-								areaId_x_y_npcId: {
-									...l,
-									npcId: id,
-								},
-							},
-						})),
+					locations: {
+						deleteMany: {},
+						createMany: {
+							data: locations.map(({ coordinates, area }) => ({
+								...coordinates,
+								areaId: area.id,
+							})),
+						},
 					},
-					crafts: crafts && {
-						upsert: crafts.map(({ ingredients, ...c }) => ({
-							create: c,
-							update: c,
-							where: {
-								npcId_itemId: {
-									npcId: id,
-									itemId: c.itemId,
-								},
-							},
-						})),
+					crafts: {
+						deleteMany: {},
+						createMany: {
+							data: crafts.map(({ ingredients, ...c }) => ({
+								...c,
+							})),
+						},
 					},
 				},
-				include: {
-					items: true,
-					locations: true,
-					crafts: true,
-				},
 			});
-
-			const itemsToRemove = updated.items.filter((updatedItem) => {
-				return !items?.find((inputItem) => {
-					return (
-						inputItem.itemId === updatedItem.itemId &&
-						inputItem.price === updatedItem.price &&
-						inputItem.unit === updatedItem.unit
-					);
-				});
-			});
-
-			const locationsToRemove = updated.locations.filter((updatedLocation) => {
-				return !locations?.find((inputLocation) => {
-					return (
-						updatedLocation.areaId === inputLocation.areaId &&
-						updatedLocation.x === inputLocation.x &&
-						updatedLocation.y === inputLocation.y
-					);
-				});
-			});
-
-			const craftsToRemove = updated.crafts.filter((updatedCraft) => {
-				return !crafts?.find((inputCraft) => {
-					return (
-						updatedCraft.durationMinutes === inputCraft.durationMinutes &&
-						updatedCraft.itemId === inputCraft.itemId &&
-						updatedCraft.price === inputCraft.price &&
-						updatedCraft.unit === inputCraft.unit
-					);
-				});
-			});
-
-			if (
-				itemsToRemove.length ||
-				locationsToRemove.length ||
-				craftsToRemove.length
-			) {
-				updated = await db.npc.update({
-					where: {
-						id,
-					},
-					data: {
-						items: {
-							delete: itemsToRemove.map((item) => ({
-								npcId_itemId: {
-									npcId: id,
-									itemId: item.itemId,
-								},
-							})),
-						},
-						locations: {
-							delete: locationsToRemove.map((l) => ({
-								id: l.id,
-							})),
-						},
-						crafts: {
-							delete: craftsToRemove.map((c) => ({
-								npcId_itemId: {
-									npcId: id,
-									itemId: c.itemId,
-								},
-							})),
-						},
-					},
-					include: {
-						items: true,
-						locations: true,
-						crafts: true,
-					},
-				});
-			}
 
 			return updated;
 		}),

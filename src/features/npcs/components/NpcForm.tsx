@@ -1,69 +1,92 @@
 "use client";
-import type { Area, Item } from "@prisma/client";
-import SpriteSelect from "~/components/SpriteSelect";
-import { Form } from "~/components/form-ui/Form";
-import FormInput from "~/components/form-ui/FormInput";
-import FormSelect from "~/components/form-ui/FormSelect";
-import LocationsMultiField from "~/features/areas/components/LocationsMultiField";
-import { useConform } from "~/hooks/useConform";
-import type { RouterOutputs } from "~/trpc/react";
-import type { ConformServerAction } from "~/types/actions";
+
+import type { z } from "zod";
+import { SpriteField } from "~/components/SpriteField";
+import { CheckboxField } from "~/components/form/CheckboxField";
+import { TextField } from "~/components/form/TextField";
+import { Form, SubmitButton, useZodForm } from "~/components/form/zod-form";
+import {
+	FormControl,
+	FormDescription,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "~/components/ui/form";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "~/components/ui/select";
+import { LocationFields } from "~/features/areas/components/LocationsField";
+import { api } from "~/trpc/react";
 import { npcSchema, npcTypes } from "../schemas";
 
 interface Props {
-	areas: Pick<Area, "id" | "name" | "spriteUrl" | "height" | "width">[];
-	items: Pick<Item, "id" | "name">[];
-	sprites: string[];
-	defaultValue?: RouterOutputs["npc"]["getBySlug"];
-	action: ConformServerAction;
+	id?: string;
+	defaultValue?: z.infer<typeof npcSchema>;
 }
 
-export function NpcForm({
-	areas,
-	items,
-	sprites,
-	action: serverAction,
-	defaultValue,
-}: Props) {
-	const [form, fields, action, lastResult] = useConform(serverAction, {
+export function NpcForm({ defaultValue, id }: Props) {
+	const updateMutation = api.npc.update.useMutation();
+	// const createMutation = api.item.create.useMutation();
+
+	const form = useZodForm({
 		schema: npcSchema,
-		defaultValue,
+		defaultValues: defaultValue,
 	});
 
-	if (lastResult?.status === "error") {
-		console.log("DEBUG", lastResult);
-	}
+	return (
+		<Form
+			handleSubmit={async (values) => {
+				if (id) {
+					return updateMutation.mutateAsync({ id, data: values });
+				}
+				// return createMutation.mutateAsync(values);
+			}}
+			persist
+			form={form}
+			className="grid grid-cols-1 sm:grid-cols-2 gap-6"
+		>
+			<TextField label="Name" control={form.control} name="name" />
+			<FormField
+				control={form.control}
+				name="type"
+				render={({ field }) => (
+					<FormItem>
+						<FormLabel>Type</FormLabel>
+						<FormControl>
+							<Select value={field.value} onValueChange={field.onChange}>
+								<SelectTrigger>
+									<SelectValue placeholder="Select type" />
+								</SelectTrigger>
+								<SelectContent>
+									{npcTypes.map((o) => (
+										<SelectItem key={o} value={o}>
+											{o}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
+						</FormControl>
+						<FormMessage />
+					</FormItem>
+				)}
+			/>
 
-	const buttonText = defaultValue ? "Update" : "Create";
+			<SpriteField control={form.control} type="NPC" name="spriteName" />
 
-	// return (
-	// 	<Form form={form} action={action} submit={buttonText}>
-	// 		<FormInput label="Name" field={fields.name} />
-	// 		<FormSelect field={fields.type} label="Type" options={npcTypes} />
-	// 		<SpriteSelect field={fields.spriteUrl} label="Sprite" options={sprites} />
+			<div className="col-span-2">
+				<LocationFields />
+			</div>
 
-	// 		<div className="col-span-2">
-	// 			<LocationsMultiField
-	// 				label="Locations"
-	// 				areas={areas}
-	// 				field={fields.locations}
-	// 				formId={form.id}
-	// 			/>
-	// 		</div>
+			{/* <CheckboxField control={form.control} name="boss" label="Boss" /> */}
 
-	// 		<div className="col-span-2">
-	// 			<NpcItemsMultiField label="Sells" items={items} field={fields.items} />
-	// 		</div>
-
-	// 		<div className="col-span-2">
-	// 			<NpcCraftsMultiField
-	// 				label="Crafts"
-	// 				items={items}
-	// 				field={fields.crafts}
-	// 			/>
-	// 		</div>
-	// 	</Form>
-	// );
-
-	return null;
+			<div className="flex justify-end col-span-full">
+				<SubmitButton>{defaultValue ? "Update" : "Create"}</SubmitButton>
+			</div>
+		</Form>
+	);
 }

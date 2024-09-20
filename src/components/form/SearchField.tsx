@@ -32,6 +32,7 @@ export function SearchField<
 	label,
 	desc,
 	query,
+	prefetch,
 }: {
 	type: string;
 	control: Control<FormShape>;
@@ -39,6 +40,7 @@ export function SearchField<
 	label?: string;
 	desc?: string;
 	query: Q;
+	prefetch?: boolean;
 }) {
 	return (
 		<FormField
@@ -52,6 +54,7 @@ export function SearchField<
 							type={type}
 							value={field.value}
 							onValueChange={field.onChange}
+							prefetch={prefetch}
 							// @ts-expect-error
 							query={query}
 						/>

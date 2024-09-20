@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import { MobForm } from "~/features/mobs/components/MobForm";
 
+import { convertLocations } from "~/features/areas/utils";
 import { MobDefinitionView } from "~/features/mobs/components/MobDefinition";
 import { mobSchema } from "~/features/mobs/schemas";
 import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles";
@@ -44,7 +45,10 @@ export default async function EditMob({ params }: { params: Params }) {
 			<MobDefinitionView mob={mob} />
 			<div>
 				<div className="text-lg pb-3">Extra Info</div>
-				<MobForm defaultValue={mobSchema.parse(mob)} id={mob.id} />
+				<MobForm
+					defaultValue={mobSchema.parse(convertLocations(mob))}
+					id={mob.id}
+				/>
 			</div>
 		</div>
 	);

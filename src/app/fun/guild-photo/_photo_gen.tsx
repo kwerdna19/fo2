@@ -40,7 +40,7 @@ function GuildPhotoGen({
 	const imageRef = useRef<HTMLImageElement>(null);
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 
-	const { data: areas } = api.area.getAllQuick.useQuery();
+	const { data: areas } = api.area.getAll.useQuery();
 
 	const [selectedArea, setSelectedArea] = useState(areas?.[0]);
 

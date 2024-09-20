@@ -53,14 +53,15 @@ model Mob {
 
 // type Enum TBD
 model Npc {
-  id        String     @id @default(cuid())
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @default(now()) @updatedAt
-  name      String
-  slug      String     @unique()
-  note      String?
-  type      String
-  spriteUrl String
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+  name       String
+  slug       String   @unique()
+  note       String?
+  type       String
+  spriteName String
+
   items     NpcSale[]
   crafts    NpcCraft[]
   locations Location[]

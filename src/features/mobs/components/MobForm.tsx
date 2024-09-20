@@ -2,6 +2,7 @@
 import type { z } from "zod";
 import { CheckboxField } from "~/components/form/CheckboxField";
 import { Form, SubmitButton, useZodForm } from "~/components/form/zod-form";
+import { LocationFields } from "~/features/areas/components/LocationsField";
 import { api } from "~/trpc/react";
 import { mobSchema } from "../schemas";
 
@@ -21,7 +22,7 @@ export function MobForm({ defaultValue, id }: Props) {
 
 	return (
 		<Form
-			handleSubmit={(values) => {
+			handleSubmit={async (values) => {
 				if (id) {
 					return updateMutation.mutateAsync({ id, data: values });
 				}
@@ -29,18 +30,13 @@ export function MobForm({ defaultValue, id }: Props) {
 			}}
 			persist
 			form={form}
-			className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-4 gap-6"
+			className="grid grid-cols-1 sm:grid-cols-2 gap-6"
 		>
-			<CheckboxField control={form.control} name="boss" label="Boss" />
+			<div className="col-span-2">
+				<LocationFields />
+			</div>
 
-			{/* <div className="col-span-2">
-	<LocationsMultiField
-		label="Locations"
-		areas={areas}
-		field={fields.locations}
-		formId={form.id}
-	/>
-</div> */}
+			<CheckboxField control={form.control} name="boss" label="Boss" />
 
 			<div className="flex justify-end col-span-full">
 				<SubmitButton>{defaultValue ? "Update" : "Create"}</SubmitButton>

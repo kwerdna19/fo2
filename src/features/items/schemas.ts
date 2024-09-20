@@ -51,7 +51,7 @@ export const itemSchema = z.object({
 	// availableStart: z.date().optional(),
 	// availableEnd: z.date().optional(),
 
-	soldBy: soldBySchema.optional(),
-	craftedBy: craftedBySchema.optional(),
-	battlePassTiers: itemBattlePassTiersSchema.optional(),
+	soldBy: soldBySchema,
+	craftedBy: craftedBySchema,
+	// battlePassTiers: itemBattlePassTiersSchema,
 });
