@@ -20,6 +20,16 @@ export const soldBySchema = z
 	})
 	.array();
 
+export const ingredientsSchema = z
+	.object({
+		item: z.object({
+			id: z.string(),
+			name: z.string(),
+		}),
+		quantity: z.number().int().default(1),
+	})
+	.array();
+
 export const craftedBySchema = z
 	.object({
 		npc: z.object({
@@ -29,15 +39,7 @@ export const craftedBySchema = z
 		durationMinutes: z.number(),
 		unit: z.nativeEnum(Unit),
 		price: z.number().int(),
-		ingredients: z
-			.object({
-				item: z.object({
-					id: z.string(),
-					name: z.string(),
-				}),
-				quantity: z.number().int().default(1),
-			})
-			.array(),
+		ingredients: ingredientsSchema,
 	})
 	.array();
 

@@ -1,13 +1,11 @@
 "use client";
 
-import type { z } from "zod";
+import { isDirty, type z } from "zod";
 import { SpriteField } from "~/components/SpriteField";
-import { CheckboxField } from "~/components/form/CheckboxField";
 import { TextField } from "~/components/form/TextField";
 import { Form, SubmitButton, useZodForm } from "~/components/form/zod-form";
 import {
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
@@ -23,6 +21,9 @@ import {
 import { LocationFields } from "~/features/areas/components/LocationsField";
 import { api } from "~/trpc/react";
 import { npcSchema, npcTypes } from "../schemas";
+import { CraftsField } from "./CraftsField";
+import { SaleItemsField } from "./SaleItemsField";
+import { TeleportField } from "./TeleportField";
 
 interface Props {
 	id?: string;
@@ -38,6 +39,15 @@ export function NpcForm({ defaultValue, id }: Props) {
 		defaultValues: defaultValue,
 	});
 
+	// TODO - handle removal of invalid fields if type changes
+	const type = form.watch("type");
+
+	console.log({
+		isDirty: form.formState.isDirty,
+		default: form.formState.defaultValues,
+		values: form.getValues(),
+	});
+
 	return (
 		<Form
 			handleSubmit={async (values) => {
@@ -48,9 +58,11 @@ export function NpcForm({ defaultValue, id }: Props) {
 			}}
 			persist
 			form={form}
-			className="grid grid-cols-1 sm:grid-cols-2 gap-6"
+			className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6"
 		>
 			<TextField label="Name" control={form.control} name="name" />
+			<TextField label="Note" control={form.control} name="note" />
+
 			<FormField
 				control={form.control}
 				name="type"
@@ -80,6 +92,12 @@ export function NpcForm({ defaultValue, id }: Props) {
 
 			<div className="col-span-2">
 				<LocationFields />
+			</div>
+
+			<div className="col-span-2">
+				{type === "Craft" ? <CraftsField /> : null}
+				{type === "Shop" ? <SaleItemsField /> : null}
+				{type === "Teleport" ? <TeleportField /> : null}
 			</div>
 
 			{/* <CheckboxField control={form.control} name="boss" label="Boss" /> */}

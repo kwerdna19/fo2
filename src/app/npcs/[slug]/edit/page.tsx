@@ -37,6 +37,7 @@ export default async function EditNpc({ params }: { params: Params }) {
 	if (!npc) {
 		return notFound();
 	}
+
 	return (
 		<div className="w-full max-w-screen-xl">
 			<Button size="sm" variant="outline" className="mb-5" asChild>

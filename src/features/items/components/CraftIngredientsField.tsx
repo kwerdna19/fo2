@@ -1,24 +1,24 @@
 "use client";
 
-import { ChevronDown, FlaskConical, Trash2, X } from "lucide-react";
-import { useFieldArray, useFormContext } from "react-hook-form";
-import type { z } from "zod";
-import UnitSelect from "~/components/UnitSelect";
+import { FlaskConical, Trash2 } from "lucide-react";
+import { type Control, useFieldArray } from "react-hook-form";
 import { SearchField } from "~/components/form/SearchField";
 import { TextField } from "~/components/form/TextField";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
 import { api } from "~/trpc/react";
-import type { itemSchema } from "../schemas";
 
-type FormValues = z.infer<typeof itemSchema>;
+// keeping it generic as TS types for this are very hard
+type Props = {
+	// biome-ignore lint/suspicious/noExplicitAny: hard
+	control: Control<any>;
+	name: string;
+};
 
-export function CraftIngredientsField({ index }: { index: number }) {
-	const { control } = useFormContext<FormValues>();
-
+export function CraftIngredientsField({ control, name }: Props) {
 	const { fields, append, remove } = useFieldArray({
 		control,
-		name: `craftedBy.${index}.ingredients`,
+		name,
 		keyName: "key",
 	});
 
@@ -38,14 +38,14 @@ export function CraftIngredientsField({ index }: { index: number }) {
 											type="Item"
 											label="Item"
 											control={control}
-											name={`craftedBy.${index}.ingredients.${i}.item`}
+											name={`${name}.${i}.item`}
 											query={api.item.getAllQuick}
 										/>
 									</div>
 									<TextField
 										label="Quantity"
 										control={control}
-										name={`craftedBy.${index}.ingredients.${i}.quantity`}
+										name={`${name}.${i}.quantity`}
 										type="number"
 									/>
 									<Button
@@ -63,15 +63,7 @@ export function CraftIngredientsField({ index }: { index: number }) {
 					})}
 				</div>
 
-				<Button
-					type="button"
-					size="sm"
-					onClick={() =>
-						append({ quantity: 1 } as NonNullable<
-							FormValues["craftedBy"]
-						>[number]["ingredients"][number])
-					}
-				>
+				<Button type="button" size="sm" onClick={() => append({ quantity: 1 })}>
 					Add Ingredient
 				</Button>
 			</div>

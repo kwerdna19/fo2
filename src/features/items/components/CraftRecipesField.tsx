@@ -14,7 +14,7 @@ import { CraftIngredientsField } from "./CraftIngredientsField";
 
 type FormValues = z.infer<typeof itemSchema>;
 
-export function CraftedByField() {
+export function CraftRecipesField() {
 	const { control } = useFormContext<FormValues>();
 
 	const { fields, append, remove } = useFieldArray({
@@ -66,7 +66,10 @@ export function CraftedByField() {
 									/>
 								</div>
 
-								<CraftIngredientsField index={index} />
+								<CraftIngredientsField
+									control={control}
+									name={`craftedBy.${index}.ingredients`}
+								/>
 
 								<Button
 									size="icon"

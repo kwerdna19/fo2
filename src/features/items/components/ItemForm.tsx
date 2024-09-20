@@ -5,7 +5,7 @@ import { TextField } from "~/components/form/TextField";
 import { Form, SubmitButton, useZodForm } from "~/components/form/zod-form";
 import { api } from "~/trpc/react";
 import { itemSchema } from "../schemas";
-import { CraftedByField } from "./CraftedByField";
+import { CraftRecipesField } from "./CraftRecipesField";
 import { SoldByField } from "./SoldByField";
 
 interface Props {
@@ -56,7 +56,7 @@ export function ItemForm({ id, defaultValue }: Props) {
 			/>
 
 			<div className="col-span-2">
-				<CraftedByField />
+				<CraftRecipesField />
 			</div>
 
 			<div className="col-span-2">

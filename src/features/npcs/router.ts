@@ -151,6 +151,17 @@ export default createTRPCRouter({
 					crafts: {
 						include: {
 							item: true,
+							ingredients: {
+								include: {
+									item: true,
+								},
+							},
+						},
+					},
+					area: {
+						select: {
+							id: true,
+							name: true,
 						},
 					},
 				},
@@ -160,7 +171,7 @@ export default createTRPCRouter({
 	create: roleProtectedProcedure(Role.MODERATOR)
 		.input(npcSchema)
 		.mutation(({ ctx: { db }, input }) => {
-			const { name, items, locations, crafts, ...rest } = input;
+			const { name, items, locations, crafts, area, ...rest } = input;
 
 			return db.npc.create({
 				data: {
@@ -174,16 +185,28 @@ export default createTRPCRouter({
 							})),
 						},
 					},
-					items: items && {
+					items: {
 						createMany: {
-							data: items,
+							data: items.map(({ item, price, unit }) => ({
+								itemId: item.id,
+								price,
+								unit,
+							})),
 						},
 					},
-					crafts: crafts && {
-						createMany: {
-							data: crafts,
-						},
+					crafts: {
+						create: crafts.map(({ item, ingredients, ...s }) => ({
+							itemId: item.id,
+							...s,
+							ingredients: {
+								create: ingredients.map((ingredient) => ({
+									itemId: ingredient.item.id,
+									quantity: ingredient.quantity,
+								})),
+							},
+						})),
 					},
+					areaId: area?.id,
 					...rest,
 				},
 			});
@@ -193,7 +216,7 @@ export default createTRPCRouter({
 		.input(z.object({ id: z.string(), data: npcSchema }))
 		.mutation(async ({ ctx: { db }, input }) => {
 			const { data, id } = input;
-			const { items, locations, crafts, ...fields } = data;
+			const { items, locations, crafts, area, ...fields } = data;
 
 			const updated = await db.npc.update({
 				where: {
@@ -204,10 +227,14 @@ export default createTRPCRouter({
 					slug: getSlugFromName(fields.name),
 					updatedAt: new Date(),
 					items: {
-						createMany: {
-							data: items,
-						},
 						deleteMany: {},
+						createMany: {
+							data: items.map(({ item, price, unit }) => ({
+								itemId: item.id,
+								price,
+								unit,
+							})),
+						},
 					},
 					locations: {
 						deleteMany: {},
@@ -219,12 +246,47 @@ export default createTRPCRouter({
 						},
 					},
 					crafts: {
-						deleteMany: {},
-						createMany: {
-							data: crafts.map(({ ingredients, ...c }) => ({
-								...c,
-							})),
-						},
+						upsert: crafts.map(({ item, ingredients, ...d }) => ({
+							create: {
+								...d,
+								itemId: item.id,
+								ingredients: {
+									connectOrCreate: ingredients.map((ingredient) => ({
+										create: {
+											itemId: ingredient.item.id,
+											quantity: ingredient.quantity,
+										},
+										where: {
+											itemId_quantity: {
+												itemId: ingredient.item.id,
+												quantity: ingredient.quantity,
+											},
+										},
+									})),
+								},
+							},
+							update: {
+								...d,
+								ingredients: {
+									deleteMany: {},
+									connectOrCreate: ingredients.map((ingredient) => ({
+										create: {
+											itemId: ingredient.item.id,
+											quantity: ingredient.quantity,
+										},
+										where: {
+											itemId_quantity: {
+												itemId: ingredient.item.id,
+												quantity: ingredient.quantity,
+											},
+										},
+									})),
+								},
+							},
+							where: {
+								npcId_itemId: { npcId: id, itemId: item.id },
+							},
+						})),
 					},
 				},
 			});
