@@ -171,7 +171,14 @@ export default createTRPCRouter({
 	create: roleProtectedProcedure(Role.MODERATOR)
 		.input(npcSchema)
 		.mutation(({ ctx: { db }, input }) => {
-			const { name, items, locations, crafts, area, ...rest } = input;
+			const {
+				name,
+				items,
+				locations,
+				crafts,
+				area: teleportArea,
+				...rest
+			} = input;
 
 			return db.npc.create({
 				data: {
@@ -206,7 +213,7 @@ export default createTRPCRouter({
 							},
 						})),
 					},
-					areaId: area?.id,
+					areaId: teleportArea?.id,
 					...rest,
 				},
 			});
