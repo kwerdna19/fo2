@@ -6,7 +6,7 @@ import {
 } from "~/utils/fo-sprite";
 import { cn } from "~/utils/styles";
 
-export interface ItemSpriteProps {
+export interface IconSpriteProps {
 	type: Unit;
 	className?: string;
 	size?: SpriteSize;
@@ -16,7 +16,7 @@ export const UnitSprite = ({
 	type,
 	className,
 	size = "xs",
-}: ItemSpriteProps) => {
+}: IconSpriteProps) => {
 	return (
 		<img
 			style={getSpriteSize("UNIT", size)}

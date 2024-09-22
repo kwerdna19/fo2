@@ -3,7 +3,7 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import Link from "next/link";
 import { useQueryStates } from "nuqs";
-import { ItemSprite } from "~/components/ItemSprite";
+import { IconSprite } from "~/components/IconSprite";
 import { PriceDisplay } from "~/components/PriceDisplay";
 import SortButton from "~/components/SortButton";
 
@@ -68,7 +68,7 @@ export const itemTableColumns = [
 				prefetch={false}
 				href={`/items/${row.original.slug}`}
 			>
-				<ItemSprite url={row.original.spriteName} size="sm" bg />
+				<IconSprite url={row.original.spriteName} size="sm" bg />
 			</Link>
 		),
 	}),

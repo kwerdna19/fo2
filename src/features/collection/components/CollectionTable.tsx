@@ -2,7 +2,7 @@
 
 import { createColumnHelper } from "@tanstack/react-table";
 import Link from "next/link";
-import { ItemSprite } from "~/components/ItemSprite";
+import { IconSprite } from "~/components/IconSprite";
 import SortButton from "~/components/SortButton";
 
 import type { ColumnDef } from "@tanstack/react-table";
@@ -30,7 +30,7 @@ export const collectionItemTableColumns = [
 				prefetch={false}
 				href={`/items/${row.original.slug}`}
 			>
-				<ItemSprite url={row.original.spriteName} size="sm" bg />
+				<IconSprite url={row.original.spriteName} size="sm" bg />
 			</Link>
 		),
 	}),

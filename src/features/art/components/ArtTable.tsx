@@ -21,7 +21,7 @@ const artColumns = [
 	// 			prefetch={false}
 	// 			href={`/skills/${row.original.slug}`}
 	// 		>
-	// 			<ItemSprite
+	// 			<IconSprite
 	// 				url={row.original.spriteUrl}
 	// 				size="sm"
 	// 				bg

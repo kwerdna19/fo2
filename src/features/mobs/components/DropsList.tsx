@@ -9,7 +9,7 @@ import {
 	TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { cn } from "~/utils/styles";
-import { ItemSprite } from "../../../components/ItemSprite";
+import { IconSprite } from "../../../components/IconSprite";
 
 type Drop = Loot & {
 	item: Pick<Item, "name" | "spriteName" | "slug" | "sellPrice">;
@@ -55,7 +55,7 @@ export function DropsList({
 						<Tooltip delayDuration={0}>
 							<TooltipTrigger className="block">
 								<Link prefetch={false} href={`/items/${d.item.slug}`}>
-									<ItemSprite bg url={d.item.spriteName} size={size} />
+									<IconSprite bg url={d.item.spriteName} size={size} />
 								</Link>
 							</TooltipTrigger>
 							<TooltipContent className="min-w-32 space-y-1" side="bottom">

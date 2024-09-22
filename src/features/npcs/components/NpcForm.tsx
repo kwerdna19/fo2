@@ -42,12 +42,6 @@ export function NpcForm({ defaultValue, id }: Props) {
 	// TODO - handle removal of invalid fields if type changes
 	const type = form.watch("type");
 
-	console.log({
-		isDirty: form.formState.isDirty,
-		default: form.formState.defaultValues,
-		values: form.getValues(),
-	});
-
 	return (
 		<Form
 			handleSubmit={async (values) => {

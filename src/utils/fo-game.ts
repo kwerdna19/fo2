@@ -339,7 +339,7 @@ const defaultSpriteAttributes = [
 	"hair-close-black",
 ];
 
-const getItemSpriteLayer = (item: Pick<Item, "type" | "subType">) => {
+const getIconSpriteLayer = (item: Pick<Item, "type" | "subType">) => {
 	// all weapons and outfit weapons
 	if (item.type === 2 || (item.type === 6 && item.subType === 16)) {
 		return "!0";
@@ -369,7 +369,7 @@ export const getPlayerSpriteUrlPreview = (
 ) => {
 	const itemSlugs =
 		items?.map((item) => {
-			return `${item.spriteName}${getItemSpriteLayer(item)}`;
+			return `${item.spriteName}${getIconSpriteLayer(item)}`;
 		}) ?? [];
 
 	const attrs = defaultSpriteAttributes.concat(itemSlugs);
@@ -380,13 +380,13 @@ export const getPlayerSpriteUrlPreview = (
 
 type PartialItem = Pick<Item, "spriteName" | "type" | "subType">;
 
-export const getItemSpriteQuery = (
+export const getIconSpriteQuery = (
 	itemOrItems: PartialItem | PartialItem[],
 ) => {
 	const items = Array.isArray(itemOrItems) ? itemOrItems : [itemOrItems];
 
 	const itemSlugs = items.map((item) => {
-		return `${item.spriteName}${getItemSpriteLayer(item)}`;
+		return `${item.spriteName}${getIconSpriteLayer(item)}`;
 	});
 
 	const attrs = defaultSpriteAttributes.concat(itemSlugs);

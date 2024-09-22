@@ -15,6 +15,7 @@ import {
 	FormMessage,
 } from "~/components/ui/form";
 import { type SpriteType, getSpriteSrc } from "~/utils/fo-sprite";
+import { IconSprite } from "./IconSprite";
 import { Sprite } from "./Sprite";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -73,6 +74,9 @@ function SpriteInput({
 			);
 		}
 
+		if (type === "SKILL") {
+			return <IconSprite url={getSpriteSrc(type, n)} size="md" />;
+		}
 		// Other types TBD?
 	};
 

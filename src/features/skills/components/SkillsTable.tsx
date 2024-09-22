@@ -3,7 +3,7 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import type { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
-import { ItemSprite } from "~/components/ItemSprite";
+import { IconSprite } from "~/components/IconSprite";
 import SortButton from "~/components/SortButton";
 import { DataTable } from "~/components/data-table/data-table";
 import { useDataTableQueryOptions } from "~/components/data-table/use-data-table-query";
@@ -25,7 +25,7 @@ export const skillColumns = [
 				prefetch={false}
 				href={`/skills/${row.original.slug}`}
 			>
-				<ItemSprite url={row.original.spriteUrl} size="sm" bg />
+				<IconSprite type="SKILL" url={row.original.spriteName} size="sm" bg />
 			</Link>
 		),
 	}),

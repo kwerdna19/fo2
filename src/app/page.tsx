@@ -1,4 +1,4 @@
-import { ItemSprite } from "~/components/ItemSprite";
+import { IconSprite } from "~/components/IconSprite";
 import NavCard from "~/components/NavCard";
 import { Sprite } from "~/components/Sprite";
 
@@ -21,7 +21,7 @@ export default function App() {
 				href="/items"
 				label="Items"
 				image={
-					<ItemSprite
+					<IconSprite
 						size="sm"
 						url="https://art.fantasyonline2.com/textures/icons/items/backpack-large-icon.png"
 					/>
@@ -43,10 +43,10 @@ export default function App() {
 				href="/skills"
 				label="Skills"
 				image={
-					<ItemSprite
+					<IconSprite
 						size="sm"
 						url="/sprites/misc-ui/skillbook-icon.png"
-						menuSprite
+						type="MENU_BUTTON"
 					/>
 				}
 			/>
@@ -54,10 +54,10 @@ export default function App() {
 				href="/guilds"
 				label="Guilds"
 				image={
-					<ItemSprite
+					<IconSprite
 						size="sm"
 						url="/sprites/misc-ui/guildmenu-icon.png"
-						menuSprite
+						type="MENU_BUTTON"
 					/>
 				}
 			/>
@@ -65,10 +65,10 @@ export default function App() {
 				href="/battlepass"
 				label="Battlepass"
 				image={
-					<ItemSprite
+					<IconSprite
 						size="sm"
 						url="/sprites/misc-ui/battlepasswindow-icon.png"
-						menuSprite
+						type="MENU_BUTTON"
 					/>
 				}
 			/>

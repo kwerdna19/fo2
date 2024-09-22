@@ -3,7 +3,7 @@ import { Pencil } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AdminButton } from "~/components/AdminButton";
-import { ItemSprite } from "~/components/ItemSprite";
+import { IconSprite } from "~/components/IconSprite";
 import { UnitSprite } from "~/components/UnitSprite";
 import { Badge } from "~/components/ui/badge";
 import { Card } from "~/components/ui/card";
@@ -64,7 +64,7 @@ export default async function BattlePass({ params }: { params: Params }) {
 					const item =
 						tier.item !== null ? (
 							<div key={key} className="flex gap-x-4 items-center text-lg">
-								<ItemSprite size="sm" url={tier.item.spriteName} />
+								<IconSprite size="sm" url={tier.item.spriteName} />
 								<Link href={`/items/${tier.item.slug}`} prefetch={false}>
 									{tier.item.name}
 								</Link>

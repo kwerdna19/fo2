@@ -9,7 +9,7 @@ import {
 	SelectValue,
 } from "~/components/ui/select";
 import { cn } from "~/utils/styles";
-import { ItemSprite } from "./ItemSprite";
+import { IconSprite } from "./IconSprite";
 import { FieldLabel } from "./ui/label";
 
 export default function SpriteSelect({
@@ -44,7 +44,7 @@ export default function SpriteSelect({
 							<div className="flex items-center gap-x-12">
 								<div className={cn(!icon && "-mt-12 mb-1")}>
 									{icon ? (
-										<ItemSprite size="md" url={o} />
+										<IconSprite size="md" url={o} />
 									) : (
 										<Sprite type="MOB" size="md" url={o} />
 									)}

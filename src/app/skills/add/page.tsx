@@ -1,16 +1,9 @@
-import { parseWithZod } from "@conform-to/zod";
 import { Role } from "@prisma/client";
 import { ChevronLeft } from "lucide-react";
-import { revalidatePath } from "next/cache";
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import { SkillForm } from "~/features/skills/components/SkillForm";
-import { skillSchema } from "~/features/skills/schemas";
 import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles";
-import { api } from "~/trpc/server";
-import type { ConformResult } from "~/types/actions";
-import { getListOfImages } from "~/utils/server";
 
 export function generateMetadata() {
 	return {
@@ -21,44 +14,6 @@ export function generateMetadata() {
 export default async function AddSkill() {
 	await userSatisfiesRoleOrRedirect(Role.MODERATOR, "/skills");
 
-	const areas = await api.area.getAllQuick();
-	const items = await api.item.getAllQuick();
-	const sprites = getListOfImages("skill");
-
-	if (!sprites) {
-		notFound();
-	}
-
-	async function action(result: ConformResult, formData: FormData) {
-		"use server";
-		const submission = parseWithZod(formData, {
-			schema: skillSchema,
-		});
-
-		if (submission.status !== "success") {
-			return submission.reply();
-		}
-
-		let redirectUrl: undefined | string;
-
-		try {
-			const created = await api.skill.create(submission.value);
-			redirectUrl = `/skills/${created.slug}`;
-		} catch (e) {
-			console.log(e);
-			return submission.reply({
-				formErrors: ["Server error"],
-			});
-		}
-
-		revalidatePath("/skills", "page");
-		revalidatePath("/items", "page");
-		if (redirectUrl) {
-			redirect(redirectUrl);
-		}
-		notFound();
-	}
-
 	return (
 		<div className="w-full max-w-screen-xl">
 			<Button size="sm" variant="outline" className="mb-5" asChild>
@@ -67,12 +22,7 @@ export default async function AddSkill() {
 					Back to skills
 				</Link>
 			</Button>
-			<SkillForm
-				action={action}
-				sprites={sprites}
-				items={items}
-				areas={areas}
-			/>
+			<SkillForm />
 		</div>
 	);
 }

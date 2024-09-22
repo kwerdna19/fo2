@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const npcs = await prisma.npc.findMany({
+const skills = await prisma.skill.findMany({
 	select: {
 		id: true,
 		name: true,
@@ -11,24 +11,22 @@ const npcs = await prisma.npc.findMany({
 	where: {},
 });
 
-console.log(npcs);
+console.log(skills);
 
-// for (const npc of npcs) {
-// 	console.log("updating", npc.name);
+for (const skill of skills) {
+	console.log("updating", skill.name);
 
-// 	if (!npc.spriteUrl.includes("/sprites/npc/")) {
-// 		console.log("skipping", npc);
-// 		continue;
-// 	}
+	// if (!skill.spriteUrl.includes("/sprites/skill/")) {
+	// 	console.log("skipping", skill);
+	// 	continue;
+	// }
 
-// 	await prisma.npc.update({
-// 		where: {
-// 			id: npc.id,
-// 		},
-// 		data: {
-// 			spriteName: npc.spriteUrl
-// 				.replace("/sprites/npc/", "")
-// 				.replace(".png", ""),
-// 		},
-// 	});
-// }
+	await prisma.skill.update({
+		where: {
+			id: skill.id,
+		},
+		data: {
+			spriteName: skill.spriteName.replace("-icon", ""),
+		},
+	});
+}

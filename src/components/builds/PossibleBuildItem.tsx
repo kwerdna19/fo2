@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Slot, slotBackgroundSpriteMap } from "~/utils/fo-game";
 import { cn } from "~/utils/styles";
 import { ItemStats } from "../../features/items/components/ItemStats";
-import { ItemSprite } from "../ItemSprite";
+import { IconSprite } from "../IconSprite";
 import { Button } from "../ui/button";
 import {
 	Tooltip,
@@ -29,7 +29,7 @@ export function PossibleBuildItem({
 }) {
 	const trigger = item ? (
 		<Link prefetch={false} href={`/items/${item.slug}`}>
-			<ItemSprite
+			<IconSprite
 				className="border-2 shadow-sm border-slate-200 bg-slate-50 rounded-sm"
 				url={item.spriteName}
 				size="md"
@@ -37,7 +37,7 @@ export function PossibleBuildItem({
 		</Link>
 	) : (
 		<div className="border-2 shadow-sm border-slate-300 bg-slate-200 flex items-center justify-center rounded-sm w-[70px] h-[70px]">
-			<ItemSprite url={slotBackgroundSpriteMap[slot]} size="sm" />
+			<IconSprite url={slotBackgroundSpriteMap[slot]} size="sm" />
 		</div>
 	);
 

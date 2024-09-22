@@ -36,46 +36,6 @@ export default async function EditSkill({ params }: { params: Params }) {
 		return notFound();
 	}
 
-	const items = await api.item.getAllQuick();
-	const areas = await api.area.getAllQuick();
-	const sprites = getListOfImages("skill");
-
-	if (!sprites) {
-		notFound();
-	}
-
-	async function action(result: ConformResult, formData: FormData) {
-		"use server";
-		const submission = parseWithZod(formData, {
-			schema: skillSchema,
-		});
-
-		if (submission.status !== "success" || !skill) {
-			return submission.reply();
-		}
-
-		try {
-			const converted = recursivelyNullifyUndefinedValues(submission.value);
-			const updated = await api.skill.update({
-				id: skill.id,
-				data: converted,
-			});
-
-			revalidatePath("/skills", "page");
-			revalidatePath("/items", "page");
-
-			if (updated.slug !== skill.slug) {
-				redirect(`/skills/${updated.slug}/edit`);
-			}
-
-			return submission.reply();
-		} catch (e) {
-			return submission.reply({
-				formErrors: ["Server error"],
-			});
-		}
-	}
-
 	return (
 		<div className="w-full max-w-screen-xl">
 			<Button size="sm" variant="outline" className="mb-5" asChild>
@@ -84,13 +44,7 @@ export default async function EditSkill({ params }: { params: Params }) {
 					Back to page
 				</Link>
 			</Button>
-			<SkillForm
-				action={action}
-				sprites={sprites}
-				defaultValue={skill}
-				items={items}
-				areas={areas}
-			/>
+			<SkillForm id={skill.id} defaultValue={skillSchema.parse(skill)} />
 		</div>
 	);
 }

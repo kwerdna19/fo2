@@ -1,176 +1,209 @@
 "use client";
-import { getInputProps } from "@conform-to/react";
-import { type Area, type Item, SkillType } from "@prisma/client";
-import SpriteSelect from "~/components/SpriteSelect";
-import { Form } from "~/components/form-ui/Form";
-import FormInput from "~/components/form-ui/FormInput";
-import FormSelect from "~/components/form-ui/FormSelect";
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
-import { AreaSelect } from "~/features/areas/components/AreaSelect";
-import ItemsMultiField from "~/features/items/components/ItemsMultiField";
-import { useConform } from "~/hooks/useConform";
-import type { RouterOutputs } from "~/trpc/react";
-import type { ConformServerAction } from "~/types/actions";
+
+import { SkillType } from "@prisma/client";
+import { isDirty, type z } from "zod";
+import { SpriteField } from "~/components/SpriteField";
+import { TextField } from "~/components/form/TextField";
+import { Form, SubmitButton, useZodForm } from "~/components/form/zod-form";
+import {
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "~/components/ui/form";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "~/components/ui/select";
+import { LocationFields } from "~/features/areas/components/LocationsField";
+import { TeleportField } from "~/features/npcs/components/TeleportField";
+import { api } from "~/trpc/react";
 import { skillSchema } from "../schemas";
+import { SkillItemsField } from "./SkillItemsField";
 
 interface Props {
-	items: Pick<Item, "id" | "name">[];
-	areas: Pick<Area, "id" | "name">[];
-	sprites: string[];
-	defaultValue?: RouterOutputs["skill"]["getBySlug"];
-	action: ConformServerAction;
+	id?: string;
+	defaultValue?: z.infer<typeof skillSchema>;
 }
 
-export function SkillForm({
-	sprites,
-	items,
-	areas,
-	action: serverAction,
-	defaultValue,
-}: Props) {
-	const [form, fields, action, lastResult] = useConform(serverAction, {
+export function SkillForm({ defaultValue, id }: Props) {
+	const updateMutation = api.skill.update.useMutation();
+	// const createMutation = api.item.create.useMutation();
+
+	const form = useZodForm({
 		schema: skillSchema,
-		defaultValue,
+		defaultValues: defaultValue,
 	});
 
-	if (lastResult?.status === "error") {
-		console.log("DEBUG", lastResult);
-	}
-
-	const buttonText = defaultValue ? "Update" : "Create";
+	const type = form.watch("type");
 
 	return (
-		<Form form={form} action={action} submit={buttonText}>
-			<FormInput label="Name" field={fields.name} />
-
-			<SpriteSelect
-				field={fields.spriteUrl}
-				label="Sprite"
-				options={sprites}
-				icon
-			/>
-
-			<FormInput label="Rank" field={fields.rank} type="number" />
-
-			<FormSelect
-				label="Type"
-				options={Object.values(SkillType)}
-				field={fields.type}
-			/>
-
-			<FormInput
-				label="Desc"
-				field={fields.desc}
-				placeholder="In game description"
-			/>
-			<FormInput label="Note" field={fields.note} />
-
-			<FormInput label="Level Req" field={fields.levelReq} type="number" />
-
-			<FormInput
-				label="Cast Time (sec)"
-				field={fields.castTimeSec}
+		<Form
+			handleSubmit={async (values) => {
+				if (id) {
+					return updateMutation.mutateAsync({ id, data: values });
+				}
+				// return createMutation.mutateAsync(values);
+			}}
+			persist
+			form={form}
+			className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6"
+		>
+			<TextField label="Name" control={form.control} name="name" />
+			<TextField
+				label="Rank"
+				control={form.control}
+				name="rank"
 				type="number"
 			/>
-			<FormInput
-				label="Cooldown (sec)"
-				field={fields.castCooldownTimeSec}
-				type="number"
+			<TextField label="Note" control={form.control} name="note" />
+			<FormField
+				control={form.control}
+				name="type"
+				render={({ field }) => (
+					<FormItem>
+						<FormLabel>Type</FormLabel>
+						<FormControl>
+							<Select
+								value={field.value ?? undefined}
+								onValueChange={field.onChange}
+							>
+								<SelectTrigger>
+									<SelectValue placeholder="Select type" />
+								</SelectTrigger>
+								<SelectContent>
+									{Object.values(SkillType).map((o) => (
+										<SelectItem key={o} value={o}>
+											{o}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
+						</FormControl>
+						<FormMessage />
+					</FormItem>
+				)}
 			/>
-			<FormInput
-				label="Duration (mins)"
-				field={fields.durationMins}
-				type="number"
-			/>
-			<FormInput label="Energy Cost" field={fields.energyCost} type="number" />
 
-			<FormInput
-				label="Tick Duration (sec)"
-				field={fields.tickDurationSec}
+			<SpriteField control={form.control} type="SKILL" name="spriteName" />
+
+			<TextField
+				label="Level Req"
+				control={form.control}
+				name="levelReq"
 				type="number"
 			/>
 
-			<div className="space-y-1">
-				<Label>Required Stats</Label>
-				<div className="grid grid-cols-4 gap-3">
-					<Input
-						placeholder="Req Str"
-						{...getInputProps(fields.reqStr, { type: "number" })}
-					/>
-					<Input
-						placeholder="Req Sta"
-						{...getInputProps(fields.reqSta, { type: "number" })}
-					/>
-					<Input
-						placeholder="Req Agi"
-						{...getInputProps(fields.reqAgi, { type: "number" })}
-					/>
-					<Input
-						placeholder="Req Int"
-						{...getInputProps(fields.reqInt, { type: "number" })}
-					/>
+			<div className="col-span-2 grid grid-cols-2 gap-3">
+				<TextField
+					label="Duration (min)"
+					control={form.control}
+					name="durationMins"
+					type="number"
+				/>
+				<TextField
+					label="Energy Cost"
+					control={form.control}
+					name="energyCost"
+					type="number"
+				/>
+			</div>
+
+			<div className="col-span-2 grid grid-cols-2 gap-3">
+				{(["reqStr", "reqSta", "reqAgi", "reqInt"] as const).map((stat) => {
+					return (
+						<TextField
+							key={stat}
+							label={stat.replace("req", "Req ")}
+							control={form.control}
+							name={stat}
+							type="number"
+						/>
+					);
+				})}
+			</div>
+
+			<div className="col-span-2 grid grid-cols-2 gap-3">
+				{(["str", "sta", "agi", "int"] as const).map((stat) => {
+					return (
+						<TextField
+							key={stat}
+							label={stat.toUpperCase()}
+							control={form.control}
+							name={stat}
+							type="number"
+						/>
+					);
+				})}
+			</div>
+
+			<div className="col-span-2 grid grid-cols-2 gap-3">
+				{(
+					["range", "atkPower", "armor", "crit", "dodge", "atkSpeed"] as const
+				).map((stat) => {
+					return (
+						<TextField
+							key={stat}
+							label={stat.replace("Power", " power").replace("Speed", " speed")}
+							control={form.control}
+							name={stat}
+							type="number"
+						/>
+					);
+				})}
+			</div>
+
+			<div className="col-span-2 grid grid-cols-2 gap-3">
+				{(["minValue", "maxValue", "value"] as const).map((stat) => {
+					return (
+						<TextField
+							key={stat}
+							label={stat.replace("Value", " value")}
+							control={form.control}
+							name={stat}
+							type="number"
+						/>
+					);
+				})}
+			</div>
+
+			<div className="col-span-2 grid grid-cols-2 gap-3">
+				<TextField
+					label="Tick Duration (sec)"
+					control={form.control}
+					name="tickDurationSec"
+					type="number"
+				/>
+				<TextField
+					label="Cast Time (sec)"
+					control={form.control}
+					name="castTimeSec"
+					type="number"
+				/>
+				<TextField
+					label="Cast Cooldown (sec)"
+					control={form.control}
+					name="castCooldownTimeSec"
+					type="number"
+				/>
+			</div>
+
+			{type === "TELEPORT" && (
+				<div className="col-span-2">
+					<TeleportField />
 				</div>
-			</div>
-
-			<div className="space-y-1">
-				<Label>Bonus Stats</Label>
-				<div className="grid grid-cols-4 gap-3">
-					<Input
-						placeholder="Str"
-						{...getInputProps(fields.str, { type: "number" })}
-					/>
-					<Input
-						placeholder="Sta"
-						{...getInputProps(fields.sta, { type: "number" })}
-					/>
-					<Input
-						placeholder="Agi"
-						{...getInputProps(fields.agi, { type: "number" })}
-					/>
-					<Input
-						placeholder="Int"
-						{...getInputProps(fields.int, { type: "number" })}
-					/>
-					<Input
-						placeholder="Armor"
-						{...getInputProps(fields.armor, { type: "number" })}
-					/>
-					<Input
-						placeholder="Crit"
-						{...getInputProps(fields.crit, { type: "number" })}
-					/>
-					<Input
-						placeholder="Dodge"
-						{...getInputProps(fields.dodge, { type: "number" })}
-					/>
-					<Input
-						placeholder="Range"
-						{...getInputProps(fields.range, { type: "number" })}
-					/>
-					<Input
-						placeholder="Atk Power"
-						{...getInputProps(fields.atkPower, { type: "number" })}
-					/>
-					<Input
-						placeholder="Atk Speed"
-						{...getInputProps(fields.atkSpeed, { type: "number" })}
-					/>
-				</div>
-			</div>
-
-			<div className="grid grid-cols-3 gap-4">
-				<FormInput label="Min Value" field={fields.minValue} type="number" />
-				<FormInput label="Value" field={fields.value} type="number" />
-				<FormInput label="Max Value" field={fields.maxValue} type="number" />
-			</div>
-
-			<div>
-				<AreaSelect label="Teleport Area" areas={areas} field={fields.areaId} />
-			</div>
+			)}
 
 			<div className="col-span-2">
-				<ItemsMultiField label="Item/s" items={items} field={fields.items} />
+				<SkillItemsField />
+			</div>
+
+			<div className="flex justify-end col-span-full">
+				<SubmitButton>{defaultValue ? "Update" : "Create"}</SubmitButton>
 			</div>
 		</Form>
 	);

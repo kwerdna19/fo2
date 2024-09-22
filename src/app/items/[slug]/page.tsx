@@ -4,7 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AdminButton } from "~/components/AdminButton";
 import { DurationDisplay } from "~/components/DurationDisplay";
-import { ItemSprite } from "~/components/ItemSprite";
+import { IconSprite } from "~/components/IconSprite";
 import { Sprite } from "~/components/Sprite";
 import { UnitSprite } from "~/components/UnitSprite";
 import { Badge } from "~/components/ui/badge";
@@ -16,7 +16,7 @@ import { auth } from "~/server/auth/auth";
 import { api } from "~/trpc/server";
 import {
 	getAverageDPS,
-	getItemSpriteQuery,
+	getIconSpriteQuery,
 	getPlayerSpriteUrlPreview,
 	isItemCollectible,
 	isItemConsumable,
@@ -73,7 +73,7 @@ export default async function Item({ params }: { params: Params }) {
 
 			<div className="flex flex-col gap-6">
 				<div className="self-center">
-					<ItemSprite bg size="2xl" url={item.spriteName} />
+					<IconSprite bg size="2xl" url={item.spriteName} />
 					<p className="text-muted-foreground pt-2 text-center">{item.name}</p>
 				</div>
 				<div>
@@ -261,7 +261,7 @@ export default async function Item({ params }: { params: Params }) {
 							type="PLAYER"
 							animated
 							size="xl"
-							url={getItemSpriteQuery(item)}
+							url={getIconSpriteQuery(item)}
 						/>
 					</div>
 				) : null}

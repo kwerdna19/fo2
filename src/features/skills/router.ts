@@ -92,8 +92,7 @@ export default createTRPCRouter({
 			select: {
 				id: true,
 				name: true,
-				slug: true,
-				spriteUrl: true,
+				// slug: true,
 			},
 		});
 	}),
@@ -107,6 +106,12 @@ export default createTRPCRouter({
 				},
 				include: {
 					items: true,
+					area: {
+						select: {
+							id: true,
+							name: true,
+						},
+					},
 				},
 			});
 		}),
@@ -114,7 +119,7 @@ export default createTRPCRouter({
 	create: roleProtectedProcedure(Role.MODERATOR)
 		.input(skillSchema)
 		.mutation(({ ctx: { db }, input }) => {
-			const { name, rank, type, items, ...rest } = input;
+			const { name, rank, type, items, area, ...rest } = input;
 
 			return db.skill.create({
 				data: {
@@ -122,8 +127,8 @@ export default createTRPCRouter({
 					rank,
 					type: type as SkillType,
 					slug: `${getSlugFromName(name)}-${rank}`,
-					items: items && {
-						connect: items,
+					items: {
+						connect: items.map((item) => ({ id: item.id })),
 					},
 					...rest,
 				},
@@ -134,49 +139,25 @@ export default createTRPCRouter({
 		.input(z.object({ id: z.string(), data: skillSchema }))
 		.mutation(async ({ ctx: { db }, input }) => {
 			const { id, data } = input;
-			const { name, rank, type, items, ...rest } = data;
+			const { name, rank, type, items, area, ...rest } = data;
 
-			let updated = await db.skill.update({
+			const updated = await db.skill.update({
 				where: {
 					id,
 				},
 				data: {
+					...rest,
 					name,
 					rank,
 					type: type as SkillType,
 					slug: `${getSlugFromName(name)}-${rank}`,
 					updatedAt: new Date(),
-					...rest,
-					items: items && {
-						connect: items,
+					areaId: area?.id,
+					items: {
+						set: items.map((item) => ({ id: item.id })),
 					},
 				},
-				include: {
-					items: true,
-				},
 			});
-
-			const itemsToRemove = updated.items.filter((item) => {
-				return !items?.find((inputItem) => {
-					return inputItem.id === item.id;
-				});
-			});
-
-			if (itemsToRemove.length) {
-				updated = await db.skill.update({
-					where: {
-						id,
-					},
-					data: {
-						items: {
-							disconnect: itemsToRemove,
-						},
-					},
-					include: {
-						items: true,
-					},
-				});
-			}
 
 			return updated;
 		}),

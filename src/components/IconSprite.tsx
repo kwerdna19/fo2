@@ -5,23 +5,21 @@ import {
 } from "~/utils/fo-sprite";
 import { cn } from "~/utils/styles";
 
-export interface ItemSpriteProps {
+export interface IconSpriteProps {
 	url: string;
 	size?: SpriteSize;
 	className?: string;
 	bg?: boolean;
-	menuSprite?: boolean;
+	type?: "MENU_BUTTON" | "ITEM" | "SKILL";
 }
 
-export const ItemSprite = ({
+export const IconSprite = ({
 	url,
 	className,
 	size = "xs",
 	bg,
-	menuSprite,
-}: ItemSpriteProps) => {
-	const type = menuSprite ? "MENU_BUTTON" : "ITEM";
-
+	type = "ITEM",
+}: IconSpriteProps) => {
 	return (
 		<img
 			style={getSpriteSize(type, size)}

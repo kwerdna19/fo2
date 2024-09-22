@@ -3,14 +3,8 @@ import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
 
-import { parseWithZod } from "@conform-to/zod";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { BattlePassForm } from "~/features/battlepasses/components/BattlePassForm";
-import { battlePassSchema } from "~/features/battlepasses/schemas";
 import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles";
-import { api } from "~/trpc/server";
-import type { ConformResult } from "~/types/actions";
 
 export function generateMetadata() {
 	return {
@@ -21,35 +15,6 @@ export function generateMetadata() {
 export default async function AddBattlePass() {
 	await userSatisfiesRoleOrRedirect(Role.MODERATOR, "/battlepass/all");
 
-	const items = await api.item.getAllQuick();
-
-	async function action(result: ConformResult, formData: FormData) {
-		"use server";
-		const submission = parseWithZod(formData, {
-			schema: battlePassSchema,
-		});
-
-		if (submission.status !== "success") {
-			return submission.reply();
-		}
-
-		try {
-			const created = await api.battlePass.create(submission.value);
-
-			revalidatePath("/items", "page");
-			revalidatePath("/battlepass/all", "page");
-			revalidatePath("/battlepass", "page");
-
-			redirect(`/battlepass/${created.slug}`);
-		} catch (e) {
-			console.error(e);
-
-			return submission.reply({
-				formErrors: ["Server error"],
-			});
-		}
-	}
-
 	return (
 		<div className="w-full max-w-screen-xl">
 			<Button size="sm" variant="outline" className="mb-5" asChild>
@@ -58,7 +23,7 @@ export default async function AddBattlePass() {
 					Back to passes
 				</Link>
 			</Button>
-			<BattlePassForm action={action} items={items} />
+			<BattlePassForm />
 		</div>
 	);
 }

@@ -36,7 +36,7 @@ const spriteSheetConfig = {
 	SKILL: {
 		width: 22,
 		height: 22,
-		baseUrl: "https://art.fantasyonline2.com/textures/skills/",
+		baseUrl: "https://art.fantasyonline2.com/textures/icons/skills/",
 	},
 	MENU_BUTTON: {
 		width: 25,
@@ -71,7 +71,7 @@ export const getSpriteSrc = (
 
 	return urlOrSpriteName.startsWith("/") || urlOrSpriteName.startsWith("http")
 		? urlOrSpriteName
-		: `${baseUrl}${urlOrSpriteName}${spriteType === "ITEM" ? "-icon" : ""}${spriteType !== "PLAYER" ? ".png" : ""}`;
+		: `${baseUrl}${urlOrSpriteName}${spriteType === "ITEM" || spriteType === "SKILL" ? "-icon" : ""}${spriteType !== "PLAYER" ? ".png" : ""}`;
 };
 
 export const getSpriteSize = (spriteType: SpriteType, size: SpriteSize) => {

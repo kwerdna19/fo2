@@ -1214,7 +1214,7 @@
           ],
           "originalType": "String"
         },
-        "spriteUrl": {
+        "spriteName": {
           "type": "string",
           "originalType": "String"
         },
@@ -1443,7 +1443,7 @@
         "name",
         "slug",
         "rank",
-        "spriteUrl"
+        "spriteName"
       ]
     },
     "Faction": {

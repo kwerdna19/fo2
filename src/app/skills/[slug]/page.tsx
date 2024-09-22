@@ -1,7 +1,7 @@
 import { Pencil } from "lucide-react";
 import { notFound } from "next/navigation";
 import { AdminButton } from "~/components/AdminButton";
-import { ItemSprite } from "~/components/ItemSprite";
+import { IconSprite } from "~/components/IconSprite";
 import { api } from "~/trpc/server";
 
 interface Params {
@@ -31,16 +31,16 @@ export default async function Item({ params }: { params: Params }) {
 				<h2 className="text-3xl">
 					{skill.name} {skill.rank}
 				</h2>
-				{/* <AdminButton
+				<AdminButton
 					size="icon"
 					variant="outline"
 					href={`/skills/${params.slug}/edit`}
 				>
 					<Pencil className="w-4 h-4" />
-				</AdminButton> */}
+				</AdminButton>
 			</div>
 			<div>
-				<ItemSprite size="xl" url={skill.spriteUrl} />
+				<IconSprite size="xl" url={skill.spriteName} type="SKILL" />
 			</div>
 		</div>
 	);

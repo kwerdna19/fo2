@@ -84,7 +84,7 @@ export default async function EditBattlePass({ params }: { params: Params }) {
 					Back to page
 				</Link>
 			</Button>
-			<BattlePassForm action={action} items={items} defaultValue={pass} />
+			<BattlePassForm defaultValue={battlePassSchema.parse(pass)} />
 		</div>
 	);
 }

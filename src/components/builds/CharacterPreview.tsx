@@ -3,7 +3,7 @@ import type { Item } from "@prisma/client";
 import {
 	type Build,
 	Slot,
-	getItemSpriteQuery,
+	getIconSpriteQuery,
 	visibleEquipment,
 } from "~/utils/fo-game";
 import { Sprite } from "../Sprite";
@@ -21,7 +21,7 @@ export function CharacterPreview({
 			type="PLAYER"
 			size="2xl"
 			className={className}
-			url={getItemSpriteQuery(items)}
+			url={getIconSpriteQuery(items)}
 		/>
 	);
 }

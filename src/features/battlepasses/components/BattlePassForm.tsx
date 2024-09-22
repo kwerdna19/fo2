@@ -1,53 +1,48 @@
 "use client";
-import type { Item } from "@prisma/client";
-import { Form } from "~/components/form-ui/Form";
-import FormInput from "~/components/form-ui/FormInput";
-import { useConform } from "~/hooks/useConform";
-import type { RouterOutputs } from "~/trpc/react";
-import type { ConformServerAction } from "~/types/actions";
+import type { z } from "zod";
+import { TextField } from "~/components/form/TextField";
+import { Form, SubmitButton, useZodForm } from "~/components/form/zod-form";
+import { api } from "~/trpc/react";
 import { battlePassSchema } from "../schemas";
-import { BattlePassTiersMultiField } from "./BattlePassTiersMultiField";
 
 interface Props {
-	items: Pick<Item, "id" | "name">[];
-	defaultValue?: RouterOutputs["battlePass"]["getBySlug"];
-	action: ConformServerAction;
+	id?: string;
+	defaultValue?: z.infer<typeof battlePassSchema>;
 }
 
-export function BattlePassForm({
-	items,
-	action: serverAction,
-	defaultValue,
-}: Props) {
-	const [form, fields, action, lastResult] = useConform(serverAction, {
+export function BattlePassForm({ id, defaultValue }: Props) {
+	const updateMutation = api.battlePass.update.useMutation();
+	// const createMutation = api.item.create.useMutation();
+
+	const form = useZodForm({
 		schema: battlePassSchema,
-		defaultValue,
+		defaultValues: defaultValue,
 	});
 
-	if (lastResult?.status === "error") {
-		console.log("DEBUG", lastResult);
-	}
-
-	const buttonText = defaultValue ? "Update" : "Create";
-
 	return (
-		<Form form={form} action={action} submit={buttonText}>
-			<FormInput label="Name" field={fields.name} />
-			<FormInput label="Desc" field={fields.desc} />
-			<FormInput
-				label="Duration (days)"
-				field={fields.durationDays}
-				type="number"
-			/>
-			<FormInput label="XP per tier" field={fields.xpPerTier} type="number" />
-			<FormInput label="Note" field={fields.note} />
+		<Form
+			handleSubmit={(values) => {
+				if (id) {
+					return updateMutation.mutateAsync({ id, data: values });
+				}
+				// return createMutation.mutateAsync(values);
+			}}
+			persist
+			form={form}
+			className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-4 gap-6"
+		>
+			<TextField label="Note" control={form.control} name="note" />
+
+			{/* <div className="col-span-2">
+				<CraftRecipesField />
+			</div>
 
 			<div className="col-span-2">
-				<BattlePassTiersMultiField
-					label="Tiers"
-					items={items}
-					field={fields.tiers}
-				/>
+				<SoldByField />
+			</div> */}
+
+			<div className="flex justify-end col-span-full">
+				<SubmitButton>{defaultValue ? "Update" : "Create"}</SubmitButton>
 			</div>
 		</Form>
 	);

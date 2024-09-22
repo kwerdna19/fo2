@@ -336,17 +336,17 @@ enum SkillType {
 }
 
 model Skill {
-  id        String     @id @default(cuid())
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @default(now()) @updatedAt
-  name      String
-  slug      String     @unique()
-  rank      Int
-  desc      String?
-  note      String?
-  spriteUrl String
-  type      SkillType?
-  levelReq  Int        @default(0)
+  id         String     @id @default(cuid())
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @default(now()) @updatedAt
+  name       String
+  slug       String     @unique()
+  rank       Int
+  desc       String?
+  note       String?
+  spriteName String
+  type       SkillType?
+  levelReq   Int        @default(0)
 
   reqStr Int?
   reqSta Int?
