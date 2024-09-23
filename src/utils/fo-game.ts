@@ -434,7 +434,7 @@ export const isItemConsumable = (item: Pick<Item, "type">) => {
 	return item.type === 4;
 };
 
-export const COLLECTIBLE_ITEM_TYPES = [2, 3, 6];
+export const COLLECTIBLE_ITEM_TYPES = [1, 2, 3, 5, 6];
 
 export const isItemCollectible = (item: Pick<Item, "type" | "name">) => {
 	return (

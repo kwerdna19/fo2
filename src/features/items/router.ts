@@ -153,9 +153,20 @@ export default createTRPCRouter({
 
 			if (collectible) {
 				conditions.push({
-					OR: COLLECTIBLE_ITEM_TYPES.map((type) => ({
-						type: type,
-					})),
+					AND: [
+						{
+							OR: COLLECTIBLE_ITEM_TYPES.map((type) => ({
+								type: type,
+							})),
+						},
+						{
+							name: {
+								not: {
+									startsWith: "[SSC]",
+								},
+							},
+						},
+					],
 				});
 			}
 

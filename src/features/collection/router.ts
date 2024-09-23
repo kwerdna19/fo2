@@ -162,11 +162,6 @@ export default createTRPCRouter({
 				AND: [
 					{
 						name: {
-							not: "XIII",
-						},
-					},
-					{
-						name: {
 							not: {
 								startsWith: "[SSC]",
 							},
