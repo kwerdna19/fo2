@@ -166,6 +166,11 @@ export default createTRPCRouter({
 								},
 							},
 						},
+						{
+							stackSize: {
+								lte: 1,
+							},
+						},
 					],
 				});
 			}
