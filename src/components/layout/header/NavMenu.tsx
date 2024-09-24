@@ -104,9 +104,7 @@ export function NavMenu({
 									key={area.id}
 									href={`/areas/${area.slug}`}
 									title={area.name}
-								>
-									{area.name}
-								</ListItem>
+								/>
 							))}
 						</ul>
 					</NavigationMenuContent>
@@ -162,9 +160,11 @@ const ListItem = React.forwardRef<
 					{...props}
 				>
 					<div className="text-sm font-medium leading-none">{title}</div>
-					<p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-						{children}
-					</p>
+					{children ? (
+						<p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+							{children}
+						</p>
+					) : null}
 				</a>
 			</NavigationMenuLink>
 		</li>
