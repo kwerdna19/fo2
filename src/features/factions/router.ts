@@ -3,6 +3,7 @@ import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { factionSearchFilterSchema } from "./search-params";
 
 import type { Prisma } from "@prisma/client";
+import { z } from "zod";
 import schema from "~/server/db/json-schema.json";
 
 const requiredFields = schema.definitions.Faction.required;
@@ -71,12 +72,23 @@ export default createTRPCRouter({
 				totalPages: Math.ceil(totalCount / per_page),
 			};
 		}),
-	getAllQuick: publicProcedure.query(({ ctx: { db } }) => {
-		return db.faction.findMany({
-			select: {
-				id: true,
-				name: true,
-			},
-		});
-	}),
+	getAllQuick: publicProcedure
+		.input(z.string().optional())
+		.query(({ ctx: { db }, input }) => {
+			return db.faction.findMany({
+				select: {
+					id: true,
+					name: true,
+				},
+				where: input
+					? {
+							OR: searchFields.map((f) => ({
+								[f]: {
+									contains: input,
+								},
+							})),
+						}
+					: undefined,
+			});
+		}),
 });
