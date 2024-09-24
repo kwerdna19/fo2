@@ -28,7 +28,7 @@ export default function SortButton<T>({
 	const isId = column.id === label;
 	const types = column.columnDef.meta?.sortTypes;
 	const className = cn(
-		"-ml-3 h-8 data-[state=open]:bg-accent",
+		"-ml-1 h-8 data-[state=open]:bg-accent",
 		isId && "capitalize",
 	);
 

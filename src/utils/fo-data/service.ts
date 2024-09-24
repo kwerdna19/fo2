@@ -247,6 +247,10 @@ export const itemDefinitionToDatabaseItem = (gameItem: ItemDefinition) => {
 		}
 	}
 
+	// bags are not stackable but use `ss` to determine bag size
+	const stackSize = gameItem.ty === 1 ? 1 : Math.max(1, gameItem.ss);
+	const bagSize = gameItem.ty === 1 ? gameItem.ss : null;
+
 	return {
 		name: gameItem.t.en.n,
 		desc: gameItem.t.en.d,
@@ -263,8 +267,8 @@ export const itemDefinitionToDatabaseItem = (gameItem: ItemDefinition) => {
 		sellPriceUnit: gameItem.vbc === 1 ? Unit.GEMS : Unit.COINS,
 		buyPrice: gameItem.vsp,
 		buyPriceUnit: gameItem.vsc === 1 ? Unit.GEMS : Unit.COINS,
-		stackSize: Math.max(1, gameItem.ss),
-
+		stackSize,
+		bagSize,
 		agi: stats?.agi,
 		str: stats?.str,
 		sta: stats?.sta,

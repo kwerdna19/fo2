@@ -226,6 +226,7 @@ model Item {
   buyPriceUnit Unit
 
   stackSize Int        @default(1)
+  bagSize   Int?
   droppedBy Loot[]
   soldBy    NpcSale[]
   craftedBy NpcCraft[]

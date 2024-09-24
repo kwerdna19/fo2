@@ -711,6 +711,13 @@
           "originalType": "Int",
           "default": 1
         },
+        "bagSize": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "originalType": "Int"
+        },
         "droppedBy": {
           "type": "array",
           "originalType": "Loot",
