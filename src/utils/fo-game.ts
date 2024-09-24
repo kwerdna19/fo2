@@ -331,72 +331,6 @@ export const getAllStats = (
 	};
 };
 
-const playerSpriteBaseUrl = "https://art.fantasyonline2.com/api/character/ss";
-
-const defaultSpriteAttributes = [
-	"body-1",
-	"eyes-standard-blue",
-	"hair-close-black",
-];
-
-const getIconSpriteLayer = (item: Pick<Item, "type" | "subType">) => {
-	// all weapons and outfit weapons
-	if (item.type === 2 || (item.type === 6 && item.subType === 16)) {
-		return "!0";
-	}
-
-	// Armor or outfit off hand
-	if (
-		(item.type === 3 && item.subType === 17) ||
-		(item.type === 6 && item.subType === 17)
-	) {
-		return "!1";
-	}
-
-	// Armor or outfit back
-	if (
-		(item.type === 3 && item.subType === 4) ||
-		(item.type === 6 && item.subType === 4)
-	) {
-		return "!2";
-	}
-
-	return "";
-};
-
-export const getPlayerSpriteUrlPreview = (
-	items?: Pick<Item, "spriteName" | "type" | "subType">[],
-) => {
-	const itemSlugs =
-		items?.map((item) => {
-			return `${item.spriteName}${getIconSpriteLayer(item)}`;
-		}) ?? [];
-
-	const attrs = defaultSpriteAttributes.concat(itemSlugs);
-	const f = attrs.join("_");
-
-	return getPlayerSpriteUrl(f);
-};
-
-type PartialItem = Pick<Item, "spriteName" | "type" | "subType">;
-
-export const getIconSpriteQuery = (
-	itemOrItems: PartialItem | PartialItem[],
-) => {
-	const items = Array.isArray(itemOrItems) ? itemOrItems : [itemOrItems];
-
-	const itemSlugs = items.map((item) => {
-		return `${item.spriteName}${getIconSpriteLayer(item)}`;
-	});
-
-	const attrs = defaultSpriteAttributes.concat(itemSlugs);
-	return attrs.join("_");
-};
-
-export const getPlayerSpriteUrl = (spriteQuery: string) => {
-	return `${playerSpriteBaseUrl}?f=${spriteQuery}`;
-};
-
 export const guildRankMap = {
 	8: "Leader",
 	4: "Officer",
@@ -407,7 +341,7 @@ export const guildRankMap = {
 
 export type GuildRank = (typeof guildRankMap)[keyof typeof guildRankMap];
 
-export const isVisible = (item: Pick<Item, "type" | "subType">) => {
+export const isItemVisible = (item: Pick<Item, "type" | "subType">) => {
 	if (item.type === 6 || item.type === 2) {
 		return true;
 	}

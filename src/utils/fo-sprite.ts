@@ -1,3 +1,6 @@
+import type { Item } from "@prisma/client";
+import { isItemVisible } from "./fo-game";
+
 type SpriteConfig = {
 	width: number;
 	height: number;
@@ -93,9 +96,12 @@ export const getSpriteStyle = (
 ) => {
 	const src = getSpriteSrc(spriteType, urlOrSpriteName);
 
+	const { width, height } = getSpriteSize(spriteType, size);
+
 	return {
 		backgroundImage: `url("${src}")`,
-		...getSpriteSize(spriteType, size),
+		width,
+		height,
 	};
 };
 
@@ -122,4 +128,64 @@ export const getSpriteTypeFromImageSize = (input: {
 	}
 
 	return null;
+};
+
+const defaultPlayerSpriteElements = [
+	"body-1",
+	"eyes-standard-blue",
+	"hair-close-black",
+];
+
+const getItemSpriteLayer = (item: Pick<Item, "type" | "subType">) => {
+	// all weapons and outfit weapons
+	if (item.type === 2 || (item.type === 6 && item.subType === 16)) {
+		return "!0";
+	}
+
+	// Armor or outfit off hand
+	if (
+		(item.type === 3 && item.subType === 17) ||
+		(item.type === 6 && item.subType === 17)
+	) {
+		return "!1";
+	}
+
+	// Armor or outfit back
+	if (
+		(item.type === 3 && item.subType === 4) ||
+		(item.type === 6 && item.subType === 4)
+	) {
+		return "!2";
+	}
+
+	return "";
+};
+
+export type PartialItem = Pick<Item, "spriteName" | "type" | "subType">;
+
+const getItemSpriteQuery = (
+	itemOrItems: PartialItem | PartialItem[],
+	baseElements?: string[],
+) => {
+	const items = Array.isArray(itemOrItems) ? itemOrItems : [itemOrItems];
+
+	const itemSlugs = items.filter(isItemVisible).map((item) => {
+		return `${item.spriteName}${getItemSpriteLayer(item)}`;
+	});
+
+	const attrs = baseElements ? baseElements.concat(itemSlugs) : itemSlugs;
+	return attrs.join("_");
+};
+
+export const getPlayerSpriteUrlPreview = (
+	items: PartialItem | PartialItem[],
+) => {
+	return getSpriteSrc(
+		"PLAYER",
+		getItemSpriteQuery(items, defaultPlayerSpriteElements),
+	);
+};
+
+export const getItemSpriteUrlPreview = (items: PartialItem) => {
+	return getSpriteSrc("PLAYER", getItemSpriteQuery(items));
 };

@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { type SpriteSize, getSpriteStyle } from "~/utils/fo-sprite";
 import { cn } from "~/utils/styles";
 
@@ -9,6 +10,7 @@ export interface SpriteProps {
 	animated?: boolean | "AUTO"; // auto means it will animate if the sprite can be animated
 	size?: SpriteSize;
 	type: "NPC" | "MOB" | "PLAYER";
+	children?: ReactNode;
 }
 
 export const Sprite = ({
@@ -17,6 +19,7 @@ export const Sprite = ({
 	className,
 	animated,
 	size = "sm",
+	children,
 }: SpriteProps) => {
 	const a = animated === "AUTO" ? ["PLAYER", "MOB"].includes(type) : animated;
 
@@ -26,6 +29,8 @@ export const Sprite = ({
 				"sprite-animated": a,
 			})}
 			style={getSpriteStyle(type, size, url)}
-		/>
+		>
+			{children}
+		</div>
 	);
 };
