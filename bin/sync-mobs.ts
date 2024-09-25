@@ -52,42 +52,51 @@ for (const gameMob of mobs) {
 		throw new Error("Invalid drop tuple length");
 	}
 
-	const drops = [] as {
-		itemInGameId: number;
-		dropRate: number;
-	}[];
+	const dropMap = {} as Record<number, number[]>;
+
 	for (let i = 0; i < dropTuples.length; i += 2) {
 		const itemInGameId = dropTuples[i];
 		const dropRate = dropTuples[i + 1];
 		if (typeof itemInGameId !== "number" || typeof dropRate !== "number") {
 			throw new Error("Invalid drop tuple");
 		}
-		drops.push({
-			itemInGameId,
-			dropRate,
-		});
+
+		if (dropMap[itemInGameId]) {
+			dropMap[itemInGameId].push(dropRate);
+		} else {
+			dropMap[itemInGameId] = [dropRate];
+		}
 	}
+
+	const drops = Object.entries(dropMap).map(([inGameItemId, dropRates]) => ({
+		inGameItemId: Number(inGameItemId),
+		dropRates: dropRates,
+	}));
 
 	if (drops.length > 0) {
 		console.log(`Updating ${drops.length} drops for ${gameMob.t.en.n}`);
 
 		await Promise.all(
-			drops.map(async ({ itemInGameId, dropRate }) => {
+			drops.map(async ({ inGameItemId, dropRates }) => {
 				const { id: itemId } = await db.item.findFirstOrThrow({
 					where: {
-						inGameId: itemInGameId,
+						inGameId: inGameItemId,
 					},
 				});
 				const mobId = dbMob.id;
+				const dropRate = dropRates[0] as number;
+				const count = dropRates.length > 1 ? dropRates.length : null;
 
 				return prisma.loot.upsert({
 					create: {
 						mobId,
 						itemId,
 						dropRate,
+						count,
 					},
 					update: {
 						dropRate,
+						count,
 					},
 					where: {
 						mobId_itemId: {

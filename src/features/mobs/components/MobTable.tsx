@@ -99,7 +99,10 @@ export const mobTableColumns: ColumnDef<MobDatum, any>[] = [
 						unit: d.item.sellPriceUnit,
 						value: d.item.sellPrice,
 					},
+					"Potential Drops": d.count,
 				})}
+				hideNull={["Potential Drops"]}
+				countProperty="Potential Drops"
 				className="flex-nowrap"
 			/>
 		),

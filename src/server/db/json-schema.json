@@ -541,6 +541,13 @@
             "null"
           ],
           "originalType": "Float"
+        },
+        "count": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "originalType": "Int"
         }
       },
       "required": [

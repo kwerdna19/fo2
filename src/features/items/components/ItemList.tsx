@@ -14,12 +14,14 @@ import { IconSprite } from "../../../components/IconSprite";
 
 type PartialItem = Pick<Item, "id" | "name" | "spriteName" | "slug">;
 
+type DisplayProperty = ReactNode | { value: number; unit: Unit };
+
 type Props<K extends PartialItem | { item: PartialItem }> = {
 	data: Array<K>;
-	getAttributes?: (
-		d: K,
-	) => Record<string, ReactNode | { value: number; unit: Unit }>;
+	getAttributes?: (d: K) => Record<string, DisplayProperty>;
 	className?: string;
+	hideNull?: string[];
+	countProperty?: string;
 	infoInToolTip?: boolean;
 	size?: "md" | "sm";
 };
@@ -27,9 +29,19 @@ type Props<K extends PartialItem | { item: PartialItem }> = {
 export function ItemList<K extends PartialItem | { item: PartialItem }>({
 	data,
 	getAttributes,
+	hideNull,
+	countProperty,
 	className,
 	size = "sm",
 }: Props<K>) {
+	const renderProperty = (value: DisplayProperty) => {
+		return value && typeof value === "object" && "value" in value ? (
+			<PriceDisplay size="xs" count={value.value} unit={value.unit} />
+		) : (
+			value
+		);
+	};
+
 	return (
 		<div
 			className={cn(
@@ -43,39 +55,45 @@ export function ItemList<K extends PartialItem | { item: PartialItem }>({
 
 				const properties =
 					getAttributes &&
-					Object.entries(getAttributes(d)).map(([key, value]) => (
-						<div key={key} className="flex justify-between">
-							<p>{key}</p>
-							<div>
-								{value && typeof value === "object" && "value" in value ? (
-									<PriceDisplay
-										size="xs"
-										count={value.value}
-										unit={value.unit}
-									/>
-								) : (
-									value
-								)}
-							</div>
-						</div>
-					));
+					Object.entries(getAttributes(d)).filter(([key, value]) => {
+						if (hideNull?.includes(key) && value === null) {
+							return false;
+						}
+						return true;
+					});
+
+				const count = countProperty
+					? properties?.find(([key]) => key === countProperty)?.[1]
+					: undefined;
+
+				const propertyComp = properties?.map(([key, value]) => (
+					<div key={key} className="flex justify-between">
+						<p>{key}</p>
+						<div>{renderProperty(value)}</div>
+					</div>
+				));
 
 				return (
 					<TooltipProvider key={item.id}>
 						<Tooltip delayDuration={0}>
 							<TooltipTrigger asChild>
 								<Link
-									className="min-w-max"
+									className="min-w-max relative"
 									prefetch={false}
 									href={`/items/${item.slug}`}
 								>
 									<IconSprite bg url={item.spriteName} size={size} />
+									{count ? (
+										<div className="absolute right-1 top-1 text-xs font-mono font-bold leading-none">
+											{renderProperty(count)}
+										</div>
+									) : null}
 								</Link>
 							</TooltipTrigger>
 							<TooltipContent className="min-w-36 space-y-1" side="bottom">
 								<p className="text-sm font-semibold">{item.name}</p>
-								{properties && properties.length > 0 ? (
-									<div className="max-w-36 text-xs">{properties}</div>
+								{propertyComp ? (
+									<div className="max-w-36 text-xs">{propertyComp}</div>
 								) : null}
 							</TooltipContent>
 						</Tooltip>

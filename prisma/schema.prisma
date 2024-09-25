@@ -161,6 +161,7 @@ model Loot {
   itemId String
 
   dropRate Float?
+  count    Int?
 
   @@id([mobId, itemId])
 }
