@@ -1,11 +1,7 @@
 "use client";
 import type { Item } from "@prisma/client";
-import {
-	type Build,
-	Slot,
-	getIconSpriteQuery,
-	visibleEquipment,
-} from "~/utils/fo-game";
+import { type Build, Slot, visibleEquipment } from "~/utils/fo-game";
+import { getPlayerSpriteUrlPreview } from "~/utils/fo-sprite";
 import { Sprite } from "../Sprite";
 
 export function CharacterPreview({
@@ -21,7 +17,7 @@ export function CharacterPreview({
 			type="PLAYER"
 			size="2xl"
 			className={className}
-			url={getIconSpriteQuery(items)}
+			url={getPlayerSpriteUrlPreview(items)}
 		/>
 	);
 }
