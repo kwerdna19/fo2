@@ -184,8 +184,8 @@ export const itemTypeMap: Record<
 			6: "SHOULDERS",
 			// 7 - mapped offhand
 
-			8: "CHEST", // ? not sure why it exists twice?
-			10: "LEGS", // ? not sure why it exists twice?
+			// 8: "CHEST", // ? not sure why it exists twice?
+			// 10: "LEGS", // ? not sure why it exists twice?
 
 			16: "WEAPON",
 			17: "OFFHAND",
