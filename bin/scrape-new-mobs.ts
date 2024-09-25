@@ -50,8 +50,7 @@ for (const gameMob of mobs) {
 	}
 
 	const drops = [] as {
-		itemInGameId: number;
-		mobInGameId: number;
+		itemId: string;
 		dropRate: number;
 	}[];
 	for (let i = 0; i < dropTuples.length; i += 2) {
@@ -60,35 +59,41 @@ for (const gameMob of mobs) {
 		if (typeof itemInGameId !== "number" || typeof dropRate !== "number") {
 			throw new Error("Invalid drop tuple");
 		}
+
+		const item = await prisma.item.findUniqueOrThrow({
+			where: { inGameId: itemInGameId },
+			select: { id: true },
+		});
+
 		drops.push({
-			itemInGameId,
+			itemId: item.id,
 			dropRate,
-			mobInGameId: createdMob.inGameId,
 		});
 	}
 
 	if (drops.length > 0) {
 		console.log(`Creating ${drops.length} drops for ${gameMob.t.en.n}`);
 
-		await Promise.all(
-			drops.map(async ({ itemInGameId, dropRate, mobInGameId }) => {
-				return prisma.loot.create({
-					data: {
-						mob: {
-							connect: {
-								inGameId: mobInGameId,
-							},
-						},
-						item: {
-							connect: {
-								inGameId: itemInGameId,
-							},
-						},
-						dropRate,
+		const mobId = createdMob.id;
+
+		for (const { itemId, dropRate } of drops) {
+			await prisma.loot.upsert({
+				create: {
+					mobId,
+					itemId,
+					dropRate,
+				},
+				update: {
+					dropRate,
+				},
+				where: {
+					mobId_itemId: {
+						mobId,
+						itemId,
 					},
-				});
-			}),
-		);
+				},
+			});
+		}
 	}
 }
 

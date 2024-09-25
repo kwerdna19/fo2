@@ -183,6 +183,10 @@ export const itemTypeMap: Record<
 			// 5 - mapped main hand
 			6: "SHOULDERS",
 			// 7 - mapped offhand
+
+			8: "CHEST", // ? not sure why it exists twice?
+			10: "LEGS", // ? not sure why it exists twice?
+
 			16: "WEAPON",
 			17: "OFFHAND",
 		},
@@ -235,12 +239,14 @@ export const itemDefinitionToDatabaseItem = (gameItem: ItemDefinition) => {
 	}
 	if (typeMap.subTypes) {
 		if (!typeMap.subTypes[gameItem.st]) {
+			console.log("ITEM: ", gameItem.t.en.n);
 			throw new Error(
-				`Item type has subtypes in map but st not found: ${gameItem.st}`,
+				`Item type ${gameItem.ty} has subtypes in map but st not found: ${gameItem.st}`,
 			);
 		}
 	} else {
 		if (gameItem.st !== 0) {
+			console.log("ITEM: ", gameItem.t.en.n);
 			throw new Error(
 				`Item type has no subtypes in map but found st: ${gameItem.st}`,
 			);

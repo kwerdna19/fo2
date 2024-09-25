@@ -108,7 +108,6 @@ const main = async () => {
 
 	await writeFile(join(tmpDir, imageFileName), Buffer.from(image));
 
-	console.log([mapDataFilePath, outputPath]);
 	execFileSync(tmxPath, [resolve("./", mapDataFilePath), outputPath]);
 
 	console.log(`Done. Generated ${name}.png`);
