@@ -395,10 +395,10 @@ model Skill {
 model Faction {
   id        Int      @id
   createdAt DateTime @default(now())
-  spriteUrl String?
   updatedAt DateTime @default(now()) @updatedAt
-  name      String   @unique()
-  slug      String   @unique()
+
+  spriteUrl String?
+  name      String
   note      String?
 
   mobs Mob[]

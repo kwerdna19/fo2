@@ -25,15 +25,13 @@ for (const gameMob of mobs) {
 
 	const { factionId, ...rest } = mobDefinitionToDatabaseMob(gameMob);
 
-	const now = Date.now().toString();
 	const createdMob = await prisma.mob.create({
 		data: {
 			...rest,
 			faction: {
 				connectOrCreate: {
 					create: {
-						name: `? (${now})`,
-						slug: now,
+						name: "Unknown Faction",
 						id: factionId,
 					},
 					where: {

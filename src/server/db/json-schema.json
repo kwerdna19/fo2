@@ -1472,6 +1472,11 @@
           "originalType": "DateTime",
           "format": "date-time"
         },
+        "updatedAt": {
+          "type": "string",
+          "originalType": "DateTime",
+          "format": "date-time"
+        },
         "spriteUrl": {
           "type": [
             "string",
@@ -1479,16 +1484,7 @@
           ],
           "originalType": "String"
         },
-        "updatedAt": {
-          "type": "string",
-          "originalType": "DateTime",
-          "format": "date-time"
-        },
         "name": {
-          "type": "string",
-          "originalType": "String"
-        },
-        "slug": {
           "type": "string",
           "originalType": "String"
         },
@@ -1509,8 +1505,7 @@
       },
       "required": [
         "id",
-        "name",
-        "slug"
+        "name"
       ]
     },
     "Account": {

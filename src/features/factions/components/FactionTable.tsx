@@ -43,20 +43,12 @@ export const skillColumns = [
 				{info.getValue()}
 			</Link>
 		),
-		meta: {
-			sortFieldReplacement: "slug",
-		},
 	}),
 	columnHelper.accessor("_count.mobs", {
 		// header: SortButton,
 		header: "# Mobs",
 		meta: {
 			sortFieldReplacement: "mobs",
-		},
-	}),
-	columnHelper.accessor("slug", {
-		meta: {
-			hidden: true,
 		},
 	}),
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
