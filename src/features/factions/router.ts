@@ -1,11 +1,16 @@
 import { baseDataTableQuerySchema } from "~/components/data-table/data-table-utils";
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import {
+	createTRPCRouter,
+	publicProcedure,
+	roleProtectedProcedure,
+} from "~/server/api/trpc";
 import { factionSearchFilterSchema } from "./search-params";
 
-import type { Prisma } from "@prisma/client";
+import { type Prisma, Role } from "@prisma/client";
 import { z } from "zod";
 import schema from "~/server/db/json-schema.json";
 import { getIdFromNameId } from "~/utils/misc";
+import { factionSchema } from "./schemas";
 
 const requiredFields = schema.definitions.Faction.required;
 const searchFields = ["name", "slug"];
@@ -102,6 +107,34 @@ export default createTRPCRouter({
 				where: {
 					id,
 				},
+				include: {
+					mobs: {
+						take: 8,
+						orderBy: {
+							inGameId: "asc",
+						},
+						where: {
+							factionXp: {
+								gt: 0,
+							},
+						},
+					},
+				},
 			});
+		}),
+
+	update: roleProtectedProcedure(Role.MODERATOR)
+		.input(z.object({ id: z.number(), data: factionSchema }))
+		.mutation(async ({ ctx: { db }, input }) => {
+			const { id, data } = input;
+
+			const updated = await db.faction.update({
+				where: {
+					id,
+				},
+				data,
+			});
+
+			return updated;
 		}),
 });

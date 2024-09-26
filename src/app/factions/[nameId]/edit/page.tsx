@@ -3,6 +3,8 @@ import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Button } from "~/components/ui/button";
+import { FactionForm } from "~/features/factions/components/FactionForm";
+import { factionSchema } from "~/features/factions/schemas";
 import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles";
 import { api } from "~/trpc/server";
 
@@ -40,10 +42,7 @@ export default async function EditFaction({ params }: { params: Params }) {
 				</Link>
 			</Button>
 
-			{/* <MobForm
-					defaultValue={mobSchema.parse(convertLocations(mob))}
-					id={mob.id}
-				/> */}
+			<FactionForm defaultValue={factionSchema.parse(data)} id={data.id} />
 		</div>
 	);
 }
