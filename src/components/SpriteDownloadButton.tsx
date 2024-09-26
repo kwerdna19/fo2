@@ -1,7 +1,5 @@
 "use client";
 
-import { useMutation } from "@tanstack/react-query";
-import { Jimp, ResizeStrategy } from "jimp";
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import {
@@ -12,61 +10,33 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { useImageDownload } from "~/hooks/useImageDownload";
 import {
 	type PartialItem,
 	getItemSpriteUrlPreview,
 	getPlayerSpriteUrlPreview,
 	spriteSizeMap,
 } from "~/utils/fo-sprite";
+import { Sprite } from "./Sprite";
 import { Button } from "./ui/button";
 
 export interface SpriteProps {
-	item?: PartialItem;
+	item: PartialItem;
 }
-
-const spriteSizes = Object.values(spriteSizeMap);
 
 export const SpriteDownloadButton = ({ item }: SpriteProps) => {
 	const [sizeIndex, setSizeIndex] = useState(0);
 
+	const spriteSizes = Object.values(spriteSizeMap);
 	const size = spriteSizes[sizeIndex] as number;
 
-	const { mutate } = useMutation({
-		mutationFn: async (input: { url: string; fileName: string }) => {
-			const { url, fileName } = input;
-
-			const img = await Jimp.read(url);
-
-			if (size > 1) {
-				img.scale({
-					f: size,
-					mode: ResizeStrategy.NEAREST_NEIGHBOR,
-				});
-			}
-
-			const buf = await img.getBuffer("image/png");
-			const blob = new Blob([buf], { type: "image/png" });
-			const objectUrl = URL.createObjectURL(blob);
-
-			const link = document.createElement("a");
-			link.href = objectUrl;
-			link.download = fileName;
-			link.click();
-			link.remove();
-
-			return objectUrl;
-		},
-		onSuccess: (url) => {
-			URL.revokeObjectURL(url);
-		},
-	});
+	const { mutate } = useImageDownload();
 
 	const onDownload = (url: string, type: string) => () => {
 		if (!item) {
 			return;
 		}
-		const fileName = `${item.spriteName}-${type}${size !== 1 ? `-${size}x` : ""}.png`;
-		mutate({ url, fileName });
+		mutate({ data: item, url, type, size });
 	};
 
 	return (
@@ -118,5 +88,16 @@ export const SpriteDownloadButton = ({ item }: SpriteProps) => {
 				</DropdownMenuContent>
 			</DropdownMenu>
 		</div>
+	);
+};
+
+export const SpritePreview = ({ item }: SpriteProps) => {
+	return (
+		<Sprite
+			type="PLAYER"
+			animated
+			size="xl"
+			url={getPlayerSpriteUrlPreview(item)}
+		/>
 	);
 };

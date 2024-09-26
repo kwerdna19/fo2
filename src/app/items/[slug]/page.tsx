@@ -6,7 +6,10 @@ import { AdminButton } from "~/components/AdminButton";
 import { DurationDisplay } from "~/components/DurationDisplay";
 import { IconSprite } from "~/components/IconSprite";
 import { Sprite } from "~/components/Sprite";
-import { SpriteDownloadButton } from "~/components/SpriteDownloadButton";
+import {
+	SpriteDownloadButton,
+	SpritePreview,
+} from "~/components/SpriteDownloadButton";
 import { UnitSprite } from "~/components/UnitSprite";
 import { Badge } from "~/components/ui/badge";
 import { Label } from "~/components/ui/label";
@@ -23,7 +26,6 @@ import {
 	isItemVisible,
 	isWeapon,
 } from "~/utils/fo-game";
-import { getPlayerSpriteUrlPreview } from "~/utils/fo-sprite";
 
 interface Params {
 	slug: string;
@@ -257,13 +259,8 @@ export default async function Item({ params }: { params: Params }) {
 
 				{isItemVisible(item) ? (
 					<div className="max-w-fit">
-						<Sprite
-							type="PLAYER"
-							animated
-							size="xl"
-							url={getPlayerSpriteUrlPreview(item)}
-						/>
-						<SpriteDownloadButton item={item} />
+						<SpritePreview item={item} />
+						{/* <SpriteDownloadButton item={item} /> */}
 					</div>
 				) : null}
 			</div>
