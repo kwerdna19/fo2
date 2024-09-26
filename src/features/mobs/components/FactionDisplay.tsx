@@ -2,10 +2,9 @@ type Props = {
 	className?: string;
 	data: {
 		faction: {
-			id: string;
+			id: number;
 			name: string;
 		};
-		factionId: string;
 		factionXp: number;
 	};
 };

@@ -125,12 +125,12 @@
           "type": "integer",
           "originalType": "Int"
         },
-        "factionId": {
-          "type": "string",
-          "originalType": "String"
-        },
         "faction": {
           "$ref": "#/definitions/Faction"
+        },
+        "factionId": {
+          "type": "integer",
+          "originalType": "Int"
         },
         "artist": {
           "type": [
@@ -1464,8 +1464,8 @@
       "type": "object",
       "properties": {
         "id": {
-          "type": "string",
-          "originalType": "String"
+          "type": "integer",
+          "originalType": "Int"
         },
         "createdAt": {
           "type": "string",
@@ -1499,10 +1499,6 @@
           ],
           "originalType": "String"
         },
-        "inGameId": {
-          "type": "integer",
-          "originalType": "Int"
-        },
         "mobs": {
           "type": "array",
           "originalType": "Mob",
@@ -1512,9 +1508,9 @@
         }
       },
       "required": [
+        "id",
         "name",
-        "slug",
-        "inGameId"
+        "slug"
       ]
     },
     "Account": {

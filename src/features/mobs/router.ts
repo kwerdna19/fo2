@@ -209,7 +209,7 @@ export default createTRPCRouter({
 					},
 					faction: {
 						connect: {
-							inGameId: factionId,
+							id: factionId,
 						},
 					},
 					...rest,
@@ -269,7 +269,7 @@ export default createTRPCRouter({
 					...converted,
 					faction: {
 						connect: {
-							inGameId: factionId,
+							id: factionId,
 						},
 					},
 				},

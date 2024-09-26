@@ -34,10 +34,10 @@ for (const gameMob of mobs) {
 					create: {
 						name: `? (${now})`,
 						slug: now,
-						inGameId: factionId,
+						id: factionId,
 					},
 					where: {
-						inGameId: factionId,
+						id: factionId,
 					},
 				},
 			},

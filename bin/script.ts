@@ -2,31 +2,45 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const skills = await prisma.skill.findMany({
+const mobs = await prisma.mob.findMany({
 	select: {
 		id: true,
 		name: true,
-		spriteName: true,
 	},
 	where: {},
 });
 
-console.log(skills);
-
-for (const skill of skills) {
-	console.log("updating", skill.name);
+for (const mob of mobs) {
+	console.log("updating", mob.name);
 
 	// if (!skill.spriteUrl.includes("/sprites/skill/")) {
 	// 	console.log("skipping", skill);
 	// 	continue;
 	// }
 
-	await prisma.skill.update({
+	await prisma.mob.update({
 		where: {
-			id: skill.id,
+			id: mob.id,
 		},
 		data: {
-			spriteName: skill.spriteName.replace("-icon", ""),
+			// factionId: mob.factionInGameId,
 		},
 	});
 }
+
+// const factions = await prisma.faction.findMany({
+// 	// where: {},
+// });
+
+// for (const faction of factions) {
+// 	console.log("updating", faction.name);
+
+// 	await prisma.faction.update({
+// 		where: {
+// 			inGameId: faction.inGameId,
+// 		},
+// 		data: {
+// 			id: faction.inGameId,
+// 		},
+// 	});
+// }

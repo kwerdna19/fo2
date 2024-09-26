@@ -23,7 +23,7 @@ export default function SortButton<T>({
 	const label =
 		typeof column.columnDef.header === "string"
 			? column.columnDef.header
-			: column.columnDef.meta?.heading ?? column.id;
+			: (column.columnDef.meta?.heading ?? column.id);
 
 	const isId = column.id === label;
 	const types = column.columnDef.meta?.sortTypes;
@@ -81,7 +81,9 @@ export default function SortButton<T>({
 
 	const sortFieldId = column.columnDef.meta?.sortFieldReplacement;
 
-	const sortCol = sortFieldId ? table.getColumn(sortFieldId) ?? column : column;
+	const sortCol = sortFieldId
+		? (table.getColumn(sortFieldId) ?? column)
+		: column;
 
 	return (
 		<DropdownMenu>

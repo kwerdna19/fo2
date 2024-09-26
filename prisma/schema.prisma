@@ -45,8 +45,9 @@ model Mob {
   spawnTimeSec Int?
 
   factionXp Int
-  factionId String
+
   faction   Faction @relation(fields: [factionId], references: [id])
+  factionId Int
 
   artist String?
 }
@@ -392,14 +393,13 @@ model Skill {
 }
 
 model Faction {
-  id        String   @id @default(cuid())
+  id        Int      @id
   createdAt DateTime @default(now())
   spriteUrl String?
   updatedAt DateTime @default(now()) @updatedAt
   name      String   @unique()
   slug      String   @unique()
   note      String?
-  inGameId  Int      @unique
 
   mobs Mob[]
 }

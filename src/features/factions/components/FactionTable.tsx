@@ -2,11 +2,13 @@
 
 import { createColumnHelper } from "@tanstack/react-table";
 import type { ColumnDef } from "@tanstack/react-table";
+import Link from "next/link";
 import SortButton from "~/components/SortButton";
 import { DataTable } from "~/components/data-table/data-table";
 import { useDataTableQueryOptions } from "~/components/data-table/use-data-table-query";
 import { type RouterOutputs, api } from "~/trpc/react";
 import type { TableProps } from "~/types/table";
+import { getNameIdSlug } from "~/utils/misc";
 import { factionSearchParamParser } from "../search-params";
 
 type FactionDatum = RouterOutputs["faction"]["getAllPopulated"]["data"][number];
@@ -25,7 +27,7 @@ export const skillColumns = [
 	// 		</Link>
 	// 	),
 	// }),
-	columnHelper.accessor("inGameId", {
+	columnHelper.accessor("id", {
 		header: SortButton,
 		meta: {
 			heading: "ID",
@@ -33,6 +35,14 @@ export const skillColumns = [
 	}),
 	columnHelper.accessor("name", {
 		header: SortButton,
+		cell: (info) => (
+			<Link
+				prefetch={false}
+				href={`/factions/${getNameIdSlug(info.row.original)}`}
+			>
+				{info.getValue()}
+			</Link>
+		),
 		meta: {
 			sortFieldReplacement: "slug",
 		},

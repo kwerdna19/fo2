@@ -1,188 +1,180 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
+
 @layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
- 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
- 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
- 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
- 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
- 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
- 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
- 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
- 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+	:root {
+		--background: 0 0% 100%;
+		--foreground: 222.2 84% 4.9%;
 
-    --warning: 36 100% 57%;
-    --warning-foreground: 222.2 47.4% 11.2%;
-    --success: 	123 38% 57%;
-    --success-foreground: 222.2 47.4% 11.2%;
-    --error: 4 90% 58%;
-    --error-foreground: 222.2 47.4% 11.2%;
- 
-    --ring: 215 20.2% 65.1%;
- 
-    --radius: 0.5rem;
-  }
- 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
- 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
- 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
- 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
- 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
- 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
- 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
- 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
- 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 85.7% 97.3%;
+		--muted: 210 40% 96.1%;
+		--muted-foreground: 215.4 16.3% 46.9%;
 
-    --warning: 36 100% 57%;
-    --warning-foreground: 	36 100% 65%;
-    --success: 	123 38% 57%;
-    --success-foreground: 123 38% 64%;
-    --error: 4 90% 58%;
-    --error-foreground: 0 69% 67%;
- 
-    --ring: 217.2 32.6% 17.5%;
-  }
+		--popover: 0 0% 100%;
+		--popover-foreground: 222.2 84% 4.9%;
 
+		--card: 0 0% 100%;
+		--card-foreground: 222.2 84% 4.9%;
 
+		--border: 214.3 31.8% 91.4%;
+		--input: 214.3 31.8% 91.4%;
+
+		--primary: 222.2 47.4% 11.2%;
+		--primary-foreground: 210 40% 98%;
+
+		--secondary: 210 40% 96.1%;
+		--secondary-foreground: 222.2 47.4% 11.2%;
+
+		--accent: 210 40% 96.1%;
+		--accent-foreground: 222.2 47.4% 11.2%;
+
+		--destructive: 0 84.2% 60.2%;
+		--destructive-foreground: 210 40% 98%;
+
+		--warning: 36 100% 57%;
+		--warning-foreground: 222.2 47.4% 11.2%;
+		--success: 123 38% 57%;
+		--success-foreground: 222.2 47.4% 11.2%;
+		--error: 4 90% 58%;
+		--error-foreground: 222.2 47.4% 11.2%;
+
+		--ring: 215 20.2% 65.1%;
+
+		--radius: 0.5rem;
+	}
+
+	.dark {
+		--background: 222.2 84% 4.9%;
+		--foreground: 210 40% 98%;
+
+		--muted: 217.2 32.6% 17.5%;
+		--muted-foreground: 215 20.2% 65.1%;
+
+		--popover: 222.2 84% 4.9%;
+		--popover-foreground: 210 40% 98%;
+
+		--card: 222.2 84% 4.9%;
+		--card-foreground: 210 40% 98%;
+
+		--border: 217.2 32.6% 17.5%;
+		--input: 217.2 32.6% 17.5%;
+
+		--primary: 210 40% 98%;
+		--primary-foreground: 222.2 47.4% 11.2%;
+
+		--secondary: 217.2 32.6% 17.5%;
+		--secondary-foreground: 210 40% 98%;
+
+		--accent: 217.2 32.6% 17.5%;
+		--accent-foreground: 210 40% 98%;
+
+		--destructive: 0 62.8% 30.6%;
+		--destructive-foreground: 0 85.7% 97.3%;
+
+		--warning: 36 100% 57%;
+		--warning-foreground: 36 100% 65%;
+		--success: 123 38% 57%;
+		--success-foreground: 123 38% 64%;
+		--error: 4 90% 58%;
+		--error-foreground: 0 69% 67%;
+
+		--ring: 217.2 32.6% 17.5%;
+	}
 }
- 
+
 @layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+	* {
+		@apply border-border;
+	}
+	body {
+		@apply bg-background text-foreground;
+	}
 }
 
 @layer utilities {
-  .pixelated {
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
-  }
+	.pixelated {
+		image-rendering: pixelated;
+		image-rendering: -moz-crisp-edges;
+		image-rendering: crisp-edges;
+	}
 
-  .sprite {
+	.sprite {
+		background-repeat: no-repeat;
+		background-size: 300% 400%;
+		background-position-x: 50%;
+		background-position-y: 66.666%;
+	}
 
-    background-repeat: no-repeat;
-    background-size: 300% 400%;
-    background-position-x: 50%;
-    background-position-y: 66.666%;
-  
-  }
+	.sprite-animated {
+		animation: spriteMoveOnX 1s step-end infinite, spriteMoveOnY 12s step-end
+			infinite;
+	}
 
-  .sprite-animated {
-    animation: spriteMoveOnX 1s step-end infinite, spriteMoveOnY 12s step-end infinite;
-  }
-  
-  @keyframes spriteMoveOnX {
-    0% {
-      background-position-x: 50%;
-    }
-  
-    25% {
-      background-position-x: 100%;
-    }
-  
-    50% {
-      background-position-x: 50%;
-    }
-  
-    75% {
-      background-position-x: 0%;
-    }
-  
-    100% {
-      background-position-x: 50%;
-    }
-  }
-  
-  @keyframes spriteMoveOnY {
-    0% {
-      background-position-y: 66.666%;
-    }
-  
-    25% {
-      background-position-y: 33.333%;
-    }
-  
-    50% {
-      background-position-y: 0%;
-    }
-  
-    75% {
-      background-position-y: 100%;
-    }
-  
-    100% {
-      background-position-y: 66.666%;
-    }
-  }
+	@keyframes spriteMoveOnX {
+		0% {
+			background-position-x: 50%;
+		}
 
+		25% {
+			background-position-x: 100%;
+		}
+
+		50% {
+			background-position-x: 50%;
+		}
+
+		75% {
+			background-position-x: 0%;
+		}
+
+		100% {
+			background-position-x: 50%;
+		}
+	}
+
+	@keyframes spriteMoveOnY {
+		0% {
+			background-position-y: 66.666%;
+		}
+
+		25% {
+			background-position-y: 33.333%;
+		}
+
+		50% {
+			background-position-y: 0%;
+		}
+
+		75% {
+			background-position-y: 100%;
+		}
+
+		100% {
+			background-position-y: 66.666%;
+		}
+	}
 }
 
-
 .fo-ornate {
+	@apply pixelated;
 
-  @apply pixelated;
-
-  border-style: solid;
-  border-image-source: url("/ui/ornate-border-1.png");
-  border-image-slice: 5 6 fill;
-  border-image-width: 10px 12px;  
-  border-width: 6px 12px 6px 12px;
-  overflow: hidden;
+	border-style: solid;
+	border-image-source: url("/ui/ornate-border-1.png");
+	border-image-slice: 5 6 fill;
+	border-image-width: 10px 12px;
+	border-width: 6px 12px 6px 12px;
+	overflow: hidden;
 }
 
 .fo-ornate-2 {
+	@apply pixelated;
 
-  @apply pixelated;
+	border-style: solid;
+	border-image-source: url("/ui/ornate-border-2.png");
+	border-image-slice: 5 7 fill;
+	border-image-width: 10px 14px;
 
-  border-style: solid;
-  border-image-source: url("/ui/ornate-border-2.png");
-  border-image-slice: 5 7 fill;
-  border-image-width: 10px 14px;
+	border-width: 8px 14px 8px 14px;
 
-  border-width: 8px 14px 8px 14px;
-
-  overflow: hidden;
-
+	overflow: hidden;
 }

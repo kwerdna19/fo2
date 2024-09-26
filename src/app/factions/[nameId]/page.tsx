@@ -1,45 +1,42 @@
 import { Pencil } from "lucide-react";
 import { notFound } from "next/navigation";
 import { AdminButton } from "~/components/AdminButton";
-import { Sprite } from "~/components/Sprite";
 import { api } from "~/trpc/server";
 
 interface Params {
-	slug: string;
+	nameId: string;
 }
 
 export async function generateMetadata({ params }: { params: Params }) {
-	const mob = await api.mob.getBySlug(params);
-	if (!mob) {
+	const data = await api.faction.getById(params);
+	if (!data) {
 		return {};
 	}
 	return {
-		title: mob.name,
+		title: data.name,
 	};
 }
 
-export default async function Mob({ params }: { params: Params }) {
-	const mob = await api.mob.getBySlug(params);
+export default async function Faction({ params }: { params: Params }) {
+	const data = await api.faction.getById(params);
 
-	if (!mob) {
+	if (!data) {
 		notFound();
 	}
 
 	return (
 		<div>
 			<div className="flex gap-x-4">
-				<h2 className="text-3xl">{mob.name}</h2>
+				<h2 className="text-3xl">{data.name}</h2>
 				<AdminButton
 					size="icon"
 					variant="outline"
-					href={`/mobs/${params.slug}/edit`}
+					href={`/factions/${params.nameId}/edit`}
 				>
 					<Pencil className="w-4 h-4" />
 				</AdminButton>
 			</div>
-			<div>
-				<Sprite type="MOB" size="lg" url={mob.spriteName} animated />
-			</div>
+			<div className="whitespace-pre">{JSON.stringify(data, null, 2)}</div>
 		</div>
 	);
 }

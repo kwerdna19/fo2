@@ -50,7 +50,7 @@ export function DefinitionView<T>({
 							const label =
 								typeof cell.column.columnDef.header === "string"
 									? cell.column.columnDef.header
-									: cell.column.columnDef.meta?.heading ?? cell.column.id;
+									: (cell.column.columnDef.meta?.heading ?? cell.column.id);
 
 							return (
 								<div

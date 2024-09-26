@@ -32,12 +32,12 @@ for (const gameMob of mobs) {
 			faction: {
 				connectOrCreate: {
 					create: {
+						id: factionId,
 						name: `? (${now})`,
 						slug: now,
-						inGameId: factionId,
 					},
 					where: {
-						inGameId: factionId,
+						id: factionId,
 					},
 				},
 			},

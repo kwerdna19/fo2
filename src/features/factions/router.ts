@@ -5,6 +5,7 @@ import { factionSearchFilterSchema } from "./search-params";
 import type { Prisma } from "@prisma/client";
 import { z } from "zod";
 import schema from "~/server/db/json-schema.json";
+import { getIdFromNameId } from "~/utils/misc";
 
 const requiredFields = schema.definitions.Faction.required;
 const searchFields = ["name", "slug"];
@@ -89,6 +90,18 @@ export default createTRPCRouter({
 							})),
 						}
 					: undefined,
+			});
+		}),
+
+	getById: publicProcedure
+		.input(z.object({ nameId: z.string() }))
+		.query(({ ctx: { db }, input: { nameId } }) => {
+			const id = getIdFromNameId(nameId);
+
+			return db.faction.findUnique({
+				where: {
+					id,
+				},
 			});
 		}),
 });

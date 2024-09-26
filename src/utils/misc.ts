@@ -5,6 +5,34 @@ export const getSlugFromName = (name: string) => {
 		.toLowerCase();
 };
 
+export const getIdFromNameId = (nameId: string) => {
+	const idString = nameId.split("-").at(-1);
+
+	if (!idString) {
+		throw new Error(`Invalid nameId ${nameId}`);
+	}
+
+	if (!idString.match(/^\d+$/)) {
+		throw new Error(`Invalid nameId ${nameId}`);
+	}
+
+	return Number(idString);
+};
+
+type D = {
+	name: string;
+} & ({ id: number } | { inGameId: number });
+
+export const getNameIdSlug = (d: D) => {
+	const base = getSlugFromName(d.name);
+
+	if ("inGameId" in d) {
+		return `${base}-${d.inGameId}`;
+	}
+
+	return `${base}-${d.id}`;
+};
+
 export const shallowCompare = (
 	obj1: Record<string | number | symbol, unknown>,
 	obj2: Record<string | number | symbol, unknown>,

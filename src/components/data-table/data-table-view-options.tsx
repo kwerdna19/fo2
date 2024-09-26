@@ -41,7 +41,7 @@ export function DataTableViewOptions<TData>({
 						const label =
 							typeof column.columnDef.header === "string"
 								? column.columnDef.header
-								: column.columnDef.meta?.heading ?? column.id;
+								: (column.columnDef.meta?.heading ?? column.id);
 
 						return (
 							<DropdownMenuCheckboxItem
