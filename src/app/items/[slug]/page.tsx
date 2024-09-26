@@ -260,7 +260,7 @@ export default async function Item({ params }: { params: Params }) {
 				{isItemVisible(item) ? (
 					<div className="max-w-fit">
 						<SpritePreview item={item} />
-						{/* <SpriteDownloadButton item={item} /> */}
+						<SpriteDownloadButton item={item} />
 					</div>
 				) : null}
 			</div>

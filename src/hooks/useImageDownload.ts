@@ -1,7 +1,8 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
-import { Jimp, ResizeStrategy } from "jimp";
+import type { ResizeStrategy } from "jimp";
+import { MyJimp } from "~/utils/jimp";
 
 export function useImageDownload() {
 	return useMutation({
@@ -19,12 +20,12 @@ export function useImageDownload() {
 			} = input;
 			const fileName = `${spriteName}${type ? `-${type}` : ""}${size !== 1 ? `-${size}x` : ""}.png`;
 
-			const img = await Jimp.read(url);
+			const img = await MyJimp.read(url);
 
 			if (size > 1) {
 				img.scale({
 					f: size,
-					mode: ResizeStrategy.NEAREST_NEIGHBOR,
+					mode: "nearestNeighbor" as ResizeStrategy,
 				});
 			}
 
