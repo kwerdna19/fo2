@@ -55,9 +55,10 @@ export const skillColumns = [
 ] as ColumnDef<FactionDatum, any>[];
 
 export function FactionTable(props: TableProps<"faction", "getAllPopulated">) {
-	const { params, options } = useDataTableQueryOptions(
+	const { params, options, searchParamOptions } = useDataTableQueryOptions(
 		factionSearchParamParser,
 		props,
+		{ defaultSort: "id" },
 	);
 	const { data } = api.faction.getAllPopulated.useQuery(params, options);
 
@@ -66,6 +67,7 @@ export function FactionTable(props: TableProps<"faction", "getAllPopulated">) {
 			title="Factions"
 			data={data ?? { data: [], totalCount: 0 }}
 			columns={skillColumns}
+			searchParamOptions={searchParamOptions}
 		/>
 	);
 }

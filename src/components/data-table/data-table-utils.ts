@@ -5,15 +5,19 @@ export const pageSizeOptions = [10, 25, 50, 100] as const;
 
 export const DEFAULT_PAGE_SIZE = pageSizeOptions[1];
 
-export const dataTableSearchParams = {
+export type DataTableSearchParamOptions = { defaultSort?: string } | undefined;
+
+export const getDataTableSearchParams = (
+	ops?: DataTableSearchParamOptions,
+) => ({
 	query: parseAsString,
 	page: parseAsInteger.withDefault(1).withOptions({ clearOnDefault: true }),
 	per_page: parseAsInteger
 		.withDefault(DEFAULT_PAGE_SIZE)
 		.withOptions({ clearOnDefault: true }),
-	sort: parseAsString.withDefault("slug"),
+	sort: parseAsString.withDefault(ops?.defaultSort ?? "slug"),
 	sort_dir: parseAsStringEnum(["asc", "desc"]).withDefault("asc"),
-};
+});
 
 export const baseDataTableQuerySchema = z.object({
 	query: z.string().nullish(),

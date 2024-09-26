@@ -86,9 +86,10 @@ export const collectionItemTableColumns = [
 export function CollectionTable(
 	props: TableProps<"collection", "getMyCollection">,
 ) {
-	const { params, options } = useDataTableQueryOptions(
+	const { params, options, searchParamOptions } = useDataTableQueryOptions(
 		collectionSearchParamParser,
 		props,
+		{ defaultSort: "addedAt" },
 	);
 	const { data } = api.collection.getMyCollection.useQuery(params, options);
 
@@ -97,6 +98,7 @@ export function CollectionTable(
 			title="Items"
 			data={data ?? { data: [], totalCount: 0 }}
 			columns={collectionItemTableColumns}
+			searchParamOptions={searchParamOptions}
 		/>
 	);
 }

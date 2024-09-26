@@ -1,6 +1,6 @@
 import { createSearchParamsCache, parseAsInteger } from "nuqs/server";
 import { z } from "zod";
-import { dataTableSearchParams } from "~/components/data-table/data-table-utils";
+import { getDataTableSearchParams } from "~/components/data-table/data-table-utils";
 import { LEVEL_CAP } from "~/utils/fo-game";
 
 export const skillSearchParamParser = {
@@ -10,7 +10,7 @@ export const skillSearchParamParser = {
 
 export const skillSearchParamCache = createSearchParamsCache({
 	...skillSearchParamParser,
-	...dataTableSearchParams,
+	...getDataTableSearchParams(),
 });
 
 export const skillSearchFilterSchema = z.object({

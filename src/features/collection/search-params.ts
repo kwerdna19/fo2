@@ -1,6 +1,6 @@
 import { createSearchParamsCache, parseAsInteger } from "nuqs/server";
 import { z } from "zod";
-import { dataTableSearchParams } from "~/components/data-table/data-table-utils";
+import { getDataTableSearchParams } from "~/components/data-table/data-table-utils";
 
 export const collectionSearchParamParser = {
 	type: parseAsInteger,
@@ -9,7 +9,7 @@ export const collectionSearchParamParser = {
 
 export const collectionSearchParamCache = createSearchParamsCache({
 	...collectionSearchParamParser,
-	...dataTableSearchParams,
+	...getDataTableSearchParams({ defaultSort: "addedAt" }),
 });
 
 export const collectionSearchFilterSchema = z.object({

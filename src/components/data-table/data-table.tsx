@@ -35,7 +35,10 @@ import { Skeleton } from "../ui/skeleton";
 import { DataTableFiltersToggle } from "./data-table-filters-toggle";
 import { DataTableSearchBar } from "./data-table-search-bar";
 import { DataTableSideBar } from "./data-table-sidebar";
-import { pageSizeOptions } from "./data-table-utils";
+import {
+	type DataTableSearchParamOptions,
+	pageSizeOptions,
+} from "./data-table-utils";
 import { DataTableViewOptions } from "./data-table-view-options";
 import { useDataTableQueryParams } from "./use-data-table-query";
 
@@ -50,6 +53,7 @@ export function DataTable<T, Data extends { totalCount: number; data: T[] }>({
 	title,
 	defaultColumnVisibility,
 	loading = false,
+	searchParamOptions,
 }: {
 	data: Data;
 	columns: ColumnDef<T>[];
@@ -57,6 +61,7 @@ export function DataTable<T, Data extends { totalCount: number; data: T[] }>({
 	title: string;
 	defaultColumnVisibility?: Record<string, boolean>;
 	loading?: boolean;
+	searchParamOptions?: DataTableSearchParamOptions;
 }) {
 	const { totalCount, data: rows } = data;
 
@@ -66,7 +71,7 @@ export function DataTable<T, Data extends { totalCount: number; data: T[] }>({
 	const hasFilters = Boolean(filtersComponent);
 
 	const { pagination, setPagination, sorting, setSorting, search, setSearch } =
-		useDataTableQueryParams();
+		useDataTableQueryParams(searchParamOptions);
 
 	// TODO revisit
 	// const [columnVisibility, setColumnVisibility] = useLocalStorage(

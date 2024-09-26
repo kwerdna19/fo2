@@ -1,6 +1,6 @@
 import { createSearchParamsCache, parseAsInteger } from "nuqs/server";
 import { z } from "zod";
-import { dataTableSearchParams } from "~/components/data-table/data-table-utils";
+import { getDataTableSearchParams } from "~/components/data-table/data-table-utils";
 import { LEVEL_CAP } from "~/utils/fo-game";
 
 export const mobSearchParamParser = {
@@ -10,7 +10,7 @@ export const mobSearchParamParser = {
 
 export const mobSearchParamCache = createSearchParamsCache({
 	...mobSearchParamParser,
-	...dataTableSearchParams,
+	...getDataTableSearchParams(),
 });
 
 export const mobSearchFilterSchema = z.object({
