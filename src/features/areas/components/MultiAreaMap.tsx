@@ -6,15 +6,15 @@ import { MapContainer } from "react-leaflet";
 import type { RouterOutputs } from "~/trpc/react";
 import { MapBackground } from "./MapBackground";
 
-type Areas = RouterOutputs["area"]["getAllPopulated"];
+type Areas = RouterOutputs["area"]["getAllPopulated"]["data"];
 
 export default function MultiAreaMap({
-	areas: allAreas,
+	areas: inputAreas,
 	bg,
 }: { areas: Areas; bg?: string }) {
-	const [region] = useState(allAreas.at(0)?.region);
-
-	const areas = allAreas.filter((a) => a.region === region);
+	const areas = inputAreas.filter((a) => a.spriteUrl) as Array<
+		Omit<Areas[number], "spriteUrl"> & { spriteUrl: string }
+	>;
 
 	const maxX = areas.reduce((acc, area) => {
 		if (area.globalX + area.width > acc) {

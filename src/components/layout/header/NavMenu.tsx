@@ -14,9 +14,10 @@ import {
 	NavigationMenuTrigger,
 	navigationMenuTriggerStyle,
 } from "~/components/ui/navigation-menu";
+import { getNameIdSlug } from "~/utils/misc";
 import { cn } from "~/utils/styles";
 
-type Areas = Pick<Area, "id" | "name" | "slug">[];
+type Areas = Pick<Area, "id" | "name">[];
 
 export function NavMenu({
 	className,
@@ -102,7 +103,7 @@ export function NavMenu({
 							{areas.map((area) => (
 								<ListItem
 									key={area.id}
-									href={`/areas/${area.slug}`}
+									href={`/areas/${getNameIdSlug(area)}`}
 									title={area.name}
 								/>
 							))}

@@ -1,5 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { api } from "~/trpc/server";
+import { getNameIdSlug } from "~/utils/misc";
 
 export const metadata = {
 	title: "Battlepass",
@@ -12,5 +13,5 @@ export default async function BattlePass() {
 	if (!pass) {
 		notFound();
 	}
-	redirect(`/battlepass/${pass.slug}`);
+	redirect(`/battlepass/${getNameIdSlug(pass.item)}`);
 }

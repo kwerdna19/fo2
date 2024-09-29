@@ -63,15 +63,17 @@ function GuildPhotoGen({
 	return (
 		<div>
 			<Select
-				value={area?.id}
-				onValueChange={(id) => setSelectedArea(areas?.find((a) => a.id === id))}
+				value={area?.id?.toString()}
+				onValueChange={(id) =>
+					setSelectedArea(areas?.find((a) => a.id.toString() === id))
+				}
 			>
 				<SelectTrigger>
 					<SelectValue placeholder="Select Area" />
 				</SelectTrigger>
 				<SelectContent>
 					{areas?.map((area) => (
-						<SelectItem key={area.id} value={area.id}>
+						<SelectItem key={area.id} value={area.id.toString()}>
 							{area.name}
 						</SelectItem>
 					))}

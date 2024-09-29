@@ -1,5 +1,6 @@
 "use client";
 import type { Item, Unit } from "@prisma/client";
+import { KeyRound } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { PriceDisplay } from "~/components/PriceDisplay";
@@ -9,10 +10,11 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "~/components/ui/tooltip";
+import { getNameIdSlug } from "~/utils/misc";
 import { cn } from "~/utils/styles";
 import { IconSprite } from "../../../components/IconSprite";
 
-type PartialItem = Pick<Item, "id" | "name" | "spriteName" | "slug">;
+type PartialItem = Pick<Item, "id" | "name" | "spriteName">;
 
 type DisplayProperty = ReactNode | { value: number; unit: Unit };
 
@@ -20,7 +22,6 @@ type Props<K extends PartialItem | { item: PartialItem }> = {
 	data: Array<K>;
 	getAttributes?: (d: K) => Record<string, DisplayProperty>;
 	className?: string;
-	hideNull?: string[];
 	countProperty?: string;
 	infoInToolTip?: boolean;
 	size?: "md" | "sm";
@@ -29,7 +30,6 @@ type Props<K extends PartialItem | { item: PartialItem }> = {
 export function ItemList<K extends PartialItem | { item: PartialItem }>({
 	data,
 	getAttributes,
-	hideNull,
 	countProperty,
 	className,
 	size = "sm",
@@ -55,12 +55,7 @@ export function ItemList<K extends PartialItem | { item: PartialItem }>({
 
 				const properties =
 					getAttributes &&
-					Object.entries(getAttributes(d)).filter(([key, value]) => {
-						if (hideNull?.includes(key) && value === null) {
-							return false;
-						}
-						return true;
-					});
+					Object.entries(getAttributes(d)).filter(([Key, val]) => val !== null);
 
 				const count = countProperty
 					? properties?.find(([key]) => key === countProperty)?.[1]
@@ -80,7 +75,7 @@ export function ItemList<K extends PartialItem | { item: PartialItem }>({
 								<Link
 									className="min-w-max relative"
 									prefetch={false}
-									href={`/items/${item.slug}`}
+									href={`/items/${getNameIdSlug(item)}`}
 								>
 									<IconSprite bg url={item.spriteName} size={size} />
 									{count ? (

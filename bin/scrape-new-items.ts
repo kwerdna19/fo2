@@ -6,9 +6,9 @@ import {
 
 const prisma = new PrismaClient();
 
-const { inGameId: highestId } = await prisma.item.findFirstOrThrow({
+const { id: highestId } = await prisma.item.findFirstOrThrow({
 	orderBy: {
-		inGameId: "desc",
+		id: "desc",
 	},
 });
 
@@ -29,7 +29,7 @@ for (const gameItem of newItems) {
 		data: {
 			...rest,
 			boxItems: boxIds && {
-				connect: boxIds.map((b) => ({ inGameId: b })),
+				connect: boxIds.map((b) => ({ id: b })),
 			},
 		},
 	});

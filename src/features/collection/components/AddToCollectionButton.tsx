@@ -11,7 +11,7 @@ import {
 } from "~/components/ui/tooltip";
 import { api } from "~/trpc/react";
 
-export function AddToCollectionButton({ id }: { id: string }) {
+export function AddToCollectionButton({ id }: { id: number }) {
 	const utils = api.useUtils();
 
 	const router = useRouter();

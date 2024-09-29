@@ -1,26 +1,22 @@
 import { Role } from "@prisma/client";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { Button } from "~/components/ui/button";
-import { getListOfImages } from "~/utils/server";
 
-import { parseWithZod } from "@conform-to/zod";
-import { revalidatePath } from "next/cache";
 import { convertLocations } from "~/features/areas/utils";
 import { NpcForm } from "~/features/npcs/components/NpcForm";
 import { npcSchema } from "~/features/npcs/schemas";
 import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles";
 import { api } from "~/trpc/server";
-import type { ConformResult } from "~/types/actions";
-import { recursivelyNullifyUndefinedValues } from "~/utils/misc";
+import { getIdFromNameId, getNameIdSlug } from "~/utils/misc";
 
 interface Params {
-	slug: string;
+	nameId: string;
 }
 
 export async function generateMetadata({ params }: { params: Params }) {
-	const npc = await api.npc.getBySlug(params);
+	const npc = await api.npc.getById(getIdFromNameId(params.nameId));
 	if (!npc) {
 		return {};
 	}
@@ -30,9 +26,9 @@ export async function generateMetadata({ params }: { params: Params }) {
 }
 
 export default async function EditNpc({ params }: { params: Params }) {
-	await userSatisfiesRoleOrRedirect(Role.MODERATOR, `/npcs/${params.slug}`);
+	await userSatisfiesRoleOrRedirect(Role.MODERATOR, `/npcs/${params.nameId}`);
 
-	const npc = await api.npc.getBySlug(params);
+	const npc = await api.npc.getById(getIdFromNameId(params.nameId));
 
 	if (!npc) {
 		return notFound();
@@ -41,7 +37,7 @@ export default async function EditNpc({ params }: { params: Params }) {
 	return (
 		<div className="w-full max-w-screen-xl">
 			<Button size="sm" variant="outline" className="mb-5" asChild>
-				<Link href={`/npcs/${npc.slug}`}>
+				<Link href={`/npcs/${getNameIdSlug(npc)}`}>
 					<ChevronLeft className="mr-2 h-4 w-4" />
 					Back to page
 				</Link>

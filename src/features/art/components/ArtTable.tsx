@@ -19,7 +19,7 @@ const artColumns = [
 	// 		<Link
 	// 			className="flex justify-center"
 	// 			prefetch={false}
-	// 			href={`/skills/${row.original.slug}`}
+	// 			href={`/skills/${getNameIdSlug(row.original)}`}
 	// 		>
 	// 			<IconSprite
 	// 				url={row.original.spriteUrl}

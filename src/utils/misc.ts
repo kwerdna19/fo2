@@ -12,25 +12,16 @@ export const getIdFromNameId = (nameId: string) => {
 		throw new Error(`Invalid nameId ${nameId}`);
 	}
 
-	if (!idString.match(/^\d+$/)) {
-		throw new Error(`Invalid nameId ${nameId}`);
-	}
-
 	return Number(idString);
 };
 
 type D = {
+	id: number;
 	name: string;
-} & ({ id: number } | { inGameId: number });
+};
 
 export const getNameIdSlug = (d: D) => {
-	const base = getSlugFromName(d.name);
-
-	if ("inGameId" in d) {
-		return `${base}-${d.inGameId}`;
-	}
-
-	return `${base}-${d.id}`;
+	return `${getSlugFromName(d.name)}-${d.id}`;
 };
 
 export const shallowCompare = (

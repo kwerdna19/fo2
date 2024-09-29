@@ -1,11 +1,9 @@
 "use client";
 
 import { Trash2 } from "lucide-react";
-import { useFieldArray, useForm, useFormContext } from "react-hook-form";
+import { useFieldArray, useFormContext } from "react-hook-form";
 import type { z } from "zod";
-import UnitSelect from "~/components/UnitSelect";
 import { SearchField } from "~/components/form/SearchField";
-import { TextField } from "~/components/form/TextField";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
 import { api } from "~/trpc/react";
@@ -29,31 +27,13 @@ export function SoldByField() {
 				<div className="space-y-3">
 					{fields.map((field, index) => {
 						return (
-							<div
-								key={field.key}
-								className="grid grid-cols-6 xl:grid-cols-9 gap-3"
-							>
-								<div className="col-span-4">
-									<SearchField
-										type="Npc"
-										control={control}
-										name={`soldBy.${index}.npc`}
-										query={api.npc.getAllQuick}
-									/>
-								</div>
-
-								<div className="col-span-3">
-									<TextField
-										placeholder="Price"
-										control={control}
-										name={`soldBy.${index}.price`}
-										type="number"
-									/>
-								</div>
-
-								<div className="col-span-1">
-									<UnitSelect control={control} name={`soldBy.${index}.unit`} />
-								</div>
+							<div key={field.key} className="flex gap-3">
+								<SearchField
+									type="Npc"
+									control={control}
+									name={`soldBy.${index}`}
+									query={api.npc.getAllQuick}
+								/>
 
 								<Button
 									size="icon"
@@ -70,11 +50,7 @@ export function SoldByField() {
 
 				<Button
 					type="button"
-					onClick={() =>
-						append({ unit: "COINS" } as NonNullable<
-							FormValues["craftedBy"]
-						>[number])
-					}
+					onClick={() => append({} as FormValues["soldBy"][number])}
 				>
 					Add
 				</Button>

@@ -10,13 +10,14 @@ import { MobDefinitionView } from "~/features/mobs/components/MobDefinition";
 import { mobSchema } from "~/features/mobs/schemas";
 import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles";
 import { api } from "~/trpc/server";
+import { getIdFromNameId, getNameIdSlug } from "~/utils/misc";
 
 interface Params {
-	slug: string;
+	nameId: string;
 }
 
 export async function generateMetadata({ params }: { params: Params }) {
-	const mob = await api.mob.getBySlug(params);
+	const mob = await api.mob.getById(getIdFromNameId(params.nameId));
 	if (!mob) {
 		return {};
 	}
@@ -26,9 +27,9 @@ export async function generateMetadata({ params }: { params: Params }) {
 }
 
 export default async function EditMob({ params }: { params: Params }) {
-	await userSatisfiesRoleOrRedirect(Role.MODERATOR, `/mobs/${params.slug}`);
+	await userSatisfiesRoleOrRedirect(Role.MODERATOR, `/mobs/${params.nameId}`);
 
-	const mob = await api.mob.getBySlug(params);
+	const mob = await api.mob.getById(getIdFromNameId(params.nameId));
 
 	if (!mob) {
 		return notFound();
@@ -37,7 +38,7 @@ export default async function EditMob({ params }: { params: Params }) {
 	return (
 		<div className="space-y-8">
 			<Button size="sm" variant="outline" asChild>
-				<Link href={`/mobs/${mob.slug}`}>
+				<Link href={`/mobs/${getNameIdSlug(mob)}`}>
 					<ChevronLeft className="mr-2 h-4 w-4" />
 					Back to page
 				</Link>

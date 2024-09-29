@@ -7,13 +7,14 @@ import { FactionForm } from "~/features/factions/components/FactionForm";
 import { factionSchema } from "~/features/factions/schemas";
 import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles";
 import { api } from "~/trpc/server";
+import { getIdFromNameId, getNameIdSlug } from "~/utils/misc";
 
 interface Params {
 	nameId: string;
 }
 
 export async function generateMetadata({ params }: { params: Params }) {
-	const data = await api.faction.getById(params);
+	const data = await api.faction.getById(getIdFromNameId(params.nameId));
 	if (!data) {
 		return {};
 	}
@@ -28,7 +29,7 @@ export default async function EditFaction({ params }: { params: Params }) {
 		`/factions/${params.nameId}`,
 	);
 
-	const data = await api.faction.getById(params);
+	const data = await api.faction.getById(getIdFromNameId(params.nameId));
 	if (!data) {
 		return notFound();
 	}
@@ -36,7 +37,7 @@ export default async function EditFaction({ params }: { params: Params }) {
 	return (
 		<div className="space-y-8">
 			<Button size="sm" variant="outline" asChild>
-				<Link href={`/factions/${params.nameId}`}>
+				<Link href={`/factions/${getNameIdSlug(data)}`}>
 					<ChevronLeft className="mr-2 h-4 w-4" />
 					Back to page
 				</Link>

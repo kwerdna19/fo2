@@ -14,7 +14,7 @@ console.log("Found:", allItems.length);
 for (const gameItem of allItems) {
 	const dbItem = await db.item.findFirst({
 		where: {
-			inGameId: gameItem.id,
+			id: gameItem.id,
 		},
 	});
 
@@ -28,12 +28,12 @@ for (const gameItem of allItems) {
 	console.log("Updating", gameItem.t.en.n);
 	await prisma.item.update({
 		where: {
-			inGameId: gameItem.id,
+			id: gameItem.id,
 		},
 		data: {
 			...rest,
 			boxItems: boxIds && {
-				connect: boxIds.map((b) => ({ inGameId: b })),
+				connect: boxIds.map((b) => ({ id: b })),
 			},
 		},
 	});

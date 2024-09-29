@@ -5,19 +5,15 @@ import { ingredientsSchema } from "../items/schemas";
 
 export const saleItemsSchema = z
 	.object({
-		item: z.object({
-			id: z.string(),
-			name: z.string(),
-		}),
-		price: z.number(),
-		unit: z.nativeEnum(Unit).optional(),
+		id: z.number(),
+		name: z.string(),
 	})
 	.array();
 
 export const craftItemsSchema = z
 	.object({
 		item: z.object({
-			id: z.string(),
+			id: z.number(),
 			name: z.string(),
 		}),
 		price: z.number().int(),
@@ -49,7 +45,7 @@ export const npcSchema = z.object({
 	crafts: craftItemsSchema,
 	area: z
 		.object({
-			id: z.string(),
+			id: z.number(),
 			name: z.string(),
 		})
 		.nullish(),

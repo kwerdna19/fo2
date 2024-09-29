@@ -1,29 +1,17 @@
-import { EquippableType, Unit } from "@prisma/client";
+import { Unit } from "@prisma/client";
 import { z } from "zod";
-import { itemBattlePassTiersSchema } from "../battlepasses/schemas";
-
-export const droppedBySchema = z
-	.object({
-		mobId: z.string(),
-		dropRate: z.number().optional(),
-	})
-	.array();
 
 export const soldBySchema = z
 	.object({
-		npc: z.object({
-			id: z.string(),
-			name: z.string(),
-		}),
-		unit: z.nativeEnum(Unit).optional(),
-		price: z.number().int(),
+		id: z.number(),
+		name: z.string(),
 	})
 	.array();
 
 export const ingredientsSchema = z
 	.object({
 		item: z.object({
-			id: z.string(),
+			id: z.number(),
 			name: z.string(),
 		}),
 		quantity: z.number().int().default(1),
@@ -33,7 +21,7 @@ export const ingredientsSchema = z
 export const craftedBySchema = z
 	.object({
 		npc: z.object({
-			id: z.string(),
+			id: z.number(),
 			name: z.string(),
 		}),
 		durationMinutes: z.number(),

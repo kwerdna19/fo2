@@ -80,7 +80,6 @@ export default createTRPCRouter({
 							item: {
 								select: {
 									id: true,
-									slug: true,
 									spriteName: true,
 									name: true,
 									sellPrice: true,
@@ -100,7 +99,6 @@ export default createTRPCRouter({
 							area: {
 								select: {
 									id: true,
-									slug: true,
 									name: true,
 								},
 							},
@@ -134,12 +132,12 @@ export default createTRPCRouter({
 		});
 	}),
 
-	getBySlug: publicProcedure
-		.input(z.object({ slug: z.string() }))
-		.query(({ ctx: { db }, input: { slug } }) => {
+	getById: publicProcedure
+		.input(z.number())
+		.query(({ ctx: { db }, input: id }) => {
 			return db.mob.findFirst({
 				where: {
-					slug,
+					id,
 				},
 				include: {
 					drops: {
@@ -147,7 +145,6 @@ export default createTRPCRouter({
 							item: {
 								select: {
 									id: true,
-									slug: true,
 									spriteName: true,
 									name: true,
 									sellPrice: true,
@@ -167,7 +164,6 @@ export default createTRPCRouter({
 							area: {
 								select: {
 									id: true,
-									slug: true,
 									name: true,
 								},
 							},
@@ -178,18 +174,18 @@ export default createTRPCRouter({
 		}),
 
 	create: roleProtectedProcedure(Role.MODERATOR)
-		.input(z.object({ data: mobSchema, inGameId: z.number() }))
+		.input(z.object({ data: mobSchema, id: z.number() }))
 		.mutation(async ({ ctx: { db }, input }) => {
-			const { data, inGameId } = input;
+			const { data, id } = input;
 
 			const { locations, ...rest } = data;
 
-			const definitionData = await getDataById("mobs", inGameId);
+			const definitionData = await getDataById("mobs", id);
 
 			if (!definitionData) {
 				throw new TRPCError({
 					code: "NOT_FOUND",
-					message: `Mob definition not found for id: ${inGameId}`,
+					message: `Mob definition not found for id: ${id}`,
 				});
 			}
 
@@ -219,7 +215,7 @@ export default createTRPCRouter({
 		}),
 
 	update: roleProtectedProcedure(Role.MODERATOR)
-		.input(z.object({ id: z.string(), data: mobSchema }))
+		.input(z.object({ id: z.number(), data: mobSchema }))
 		.mutation(async ({ ctx: { db }, input }) => {
 			const { id, data } = input;
 			const { locations, ...fields } = data;
@@ -247,16 +243,14 @@ export default createTRPCRouter({
 		}),
 
 	syncDefinition: roleProtectedProcedure(Role.MODERATOR)
-		.input(z.object({ inGameId: z.number() }))
-		.mutation(async ({ ctx: { db }, input }) => {
-			const { inGameId } = input;
-
-			const definitionData = await getDataById("mobs", inGameId);
+		.input(z.number())
+		.mutation(async ({ ctx: { db }, input: id }) => {
+			const definitionData = await getDataById("mobs", id);
 
 			if (!definitionData) {
 				throw new TRPCError({
 					code: "NOT_FOUND",
-					message: `Item definition not found for id: ${inGameId}`,
+					message: `Item definition not found for id: ${id}`,
 				});
 			}
 
@@ -274,14 +268,14 @@ export default createTRPCRouter({
 					},
 				},
 				where: {
-					inGameId,
+					id,
 				},
 			});
 		}),
 
 	delete: roleProtectedProcedure(Role.ADMIN)
-		.input(z.object({ id: z.string() }))
-		.mutation(({ ctx: { db }, input: { id } }) => {
+		.input(z.number())
+		.mutation(({ ctx: { db }, input: id }) => {
 			return db.mob.delete({
 				where: { id },
 			});

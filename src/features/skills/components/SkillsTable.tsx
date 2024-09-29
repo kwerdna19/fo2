@@ -12,6 +12,7 @@ import { ItemStats } from "~/features/items/components/ItemStats";
 import { type RouterOutputs, api } from "~/trpc/react";
 import type { TableProps } from "~/types/table";
 import { skillSearchParamParser } from "../search-params";
+import { getSkillNameIdSlug } from "../utils";
 
 type SkillDatum = RouterOutputs["skill"]["getAllPopulated"]["data"][number];
 const columnHelper = createColumnHelper<SkillDatum>();
@@ -23,7 +24,7 @@ export const skillColumns = [
 			<Link
 				className="flex justify-center"
 				prefetch={false}
-				href={`/skills/${row.original.slug}`}
+				href={`/skills/${getSkillNameIdSlug(row.original)}`}
 			>
 				<IconSprite type="SKILL" url={row.original.spriteName} size="sm" bg />
 			</Link>
@@ -31,19 +32,14 @@ export const skillColumns = [
 	}),
 	columnHelper.accessor("name", {
 		cell: (info) => (
-			<Link prefetch={false} href={`/skills/${info.row.original.slug}`}>
+			<Link
+				prefetch={false}
+				href={`/skills/${getSkillNameIdSlug(info.row.original)}`}
+			>
 				{info.getValue()}
 			</Link>
 		),
 		header: SortButton,
-		meta: {
-			sortFieldReplacement: "slug",
-		},
-	}),
-	columnHelper.accessor("slug", {
-		meta: {
-			hidden: true,
-		},
 	}),
 	columnHelper.accessor("rank", {
 		header: SortButton,

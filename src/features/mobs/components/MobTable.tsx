@@ -19,6 +19,7 @@ import { ItemList } from "~/features/items/components/ItemList";
 import { type RouterOutputs, api } from "~/trpc/react";
 import type { TableProps } from "~/types/table";
 import { LEVEL_CAP } from "~/utils/fo-game";
+import { getNameIdSlug } from "~/utils/misc";
 import { mobSearchFilterSchema, mobSearchParamParser } from "../search-params";
 import { DmgRange } from "./DmgRange";
 import { DropGold } from "./DropGold";
@@ -36,7 +37,7 @@ export const mobTableColumns: ColumnDef<MobDatum, any>[] = [
 		cell: ({ row }) => (
 			<Link
 				prefetch={false}
-				href={`/mobs/${row.original.slug}`}
+				href={`/mobs/${getNameIdSlug(row.original)}`}
 				className="flex justify-center items-center h-[64px] max-h-full overflow-hidden group-hover:overflow-visible"
 			>
 				<Sprite
@@ -52,7 +53,7 @@ export const mobTableColumns: ColumnDef<MobDatum, any>[] = [
 		id: "name",
 		enableHiding: false,
 		cell: (info) => (
-			<Link prefetch={false} href={`/mobs/${info.row.original.slug}`}>
+			<Link prefetch={false} href={`/mobs/${getNameIdSlug(info.row.original)}`}>
 				{info.getValue()}
 			</Link>
 		),
@@ -64,11 +65,6 @@ export const mobTableColumns: ColumnDef<MobDatum, any>[] = [
 	columnHelper.accessor("desc", {}),
 	columnHelper.accessor("level", {
 		header: SortButton,
-	}),
-	columnHelper.accessor("boss", {
-		header: SortButton,
-		cell: ({ row }) =>
-			row.original.boss ? <Crown className="h-5 w-5 text-yellow-600" /> : null,
 	}),
 	columnHelper.display({
 		id: "gold",
@@ -99,9 +95,8 @@ export const mobTableColumns: ColumnDef<MobDatum, any>[] = [
 						unit: d.item.sellPriceUnit,
 						value: d.item.sellPrice,
 					},
-					"Potential Drops": d.count,
+					"Potential Drops": d.count > 1 ? d.count : null,
 				})}
-				hideNull={["Potential Drops"]}
 				countProperty="Potential Drops"
 				className="flex-nowrap"
 			/>
@@ -164,11 +159,6 @@ export const mobTableColumns: ColumnDef<MobDatum, any>[] = [
 	}),
 	columnHelper.accessor("artist", {
 		header: SortButton,
-	}),
-	columnHelper.accessor("slug", {
-		meta: {
-			hidden: true,
-		},
 	}),
 ];
 

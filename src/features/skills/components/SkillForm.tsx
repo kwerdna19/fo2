@@ -26,7 +26,7 @@ import { skillSchema } from "../schemas";
 import { SkillItemsField } from "./SkillItemsField";
 
 interface Props {
-	id?: string;
+	id?: number;
 	defaultValue?: z.infer<typeof skillSchema>;
 }
 

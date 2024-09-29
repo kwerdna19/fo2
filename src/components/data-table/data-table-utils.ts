@@ -15,7 +15,7 @@ export const getDataTableSearchParams = (
 	per_page: parseAsInteger
 		.withDefault(DEFAULT_PAGE_SIZE)
 		.withOptions({ clearOnDefault: true }),
-	sort: parseAsString.withDefault(ops?.defaultSort ?? "slug"),
+	sort: parseAsString.withDefault(ops?.defaultSort ?? "id"),
 	sort_dir: parseAsStringEnum(["asc", "desc"]).withDefault("asc"),
 });
 

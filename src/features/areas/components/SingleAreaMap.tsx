@@ -8,7 +8,7 @@ import { cn } from "~/utils/styles";
 import { LocationLayers } from "./LocationLayers";
 import { MapBackground } from "./MapBackground";
 
-type Area = NonNullable<RouterOutputs["area"]["getBySlug"]>;
+type Area = NonNullable<RouterOutputs["area"]["getById"]>;
 
 export default function SingleAreaMap({
 	area,
@@ -22,6 +22,8 @@ export default function SingleAreaMap({
 	children?: ReactNode;
 }) {
 	const { spriteUrl: url, height, width, locations } = area;
+
+	if (!url) return null;
 
 	return (
 		<MapContainer

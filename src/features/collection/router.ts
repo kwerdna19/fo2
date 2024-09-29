@@ -96,7 +96,7 @@ export default createTRPCRouter({
 			};
 		}),
 	addToCollection: protectedProcedure
-		.input(z.object({ itemId: z.string() }))
+		.input(z.object({ itemId: z.number() }))
 		.mutation(({ ctx: { db, session }, input: { itemId } }) => {
 			return db.collectionItem.upsert({
 				where: {
@@ -116,7 +116,7 @@ export default createTRPCRouter({
 		}),
 
 	removeFromCollection: protectedProcedure
-		.input(z.object({ itemId: z.string() }))
+		.input(z.object({ itemId: z.number() }))
 		.mutation(({ ctx: { db, session }, input: { itemId } }) => {
 			return db.collectionItem.delete({
 				where: {

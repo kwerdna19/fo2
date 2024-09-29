@@ -99,10 +99,8 @@ export default createTRPCRouter({
 		}),
 
 	getById: publicProcedure
-		.input(z.object({ nameId: z.string() }))
-		.query(({ ctx: { db }, input: { nameId } }) => {
-			const id = getIdFromNameId(nameId);
-
+		.input(z.number())
+		.query(({ ctx: { db }, input: id }) => {
 			return db.faction.findUnique({
 				where: {
 					id,
@@ -111,7 +109,7 @@ export default createTRPCRouter({
 					mobs: {
 						take: 8,
 						orderBy: {
-							inGameId: "asc",
+							id: "asc",
 						},
 						where: {
 							factionXp: {

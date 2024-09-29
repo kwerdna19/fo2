@@ -1,10 +1,10 @@
-import { EquippableType } from "@prisma/client";
 import { Pencil } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AdminButton } from "~/components/AdminButton";
 import { DurationDisplay } from "~/components/DurationDisplay";
 import { IconSprite } from "~/components/IconSprite";
+import { PriceDisplay } from "~/components/PriceDisplay";
 import { Sprite } from "~/components/Sprite";
 import {
 	SpriteDownloadButton,
@@ -18,6 +18,7 @@ import { ItemRequiredStats } from "~/features/items/components/ItemRequiredStats
 import { ItemStats } from "~/features/items/components/ItemStats";
 import { auth } from "~/server/auth/auth";
 import { api } from "~/trpc/server";
+import { itemTypeMap } from "~/utils/fo-data/service";
 import {
 	getAverageDPS,
 	isItemCollectible,
@@ -26,13 +27,14 @@ import {
 	isItemVisible,
 	isWeapon,
 } from "~/utils/fo-game";
+import { getIdFromNameId, getNameIdSlug } from "~/utils/misc";
 
 interface Params {
-	slug: string;
+	nameId: string;
 }
 
 export async function generateMetadata({ params }: { params: Params }) {
-	const item = await api.item.getBySlug(params);
+	const item = await api.item.getById(getIdFromNameId(params.nameId));
 	if (!item) {
 		return {};
 	}
@@ -42,7 +44,7 @@ export async function generateMetadata({ params }: { params: Params }) {
 }
 
 export default async function Item({ params }: { params: Params }) {
-	const item = await api.item.getBySlug(params);
+	const item = await api.item.getById(getIdFromNameId(params.nameId));
 
 	const session = await auth();
 
@@ -59,7 +61,7 @@ export default async function Item({ params }: { params: Params }) {
 				<AdminButton
 					size="icon"
 					variant="outline"
-					href={`/items/${params.slug}/edit`}
+					href={`/items/${getNameIdSlug(item)}/edit`}
 				>
 					<Pencil className="w-4 h-4" />
 				</AdminButton>
@@ -68,6 +70,10 @@ export default async function Item({ params }: { params: Params }) {
 			{item.note ? <p className="py-2">{item.note}</p> : null}
 		</>
 	);
+
+	const groupType = itemTypeMap[item.type];
+
+	const subType = groupType?.subTypes?.[item.subType];
 
 	return (
 		<div className="grid lg:grid-cols-4 gap-8">
@@ -81,8 +87,9 @@ export default async function Item({ params }: { params: Params }) {
 				<div>
 					<Label>Slot</Label>
 					<div className="flex items-center gap-4 flex-wrap capitalize">
-						{item.equip?.replace(/_/g, " ")?.toLowerCase() ?? "-"}
-						{item.equip === EquippableType.MAIN_HAND ? (
+						{groupType?.type.replace(/_/g, " ")?.toLowerCase() ?? "-"}
+						{subType ? ` - ${subType.replace(/_/g, " ")?.toLowerCase()}` : null}
+						{isWeapon(item) ? (
 							<Badge>{isItemTwoHanded(item) ? "2" : "1"}-H</Badge>
 						) : null}
 					</div>
@@ -181,10 +188,16 @@ export default async function Item({ params }: { params: Params }) {
 											className="grid items-center grid-cols-[0.5fr_1fr_0.5fr] gap-3"
 											key={`${itemId}_${mobId}`}
 										>
-											<Link prefetch={false} href={`/mob/${mob.slug}`}>
+											<Link
+												prefetch={false}
+												href={`/mob/${getNameIdSlug(mob)}`}
+											>
 												<Sprite type="MOB" url={mob.spriteName} size="sm" />
 											</Link>
-											<Link prefetch={false} href={`/mob/${mob.slug}`}>
+											<Link
+												prefetch={false}
+												href={`/mob/${getNameIdSlug(mob)}`}
+											>
 												{mob.name}
 											</Link>
 											<div>{dropRate}%</div>
@@ -199,21 +212,30 @@ export default async function Item({ params }: { params: Params }) {
 						<div>
 							<h2 className="text-xl mb-2">Sold By</h2>
 							<div className="max-w-screen-md">
-								{item.soldBy.map(({ itemId, npcId, npc, price, unit }) => {
+								{item.soldBy.map((npc) => {
 									return (
 										<div
 											className="grid items-center grid-cols-[0.5fr_1fr_0.5fr] gap-3"
-											key={`${itemId}_${npcId}`}
+											key={npc.id}
 										>
-											<Link prefetch={false} href={`/npc/${npc.slug}`}>
+											<Link
+												prefetch={false}
+												href={`/npc/${getNameIdSlug(npc)}`}
+											>
 												<Sprite type="NPC" url={npc.spriteName} size="sm" />
 											</Link>
-											<Link prefetch={false} href={`/npc/${npc.slug}`}>
+											<Link
+												prefetch={false}
+												href={`/npc/${getNameIdSlug(npc)}`}
+											>
 												{npc.name}
 											</Link>
 											<div className="flex gap-2 items-center">
-												<UnitSprite type={unit} size="sm" />
-												{price}
+												<PriceDisplay
+													unit={item.buyPriceUnit}
+													count={item.buyPrice}
+													size="sm"
+												/>
 											</div>
 										</div>
 									);
@@ -222,21 +244,27 @@ export default async function Item({ params }: { params: Params }) {
 						</div>
 					)}
 
-					{item.craftedBy.length > 0 && (
+					{item.crafts.length > 0 && (
 						<div>
 							<h2 className="text-xl mb-2">Crafted By</h2>
 							<div className="max-w-screen-md">
-								{item.craftedBy.map(
+								{item.crafts.map(
 									({ itemId, npcId, npc, price, unit, durationMinutes }) => {
 										return (
 											<div
 												className="grid items-center grid-cols-[0.5fr_1fr_0.5fr_0.5fr] gap-3"
 												key={`${itemId}_${npcId}`}
 											>
-												<Link prefetch={false} href={`/npc/${npc.slug}`}>
+												<Link
+													prefetch={false}
+													href={`/npc/${getNameIdSlug(npc)}`}
+												>
 													<Sprite type="NPC" url={npc.spriteName} size="sm" />
 												</Link>
-												<Link prefetch={false} href={`/npc/${npc.slug}`}>
+												<Link
+													prefetch={false}
+													href={`/npc/${getNameIdSlug(npc)}`}
+												>
 													{npc.name}
 												</Link>
 												<div className="flex gap-2 items-center">

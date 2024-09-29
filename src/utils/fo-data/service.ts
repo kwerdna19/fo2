@@ -1,6 +1,6 @@
-import { type Item, type Mob, type Prisma, Unit } from "@prisma/client";
+import { Unit } from "@prisma/client";
 import { z } from "zod";
-import faction from "~/features/factions/router";
+import type { AreaDatum } from "~/features/areas/components/AreaTable";
 import type { ItemDatum } from "~/features/items/components/ItemTable";
 import type { MobDatum } from "~/features/mobs/components/MobTable";
 import { getSlugFromName } from "../misc";
@@ -63,6 +63,7 @@ export async function getAllData<T extends DataType>(type: T, startId = 0) {
 
 export const mobDefinitionToDatabaseMob = (gameMob: MobDefinition) => {
 	return {
+		id: gameMob.id,
 		name: gameMob.t.en.n,
 		desc: gameMob.t.en.d,
 		slug: getSlugFromName(gameMob.t.en.n),
@@ -75,15 +76,14 @@ export const mobDefinitionToDatabaseMob = (gameMob: MobDefinition) => {
 		moveSpeed: gameMob.ms,
 		dmgMin: gameMob.mnd,
 		dmgMax: gameMob.mxd,
-		inGameId: gameMob.id,
 		factionXp: gameMob.fx,
-
 		factionId: gameMob.fi,
 	};
 };
 
 // DB fields provided by the data api
 export const mobDefinitionFields = [
+	"id",
 	"name",
 	"desc",
 	"spriteName",
@@ -94,7 +94,6 @@ export const mobDefinitionFields = [
 	"atkSpeed",
 	"dmgMin",
 	"dmgMax",
-	"inGameId",
 	"moveSpeed",
 	"factionXp",
 	"drops",
@@ -195,11 +194,11 @@ export const itemTypeMap: Record<
 
 // datum fields provided by the data api
 export const itemDefinitionFields = [
+	"id",
 	"name",
 	"desc",
 	"spriteName",
 	"levelReq",
-	"inGameId",
 	"type",
 	"subType",
 	"sellPrice",
@@ -258,13 +257,12 @@ export const itemDefinitionToDatabaseItem = (gameItem: ItemDefinition) => {
 	const bagSize = gameItem.ty === 1 ? gameItem.ss : null;
 
 	return {
+		id: gameItem.id,
 		name: gameItem.t.en.n,
 		desc: gameItem.t.en.d,
 		slug: getSlugFromName(gameItem.t.en.n),
 		spriteName: gameItem.sfn,
 		levelReq: gameItem.lr,
-
-		inGameId: gameItem.id,
 
 		type: gameItem.ty,
 		subType: gameItem.st,
@@ -296,12 +294,25 @@ export const itemDefinitionToDatabaseItem = (gameItem: ItemDefinition) => {
 	};
 };
 
+// datum fields provided by the data api
+export const areaDefinitionFields = [
+	"id",
+	"name",
+	"desc",
+	"globalX",
+	"globalY",
+	"globalZ",
+	"spawnX",
+	"spawnY",
+	"height",
+	"width",
+] satisfies Array<keyof AreaDatum>;
+
 export const zoneDefinitionToDatabaseArea = (zone: ZoneDefinition) => {
 	return {
 		name: zone.t.en.n,
 		desc: zone.t.en.d,
 		slug: getSlugFromName(zone.t.en.n),
-		inGameId: zone.id,
 		height: zone.hip,
 		width: zone.wip,
 		globalX: zone.blx,

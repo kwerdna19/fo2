@@ -15,7 +15,7 @@ import {
 import { cn } from "~/utils/styles";
 import { Command, CommandInput, CommandItem } from "./ui/command";
 
-export type ValueShape = { id: string; name: string };
+export type ValueShape = { id: number; name: string };
 
 export type SearchQuery<V> = DecoratedQuery<{
 	// biome-ignore lint/suspicious/noConfusingVoidType: <explanation>

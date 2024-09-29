@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const skillItemsSchema = z
 	.object({
-		id: z.string(),
+		id: z.number(),
 		name: z.string(),
 	})
 	.array();
@@ -14,7 +14,7 @@ export const skillSchema = z.object({
 	note: z.string().nullish(),
 	spriteName: z.string(),
 
-	type: z.string().nullish(),
+	type: z.string(),
 	levelReq: z.number().int().optional(),
 
 	reqStr: z.number().int().nullish(),
@@ -45,7 +45,7 @@ export const skillSchema = z.object({
 
 	area: z
 		.object({
-			id: z.string(),
+			id: z.number(),
 			name: z.string(),
 		})
 		.nullish(),

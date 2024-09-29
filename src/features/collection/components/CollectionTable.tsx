@@ -14,6 +14,7 @@ import type { TableProps } from "~/types/table";
 import { format } from "date-fns";
 import ItemSubType from "~/features/items/components/ItemSubType";
 import ItemType from "~/features/items/components/ItemType";
+import { getNameIdSlug } from "~/utils/misc";
 import { collectionSearchParamParser } from "../search-params";
 import { RemoveFromCollectionButton } from "./RemoveFromCollectionButton";
 
@@ -28,7 +29,7 @@ export const collectionItemTableColumns = [
 			<Link
 				className="flex justify-center items-center h-[64px]"
 				prefetch={false}
-				href={`/items/${row.original.slug}`}
+				href={`/items/${getNameIdSlug(row.original)}`}
 			>
 				<IconSprite url={row.original.spriteName} size="sm" bg />
 			</Link>
@@ -36,7 +37,10 @@ export const collectionItemTableColumns = [
 	}),
 	columnHelper.accessor("name", {
 		cell: (info) => (
-			<Link prefetch={false} href={`/items/${info.row.original.slug}`}>
+			<Link
+				prefetch={false}
+				href={`/items/${getNameIdSlug(info.row.original)}`}
+			>
 				{info.getValue()}
 			</Link>
 		),
@@ -50,12 +54,6 @@ export const collectionItemTableColumns = [
 		header: SortButton,
 		meta: {
 			heading: "Added On",
-		},
-	}),
-	columnHelper.accessor("slug", {
-		header: SortButton,
-		meta: {
-			hidden: true,
 		},
 	}),
 	columnHelper.accessor("type", {

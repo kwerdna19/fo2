@@ -9,7 +9,7 @@ import { CraftRecipesField } from "./CraftRecipesField";
 import { SoldByField } from "./SoldByField";
 
 interface Props {
-	id?: string;
+	id?: number;
 	defaultValue?: z.infer<typeof itemSchema>;
 }
 

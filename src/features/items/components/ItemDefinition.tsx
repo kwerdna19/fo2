@@ -30,11 +30,7 @@ export function ItemDefinitionView({ item }: { item: ItemDatum }) {
 						Last synced: {format(item.definitionUpdatedAt, "PPp")}
 					</div>
 				</div>
-				<Button
-					size="sm"
-					disabled={isPending}
-					onClick={() => mutate({ inGameId: item.inGameId })}
-				>
+				<Button size="sm" disabled={isPending} onClick={() => mutate(item.id)}>
 					<RefreshCcw
 						className={cn("size-4 mr-2", isPending && "animate-spin")}
 					/>

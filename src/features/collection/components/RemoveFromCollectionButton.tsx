@@ -4,7 +4,7 @@ import { Loader2, XIcon } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { api } from "~/trpc/react";
 
-export function RemoveFromCollectionButton({ id }: { id: string }) {
+export function RemoveFromCollectionButton({ id }: { id: number }) {
 	const utils = api.useUtils();
 
 	const { mutate: remove, isPending } =

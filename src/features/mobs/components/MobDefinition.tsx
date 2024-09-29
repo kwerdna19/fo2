@@ -27,11 +27,7 @@ export function MobDefinitionView({ mob }: { mob: MobDatum }) {
 						Last synced: {format(mob.definitionUpdatedAt, "PPp")}
 					</div>
 				</div>
-				<Button
-					size="sm"
-					disabled={isPending}
-					onClick={() => mutate({ inGameId: mob.inGameId })}
-				>
+				<Button size="sm" disabled={isPending} onClick={() => mutate(mob.id)}>
 					<RefreshCcw
 						className={cn("size-4 mr-2", isPending && "animate-spin")}
 					/>

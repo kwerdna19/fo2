@@ -1,4 +1,5 @@
 "use client";
+import type { Mob, Npc } from "@prisma/client";
 import * as L from "leaflet";
 import Link from "next/link";
 import { LayerGroup, LayersControl, Marker, Popup } from "react-leaflet";
@@ -7,15 +8,16 @@ import { DropsList } from "~/features/mobs/components/DropsList";
 import { MobHealth } from "~/features/mobs/components/MobHealth";
 import type { RouterOutputs } from "~/trpc/react";
 import { getSpriteFrameSize, getSpriteSrc } from "~/utils/fo-sprite";
+import { getNameIdSlug } from "~/utils/misc";
 
-type Locations = NonNullable<RouterOutputs["area"]["getBySlug"]>["locations"];
+type Locations = NonNullable<RouterOutputs["area"]["getById"]>["locations"];
 
 const mobSprite = getSpriteFrameSize("MOB");
 
 export function LocationLayers({
 	id,
 	locations,
-}: { id: string; locations: Locations }) {
+}: { id: number; locations: Locations }) {
 	const mobs = locations
 		.filter((l) => l.mob && l.mobId)
 		.map((l) => ({ ...l.mob, x: l.x, y: l.y, key: l.id }));
@@ -49,7 +51,7 @@ export function LocationLayers({
 										<div className="flex items-center justify-between">
 											<Link
 												prefetch={false}
-												href={`/mobs/${mob.slug}`}
+												href={`/mobs/${getNameIdSlug(mob as Mob)}`}
 												className="text-sm font-bold"
 											>
 												{mob.name}
@@ -91,8 +93,8 @@ export function LocationLayers({
 							>
 								<Popup
 									minWidth={
-										npc.items?.length
-											? 56 * (Math.min(npc.items.length, 6) || 1) + 8
+										npc.selling?.length
+											? 56 * (Math.min(npc.selling.length, 6) || 1) + 8
 											: 72
 									}
 									closeButton={false}
@@ -101,26 +103,26 @@ export function LocationLayers({
 										<div className="flex items-center justify-between">
 											<Link
 												prefetch={false}
-												href={`/npcs/${npc.slug}`}
+												href={`/npcs/${getNameIdSlug(npc as Npc)}`}
 												className="text-sm font-bold"
 											>
 												{npc.name}
 											</Link>
 										</div>
-										{npc.items && npc.items.length > 0 ? (
+										{npc.selling && npc.selling.length > 0 ? (
 											<ItemList
-												data={npc.items}
+												data={npc.selling}
 												getAttributes={(item) => ({
 													"Buy Price": {
-														value: item.item.buyPrice,
-														unit: item.item.buyPriceUnit,
+														value: item.buyPrice,
+														unit: item.buyPriceUnit,
 													},
 												})}
 											/>
 										) : null}
 										{npc.type === "Shop" &&
-										npc.items &&
-										npc.items?.length > 0 ? null : (
+										npc.selling &&
+										npc.selling?.length > 0 ? null : (
 											<div className="italic">{npc.type}</div>
 										)}
 									</div>

@@ -5,40 +5,14 @@
       "type": "object",
       "properties": {
         "id": {
-          "type": "string",
-          "originalType": "String"
-        },
-        "createdAt": {
-          "type": "string",
-          "originalType": "DateTime",
-          "format": "date-time"
-        },
-        "updatedAt": {
-          "type": "string",
-          "originalType": "DateTime",
-          "format": "date-time"
-        },
-        "definitionUpdatedAt": {
-          "type": "string",
-          "originalType": "DateTime",
-          "format": "date-time"
+          "type": "integer",
+          "originalType": "Int"
         },
         "name": {
           "type": "string",
           "originalType": "String"
         },
-        "slug": {
-          "type": "string",
-          "originalType": "String"
-        },
         "desc": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "originalType": "String"
-        },
-        "note": {
           "type": [
             "string",
             "null"
@@ -61,31 +35,9 @@
           "type": "integer",
           "originalType": "Int"
         },
-        "boss": {
-          "type": "boolean",
-          "originalType": "Boolean",
-          "default": false
-        },
-        "drops": {
-          "type": "array",
-          "originalType": "Loot",
-          "items": {
-            "$ref": "#/definitions/Loot"
-          }
-        },
-        "locations": {
-          "type": "array",
-          "originalType": "Location",
-          "items": {
-            "$ref": "#/definitions/Location"
-          }
-        },
         "atkSpeed": {
-          "type": [
-            "number",
-            "null"
-          ],
-          "originalType": "Float"
+          "type": "integer",
+          "originalType": "Int"
         },
         "dmgMin": {
           "type": "integer",
@@ -99,12 +51,52 @@
           "type": "integer",
           "originalType": "Int"
         },
-        "inGameId": {
+        "spriteName": {
+          "type": "string",
+          "originalType": "String"
+        },
+        "factionId": {
           "type": "integer",
           "originalType": "Int"
         },
-        "spriteName": {
+        "factionXp": {
+          "type": "integer",
+          "originalType": "Int"
+        },
+        "drops": {
+          "type": "array",
+          "originalType": "Loot",
+          "items": {
+            "$ref": "#/definitions/Loot"
+          }
+        },
+        "createdAt": {
           "type": "string",
+          "originalType": "DateTime",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "originalType": "DateTime",
+          "format": "date-time"
+        },
+        "definitionUpdatedAt": {
+          "type": "string",
+          "originalType": "DateTime",
+          "format": "date-time"
+        },
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "originalType": "String"
+        },
+        "artist": {
+          "type": [
+            "string",
+            "null"
+          ],
           "originalType": "String"
         },
         "numSpawns": {
@@ -121,47 +113,39 @@
           ],
           "originalType": "Int"
         },
-        "factionXp": {
-          "type": "integer",
-          "originalType": "Int"
+        "locations": {
+          "type": "array",
+          "originalType": "Location",
+          "items": {
+            "$ref": "#/definitions/Location"
+          }
         },
         "faction": {
           "$ref": "#/definitions/Faction"
-        },
-        "factionId": {
-          "type": "integer",
-          "originalType": "Int"
-        },
-        "artist": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "originalType": "String"
         }
       },
       "required": [
+        "id",
         "name",
-        "slug",
         "level",
         "health",
         "goldMin",
         "goldMax",
+        "atkSpeed",
         "dmgMin",
         "dmgMax",
         "moveSpeed",
-        "inGameId",
         "spriteName",
-        "factionXp",
-        "factionId"
+        "factionId",
+        "factionXp"
       ]
     },
     "Npc": {
       "type": "object",
       "properties": {
         "id": {
-          "type": "string",
-          "originalType": "String"
+          "type": "integer",
+          "originalType": "Int"
         },
         "createdAt": {
           "type": "string",
@@ -177,7 +161,7 @@
           "type": "string",
           "originalType": "String"
         },
-        "slug": {
+        "spriteName": {
           "type": "string",
           "originalType": "String"
         },
@@ -192,22 +176,18 @@
           "type": "string",
           "originalType": "String"
         },
-        "spriteName": {
-          "type": "string",
-          "originalType": "String"
-        },
-        "items": {
+        "selling": {
           "type": "array",
-          "originalType": "NpcSale",
+          "originalType": "Item",
           "items": {
-            "$ref": "#/definitions/NpcSale"
+            "$ref": "#/definitions/Item"
           }
         },
         "crafts": {
           "type": "array",
-          "originalType": "NpcCraft",
+          "originalType": "Craft",
           "items": {
-            "$ref": "#/definitions/NpcCraft"
+            "$ref": "#/definitions/Craft"
           }
         },
         "locations": {
@@ -217,19 +197,12 @@
             "$ref": "#/definitions/Location"
           }
         },
-        "inGameId": {
+        "areaId": {
           "type": [
             "integer",
             "null"
           ],
           "originalType": "Int"
-        },
-        "areaId": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "originalType": "String"
         },
         "area": {
           "anyOf": [
@@ -245,49 +218,11 @@
       },
       "required": [
         "name",
-        "slug",
-        "type",
-        "spriteName"
+        "spriteName",
+        "type"
       ]
     },
-    "NpcSale": {
-      "type": "object",
-      "properties": {
-        "npc": {
-          "$ref": "#/definitions/Npc"
-        },
-        "npcId": {
-          "type": "string",
-          "originalType": "String"
-        },
-        "item": {
-          "$ref": "#/definitions/Item"
-        },
-        "itemId": {
-          "type": "string",
-          "originalType": "String"
-        },
-        "unit": {
-          "type": "string",
-          "originalType": "Unit",
-          "default": "COINS",
-          "enum": [
-            "GEMS",
-            "COINS"
-          ]
-        },
-        "price": {
-          "type": "integer",
-          "originalType": "Int"
-        }
-      },
-      "required": [
-        "npcId",
-        "itemId",
-        "price"
-      ]
-    },
-    "NpcCraft": {
+    "Craft": {
       "type": "object",
       "properties": {
         "id": {
@@ -298,15 +233,15 @@
           "$ref": "#/definitions/Npc"
         },
         "npcId": {
-          "type": "string",
-          "originalType": "String"
+          "type": "integer",
+          "originalType": "Int"
         },
         "item": {
           "$ref": "#/definitions/Item"
         },
         "itemId": {
-          "type": "string",
-          "originalType": "String"
+          "type": "integer",
+          "originalType": "Int"
         },
         "price": {
           "type": "integer",
@@ -325,11 +260,11 @@
           "type": "integer",
           "originalType": "Int"
         },
-        "ingredients": {
+        "items": {
           "type": "array",
-          "originalType": "ItemQuantity",
+          "originalType": "CraftItem",
           "items": {
-            "$ref": "#/definitions/ItemQuantity"
+            "$ref": "#/definitions/CraftItem"
           }
         }
       },
@@ -340,43 +275,43 @@
         "durationMinutes"
       ]
     },
-    "ItemQuantity": {
+    "CraftItem": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "integer",
-          "originalType": "Int"
-        },
         "item": {
           "$ref": "#/definitions/Item"
         },
         "itemId": {
-          "type": "string",
-          "originalType": "String"
+          "type": "integer",
+          "originalType": "Int"
         },
         "quantity": {
           "type": "integer",
           "originalType": "Int",
           "default": 1
         },
-        "usedInCrafts": {
-          "type": "array",
-          "originalType": "NpcCraft",
-          "items": {
-            "$ref": "#/definitions/NpcCraft"
-          }
+        "craftId": {
+          "type": "integer",
+          "originalType": "Int"
+        },
+        "craft": {
+          "$ref": "#/definitions/Craft"
         }
       },
       "required": [
-        "itemId"
+        "itemId",
+        "craftId"
       ]
     },
     "BattlePass": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "string",
-          "originalType": "String"
+        "itemId": {
+          "type": "integer",
+          "originalType": "Int"
+        },
+        "item": {
+          "$ref": "#/definitions/Item"
         },
         "createdAt": {
           "type": "string",
@@ -387,21 +322,6 @@
           "type": "string",
           "originalType": "DateTime",
           "format": "date-time"
-        },
-        "name": {
-          "type": "string",
-          "originalType": "String"
-        },
-        "slug": {
-          "type": "string",
-          "originalType": "String"
-        },
-        "spriteUrl": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "originalType": "String"
         },
         "durationDays": {
           "type": [
@@ -416,31 +336,6 @@
             "null"
           ],
           "originalType": "Int"
-        },
-        "item": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Item"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "originalType": "Item"
-        },
-        "itemId": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "originalType": "String"
-        },
-        "desc": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "originalType": "String"
         },
         "note": {
           "type": [
@@ -458,8 +353,7 @@
         }
       },
       "required": [
-        "name",
-        "slug"
+        "itemId"
       ]
     },
     "BattlePassTier": {
@@ -469,8 +363,8 @@
           "$ref": "#/definitions/BattlePass"
         },
         "battlePassId": {
-          "type": "string",
-          "originalType": "String"
+          "type": "integer",
+          "originalType": "Int"
         },
         "tier": {
           "type": "integer",
@@ -489,10 +383,10 @@
         },
         "itemId": {
           "type": [
-            "string",
+            "integer",
             "null"
           ],
-          "originalType": "String"
+          "originalType": "Int"
         },
         "amount": {
           "type": [
@@ -525,63 +419,40 @@
           "$ref": "#/definitions/Mob"
         },
         "mobId": {
-          "type": "string",
-          "originalType": "String"
+          "type": "integer",
+          "originalType": "Int"
         },
         "item": {
           "$ref": "#/definitions/Item"
         },
         "itemId": {
-          "type": "string",
-          "originalType": "String"
+          "type": "integer",
+          "originalType": "Int"
         },
         "dropRate": {
-          "type": [
-            "number",
-            "null"
-          ],
+          "type": "number",
           "originalType": "Float"
         },
         "count": {
-          "type": [
-            "integer",
-            "null"
-          ],
-          "originalType": "Int"
+          "type": "integer",
+          "originalType": "Int",
+          "default": 1
         }
       },
       "required": [
         "mobId",
-        "itemId"
+        "itemId",
+        "dropRate"
       ]
     },
     "Item": {
       "type": "object",
       "properties": {
         "id": {
-          "type": "string",
-          "originalType": "String"
-        },
-        "createdAt": {
-          "type": "string",
-          "originalType": "DateTime",
-          "format": "date-time"
-        },
-        "updatedAt": {
-          "type": "string",
-          "originalType": "DateTime",
-          "format": "date-time"
-        },
-        "definitionUpdatedAt": {
-          "type": "string",
-          "originalType": "DateTime",
-          "format": "date-time"
+          "type": "integer",
+          "originalType": "Int"
         },
         "name": {
-          "type": "string",
-          "originalType": "String"
-        },
-        "slug": {
           "type": "string",
           "originalType": "String"
         },
@@ -599,52 +470,9 @@
           ],
           "originalType": "String"
         },
-        "equip": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "originalType": "EquippableType",
-          "enum": [
-            "HEAD",
-            "FACE",
-            "BACK",
-            "SHOULDERS",
-            "CHEST",
-            "LEGS",
-            "RING",
-            "MAIN_HAND",
-            "TRINKET",
-            "OFFHAND",
-            "GUILD",
-            "COSMETIC_HEAD",
-            "COSMETIC_FACE",
-            "COSMETIC_BACK",
-            "COSMETIC_SHOULDERS",
-            "COSMETIC_CHEST",
-            "COSMETIC_LEGS"
-          ]
-        },
         "levelReq": {
-          "type": [
-            "integer",
-            "null"
-          ],
+          "type": "integer",
           "originalType": "Int"
-        },
-        "globalLoot": {
-          "type": [
-            "boolean",
-            "null"
-          ],
-          "originalType": "Boolean"
-        },
-        "globalLootDropRate": {
-          "type": [
-            "number",
-            "null"
-          ],
-          "originalType": "Float"
         },
         "tier": {
           "type": [
@@ -665,10 +493,6 @@
             "STA",
             "INT"
           ]
-        },
-        "inGameId": {
-          "type": "integer",
-          "originalType": "Int"
         },
         "type": {
           "type": "integer",
@@ -725,128 +549,12 @@
           ],
           "originalType": "Int"
         },
-        "droppedBy": {
-          "type": "array",
-          "originalType": "Loot",
-          "items": {
-            "$ref": "#/definitions/Loot"
-          }
-        },
-        "soldBy": {
-          "type": "array",
-          "originalType": "NpcSale",
-          "items": {
-            "$ref": "#/definitions/NpcSale"
-          }
-        },
-        "craftedBy": {
-          "type": "array",
-          "originalType": "NpcCraft",
-          "items": {
-            "$ref": "#/definitions/NpcCraft"
-          }
-        },
-        "boxId": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "originalType": "String"
-        },
-        "box": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Item"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "originalType": "Item"
-        },
         "boxItems": {
           "type": "array",
           "originalType": "Item",
           "items": {
             "$ref": "#/definitions/Item"
           }
-        },
-        "usages": {
-          "type": "array",
-          "originalType": "ItemQuantity",
-          "items": {
-            "$ref": "#/definitions/ItemQuantity"
-          }
-        },
-        "battlePassTiers": {
-          "type": "array",
-          "originalType": "BattlePassTier",
-          "items": {
-            "$ref": "#/definitions/BattlePassTier"
-          }
-        },
-        "battlePass": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/BattlePass"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "originalType": "BattlePass"
-        },
-        "skillId": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "originalType": "String"
-        },
-        "skillInfo": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Skill"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "originalType": "Skill"
-        },
-        "areaId": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "originalType": "String"
-        },
-        "area": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Area"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "originalType": "Area"
-        },
-        "availableStart": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "originalType": "DateTime",
-          "format": "date-time"
-        },
-        "availableEnd": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "originalType": "DateTime",
-          "format": "date-time"
         },
         "reqStr": {
           "type": [
@@ -946,6 +654,21 @@
           ],
           "originalType": "Int"
         },
+        "createdAt": {
+          "type": "string",
+          "originalType": "DateTime",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "originalType": "DateTime",
+          "format": "date-time"
+        },
+        "definitionUpdatedAt": {
+          "type": "string",
+          "originalType": "DateTime",
+          "format": "date-time"
+        },
         "artist": {
           "type": [
             "string",
@@ -953,18 +676,132 @@
           ],
           "originalType": "String"
         },
+        "globalLoot": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "originalType": "Boolean"
+        },
+        "globalLootDropRate": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "originalType": "Int"
+        },
+        "droppedBy": {
+          "type": "array",
+          "originalType": "Loot",
+          "items": {
+            "$ref": "#/definitions/Loot"
+          }
+        },
+        "soldBy": {
+          "type": "array",
+          "originalType": "Npc",
+          "items": {
+            "$ref": "#/definitions/Npc"
+          }
+        },
+        "crafts": {
+          "type": "array",
+          "originalType": "Craft",
+          "items": {
+            "$ref": "#/definitions/Craft"
+          }
+        },
         "collections": {
           "type": "array",
           "originalType": "CollectionItem",
           "items": {
             "$ref": "#/definitions/CollectionItem"
           }
+        },
+        "usages": {
+          "type": "array",
+          "originalType": "CraftItem",
+          "items": {
+            "$ref": "#/definitions/CraftItem"
+          }
+        },
+        "battlePassTiers": {
+          "type": "array",
+          "originalType": "BattlePassTier",
+          "items": {
+            "$ref": "#/definitions/BattlePassTier"
+          }
+        },
+        "battlePass": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/BattlePass"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "originalType": "BattlePass"
+        },
+        "skillId": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "originalType": "Int"
+        },
+        "skillInfo": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Skill"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "originalType": "Skill"
+        },
+        "areaId": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "originalType": "Int"
+        },
+        "area": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Area"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "originalType": "Area"
+        },
+        "boxId": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "originalType": "Int"
+        },
+        "box": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Item"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "originalType": "Item"
         }
       },
       "required": [
+        "id",
         "name",
-        "slug",
-        "inGameId",
+        "levelReq",
         "type",
         "subType",
         "spriteName",
@@ -985,8 +822,8 @@
           "$ref": "#/definitions/Area"
         },
         "areaId": {
-          "type": "string",
-          "originalType": "String"
+          "type": "integer",
+          "originalType": "Int"
         },
         "x": {
           "type": "integer",
@@ -1009,10 +846,10 @@
         },
         "npcId": {
           "type": [
-            "string",
+            "integer",
             "null"
           ],
-          "originalType": "String"
+          "originalType": "Int"
         },
         "mob": {
           "anyOf": [
@@ -1027,10 +864,10 @@
         },
         "mobId": {
           "type": [
-            "string",
+            "integer",
             "null"
           ],
-          "originalType": "String"
+          "originalType": "Int"
         },
         "connectedArea": {
           "anyOf": [
@@ -1045,10 +882,10 @@
         },
         "connectedAreaId": {
           "type": [
-            "string",
+            "integer",
             "null"
           ],
-          "originalType": "String"
+          "originalType": "Int"
         }
       },
       "required": [
@@ -1061,8 +898,8 @@
       "type": "object",
       "properties": {
         "id": {
-          "type": "string",
-          "originalType": "String"
+          "type": "integer",
+          "originalType": "Int"
         },
         "createdAt": {
           "type": "string",
@@ -1070,7 +907,10 @@
           "format": "date-time"
         },
         "spriteUrl": {
-          "type": "string",
+          "type": [
+            "string",
+            "null"
+          ],
           "originalType": "String"
         },
         "updatedAt": {
@@ -1087,8 +927,11 @@
           "type": "string",
           "originalType": "String"
         },
-        "slug": {
-          "type": "string",
+        "desc": {
+          "type": [
+            "string",
+            "null"
+          ],
           "originalType": "String"
         },
         "note": {
@@ -1112,10 +955,6 @@
           "items": {
             "$ref": "#/definitions/Location"
           }
-        },
-        "region": {
-          "type": "integer",
-          "originalType": "Int"
         },
         "globalX": {
           "type": "integer",
@@ -1144,10 +983,6 @@
             "$ref": "#/definitions/Location"
           }
         },
-        "inGameId": {
-          "type": "integer",
-          "originalType": "Int"
-        },
         "items": {
           "type": "array",
           "originalType": "Item",
@@ -1171,26 +1006,22 @@
         }
       },
       "required": [
-        "spriteUrl",
         "name",
-        "slug",
         "height",
         "width",
-        "region",
         "globalX",
         "globalY",
         "globalZ",
         "spawnX",
-        "spawnY",
-        "inGameId"
+        "spawnY"
       ]
     },
     "Skill": {
       "type": "object",
       "properties": {
         "id": {
-          "type": "string",
-          "originalType": "String"
+          "type": "integer",
+          "originalType": "Int"
         },
         "createdAt": {
           "type": "string",
@@ -1203,10 +1034,6 @@
           "format": "date-time"
         },
         "name": {
-          "type": "string",
-          "originalType": "String"
-        },
-        "slug": {
           "type": "string",
           "originalType": "String"
         },
@@ -1233,10 +1060,7 @@
           "originalType": "String"
         },
         "type": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": "string",
           "originalType": "SkillType",
           "enum": [
             "HEAL",
@@ -1420,19 +1244,12 @@
           ],
           "originalType": "Int"
         },
-        "inGameId": {
+        "areaId": {
           "type": [
             "integer",
             "null"
           ],
           "originalType": "Int"
-        },
-        "areaId": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "originalType": "String"
         },
         "area": {
           "anyOf": [
@@ -1455,9 +1272,9 @@
       },
       "required": [
         "name",
-        "slug",
         "rank",
-        "spriteName"
+        "spriteName",
+        "type"
       ]
     },
     "Faction": {
@@ -1753,8 +1570,8 @@
           "$ref": "#/definitions/User"
         },
         "itemId": {
-          "type": "string",
-          "originalType": "String"
+          "type": "integer",
+          "originalType": "Int"
         },
         "item": {
           "$ref": "#/definitions/Item"
@@ -1796,13 +1613,7 @@
         },
         "type": {
           "type": "string",
-          "originalType": "ArtType",
-          "enum": [
-            "NPC",
-            "MOB",
-            "ITEM",
-            "SKILL"
-          ]
+          "originalType": "String"
         },
         "spriteSheetUrl": {
           "type": "string",
@@ -1890,14 +1701,11 @@
     "npc": {
       "$ref": "#/definitions/Npc"
     },
-    "npcSale": {
-      "$ref": "#/definitions/NpcSale"
+    "craft": {
+      "$ref": "#/definitions/Craft"
     },
-    "npcCraft": {
-      "$ref": "#/definitions/NpcCraft"
-    },
-    "itemQuantity": {
-      "$ref": "#/definitions/ItemQuantity"
+    "craftItem": {
+      "$ref": "#/definitions/CraftItem"
     },
     "battlePass": {
       "$ref": "#/definitions/BattlePass"

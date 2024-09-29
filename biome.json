@@ -13,6 +13,7 @@
 		"ignore": [
 			".next",
 			"fo-data.json",
+			"bin/data",
 			"json-schema.json",
 			"src/utils/fo-api/client"
 		]

@@ -18,7 +18,7 @@ import { itemSchema } from "./schemas";
 import { itemSearchFilterSchema } from "./search-params";
 
 const requiredFields = schema.definitions.Item.required;
-const searchFields = ["name", "desc", "slug", "spriteName"];
+const searchFields = ["name", "desc", "spriteName"];
 
 const itemInclude = {
 	boxItems: {
@@ -26,7 +26,6 @@ const itemInclude = {
 			id: true,
 			name: true,
 			spriteName: true,
-			slug: true,
 		},
 	},
 	box: {
@@ -34,7 +33,6 @@ const itemInclude = {
 			id: true,
 			name: true,
 			spriteName: true,
-			slug: true,
 		},
 	},
 	usages: {
@@ -44,7 +42,6 @@ const itemInclude = {
 					id: true,
 					name: true,
 					spriteName: true,
-					slug: true,
 				},
 			},
 		},
@@ -57,22 +54,17 @@ const itemInclude = {
 			dropRate: "desc",
 		},
 	},
-	soldBy: {
+	soldBy: true,
+	crafts: {
 		include: {
 			npc: true,
-		},
-	},
-	craftedBy: {
-		include: {
-			npc: true,
-			ingredients: {
+			items: {
 				include: {
 					item: {
 						select: {
 							id: true,
 							name: true,
 							spriteName: true,
-							slug: true,
 						},
 					},
 				},
@@ -205,12 +197,12 @@ export default createTRPCRouter({
 			};
 		}),
 
-	getBySlug: publicProcedure
-		.input(z.object({ slug: z.string() }))
-		.query(({ ctx: { db, session }, input: { slug } }) => {
+	getById: publicProcedure
+		.input(z.number())
+		.query(({ ctx: { db, session }, input: id }) => {
 			return db.item.findFirst({
 				where: {
-					slug,
+					id,
 				},
 				include: {
 					...itemInclude,
@@ -228,7 +220,7 @@ export default createTRPCRouter({
 	getAllEquipment: publicProcedure.query(async ({ ctx: { db } }) => {
 		return db.item.findMany({
 			orderBy: {
-				slug: "asc",
+				name: "asc",
 			},
 			where: {
 				OR: [
@@ -248,13 +240,11 @@ export default createTRPCRouter({
 		.query(async ({ ctx: { db }, input }) => {
 			return db.item.findMany({
 				orderBy: {
-					slug: "asc",
+					name: "asc",
 				},
 				select: {
 					id: true,
 					name: true,
-					// spriteName: true,
-					// slug: true,
 				},
 				where: input
 					? {
@@ -269,18 +259,18 @@ export default createTRPCRouter({
 		}),
 
 	create: roleProtectedProcedure(Role.MODERATOR)
-		.input(z.object({ data: itemSchema, inGameId: z.number() }))
+		.input(z.object({ data: itemSchema, id: z.number() }))
 		.mutation(async ({ ctx: { db }, input }) => {
-			const { data, inGameId } = input;
+			const { data, id } = input;
 
 			const { soldBy, craftedBy, ...rest } = data;
 
-			const definitionData = await getDataById("items", inGameId);
+			const definitionData = await getDataById("items", id);
 
 			if (!definitionData) {
 				throw new TRPCError({
 					code: "NOT_FOUND",
-					message: `Item definition not found for id: ${inGameId}`,
+					message: `Item definition not found for id: ${id}`,
 				});
 			}
 
@@ -290,14 +280,9 @@ export default createTRPCRouter({
 			return db.item.create({
 				data: {
 					soldBy: {
-						createMany: {
-							data: soldBy.map(({ npc, ...s }) => ({
-								npcId: npc.id,
-								...s,
-							})),
-						},
+						connect: soldBy.map(({ id }) => ({ id })),
 					},
-					craftedBy: {
+					crafts: {
 						create: craftedBy.map(({ npc, ingredients, ...s }) => ({
 							npcId: npc.id,
 							...s,
@@ -310,7 +295,7 @@ export default createTRPCRouter({
 						})),
 					},
 					boxItems: boxIds && {
-						connect: boxIds.map((b) => ({ inGameId: b })),
+						connect: boxIds.map((b) => ({ id: b })),
 					},
 					...converted,
 					...rest,
@@ -319,7 +304,7 @@ export default createTRPCRouter({
 		}),
 
 	update: roleProtectedProcedure(Role.MODERATOR)
-		.input(z.object({ id: z.string(), data: itemSchema }))
+		.input(z.object({ id: z.number(), data: itemSchema }))
 		.mutation(async ({ ctx: { db }, input }) => {
 			const { id, data } = input;
 			const { soldBy, craftedBy, ...rest } = data;
@@ -331,15 +316,9 @@ export default createTRPCRouter({
 				data: {
 					...rest,
 					soldBy: {
-						deleteMany: {},
-						createMany: {
-							data: soldBy.map(({ npc, ...s }) => ({
-								npcId: npc.id,
-								...s,
-							})),
-						},
+						set: soldBy.map(({ id }) => ({ id })),
 					},
-					craftedBy: {
+					crafts: {
 						upsert: craftedBy.map(({ npc, ingredients, ...d }) => ({
 							create: {
 								...d,
@@ -389,16 +368,14 @@ export default createTRPCRouter({
 		}),
 
 	syncDefinition: roleProtectedProcedure(Role.MODERATOR)
-		.input(z.object({ inGameId: z.number() }))
-		.mutation(async ({ ctx: { db }, input }) => {
-			const { inGameId } = input;
-
-			const definitionData = await getDataById("items", inGameId);
+		.input(z.number())
+		.mutation(async ({ ctx: { db }, input: id }) => {
+			const definitionData = await getDataById("items", id);
 
 			if (!definitionData) {
 				throw new TRPCError({
 					code: "NOT_FOUND",
-					message: `Item definition not found for id: ${inGameId}`,
+					message: `Item definition not found for id: ${id}`,
 				});
 			}
 
@@ -409,19 +386,19 @@ export default createTRPCRouter({
 				data: {
 					definitionUpdatedAt: new Date(),
 					boxItems: boxIds && {
-						set: boxIds.map((b) => ({ inGameId: b })),
+						set: boxIds.map((b) => ({ id: b })),
 					},
 					...converted,
 				},
 				where: {
-					inGameId,
+					id,
 				},
 			});
 		}),
 
 	delete: roleProtectedProcedure(Role.ADMIN)
-		.input(z.object({ id: z.string() }))
-		.mutation(({ ctx: { db }, input: { id } }) => {
+		.input(z.number())
+		.mutation(({ ctx: { db }, input: id }) => {
 			return db.item.delete({
 				where: { id },
 			});

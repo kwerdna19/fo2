@@ -2,7 +2,12 @@ import { Unit } from "@prisma/client";
 import { z } from "zod";
 
 export const battlePassTierSchema = z.object({
-	itemId: z.string().optional(),
+	item: z
+		.object({
+			id: z.number(),
+			name: z.string(),
+		})
+		.nullish(),
 	amount: z.number().int().optional(),
 	unit: z.nativeEnum(Unit).optional(),
 });
@@ -15,8 +20,11 @@ export const itemBattlePassTiersSchema = z
 	.array();
 
 export const battlePassSchema = z.object({
-	name: z.string(),
-	tiers: battlePassTierSchema.array().optional(),
+	item: z.object({
+		id: z.number(),
+		name: z.string(),
+	}),
+	tiers: battlePassTierSchema.array(),
 	desc: z.string().optional(),
 	note: z.string().optional(),
 	durationDays: z.number().min(1).optional(),

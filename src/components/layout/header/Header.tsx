@@ -14,7 +14,7 @@ import {
 import { AuthMenu } from "../AuthMenu";
 import { NavMenu } from "./NavMenu";
 
-type Areas = Pick<Area, "id" | "name" | "slug">[];
+type Areas = Pick<Area, "id" | "name">[];
 
 export function Header({
 	areas,

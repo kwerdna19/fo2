@@ -53,16 +53,13 @@ export default createTRPCRouter({
 						: { sort: sort_dir, nulls: "last" },
 				},
 				include: {
-					items: {
-						include: {
-							item: true,
-						},
+					selling: {
 						orderBy: [
 							{
-								unit: "desc",
+								sellPriceUnit: "desc",
 							},
 							{
-								price: "asc",
+								sellPrice: "asc",
 							},
 						],
 					},
@@ -105,18 +102,9 @@ export default createTRPCRouter({
 			return db.npc.findMany({
 				where: input
 					? {
-							OR: [
-								{
-									name: {
-										contains: input,
-									},
-								},
-								{
-									slug: {
-										contains: input,
-									},
-								},
-							],
+							name: {
+								contains: input,
+							},
 						}
 					: {},
 				orderBy: {
@@ -130,19 +118,15 @@ export default createTRPCRouter({
 			});
 		}),
 
-	getBySlug: publicProcedure
-		.input(z.object({ slug: z.string() }))
-		.query(({ ctx: { db }, input: { slug } }) => {
+	getById: publicProcedure
+		.input(z.number())
+		.query(({ ctx: { db }, input: id }) => {
 			return db.npc.findUnique({
 				where: {
-					slug,
+					id,
 				},
 				include: {
-					items: {
-						include: {
-							item: true,
-						},
-					},
+					selling: true,
 					locations: {
 						include: {
 							area: true,
@@ -151,7 +135,7 @@ export default createTRPCRouter({
 					crafts: {
 						include: {
 							item: true,
-							ingredients: {
+							items: {
 								include: {
 									item: true,
 								},
@@ -183,7 +167,6 @@ export default createTRPCRouter({
 			return db.npc.create({
 				data: {
 					name,
-					slug: getSlugFromName(name),
 					locations: {
 						createMany: {
 							data: locations.map(({ coordinates, area }) => ({
@@ -192,14 +175,10 @@ export default createTRPCRouter({
 							})),
 						},
 					},
-					items: {
-						createMany: {
-							data: items.map(({ item, price, unit }) => ({
-								itemId: item.id,
-								price,
-								unit,
-							})),
-						},
+					selling: {
+						connect: items.map((item) => ({
+							id: item.id,
+						})),
 					},
 					crafts: {
 						create: crafts.map(({ item, ingredients, ...s }) => ({
@@ -220,7 +199,7 @@ export default createTRPCRouter({
 		}),
 
 	update: roleProtectedProcedure(Role.MODERATOR)
-		.input(z.object({ id: z.string(), data: npcSchema }))
+		.input(z.object({ id: z.number(), data: npcSchema }))
 		.mutation(async ({ ctx: { db }, input }) => {
 			const { data, id } = input;
 			const { items, locations, crafts, area: teleportArea, ...fields } = data;
@@ -231,17 +210,9 @@ export default createTRPCRouter({
 				},
 				data: {
 					...fields,
-					slug: getSlugFromName(fields.name),
 					updatedAt: new Date(),
-					items: {
-						deleteMany: {},
-						createMany: {
-							data: items.map(({ item, price, unit }) => ({
-								itemId: item.id,
-								price,
-								unit,
-							})),
-						},
+					selling: {
+						set: items.map(({ id }) => ({ id })),
 					},
 					locations: {
 						deleteMany: {},
@@ -303,7 +274,7 @@ export default createTRPCRouter({
 		}),
 
 	delete: roleProtectedProcedure(Role.ADMIN)
-		.input(z.object({ id: z.string() }))
+		.input(z.object({ id: z.number() }))
 		.mutation(({ ctx: { db }, input: { id } }) => {
 			return db.npc.delete({
 				where: { id },

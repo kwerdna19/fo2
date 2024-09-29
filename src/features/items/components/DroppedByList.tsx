@@ -7,6 +7,7 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "~/components/ui/tooltip";
+import { getNameIdSlug } from "~/utils/misc";
 import type { ItemDatum } from "./ItemTable";
 
 export function DroppedByList({ mobs }: { mobs: ItemDatum["droppedBy"] }) {
@@ -20,7 +21,7 @@ export function DroppedByList({ mobs }: { mobs: ItemDatum["droppedBy"] }) {
 								<Link
 									className="flex justify-center items-center h-[64px] max-h-full overflow-hidden group-hover:overflow-visible"
 									prefetch={false}
-									href={`/mobs/${d.mob.slug}`}
+									href={`/mobs/${getNameIdSlug(d.mob)}`}
 								>
 									<Sprite
 										type="MOB"

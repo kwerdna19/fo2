@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
 import { anonApi } from "~/trpc/server";
+import { getIdFromNameId, getNameIdSlug, getSlugFromName } from "~/utils/misc";
 
 const SingleAreaMap = dynamic(
 	() => import("~/features/areas/components/SingleAreaMap"),
@@ -8,11 +9,11 @@ const SingleAreaMap = dynamic(
 );
 
 interface Params {
-	slug: string;
+	nameId: string;
 }
 
 export async function generateMetadata({ params }: { params: Params }) {
-	const area = await anonApi.area.getBySlug(params);
+	const area = await anonApi.area.getById(getIdFromNameId(params.nameId));
 	if (!area) {
 		return {};
 	}
@@ -25,13 +26,13 @@ export async function generateStaticParams() {
 	const areas = await anonApi.area.getAll();
 	return areas.map((area) => {
 		return {
-			slug: area.slug,
+			nameId: getNameIdSlug(area),
 		};
 	});
 }
 
 export default async function Area({ params }: { params: Params }) {
-	const area = await anonApi.area.getBySlug(params);
+	const area = await anonApi.area.getById(getIdFromNameId(params.nameId));
 
 	if (!area) {
 		notFound();

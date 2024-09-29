@@ -21,7 +21,7 @@ export const skillColumns = [
 	// 		<Link
 	// 			className="flex justify-center"
 	// 			prefetch={false}
-	// 			href={`/skills/${row.original.slug}`}
+	// 			href={`/skills/${getNameIdSlug(row.original)}`}
 	// 		>
 	// 			<IconSprite type="SKILL" url={row.original.spriteName} size="sm" bg />
 	// 		</Link>

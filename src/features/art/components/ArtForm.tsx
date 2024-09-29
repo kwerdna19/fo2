@@ -5,7 +5,7 @@ import { useState } from "react";
 import { getSpriteTypeFromImageSize } from "~/utils/fo-sprite";
 
 type Props = {
-	id?: string;
+	id?: number;
 };
 
 export function ArtForm(props: Props) {

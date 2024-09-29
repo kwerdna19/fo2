@@ -6,7 +6,6 @@ import {
 	publicProcedure,
 	roleProtectedProcedure,
 } from "~/server/api/trpc";
-import { getSlugFromName } from "~/utils/misc";
 import { battlePassSchema } from "./schemas";
 
 export default createTRPCRouter({
@@ -17,7 +16,7 @@ export default createTRPCRouter({
 					include: {
 						item: {
 							select: {
-								slug: true,
+								id: true,
 								name: true,
 								spriteName: true,
 							},
@@ -33,10 +32,8 @@ export default createTRPCRouter({
 
 	getAllQuick: publicProcedure.query(({ ctx: { db } }) => {
 		return db.battlePass.findMany({
-			select: {
-				id: true,
-				name: true,
-				slug: true,
+			include: {
+				item: true,
 			},
 		});
 	}),
@@ -44,11 +41,13 @@ export default createTRPCRouter({
 	getCurrent: publicProcedure.query(({ ctx: { db } }) => {
 		return db.battlePass.findFirst({
 			include: {
+				item: true,
 				tiers: {
 					include: {
 						item: {
 							select: {
-								slug: true,
+								id: true,
+								spriteName: true,
 								name: true,
 							},
 						},
@@ -68,11 +67,12 @@ export default createTRPCRouter({
 	getNext: publicProcedure.query(({ ctx: { db } }) => {
 		return db.battlePass.findFirst({
 			include: {
+				item: true,
 				tiers: {
 					include: {
 						item: {
 							select: {
-								slug: true,
+								id: true,
 								name: true,
 								spriteName: true,
 							},
@@ -91,16 +91,17 @@ export default createTRPCRouter({
 		});
 	}),
 
-	getBySlug: publicProcedure
-		.input(z.object({ slug: z.string() }))
-		.query(({ ctx: { db }, input: { slug } }) => {
+	getById: publicProcedure
+		.input(z.number())
+		.query(({ ctx: { db }, input: id }) => {
 			return db.battlePass.findUnique({
 				include: {
+					item: true,
 					tiers: {
 						include: {
 							item: {
 								select: {
-									slug: true,
+									id: true,
 									name: true,
 									spriteName: true,
 								},
@@ -112,7 +113,7 @@ export default createTRPCRouter({
 					},
 				},
 				where: {
-					slug,
+					itemId: id,
 				},
 			});
 		}),
@@ -120,12 +121,11 @@ export default createTRPCRouter({
 	create: roleProtectedProcedure(Role.MODERATOR)
 		.input(battlePassSchema)
 		.mutation(({ ctx: { db }, input }) => {
-			const { name, tiers, ...rest } = input;
+			const { tiers, item, ...rest } = input;
 
 			return db.battlePass.create({
 				data: {
-					name,
-					slug: getSlugFromName(name),
+					itemId: item.id,
 					tiers: tiers && {
 						createMany: {
 							data: tiers.map((d, index) => ({
@@ -140,28 +140,21 @@ export default createTRPCRouter({
 		}),
 
 	update: roleProtectedProcedure(Role.MODERATOR)
-		.input(z.object({ id: z.string(), data: battlePassSchema }))
+		.input(
+			z.object({ id: z.number(), data: battlePassSchema.omit({ item: true }) }),
+		)
 		.mutation(async ({ ctx: { db }, input }) => {
 			const { id, data } = input;
-			const { name, tiers, ...fields } = data;
-
-			// @TODO db commit to prevent data loss?
-			// all deleted before to prevent composite key clashing
-			await db.battlePassTier.deleteMany({
-				where: {
-					battlePassId: id,
-				},
-			});
+			const { tiers, ...fields } = data;
 
 			const updated = await db.battlePass.update({
 				where: {
-					id,
+					itemId: id,
 				},
 				data: {
-					name,
-					slug: getSlugFromName(name),
 					...fields,
-					tiers: tiers && {
+					tiers: {
+						deleteMany: {},
 						createMany: {
 							data: tiers.map((t, i) => ({
 								...t,
@@ -170,19 +163,16 @@ export default createTRPCRouter({
 						},
 					},
 				},
-				include: {
-					tiers: true,
-				},
 			});
 
 			return updated;
 		}),
 
 	delete: roleProtectedProcedure(Role.ADMIN)
-		.input(z.object({ id: z.string() }))
+		.input(z.number())
 		.mutation(({ ctx: { db }, input }) => {
 			return db.battlePass.delete({
-				where: { id: input.id },
+				where: { itemId: input },
 			});
 		}),
 });

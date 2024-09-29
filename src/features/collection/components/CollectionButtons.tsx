@@ -7,7 +7,7 @@ import { api } from "~/trpc/react";
 export function CollectionButtons({
 	id,
 	initialOwned,
-}: { id: string; initialOwned: boolean }) {
+}: { id: number; initialOwned: boolean }) {
 	const { data: ownedMap } = api.collection.ownedMap.useQuery();
 
 	const owned = !ownedMap ? initialOwned : Boolean(ownedMap[id]);

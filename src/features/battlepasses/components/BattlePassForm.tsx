@@ -6,7 +6,7 @@ import { api } from "~/trpc/react";
 import { battlePassSchema } from "../schemas";
 
 interface Props {
-	id?: string;
+	id?: number;
 	defaultValue?: z.infer<typeof battlePassSchema>;
 }
 

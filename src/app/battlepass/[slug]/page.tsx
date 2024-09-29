@@ -8,23 +8,24 @@ import { UnitSprite } from "~/components/UnitSprite";
 import { Badge } from "~/components/ui/badge";
 import { Card } from "~/components/ui/card";
 import { api } from "~/trpc/server";
+import { getIdFromNameId, getNameIdSlug } from "~/utils/misc";
 
 interface Params {
-	slug: string;
+	nameId: string;
 }
 
 export async function generateMetadata({ params }: { params: Params }) {
-	const pass = await api.battlePass.getBySlug(params);
+	const pass = await api.battlePass.getById(getIdFromNameId(params.nameId));
 	if (!pass) {
 		return {};
 	}
 	return {
-		title: pass.name,
+		title: pass.item.name,
 	};
 }
 
 export default async function BattlePass({ params }: { params: Params }) {
-	const pass = await api.battlePass.getBySlug(params);
+	const pass = await api.battlePass.getById(getIdFromNameId(params.nameId));
 
 	if (!pass) {
 		notFound();
@@ -33,14 +34,14 @@ export default async function BattlePass({ params }: { params: Params }) {
 	return (
 		<div className="w-full">
 			<div className="flex gap-x-4">
-				<h2 className="text-3xl">{pass.name}</h2>
-				{/* <AdminButton
+				<h2 className="text-3xl">{pass.item.name}</h2>
+				<AdminButton
 					size="icon"
 					variant="outline"
-					href={`/battlepass/${params.slug}/edit`}
+					href={`/battlepass/${getNameIdSlug(pass.item)}/edit`}
 				>
 					<Pencil className="w-4 h-4" />
-				</AdminButton> */}
+				</AdminButton>
 			</div>
 			<div className="flex items-center gap-x-3 pt-2 pb-4">
 				<Badge>{pass.durationDays} days</Badge>
@@ -65,7 +66,10 @@ export default async function BattlePass({ params }: { params: Params }) {
 						tier.item !== null ? (
 							<div key={key} className="flex gap-x-4 items-center text-lg">
 								<IconSprite size="sm" url={tier.item.spriteName} />
-								<Link href={`/items/${tier.item.slug}`} prefetch={false}>
+								<Link
+									href={`/items/${getNameIdSlug(tier.item)}`}
+									prefetch={false}
+								>
 									{tier.item.name}
 								</Link>
 							</div>

@@ -13,7 +13,7 @@ console.log("Found:", mobs.length);
 for (const gameMob of mobs) {
 	const dbMob = await db.mob.findFirst({
 		where: {
-			inGameId: gameMob.id,
+			id: gameMob.id,
 		},
 	});
 	if (!dbMob) {
@@ -78,12 +78,12 @@ for (const gameMob of mobs) {
 			drops.map(async ({ inGameItemId, dropRates }) => {
 				const { id: itemId } = await db.item.findFirstOrThrow({
 					where: {
-						inGameId: inGameItemId,
+						id: inGameItemId,
 					},
 				});
 				const mobId = dbMob.id;
 				const dropRate = dropRates[0] as number;
-				const count = dropRates.length > 1 ? dropRates.length : null;
+				const count = dropRates.length;
 
 				return prisma.loot.upsert({
 					create: {

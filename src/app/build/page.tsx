@@ -1,4 +1,4 @@
-import BuildPlayground from "~/components/builds/BuildPlayground";
+// import BuildPlayground from "~/components/builds/BuildPlayground";
 import { api } from "~/trpc/server";
 
 export const metadata = {
@@ -6,7 +6,5 @@ export const metadata = {
 };
 
 export default async function Builds() {
-	const items = await api.item.getAllEquipment();
-
-	return <BuildPlayground items={items} />;
+	return <div>temporarily disabled</div>;
 }

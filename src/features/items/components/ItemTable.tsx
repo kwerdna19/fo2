@@ -43,6 +43,7 @@ import {
 	isItemConsumable,
 	isItemTwoHanded,
 } from "~/utils/fo-game";
+import { getNameIdSlug } from "~/utils/misc";
 import {
 	itemSearchFilterSchema,
 	itemSearchParamParser,
@@ -66,7 +67,7 @@ export const itemTableColumns = [
 			<Link
 				className="flex justify-center items-center h-[64px]"
 				prefetch={false}
-				href={`/items/${row.original.slug}`}
+				href={`/items/${getNameIdSlug(row.original)}`}
 			>
 				<IconSprite url={row.original.spriteName} size="sm" bg />
 			</Link>
@@ -74,7 +75,10 @@ export const itemTableColumns = [
 	}),
 	columnHelper.accessor("name", {
 		cell: (info) => (
-			<Link prefetch={false} href={`/items/${info.row.original.slug}`}>
+			<Link
+				prefetch={false}
+				href={`/items/${getNameIdSlug(info.row.original)}`}
+			>
 				{info.getValue()}
 			</Link>
 		),
@@ -84,12 +88,6 @@ export const itemTableColumns = [
 		},
 	}),
 	columnHelper.accessor("desc", {}),
-	columnHelper.accessor("slug", {
-		header: SortButton,
-		meta: {
-			hidden: true,
-		},
-	}),
 	columnHelper.accessor("type", {
 		cell: (info) => {
 			return <ItemType type={info.getValue()} />;
@@ -225,9 +223,9 @@ export const itemTableColumns = [
 	}),
 	columnHelper.accessor("soldBy", {
 		header: "Sold By",
-		cell: (info) => <SoldByList npcs={info.getValue()} />,
+		cell: (info) => <SoldByList item={info.row.original} />,
 	}),
-	columnHelper.accessor("craftedBy", {
+	columnHelper.accessor("crafts", {
 		header: "Crafted By",
 		cell: (info) => <CraftedByList npcs={info.getValue()} />,
 	}),

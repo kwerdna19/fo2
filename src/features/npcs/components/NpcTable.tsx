@@ -12,6 +12,7 @@ import { Badge } from "~/components/ui/badge";
 import { ItemList } from "~/features/items/components/ItemList";
 import { type RouterOutputs, api } from "~/trpc/react";
 import type { TableProps } from "~/types/table";
+import { getNameIdSlug } from "~/utils/misc";
 import { npcSearchParamParser } from "../search-params";
 
 type NpcDatum = RouterOutputs["npc"]["getAllPopulated"]["data"][number];
@@ -23,7 +24,7 @@ export const columns = [
 		cell: ({ row }) => (
 			<Link
 				prefetch={false}
-				href={`/npcs/${row.original.slug}`}
+				href={`/npcs/${getNameIdSlug(row.original)}`}
 				className="flex justify-center items-center h-[64px] max-h-full overflow-hidden group-hover:overflow-visible"
 			>
 				<Sprite
@@ -37,7 +38,7 @@ export const columns = [
 	}),
 	columnHelper.accessor("name", {
 		cell: (info) => (
-			<Link prefetch={false} href={`/npcs/${info.row.original.slug}`}>
+			<Link prefetch={false} href={`/npcs/${getNameIdSlug(info.row.original)}`}>
 				{info.getValue()}
 			</Link>
 		),
@@ -54,7 +55,7 @@ export const columns = [
 					{row.original.locations.map(({ id, area }) => (
 						<Link
 							prefetch={false}
-							href={`/areas/${area.slug}?npcId=${row.original.id}`}
+							href={`/areas/${getNameIdSlug(area)}?npcId=${row.original.id}`}
 							key={id}
 						>
 							<Badge>{area.name}</Badge>
@@ -70,11 +71,11 @@ export const columns = [
 		header: "Sells",
 		cell: ({ row }) => (
 			<ItemList
-				data={row.original.items}
+				data={row.original.selling}
 				getAttributes={(item) => ({
 					"Buy Price": {
-						value: item.item.buyPrice,
-						unit: item.item.buyPriceUnit,
+						value: item.buyPrice,
+						unit: item.buyPriceUnit,
 					},
 				})}
 			/>

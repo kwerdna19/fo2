@@ -1,24 +1,21 @@
-import { parseWithZod } from "@conform-to/zod";
 import { Role } from "@prisma/client";
 import { ChevronLeft } from "lucide-react";
-import { revalidatePath } from "next/cache";
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import { SkillForm } from "~/features/skills/components/SkillForm";
 import { skillSchema } from "~/features/skills/schemas";
+import { getSkillNameIdSlug } from "~/features/skills/utils";
 import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles";
 import { api } from "~/trpc/server";
-import type { ConformResult } from "~/types/actions";
-import { recursivelyNullifyUndefinedValues } from "~/utils/misc";
-import { getListOfImages } from "~/utils/server";
+import { getIdFromNameId } from "~/utils/misc";
 
 interface Params {
-	slug: string;
+	nameId: string;
 }
 
 export async function generateMetadata({ params }: { params: Params }) {
-	const skill = await api.skill.getBySlug(params);
+	const skill = await api.skill.getById(getIdFromNameId(params.nameId));
 	if (!skill) {
 		return {};
 	}
@@ -28,9 +25,9 @@ export async function generateMetadata({ params }: { params: Params }) {
 }
 
 export default async function EditSkill({ params }: { params: Params }) {
-	await userSatisfiesRoleOrRedirect(Role.MODERATOR, `/skills/${params.slug}`);
+	await userSatisfiesRoleOrRedirect(Role.MODERATOR, `/skills/${params.nameId}`);
 
-	const skill = await api.skill.getBySlug(params);
+	const skill = await api.skill.getById(getIdFromNameId(params.nameId));
 
 	if (!skill) {
 		return notFound();
@@ -39,7 +36,7 @@ export default async function EditSkill({ params }: { params: Params }) {
 	return (
 		<div className="w-full max-w-screen-xl">
 			<Button size="sm" variant="outline" className="mb-5" asChild>
-				<Link href={`/skills/${skill.slug}`}>
+				<Link href={`/skills/${getSkillNameIdSlug(skill)}`}>
 					<ChevronLeft className="mr-2 h-4 w-4" />
 					Back to page
 				</Link>

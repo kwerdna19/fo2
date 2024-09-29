@@ -1,77 +1,48 @@
 import { basename } from "path";
-import { EquippableType, type Item } from "@prisma/client";
+import type { Item } from "@prisma/client";
 import { itemTypeMap } from "./fo-data/service";
 
-// not exported form prisma, bc unused in schemas, so moved here
-export enum Slot {
-	HEAD = 0,
-	FACE = 1,
-	BACK = 2,
-	SHOULDERS = 3,
-	CHEST = 4,
-	LEGS = 5,
-	LEFT_RING = 6,
-	RIGHT_RING = 7,
-	MAIN_HAND = 8,
-	LEFT_TRINKET = 9,
-	RIGHT_TRINKET = 10,
-	GUILD = 11,
-	OFFHAND = 12,
-}
+// export enum Slot {
+// 	HEAD = 0,
+// 	FACE = 1,
+// 	BACK = 2,
+// 	SHOULDERS = 3,
+// 	CHEST = 4,
+// 	LEGS = 5,
+// 	LEFT_RING = 6,
+// 	RIGHT_RING = 7,
+// 	MAIN_HAND = 8,
+// 	LEFT_TRINKET = 9,
+// 	RIGHT_TRINKET = 10,
+// 	GUILD = 11,
+// 	OFFHAND = 12,
+// }
 
-export const cosmeticEquipment = [
-	EquippableType.COSMETIC_HEAD,
-	EquippableType.COSMETIC_FACE,
-	EquippableType.COSMETIC_BACK,
-	EquippableType.COSMETIC_SHOULDERS,
-	EquippableType.COSMETIC_CHEST,
-	EquippableType.COSMETIC_LEGS,
-] satisfies EquippableType[];
-
-export type CosmeticEquippableType = (typeof cosmeticEquipment)[number];
-
-export type NonCosmeticEquippableType = Exclude<
-	EquippableType,
-	CosmeticEquippableType
->;
-
-export const equipmentSlotConfig: Record<
-	NonCosmeticEquippableType,
-	Slot | Slot[]
-> = {
-	HEAD: Slot.HEAD,
-	FACE: Slot.FACE,
-	BACK: Slot.BACK,
-	SHOULDERS: Slot.SHOULDERS,
-	CHEST: Slot.CHEST,
-	LEGS: Slot.LEGS,
-	RING: [Slot.LEFT_RING, Slot.RIGHT_RING],
-	MAIN_HAND: Slot.MAIN_HAND,
-	TRINKET: [Slot.LEFT_TRINKET, Slot.RIGHT_TRINKET],
-	OFFHAND: Slot.OFFHAND,
-	GUILD: Slot.GUILD,
-};
-
-export const visibleEquipment = [
-	EquippableType.HEAD,
-	EquippableType.FACE,
-	EquippableType.BACK,
-	EquippableType.SHOULDERS,
-	EquippableType.CHEST,
-	EquippableType.LEGS,
-	EquippableType.MAIN_HAND,
-	EquippableType.OFFHAND,
-] satisfies EquippableType[];
+// export const equipmentSlotConfig: Record<
+// 	NonCosmeticEquippableType,
+// 	Slot | Slot[]
+// > = {
+// 	HEAD: Slot.HEAD,
+// 	FACE: Slot.FACE,
+// 	BACK: Slot.BACK,
+// 	SHOULDERS: Slot.SHOULDERS,
+// 	CHEST: Slot.CHEST,
+// 	LEGS: Slot.LEGS,
+// 	RING: [Slot.LEFT_RING, Slot.RIGHT_RING],
+// 	MAIN_HAND: Slot.MAIN_HAND,
+// 	TRINKET: [Slot.LEFT_TRINKET, Slot.RIGHT_TRINKET],
+// 	OFFHAND: Slot.OFFHAND,
+// 	GUILD: Slot.GUILD,
+// };
 
 type DamageKey = "dmgMin" | "dmgMax" | "atkSpeed";
 type Weapon<T extends Item = Item> = {
 	[K in keyof T]: K extends DamageKey ? NonNullable<T[K]> : T[K];
 };
 
-export type Build = Partial<Record<Slot, Item>>;
-
+// export type Build = Partial<Record<Slot, Item>>;
 // value is array since the slot can be multiple things, or value is null if slot can be anything
-export type PossibleBuild = Partial<Record<Slot, Item[] | null>>;
+// export type PossibleBuild = Partial<Record<Slot, Item[] | null>>;
 
 export const isWeapon = <T extends Item>(item: T): item is Weapon<T> => {
 	return item.atkSpeed !== null && item.dmgMin !== null && item.dmgMax !== null;
@@ -89,62 +60,62 @@ export const getSumOfBasicStats = (item: Item) => {
 	return (item.agi ?? 0) + (item.str ?? 0) + (item.sta ?? 0) + (item.int ?? 0);
 };
 
-const equipTypeWorksForSlot = (e: EquippableType | null, s: Slot) => {
-	if (!e || e.startsWith("COSMETIC_")) {
-		return false;
-	}
-	const slotOrSlots = equipmentSlotConfig[e as NonCosmeticEquippableType];
-	if (Array.isArray(slotOrSlots)) {
-		return slotOrSlots.includes(s);
-	}
-	return slotOrSlots === s;
-};
+// const equipTypeWorksForSlot = (e: EquippableType | null, s: Slot) => {
+// 	if (!e || e.startsWith("COSMETIC_")) {
+// 		return false;
+// 	}
+// 	const slotOrSlots = equipmentSlotConfig[e as NonCosmeticEquippableType];
+// 	if (Array.isArray(slotOrSlots)) {
+// 		return slotOrSlots.includes(s);
+// 	}
+// 	return slotOrSlots === s;
+// };
 
-export const playerSlots = [
-	Slot.HEAD,
-	Slot.FACE,
-	Slot.BACK,
-	Slot.SHOULDERS,
-	Slot.CHEST,
-	Slot.LEGS,
-	Slot.MAIN_HAND,
-	Slot.LEFT_RING,
-	Slot.RIGHT_RING,
-	Slot.LEFT_TRINKET,
-	Slot.RIGHT_TRINKET,
-	null, // empty slot for blank space in display
-	Slot.GUILD,
-	Slot.OFFHAND,
-];
+// export const playerSlots = [
+// 	Slot.HEAD,
+// 	Slot.FACE,
+// 	Slot.BACK,
+// 	Slot.SHOULDERS,
+// 	Slot.CHEST,
+// 	Slot.LEGS,
+// 	Slot.MAIN_HAND,
+// 	Slot.LEFT_RING,
+// 	Slot.RIGHT_RING,
+// 	Slot.LEFT_TRINKET,
+// 	Slot.RIGHT_TRINKET,
+// 	null, // empty slot for blank space in display
+// 	Slot.GUILD,
+// 	Slot.OFFHAND,
+// ];
 
-export const slotBackgroundSpriteMap: Record<Slot, string> = {
-	[Slot.HEAD]: "/sprites/item-bg/item-bg-head-icon.png",
-	[Slot.FACE]: "/sprites/item-bg/item-bg-face-icon.png",
-	[Slot.BACK]: "/sprites/item-bg/item-bg-back-icon.png",
-	[Slot.SHOULDERS]: "/sprites/item-bg/item-bg-shoulder-icon.png",
-	[Slot.CHEST]: "/sprites/item-bg/item-bg-body-icon.png",
-	[Slot.LEGS]: "/sprites/item-bg/item-bg-leg-icon.png",
-	[Slot.LEFT_RING]: "/sprites/item-bg/item-bg-ring1-icon.png",
-	[Slot.RIGHT_RING]: "/sprites/item-bg/item-bg-ring1-icon.png",
-	[Slot.MAIN_HAND]: "/sprites/item-bg/item-bg-weapon-icon.png",
-	[Slot.LEFT_TRINKET]: "/sprites/item-bg/item-bg-trinket1-icon.png",
-	[Slot.RIGHT_TRINKET]: "/sprites/item-bg/item-bg-trinket1-icon.png",
-	[Slot.GUILD]: "/sprites/item-bg/item-bg-guild-icon.png",
-	[Slot.OFFHAND]: "/sprites/item-bg/item-bg-offhand-icon.png",
-};
+// export const slotBackgroundSpriteMap: Record<Slot, string> = {
+// 	[Slot.HEAD]: "/sprites/item-bg/item-bg-head-icon.png",
+// 	[Slot.FACE]: "/sprites/item-bg/item-bg-face-icon.png",
+// 	[Slot.BACK]: "/sprites/item-bg/item-bg-back-icon.png",
+// 	[Slot.SHOULDERS]: "/sprites/item-bg/item-bg-shoulder-icon.png",
+// 	[Slot.CHEST]: "/sprites/item-bg/item-bg-body-icon.png",
+// 	[Slot.LEGS]: "/sprites/item-bg/item-bg-leg-icon.png",
+// 	[Slot.LEFT_RING]: "/sprites/item-bg/item-bg-ring1-icon.png",
+// 	[Slot.RIGHT_RING]: "/sprites/item-bg/item-bg-ring1-icon.png",
+// 	[Slot.MAIN_HAND]: "/sprites/item-bg/item-bg-weapon-icon.png",
+// 	[Slot.LEFT_TRINKET]: "/sprites/item-bg/item-bg-trinket1-icon.png",
+// 	[Slot.RIGHT_TRINKET]: "/sprites/item-bg/item-bg-trinket1-icon.png",
+// 	[Slot.GUILD]: "/sprites/item-bg/item-bg-guild-icon.png",
+// 	[Slot.OFFHAND]: "/sprites/item-bg/item-bg-offhand-icon.png",
+// };
 
-export const getPossibleBuildFromItems = (items: Item[]): PossibleBuild => {
-	return playerSlots.reduce((acc, s) => {
-		if (s === null) {
-			return acc;
-		}
-		const possibleItems = items.filter((i) =>
-			equipTypeWorksForSlot(i.equip, s),
-		);
-		acc[s] = possibleItems.length > 0 ? possibleItems : null;
-		return acc;
-	}, {} as PossibleBuild);
-};
+// export const getPossibleBuildFromItems = (items: Item[]): PossibleBuild => {
+// 	return playerSlots.reduce((acc, s) => {
+// 		if (s === null) {
+// 			return acc;
+// 		}
+// 		const possibleItems = items.filter((i) =>
+// 			equipTypeWorksForSlot(i.equip, s),
+// 		);
+// 		acc[s] = possibleItems.length > 0 ? possibleItems : null;
+// 		return acc;
+// 	}, {} as PossibleBuild);
+// };
 
 export const MAX_LEVEL = 120;
 
@@ -310,26 +281,26 @@ export const getArmor = (stats: Record<BasicStats, number>) => {
 	return 5 * stats.str - 100;
 };
 
-export const getAllStats = (
-	build: Build,
-	level: number,
-	skillPoints: Omit<BaseInputStats, "armor"> = BASE_STATS,
-) => {
-	const buildItems = Object.values(build).filter(Boolean);
-	const basicStats = combineBasicStats(buildItems, skillPoints);
+// export const getAllStats = (
+// 	build: Build,
+// 	level: number,
+// 	skillPoints: Omit<BaseInputStats, "armor"> = BASE_STATS,
+// ) => {
+// 	const buildItems = Object.values(build).filter(Boolean);
+// 	const basicStats = combineBasicStats(buildItems, skillPoints);
 
-	const mainHand = build[Slot.MAIN_HAND];
-	const derivedStats = getDerivedStats(
-		basicStats,
-		level,
-		mainHand && isWeapon(mainHand) ? mainHand : undefined,
-	);
+// 	const mainHand = build[Slot.MAIN_HAND];
+// 	const derivedStats = getDerivedStats(
+// 		basicStats,
+// 		level,
+// 		mainHand && isWeapon(mainHand) ? mainHand : undefined,
+// 	);
 
-	return {
-		...basicStats,
-		...derivedStats,
-	};
-};
+// 	return {
+// 		...basicStats,
+// 		...derivedStats,
+// 	};
+// };
 
 export const guildRankMap = {
 	8: "Leader",

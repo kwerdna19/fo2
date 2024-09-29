@@ -83,7 +83,7 @@ export default createTRPCRouter({
 		return db.skill.findMany({
 			orderBy: [
 				{
-					slug: "asc",
+					name: "asc",
 				},
 				{
 					rank: "asc",
@@ -97,12 +97,12 @@ export default createTRPCRouter({
 		});
 	}),
 
-	getBySlug: publicProcedure
-		.input(z.object({ slug: z.string() }))
-		.query(({ ctx: { db }, input: { slug } }) => {
+	getById: publicProcedure
+		.input(z.number())
+		.query(({ ctx: { db }, input: id }) => {
 			return db.skill.findUniqueOrThrow({
 				where: {
-					slug,
+					id,
 				},
 				include: {
 					items: true,
@@ -119,14 +119,11 @@ export default createTRPCRouter({
 	create: roleProtectedProcedure(Role.MODERATOR)
 		.input(skillSchema)
 		.mutation(({ ctx: { db }, input }) => {
-			const { name, rank, type, items, area, ...rest } = input;
+			const { type, items, area, ...rest } = input;
 
 			return db.skill.create({
 				data: {
-					name,
-					rank,
 					type: type as SkillType,
-					slug: `${getSlugFromName(name)}-${rank}`,
 					items: {
 						connect: items.map((item) => ({ id: item.id })),
 					},
@@ -136,10 +133,10 @@ export default createTRPCRouter({
 		}),
 
 	update: roleProtectedProcedure(Role.MODERATOR)
-		.input(z.object({ id: z.string(), data: skillSchema }))
+		.input(z.object({ id: z.number(), data: skillSchema }))
 		.mutation(async ({ ctx: { db }, input }) => {
 			const { id, data } = input;
-			const { name, rank, type, items, area, ...rest } = data;
+			const { type, items, area, ...rest } = data;
 
 			const updated = await db.skill.update({
 				where: {
@@ -147,10 +144,7 @@ export default createTRPCRouter({
 				},
 				data: {
 					...rest,
-					name,
-					rank,
 					type: type as SkillType,
-					slug: `${getSlugFromName(name)}-${rank}`,
 					updatedAt: new Date(),
 					areaId: area?.id,
 					items: {
@@ -160,13 +154,5 @@ export default createTRPCRouter({
 			});
 
 			return updated;
-		}),
-
-	delete: roleProtectedProcedure(Role.ADMIN)
-		.input(z.object({ id: z.string() }))
-		.mutation(({ ctx: { db }, input: { id } }) => {
-			return db.skill.delete({
-				where: { id },
-			});
 		}),
 });

@@ -8,13 +8,14 @@ import { ItemForm } from "~/features/items/components/ItemForm";
 import { itemSchema } from "~/features/items/schemas";
 import { userSatisfiesRoleOrRedirect } from "~/server/auth/roles";
 import { api } from "~/trpc/server";
+import { getIdFromNameId, getNameIdSlug } from "~/utils/misc";
 
 interface Params {
-	slug: string;
+	nameId: string;
 }
 
 export async function generateMetadata({ params }: { params: Params }) {
-	const item = await api.item.getBySlug(params);
+	const item = await api.item.getById(getIdFromNameId(params.nameId));
 	if (!item) {
 		return {};
 	}
@@ -24,9 +25,9 @@ export async function generateMetadata({ params }: { params: Params }) {
 }
 
 export default async function EditItem({ params }: { params: Params }) {
-	await userSatisfiesRoleOrRedirect(Role.MODERATOR, `/items/${params.slug}`);
+	await userSatisfiesRoleOrRedirect(Role.MODERATOR, `/items/${params.nameId}`);
 
-	const item = await api.item.getBySlug(params);
+	const item = await api.item.getById(getIdFromNameId(params.nameId));
 
 	if (!item) {
 		return notFound();
@@ -35,7 +36,7 @@ export default async function EditItem({ params }: { params: Params }) {
 	return (
 		<div className="space-y-8">
 			<Button size="sm" variant="outline" asChild>
-				<Link href={`/items/${item.slug}`}>
+				<Link href={`/items/${getNameIdSlug(item)}`}>
 					<ChevronLeft className="mr-2 h-4 w-4" />
 					Back to page
 				</Link>

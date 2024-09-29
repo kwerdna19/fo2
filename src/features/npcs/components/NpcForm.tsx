@@ -26,7 +26,7 @@ import { SaleItemsField } from "./SaleItemsField";
 import { TeleportField } from "./TeleportField";
 
 interface Props {
-	id?: string;
+	id?: number;
 	defaultValue?: z.infer<typeof npcSchema>;
 }
 

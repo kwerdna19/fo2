@@ -30,31 +30,13 @@ export function SaleItemsField({ className }: { className?: string }) {
 				<div className="space-y-3">
 					{fields.map((field, index) => {
 						return (
-							<div
-								key={field.key}
-								className="grid grid-cols-6 xl:grid-cols-9 gap-3"
-							>
-								<div className="col-span-4">
-									<SearchField
-										type="Item"
-										control={control}
-										name={`items.${index}.item`}
-										query={api.item.getAllQuick}
-									/>
-								</div>
-
-								<div className="col-span-3">
-									<TextField
-										placeholder="Price"
-										control={control}
-										name={`items.${index}.price`}
-										type="number"
-									/>
-								</div>
-
-								<div className="col-span-1">
-									<UnitSelect control={control} name={`items.${index}.unit`} />
-								</div>
+							<div key={field.key} className="flex gap-3">
+								<SearchField
+									type="Item"
+									control={control}
+									name={`items.${index}`}
+									query={api.item.getAllQuick}
+								/>
 
 								<Button
 									size="icon"
@@ -71,9 +53,7 @@ export function SaleItemsField({ className }: { className?: string }) {
 
 				<Button
 					type="button"
-					onClick={() =>
-						append({ unit: "COINS" } as FormValues["items"][number])
-					}
+					onClick={() => append({} as FormValues["items"][number])}
 				>
 					Add
 				</Button>

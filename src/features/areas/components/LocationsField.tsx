@@ -42,10 +42,9 @@ function CoordinatesField({ index }: { index: number }) {
 
 	const area = watch(`locations.${index}.area`);
 
-	const { data: areaInfo } = api.area.getById.useQuery(
-		{ id: area?.id },
-		{ enabled: !!area },
-	);
+	const { data: areaInfo } = api.area.getById.useQuery(area?.id, {
+		enabled: !!area,
+	});
 
 	return (
 		<FormField

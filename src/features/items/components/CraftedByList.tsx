@@ -9,9 +9,10 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "~/components/ui/tooltip";
+import { getNameIdSlug } from "~/utils/misc";
 import type { ItemDatum } from "./ItemTable";
 
-export function CraftedByList({ npcs }: { npcs: ItemDatum["craftedBy"] }) {
+export function CraftedByList({ npcs }: { npcs: ItemDatum["crafts"] }) {
 	return (
 		<div className="flex items-center h-[64px]">
 			{npcs.map((d) => (
@@ -22,7 +23,7 @@ export function CraftedByList({ npcs }: { npcs: ItemDatum["craftedBy"] }) {
 								<Link
 									className="flex justify-center items-center h-[64px] max-h-full overflow-hidden group-hover:overflow-visible"
 									prefetch={false}
-									href={`/npcs/${d.npc.slug}`}
+									href={`/npcs/${getNameIdSlug(d.npc)}`}
 								>
 									<Sprite
 										type="NPC"

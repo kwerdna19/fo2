@@ -7,7 +7,7 @@ import { api } from "~/trpc/react";
 import { mobSchema } from "../schemas";
 
 interface Props {
-	id?: string;
+	id?: number;
 	defaultValue?: z.infer<typeof mobSchema>;
 }
 

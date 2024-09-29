@@ -5,9 +5,9 @@ import {
 } from "~/utils/fo-data/service";
 const prisma = new PrismaClient();
 
-const { inGameId: highestId } = await prisma.mob.findFirstOrThrow({
+const { id: highestId } = await prisma.mob.findFirstOrThrow({
 	orderBy: {
-		inGameId: "desc",
+		id: "desc",
 	},
 });
 
@@ -75,12 +75,12 @@ for (const gameMob of mobs) {
 
 		for (const { inGameItemId, dropRates } of drops) {
 			const { id: itemId } = await prisma.item.findUniqueOrThrow({
-				where: { inGameId: inGameItemId },
+				where: { id: inGameItemId },
 				select: { id: true },
 			});
 
 			const dropRate = dropRates[0] as number;
-			const count = dropRates.length > 1 ? dropRates.length : null;
+			const count = dropRates.length;
 
 			await prisma.loot.upsert({
 				create: {

@@ -5,13 +5,14 @@ import { AdminButton } from "~/components/AdminButton";
 import { Sprite } from "~/components/Sprite";
 import { Button } from "~/components/ui/button";
 import { api } from "~/trpc/server";
+import { getIdFromNameId } from "~/utils/misc";
 
 interface Params {
 	nameId: string;
 }
 
 export async function generateMetadata({ params }: { params: Params }) {
-	const data = await api.faction.getById(params);
+	const data = await api.faction.getById(getIdFromNameId(params.nameId));
 	if (!data) {
 		return {};
 	}
@@ -21,7 +22,7 @@ export async function generateMetadata({ params }: { params: Params }) {
 }
 
 export default async function Faction({ params }: { params: Params }) {
-	const data = await api.faction.getById(params);
+	const data = await api.faction.getById(getIdFromNameId(params.nameId));
 
 	if (!data) {
 		notFound();
